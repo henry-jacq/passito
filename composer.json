@@ -1,0 +1,17 @@
+{
+    "name": "henry/passito",
+    "autoload": {
+        "psr-4": {
+            "Passito\\": "app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "henry-jacq",
+            "email": "henryeditz267@gmail.com"
+        }
+    ],
+    "require": {
+        "vlucas/phpdotenv": "^5.6"
+    }
+}

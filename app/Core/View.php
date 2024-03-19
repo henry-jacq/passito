@@ -1,6 +1,6 @@
 <?php
 
-namespace Passito\Core;
+namespace App\Core;
 
 use Exception;
 

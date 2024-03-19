@@ -32,11 +32,12 @@ return [
     View::class => function(ContainerInterface $container){
         return new View($container->get(Config::class));
     },
-    // SessionInterface::class => function (ContainerInterface $container) {
-    //     return new Session($container->get(Config::class));
-    // },
+    SessionInterface::class => function (ContainerInterface $container) {
+        return new Session($container->get(Config::class));
+    },
     ResponseFactoryInterface::class => fn(App $app) => $app->getResponseFactory(),
-    // Request::class => function(ContainerInterface $container) {
-    //     return new Request($container->get(SessionInterface::class));
-    // }
+    Request::class => function(ContainerInterface $container) {
+        return new Request($container->get(SessionInterface::class));
+    }
 ];
+

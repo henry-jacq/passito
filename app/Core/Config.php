@@ -5,9 +5,9 @@ namespace App\Core;
 class Config
 {
     public function __construct(private readonly array $config)
-    {
+    {   
     }
-
+    
     public function get(string $name, mixed $default = null): mixed
     {
         $path  = explode('.', $name);

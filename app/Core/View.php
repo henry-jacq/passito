@@ -3,8 +3,9 @@
 namespace App\Core;
 
 use Exception;
+use App\Interfaces\ViewInterface;
 
-class View
+class View implements ViewInterface
 {
     public string $title;
     private mixed $resultView;
@@ -13,7 +14,7 @@ class View
     private string $footerBlock;
     private string $baseViewName;
     private string $contentsBlock;
-
+    
     public function __construct(private readonly Config $config)
     {
         $this->title = $config->get('app.name');
@@ -36,7 +37,7 @@ class View
         foreach ($this->globals as $key => $value) {
             $$key = $value;
         }
-
+        
         if (!str_contains($layoutName, '.php')) {
             $layoutName = $layoutName . '.php';
         }
@@ -146,7 +147,7 @@ class View
      */
     public function createPage(string $view, $params = []): View
     {
-        if (!str_contains($this->baseViewName, '.php')) {
+        if (!str_contains($this->baseViewName ,'.php')) {
             $this->baseViewName = $this->baseViewName . '.php';
         }
         $mainView = $this->renderBaseView($this->baseViewName, $params);
@@ -161,7 +162,7 @@ class View
      */
     public function render(): void
     {
-        echo ($this->resultView);
+        echo($this->resultView);
     }
 
     /**
@@ -228,4 +229,5 @@ class View
 
         return true;
     }
+    
 }

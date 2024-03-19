@@ -27,7 +27,7 @@ function now()
 function packJson(array $data)
 {
     if (is_array($data)) {
-        return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+        return json_encode($data, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES);
     }
     return '{}';
 }

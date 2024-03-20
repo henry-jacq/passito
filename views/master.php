@@ -4,7 +4,7 @@ $theme = $params['user']['preferences']['theme'] ?? 'dark';
 
 ?>
 
-<html lang="en" data-bs-theme="<?php echo($theme); ?>">
+<html lang="en" data-bs-theme="dark">
 
 <?php echo ($this->renderLayout('head', $params)); ?>
 

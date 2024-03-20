@@ -27,14 +27,14 @@
         <div class="card-body">
             <h5 class="card-title text-body-emphasis">New message!</h5>
             <p class="card-text">Bus routes changed!</p>
-            <a href="#" class="btn btn-sm btn-primary">Read More</a>
+            <a href="#" class="btn btn-sm btn-prime">Read More</a>
         </div>
     </div>
     <div class="card bg-body-tertiary shadow rounded-3 mb-3">
         <div class="card-body">
             <h5 class="card-title text-body-emphasis">New message!</h5>
             <p class="card-text">Portal open for requesting outpass</p>
-            <a href="#" class="btn btn-sm btn-primary">Read More</a>
+            <a href="#" class="btn btn-sm btn-prime">Read More</a>
         </div>
     </div>
 </div>

@@ -22,7 +22,7 @@ class HomeController extends Controller
         $args = [
             'title' => 'Home'
         ];
-        return $this->render($response, 'user/home', $args);
+        return $this->render($response, 'user/home', $args, footer: true);
     }
 
 }

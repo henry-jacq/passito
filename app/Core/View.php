@@ -8,6 +8,8 @@ use App\Interfaces\ViewInterface;
 class View implements ViewInterface
 {
     public string $title;
+    public string $appName;
+    public string $appDesc;
     private mixed $resultView;
     private array $globals = [];
     private string $headerBlock;
@@ -18,6 +20,8 @@ class View implements ViewInterface
     public function __construct(private readonly Config $config)
     {
         $this->title = $config->get('app.name');
+        $this->appName = $config->get('app.name');
+        $this->appDesc = $config->get('app.desc');
         $this->baseViewName = $config->get('view.base_view');
         $this->headerBlock = $config->get('view.placeholder.header');
         $this->footerBlock = $config->get('view.placeholder.footer');

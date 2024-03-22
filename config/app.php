@@ -13,6 +13,7 @@ $appSnakeName = strtolower(str_replace(' ', '_', $_ENV['APP_NAME']));
 return [
     'app' => [
         'name' => $_ENV['APP_NAME'],
+        'desc' => $_ENV['APP_DESC'],
         'host' => $_ENV['APP_URL'] ?? 'http://localhost',
         'version' => $_ENV['APP_VERSION'] ?? '1.0',
         'display_error_details' => $boolean($_ENV['APP_DEBUG'] ?? 0),

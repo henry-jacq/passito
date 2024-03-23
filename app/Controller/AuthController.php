@@ -7,7 +7,7 @@ use App\Core\Controller;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-class HomeController extends Controller
+class AuthController extends Controller
 {
     public function __construct(
         private readonly View $view,
@@ -15,12 +15,11 @@ class HomeController extends Controller
         parent::__construct($view);
     }
 
-    public function index(Request $request, Response $response): Response
+    public function login(Request $request, Response $response): Response
     {
         $args = [
-            'title' => 'Home'
+            'title' => 'Login'
         ];
-        return $this->render($response, 'user/home', $args, footer: true);
+        return $this->render($response, 'auth/login', $args, header: false);
     }
-
 }

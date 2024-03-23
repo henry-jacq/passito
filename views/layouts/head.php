@@ -2,20 +2,20 @@
     <meta data-n-head="1" charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?= $this->title ?> · Passito</title>
+    <title><?= $this->title ?> · <?= $this->appName ?></title>
     <link rel="icon" type="image/x-icon" href="/assets/brand/photogram-icon.png">
     <meta name="author" content="Henry">
     <meta property="og:image" content="/assets/brand/photogram-icon.png">
-    <meta property="site_name" content="Passito">
-    <meta property="og:title" content="Passito · Gatepass Management System">
+    <meta property="site_name" content="<?= $this->appName ?>">
+    <meta property="og:title" content="<?= $this->appName ?> · <?= $this->appDesc ?>">
     <meta property="og:site_name" content="http://passito.local">
     <meta property="og:type" content="website">
     <meta property="og:image" content="/assets/brand/photogram-icon.png">
-    <meta property="og:image:alt" content="Passito · Created by Henry">
-    <meta property="description" content="Create an account or log in to Passito. Get instant gatepass with no hesitation.">
+    <meta property="og:image:alt" content="<?= $this->appName ?> · Created by Henry">
+    <meta property="description" content="Create an account or log in to <?= $this->appName ?>. Get instant gatepass with no hesitation.">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Passito">
-    <meta name="twitter:description" content="Passito is an easy-to-use web app for applying gatepass instantly.">
+    <meta name="twitter:title" content="<?= $this->appName ?>">
+    <meta name="twitter:description" content="<?= $this->appName ?> is an easy-to-use web app for applying gatepass instantly.">
     <meta name="twitter:image" content="/assets/screenshot-2.png">
     <link rel="shortcut icon" href="/assets/brand/favicon.ico">
     <link href="/css/bootstrap.min.css" rel="stylesheet">

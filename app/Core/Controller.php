@@ -25,25 +25,21 @@ class Controller
     
     public function render(Request $request, Response $response, string $viewPath, array $args, $header = true, $footer = false)
     {
-        $args['header'] = $header;
-        $args['footer'] = $footer;
         $role = $request->getAttribute('role');
-
-        dd($role);
         
         if ($role == "admin") {
-            $response->getBody()->write(
-                (string) $this->view
-                    ->createPage($viewPath, $args)
-                    ->render()
-            );
+            $args['admin'] = true;
         } else {
-            $response->getBody()->write(
-                (string) $this->view
-                    ->createPage($viewPath, $args)
-                    ->render()
-            );
+            $args['header'] = $header;
+            $args['footer'] = $footer;
         }
+
+        $response->getBody()->write(
+            (string) $this->view
+                ->createPage($viewPath, $args)
+                ->render()
+        );
+
         return $response;
     }
 }

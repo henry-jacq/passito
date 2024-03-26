@@ -46,7 +46,12 @@ class View implements ViewInterface
             $layoutName = $layoutName . '.php';
         }
 
-        $path = VIEW_PATH . '/layouts/' . $layoutName;
+        // Load layouts for either admin or user
+        if (isset($admin)) {
+            $path = VIEW_PATH . '/layouts/admin/' . $layoutName;
+        } else {
+            $path = VIEW_PATH . '/layouts/user/' . $layoutName;
+        }
 
         if (file_exists($path)) {
             ob_start();

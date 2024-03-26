@@ -20,6 +20,6 @@ class AuthController extends Controller
         $args = [
             'title' => 'Login'
         ];
-        return $this->render($response, 'auth/login', $args, header: false);
+        return $this->render($request, $response, 'auth/login', $args, header: false);
     }
 }

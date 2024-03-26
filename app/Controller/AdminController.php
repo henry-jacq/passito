@@ -17,9 +17,10 @@ class AdminController extends Controller
 
     public function home(Request $request, Response $response): Response
     {
+        
         $args = [
             'title' => 'Admin Home'
         ];
-        return $this->render($response, 'admin/home', $args, footer: true);
+        return $this->render($request, $response, 'admin/test', $args, header: false);
     }
 }

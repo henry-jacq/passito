@@ -2,6 +2,7 @@
 
 namespace App\Core;
 
+use Slim\Psr7\Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
 class Controller
@@ -22,15 +23,27 @@ class Controller
         return $response->withStatus($params['code']);
     }
     
-    public function render(Response $response, string $viewPath, array $args, $header = true, $footer = false)
+    public function render(Request $request, Response $response, string $viewPath, array $args, $header = true, $footer = false)
     {
         $args['header'] = $header;
         $args['footer'] = $footer;
-        $response->getBody()->write(
-            (string) $this->view
-            ->createPage($viewPath, $args)
-            ->render()
-        );
+        $role = $request->getAttribute('role');
+
+        dd($role);
+        
+        if ($role == "admin") {
+            $response->getBody()->write(
+                (string) $this->view
+                    ->createPage($viewPath, $args)
+                    ->render()
+            );
+        } else {
+            $response->getBody()->write(
+                (string) $this->view
+                    ->createPage($viewPath, $args)
+                    ->render()
+            );
+        }
         return $response;
     }
 }

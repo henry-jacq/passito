@@ -5,8 +5,6 @@ namespace App\Controller;
 use Closure;
 use App\Core\Auth;
 use App\Core\View;
-use App\Model\Post;
-use App\Model\User;
 use App\Core\Session;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -40,8 +38,6 @@ class ApiController
 
     public function __construct(
         private readonly Auth $auth,
-        private readonly Post $post,
-        private readonly User $user,
         private readonly View $view,
         private readonly Session $session
     )

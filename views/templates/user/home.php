@@ -42,7 +42,7 @@
 <nav class="navbar sticky-top border-bottom shadow shadow-bottom navbar-expand-md bg-body-tertiary px-2" aria-label="Passito admin navbar">
     <div class="container-fluid">
         <a class="navbar-brand fs-4" href="/admin">Passito</a>
-        <button class="btn sidebar-toggler me-auto ms-md-5">
+        <button class="btn sidebar-toggler me-auto ms-md-5 d-md-none">
             <i class="bi bi-list-nested"></i>
         </button>
         <a role="button" class="text-body-emphasis" href="#">
@@ -112,7 +112,6 @@
         // Function to handle sidebar toggle
         function toggleSidebar() {
             if (!sidebar.getAttribute('style')) {
-                console.log(window.innerWidth);
                 if (window.innerWidth >= 768) {
                     sidebar.style.left = '-280px';
                 } else {
@@ -120,6 +119,9 @@
                 }
             } else {
                 sidebar.style.left = (sidebar.style.left === '0px' ? '-280px' : '0px');
+            }
+            if (sidebar.style.left == '-280px') {
+                contentContainer.style.left = '0px';
             }
         }
 

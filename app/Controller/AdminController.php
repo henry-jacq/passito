@@ -15,12 +15,12 @@ class AdminController extends Controller
         parent::__construct($view);
     }
 
-    public function home(Request $request, Response $response): Response
+    public function dashboard(Request $request, Response $response): Response
     {
         
         $args = [
-            'title' => 'Admin Home'
+            'title' => 'Dashboard'
         ];
-        return $this->render($request, $response, 'admin/test', $args, header: false);
+        return $this->render($request, $response, 'admin/dashboard', $args, header: false);
     }
 }

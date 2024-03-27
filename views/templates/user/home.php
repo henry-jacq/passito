@@ -34,7 +34,7 @@
 
         .content-container {
             margin-left: 280px;
-            transition: none;
+            transition: margin-left 0.5s ease;
         }
     }
 </style>
@@ -102,15 +102,36 @@
         </div>
     </div>
 </div>
+
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         var toggler = document.querySelector(".sidebar-toggler");
         var sidebar = document.querySelector(".sidebar");
-        var content = document.querySelector(".content");
+        var contentContainer = document.querySelector(".content-container");
 
-        toggler.addEventListener("click", function() {
-            if (window.innerWidth < 768) {
+        // Function to handle sidebar toggle
+        function toggleSidebar() {
+            if (!sidebar.getAttribute('style')) {
+                console.log(window.innerWidth);
+                if (window.innerWidth >= 768) {
+                    sidebar.style.left = '-280px';
+                } else {
+                    sidebar.style.left = '0px';
+                }
+            } else {
                 sidebar.style.left = (sidebar.style.left === '0px' ? '-280px' : '0px');
+            }
+        }
+
+        // Event listener for sidebar toggler
+        toggler.addEventListener("click", function() {
+            toggleSidebar();
+        });
+
+        // Event listener for window resize
+        window.addEventListener("resize", function() {
+            if (sidebar.getAttribute('style')) {
+                sidebar.style = null;
             }
         });
     });

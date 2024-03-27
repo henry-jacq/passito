@@ -1,44 +1,3 @@
-<style>
-    body {
-        overflow: hidden;
-    }
-
-    .sidebar {
-        position: fixed;
-        top: 12px;
-        left: -280px;
-        bottom: 0;
-        z-index: 100;
-        overflow-y: auto;
-        width: 280px;
-        transition: left 0.5s ease;
-    }
-
-    .content {
-        padding: 20px;
-        overflow-y: auto;
-        max-height: calc(100vh - 59px);
-    }
-
-    .content-container {
-        flex-grow: 1;
-        overflow-y: auto;
-        margin-left: 0;
-        transition: margin-left 0.5s ease;
-    }
-
-    @media (min-width: 768px) {
-        .sidebar {
-            left: 0;
-        }
-
-        .content-container {
-            margin-left: 280px;
-            transition: margin-left 0.5s ease;
-        }
-    }
-</style>
-
 <nav class="navbar sticky-top border-bottom shadow shadow-bottom navbar-expand-md bg-body-tertiary px-2" aria-label="Passito admin navbar">
     <div class="container-fluid">
         <a class="navbar-brand fs-4" href="/admin/dashboard">Passito</a>
@@ -56,31 +15,31 @@
         <p class="text-uppercase fw-semibold text-secondary small mb-2 pt-2">Admin Panel</p>
         <ul class="nav nav-pills flex-column">
             <li class="nav-item">
-                <a href="/admin/dashboard" class="nav-link active" aria-current="page">
+                <a href="/admin/dashboard" class="nav-link <?php if($title == 'Dashboard'): echo('active'); else: echo('text-body'); endif; ?>" aria-current="page">
                     <i class="bi bi-speedometer2 me-2"></i>
                     Dashboard
                 </a>
             </li>
             <li>
-                <a href="/admin/manage/request" class="nav-link text-body">
+                <a href="/admin/manage/request" class="nav-link <?php if($title == 'Manage Requests'): echo('active'); else: echo('text-body'); endif; ?>">
                     <i class="bi bi-file-text me-2"></i>
                     Manage Requests
                 </a>
             </li>
             <li>
-                <a href="/admin/manage/users" class="nav-link text-body">
+                <a href="/admin/manage/users" class="nav-link <?php if($title == 'Manage Users'): echo('active'); else: echo('text-body'); endif; ?>">
                     <i class="bi bi-people me-2"></i>
                     User Management
                 </a>
             </li>
             <li>
-                <a href="/admin/analytics" class="nav-link text-body">
+                <a href="/admin/analytics" class="nav-link <?php if($title == 'Analytics'): echo('active'); else: echo('text-body'); endif; ?>">
                     <i class="bi bi-graph-up me-2"></i>
                     Reports and Analytics
                 </a>
             </li>
             <li>
-                <a href="/admin/settings" class="nav-link text-body">
+                <a href="/admin/settings" class="nav-link <?php if($title == 'Settings'): echo('active'); else: echo('text-body'); endif; ?>">
                     <i class="bi bi-gear-wide-connected me-2"></i>
                     Settings
                 </a>
@@ -89,7 +48,7 @@
     </div>
     <div class="content-container">
         <div class="content">
-            <h3 class="lead fs-3">Dashboard</h3>
+            <h3 class="lead fs-3"><?= $title ?></h3>
             <hr>
             <div class="p-5 bg-body-tertiary shadow rounded-3">
                 <h3 class="text-body-emphasis mb-3">Hello Admin! 👋</h3>
@@ -102,39 +61,3 @@
         </div>
     </div>
 </div>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var toggler = document.querySelector(".sidebar-toggler");
-        var sidebar = document.querySelector(".sidebar");
-        var contentContainer = document.querySelector(".content-container");
-
-        // Function to handle sidebar toggle
-        function toggleSidebar() {
-            if (!sidebar.getAttribute('style')) {
-                if (window.innerWidth >= 768) {
-                    sidebar.style.left = '-280px';
-                } else {
-                    sidebar.style.left = '0px';
-                }
-            } else {
-                sidebar.style.left = (sidebar.style.left === '0px' ? '-280px' : '0px');
-            }
-            if (sidebar.style.left == '-280px') {
-                contentContainer.style.left = '0px';
-            }
-        }
-
-        // Event listener for sidebar toggler
-        toggler.addEventListener("click", function() {
-            toggleSidebar();
-        });
-
-        // Event listener for window resize
-        window.addEventListener("resize", function() {
-            if (sidebar.getAttribute('style')) {
-                sidebar.style = null;
-            }
-        });
-    });
-</script>

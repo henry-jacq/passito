@@ -12,9 +12,9 @@ return function (App $app) {
 
     $app->group('/admin', function(RouteCollectorProxy $group) {
         $group->any('/dashboard', [AdminController::class, 'dashboard']);
-        $group->any('/manage/request', [AdminController::class, 'dashboard']);
-        $group->any('/manage/users', [AdminController::class, 'dashboard']);
-        $group->any('/analytics', [AdminController::class, 'dashboard']);
-        $group->any('/settings', [AdminController::class, 'dashboard']);
+        $group->any('/manage/request', [AdminController::class, 'manageRequests']);
+        $group->any('/manage/users', [AdminController::class, 'manageUsers']);
+        $group->any('/analytics', [AdminController::class, 'analytics']);
+        $group->any('/settings', [AdminController::class, 'settings']);
     });
 };

@@ -23,4 +23,40 @@ class AdminController extends Controller
         ];
         return $this->render($request, $response, 'admin/dashboard', $args, header: false);
     }
+
+    public function manageRequests(Request $request, Response $response): Response
+    {
+
+        $args = [
+            'title' => 'Manage Requests'
+        ];
+        return $this->render($request, $response, 'admin/dashboard', $args, header: false);
+    }
+
+    public function manageUsers(Request $request, Response $response): Response
+    {
+
+        $args = [
+            'title' => 'Manage Users'
+        ];
+        return $this->render($request, $response, 'admin/dashboard', $args, header: false);
+    }
+
+    public function analytics(Request $request, Response $response): Response
+    {
+
+        $args = [
+            'title' => 'Analytics'
+        ];
+        return $this->render($request, $response, 'admin/dashboard', $args, header: false);
+    }
+
+    public function settings(Request $request, Response $response): Response
+    {
+
+        $args = [
+            'title' => 'Settings'
+        ];
+        return $this->render($request, $response, 'admin/dashboard', $args, header: false);
+    }
 }

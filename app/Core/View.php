@@ -3,7 +3,6 @@
 namespace App\Core;
 
 use Exception;
-use App\Interfaces\ViewInterface;
 
 class View
 {
@@ -29,7 +28,7 @@ class View
     }
 
     /**
-     * Generates the layout view
+     * Render layout view
      */
     public function renderLayout(string $layoutName, array $params = [])
     {
@@ -62,7 +61,7 @@ class View
     }
 
     /**
-     * Generates the layout view
+     * Render components
      */
     public function renderComponent($component, $params = [])
     {
@@ -89,7 +88,7 @@ class View
     }
 
     /**
-     * Generates the template view
+     * Render template view
      */
     public function renderTemplate($template, $params = [])
     {

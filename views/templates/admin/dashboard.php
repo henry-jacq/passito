@@ -9,7 +9,7 @@
                 <i class="bi bi-bell me-sm-4 me-4"></i>
             </a>
             <div class="dropdown-menu dropdown-menu-end py-0">
-                <div class="card border-0 overflow-auto" style="width: 340px; height: 80%;">
+                <div class="card border-0 overflow-auto" style="width: 320px; height: 80%;">
                     <div class="card-header">
                         <p class="small text-uppercase fw-semibold m-0">Notifications</p>
                     </div>
@@ -17,21 +17,21 @@
                         <div class="list-group overflow-auto">
                             <a href="#" class="list-group-item list-group-item-action border-0 rounded mt-1 shadow-sm" aria-current="true">
                                 <div class="d-flex w-100 justify-content-between">
-                                    <p class="fw-semibold mb-1">Pending Request</p>
-                                    <small>1 day ago</small>
+                                    <p class="mb-1"><i class="bi bi-clock-history text-warning me-2"></i>Approve Request</p>
+                                    <small>1 hour ago</small>
                                 </div>
                                 <p class="text-wrap small mb-1">Henry has Inititated outpass request!</p>
                             </a>
                             <a href="#" class="list-group-item list-group-item-action border-0 rounded mt-1 shadow-sm" aria-current="true">
                                 <div class="d-flex w-100 justify-content-between">
-                                    <p class="fw-semibold mb-1">Pending Request</p>
-                                    <small>1 day ago</small>
+                                    <p class="mb-1"><i class="bi bi-clock-history text-warning me-2"></i>Approve Request</p>
+                                    <small>6 hours ago</small>
                                 </div>
                                 <p class="text-wrap small mb-1">John has Inititated outpass request!</p>
                             </a>
                             <a href="#" class="list-group-item list-group-item-action border-0 rounded mt-1 shadow-sm" aria-current="true">
                                 <div class="d-flex w-100 justify-content-between">
-                                    <p class="fw-semibold mb-1">Alert: Pending approvals</p>
+                                    <p class="mb-1"><i class="bi bi-exclamation-circle text-danger me-2"></i>Pending approvals</p>
                                     <small>1 day ago</small>
                                 </div>
                                 <p class="text-wrap small mb-1">Validate the pending outpass requests!</p>
@@ -41,7 +41,10 @@
                     <div class="card-footer">
                         <div class="d-flex justify-content-between align-items-center">
                             <a role="button" class="small">Clear all</a>
-                            <a role="button" class="small">Mark as read</a>
+                            <a role="button" class="small">
+                                <i class="bi bi-check2-all"></i>
+                                Mark as read
+                            </a>
                         </div>
                     </div>
                 </div>

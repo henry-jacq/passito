@@ -12,9 +12,11 @@ $theme = $params['user']['preferences']['theme'] ?? 'dark';
 
     {{header}}
 
-    <section class="container">
-        {{contents}}
-    </section>
+    <?php if ($params['role'] == "admin") {
+        echo ('{{contents}}');
+    } else {
+        echo ('<section class="container">{{contents}}</section>');
+    } ?>
 
     {{footer}}
 

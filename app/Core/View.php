@@ -5,7 +5,7 @@ namespace App\Core;
 use Exception;
 use App\Interfaces\ViewInterface;
 
-class View implements ViewInterface
+class View
 {
     public string $title;
     public string $appName;
@@ -47,11 +47,9 @@ class View implements ViewInterface
         }
 
         // Load layouts for either admin or user
-        if (isset($admin)) {
-            $path = VIEW_PATH . '/layouts/admin/' . $layoutName;
-        } else {
-            $path = VIEW_PATH . '/layouts/user/' . $layoutName;
-        }
+        $role = isset($role) && $role == "admin" ? 'admin' : 'user';
+
+        $path = VIEW_PATH . "/layouts/{$role}" . DIRECTORY_SEPARATOR . $layoutName;
 
         if (file_exists($path)) {
             ob_start();
@@ -81,7 +79,9 @@ class View implements ViewInterface
             $$key = $value;
         }
 
-        $path = VIEW_PATH . '/components/' . $component;
+        $role = isset($role) && $role == "admin" ? 'admin' : 'user';
+
+        $path = VIEW_PATH . "/components/{$role}" . DIRECTORY_SEPARATOR . $component;
 
         if (file_exists($path)) {
             include $path;
@@ -108,39 +108,13 @@ class View implements ViewInterface
             $$key = $value;
         }
 
-        $path = VIEW_PATH . '/templates/' . $template;
+        $role = isset($role) && $role == "admin" ? 'admin' : 'user';
+
+        $path = VIEW_PATH . "/templates/{$role}" . DIRECTORY_SEPARATOR . $template;
 
         if (file_exists($path)) {
             ob_start();
             include $path;
-            $contents = ob_get_clean();
-            if (ob_get_length() > 0) {
-                ob_end_clean();
-            }
-            return $contents;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Generates the base view
-     */
-    public function renderBaseView(string $baseViewName, $params = [])
-    {
-        foreach ($params as $key => $value) {
-            $$key = $value;
-        }
-
-        if (isset($title)) {
-            $this->title = $title;
-        }
-
-        $baseViewPath = VIEW_PATH . DIRECTORY_SEPARATOR . $baseViewName;
-
-        if (file_exists($baseViewPath)) {
-            ob_start();
-            include $baseViewPath;
             $contents = ob_get_clean();
             if (ob_get_length() > 0) {
                 ob_end_clean();
@@ -159,7 +133,7 @@ class View implements ViewInterface
         if (!str_contains($this->baseViewName ,'.php')) {
             $this->baseViewName = $this->baseViewName . '.php';
         }
-        $mainView = $this->renderBaseView($this->baseViewName, $params);
+        $mainView = $this->renderLayout($this->baseViewName, $params);
         $templateView = $this->renderTemplate($view, $params);
         $this->resultView = str_replace($this->contentsBlock, $templateView, $mainView);
         $this->pageFrame($params);

@@ -79,9 +79,7 @@ class View
             $$key = $value;
         }
 
-        $role = isset($role) && $role == "admin" ? 'admin' : 'user';
-
-        $path = VIEW_PATH . "/components/{$role}" . DIRECTORY_SEPARATOR . $component;
+        $path = VIEW_PATH . DIRECTORY_SEPARATOR . "components" . DIRECTORY_SEPARATOR . $component;
 
         if (file_exists($path)) {
             include $path;
@@ -108,9 +106,7 @@ class View
             $$key = $value;
         }
 
-        $role = isset($role) && $role == "admin" ? 'admin' : 'user';
-
-        $path = VIEW_PATH . "/templates/{$role}" . DIRECTORY_SEPARATOR . $template;
+        $path = VIEW_PATH . "/templates/" . DIRECTORY_SEPARATOR . $template;
 
         if (file_exists($path)) {
             ob_start();

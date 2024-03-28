@@ -4,6 +4,49 @@
         <button class="btn sidebar-toggler me-auto ms-md-5 d-md-none">
             <i class="bi bi-list-nested"></i>
         </button>
+        <div class="dropdown ms-auto">
+            <a class="text-body-emphasis" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-bs-auto-close="outside">
+                <i class="bi bi-bell me-sm-4 me-4"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-end py-0">
+                <div class="card border-0 overflow-auto" style="width: 340px; height: 80%;">
+                    <div class="card-header">
+                        <p class="small text-uppercase fw-semibold m-0">Notifications</p>
+                    </div>
+                    <div class="card-body p-2">
+                        <div class="list-group overflow-auto">
+                            <a href="#" class="list-group-item list-group-item-action border-0 rounded mt-1 shadow-sm" aria-current="true">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <p class="fw-semibold mb-1">Pending Request</p>
+                                    <small>1 day ago</small>
+                                </div>
+                                <p class="text-wrap small mb-1">Henry has Inititated outpass request!</p>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action border-0 rounded mt-1 shadow-sm" aria-current="true">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <p class="fw-semibold mb-1">Pending Request</p>
+                                    <small>1 day ago</small>
+                                </div>
+                                <p class="text-wrap small mb-1">John has Inititated outpass request!</p>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action border-0 rounded mt-1 shadow-sm" aria-current="true">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <p class="fw-semibold mb-1">Alert: Pending approvals</p>
+                                    <small>1 day ago</small>
+                                </div>
+                                <p class="text-wrap small mb-1">Validate the pending outpass requests!</p>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a role="button" class="small">Clear all</a>
+                            <a role="button" class="small">Mark as read</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <a role="button" class="text-body-emphasis" href="#">
             <i class="bi bi-box-arrow-left me-md-1"></i>
             <span class="d-none d-md-inline-block">Logout</span>
@@ -15,31 +58,41 @@
         <p class="text-uppercase fw-semibold text-secondary small mb-2 pt-2">Admin Panel</p>
         <ul class="nav nav-pills flex-column">
             <li class="nav-item">
-                <a href="/admin/dashboard" class="nav-link <?php if($title == 'Dashboard'): echo('active'); else: echo('text-body'); endif; ?>" aria-current="page">
+                <a href="/admin/dashboard" class="nav-link <?php if ($title == 'Dashboard') : echo ('active');
+                                                            else : echo ('text-body');
+                                                            endif; ?>" aria-current="page">
                     <i class="bi bi-speedometer2 me-2"></i>
                     Dashboard
                 </a>
             </li>
             <li>
-                <a href="/admin/manage/request" class="nav-link <?php if($title == 'Manage Requests'): echo('active'); else: echo('text-body'); endif; ?>">
+                <a href="/admin/manage/request" class="nav-link <?php if ($title == 'Manage Requests') : echo ('active');
+                                                                else : echo ('text-body');
+                                                                endif; ?>">
                     <i class="bi bi-file-text me-2"></i>
                     Manage Requests
                 </a>
             </li>
             <li>
-                <a href="/admin/manage/users" class="nav-link <?php if($title == 'Manage Users'): echo('active'); else: echo('text-body'); endif; ?>">
+                <a href="/admin/manage/users" class="nav-link <?php if ($title == 'Manage Users') : echo ('active');
+                                                                else : echo ('text-body');
+                                                                endif; ?>">
                     <i class="bi bi-people me-2"></i>
                     User Management
                 </a>
             </li>
             <li>
-                <a href="/admin/analytics" class="nav-link <?php if($title == 'Analytics'): echo('active'); else: echo('text-body'); endif; ?>">
+                <a href="/admin/analytics" class="nav-link <?php if ($title == 'Analytics') : echo ('active');
+                                                            else : echo ('text-body');
+                                                            endif; ?>">
                     <i class="bi bi-graph-up me-2"></i>
                     Reports and Analytics
                 </a>
             </li>
             <li>
-                <a href="/admin/settings" class="nav-link <?php if($title == 'Settings'): echo('active'); else: echo('text-body'); endif; ?>">
+                <a href="/admin/settings" class="nav-link <?php if ($title == 'Settings') : echo ('active');
+                                                            else : echo ('text-body');
+                                                            endif; ?>">
                     <i class="bi bi-gear-wide-connected me-2"></i>
                     Settings
                 </a>

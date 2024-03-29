@@ -1,10 +1,6 @@
-<h3 class="lead fs-3"><?= $title ?></h3>
+<h3 class="lead fs-4"><?= $title ?></h3>
 <hr>
 <div class="p-5 bg-body-tertiary shadow rounded-3">
     <h3 class="text-body-emphasis mb-3">Hello Admin! 👋</h3>
     <p>Welcome to Passito! Begin gatepass request approvals now!</p>
-</div>
-<div class="p-5 mt-3 bg-body-tertiary shadow rounded-3">
-    <h3 class="text-body-emphasis mb-3">Description</h3>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde, exercitationem tempora quis harum eaque ea dolor dolore odit aut architecto error aspernatur fuga veniam facere at consectetur explicabo porro fugiat. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat cupiditate nisi totam numquam odio. Perspiciatis ea, eius ducimus, id eaque nostrum dolorem non expedita sapiente, necessitatibus delectus quibusdam aperiam nesciunt. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quis in eveniet nulla delectus? Facere culpa perferendis magni numquam, dicta voluptatum blanditiis quas tempora quibusdam sequi, ratione veniam ea quisquam dolores! Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere obcaecati temporibus cupiditate harum dignissimos eligendi cum vero maxime recusandae. Minima vitae dolore quibusdam ipsa aliquid earum nostrum nemo veritatis quas! Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum odio obcaecati tempore laudantium, similique optio in ut! Recusandae nam architecto sed officia ullam repellendus eveniet sit hic libero? Doloremque, totam? Lorem ipsum dolor sit amet consectetur adipisicing elit. Id blanditiis ipsam praesentium unde, voluptatum eum laudantium corporis! Nobis, quam nam nulla, dolorum molestias eaque architecto dolores saepe, dignissimos pariatur amet. Lorem, ipsum dolor sit amet consectetur adipisicing elit. Deleniti quis iusto ullam consequuntur magnam, excepturi ducimus tempore aliquam beatae recusandae perferendis debitis obcaecati! Ducimus laboriosam distinctio modi alias ipsum quasi!</p>
 </div>

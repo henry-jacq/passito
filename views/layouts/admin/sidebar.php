@@ -39,7 +39,7 @@
             </a>
         </li>
         <li>
-            <a href="#" class="nav-link text-body">
+            <a href="/admin/create/announcements" class="nav-link <?php if ($title == 'Announcements') : echo ('active'); else : echo ('text-body'); endif; ?>">
                 <i class="bi bi-megaphone me-2"></i>
                 Announcements
             </a>
@@ -47,7 +47,7 @@
         <li>
             <a href="/admin/settings" class="nav-link <?php if ($title == 'Settings') : echo ('active'); else : echo ('text-body'); endif; ?>">
                 <i class="bi bi-gear-wide-connected me-2"></i>
-                Passito Settings
+                Passito Tweaks
             </a>
         </li>
     </ul>

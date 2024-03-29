@@ -30,7 +30,7 @@ class AdminController extends Controller
         $args = [
             'title' => 'Manage Requests'
         ];
-        return $this->render($request, $response, 'admin/dashboard', $args, header: false);
+        return $this->render($request, $response, 'admin/requests', $args, header: false);
     }
 
     public function manageUsers(Request $request, Response $response): Response
@@ -51,12 +51,21 @@ class AdminController extends Controller
         return $this->render($request, $response, 'admin/dashboard', $args, header: false);
     }
 
+    public function announcements(Request $request, Response $response): Response
+    {
+
+        $args = [
+            'title' => 'Announcements'
+        ];
+        return $this->render($request, $response, 'admin/announcements', $args, header: false);
+    }
+    
     public function settings(Request $request, Response $response): Response
     {
 
         $args = [
             'title' => 'Settings'
         ];
-        return $this->render($request, $response, 'admin/dashboard', $args, header: false);
+        return $this->render($request, $response, 'admin/settings', $args, header: false);
     }
 }

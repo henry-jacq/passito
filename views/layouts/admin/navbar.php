@@ -1,6 +1,6 @@
-<nav class="navbar sticky-top border-bottom shadow shadow-bottom navbar-expand-md bg-body-tertiary px-2" aria-label="Passito admin navbar">
+<nav class="navbar sticky-top border-bottom shadow shadow-bottom navbar-expand-md bg-body px-2" aria-label="Passito admin navbar">
     <div class="container-fluid">
-        <a class="navbar-brand fs-4" href="/admin/dashboard">Passito</a>
+        <a class="navbar-brand link-body-emphasis fs-4" href="/admin/dashboard">Passito</a>
         <button class="btn sidebar-toggler me-auto ms-md-5 d-md-none">
             <i class="bi bi-list-nested"></i>
         </button>

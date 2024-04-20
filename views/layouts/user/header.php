@@ -9,16 +9,16 @@
             <div class="collapse navbar-collapse" id="studentNavbar">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/"><i class="bi bi-house-door-fill me-2"></i>Home</a>
+                        <a class="nav-link <?php if($title == 'Home'): echo('active'); endif; ?>" aria-current="page" href="/"><i class="bi bi-house-door-fill me-2"></i>Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="bi bi-file-text me-2"></i>Request</a>
+                        <a class="nav-link <?php if($title == 'Request'): echo('active'); endif; ?>" href="/request"><i class="bi bi-file-text me-2"></i>Request</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="bi bi-ui-checks me-2"></i>Status</a>
+                        <a class="nav-link <?php if($title == 'Status'): echo('active'); endif; ?>" href="#"><i class="bi bi-ui-checks me-2"></i>Status</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="bi bi-bell me-2"></i>Inbox</a>
+                        <a class="nav-link <?php if($title == 'Inbox'): echo('active'); endif; ?>" href="#"><i class="bi bi-bell me-2"></i>Inbox</a>
                     </li>
                     <li class="ms-lg-2 nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-person-circle"></i></a>

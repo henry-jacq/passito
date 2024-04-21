@@ -2,9 +2,15 @@
 <hr>
 <div class="row g-3">
     <!-- Recent Activities Widget -->
-    <div class="col-md-4 d-flex align-items-stretch">
+    <div class="col col-md-6 col-lg-4 d-flex align-items-stretch">
         <div class="p-3 border rounded bg-body-emphasis w-100">
-            <h5 class="lead fs-5 mb-3 text-wrap">Recent Activities</h5>
+            <h5 class="lead fs-5 mb-3 text-wrap">
+                <div class="d-none d-lg-inline">
+                    <i class="bi bi-activity me-2"></i>
+                </div>
+                Recent Activities
+            </h5>
+            <hr>
             <div class="list-group list-group-flush rounded">
                 <a href="#" class="list-group-item bg-transparent">
                     <strong>08/04/2024 - 12:30 PM</strong>
@@ -23,9 +29,15 @@
     </div>
 
     <!-- Upcoming Announcements Widget -->
-    <div class="col-md-4 d-flex align-items-stretch">
+    <div class="col col-md-6 col-lg-4 d-flex align-items-stretch">
         <div class="p-3 border rounded bg-body-emphasis w-100">
-            <h5 class="lead fs-5 mb-3 text-wrap">Announcements</h5>
+            <h5 class="lead fs-5 mb-3 text-break">
+                <div class="d-none d-lg-inline">
+                    <i class="bi bi-megaphone me-2"></i>
+                </div>
+                Announcements
+            </h5>
+            <hr>
             <div class="list-group list-group-flush rounded">
                 <a href="#" class="list-group-item bg-transparent">
                     <b>08/04/2024</b><br> Special bus for hostel students
@@ -40,9 +52,15 @@
         </div>
     </div>
     <!-- System Performance Widget -->
-    <div class="col-md-4 d-flex align-items-stretch">
+    <div class="col col-md-12 col-lg-4 d-flex align-items-stretch">
         <div class="p-3 border rounded bg-body-emphasis w-100">
-            <h5 class="lead fs-5 mb-3 text-wrap">System Performance</h5>
+            <h5 class="lead fs-5 mb-3 text-wrap">
+                <div class="d-none d-lg-inline">
+                    <i class="bi bi-bar-chart me-2"></i>
+                </div>
+                System Performance
+            </h5>
+            <hr>
             <div class="list-group list-group-flush rounded">
                 <a href="#" class="list-group-item bg-transparent">
                     <strong>Active Users:</strong> 150

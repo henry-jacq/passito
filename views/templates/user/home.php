@@ -1,10 +1,10 @@
-<div class="container my-5">
+<div class="my-5">
     <div class="p-5 bg-body-tertiary shadow rounded-3">
         <h3 class="text-body-emphasis mb-3">Hello Henry! 👋</h3>
         <p class="">Welcome to Passito, simplified gatepass manager. <br> Experience effortless gatepass approvals with Passito!</p>
     </div>
 </div>
-<div class="container my-5">
+<div class="my-5">
     <h3 class="fw-normal fs-4 mt-4">Summary</h3>
     <hr>
     <div class="row gap-4 mx-2">

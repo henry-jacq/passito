@@ -27,13 +27,11 @@ class Controller
     {
         $role = $request->getAttribute('role');
         
-        if ($role == "admin") {
-            $args['admin'] = true;
-        } else {
+        if ($role != "admin") {
             $args['header'] = $header;
             $args['footer'] = $footer;
         }
-
+        
         $response->getBody()->write(
             (string) $this->view
                 ->createPage($viewPath, $args)

@@ -25,12 +25,16 @@ class Controller
     
     public function render(Request $request, Response $response, string $viewPath, array $args, $header = true, $footer = false)
     {
-        $role = $request->getAttribute('role');
-        
-        if ($role != "admin") {
-            $args['header'] = $header;
+        // $role = $request->getAttribute('role');
+        $role = "admin";
+
+        if ($role == "admin") {
+            $args['role'] = $role;
+        } else {            $args['header'] = $header;
             $args['footer'] = $footer;
         }
+
+        // dd($args);
         
         $response->getBody()->write(
             (string) $this->view

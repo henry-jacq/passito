@@ -19,11 +19,11 @@ class Mailer
      * Initialize server settings
      */
     private function initServer()
-    {
+    {        
         // Enable verbose debug output
-        // if ((bool) $this->config->get('mail.debug')) {
-        $this->mailer->SMTPDebug = SMTP::DEBUG_SERVER;
-        // }
+        if ($this->config->get('mail.debug') == true) {
+            $this->mailer->SMTPDebug = SMTP::DEBUG_SERVER;
+        }
         
         // Send using SMTP
         $this->mailer->isSMTP();
@@ -32,7 +32,7 @@ class Mailer
         $this->mailer->Host = $this->config->get('mail.host');
 
         // TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
-        $this->mailer->Port = (int) $this->config->get('mail.port');
+        $this->mailer->Port = $this->config->get('mail.port');
 
         // Enable SMTP authentication
         $this->mailer->SMTPAuth = true;
@@ -47,7 +47,7 @@ class Mailer
         $this->mailer->setFrom($this->config->get('mail.from'));
 
         // Enable implicit TLS encryption
-        if ((int) $this->config->get('mail.port') == 587) {
+        if ($this->config->get('mail.port') == 587) {
             $this->mailer->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         } else {
             $this->mailer->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;

@@ -48,10 +48,10 @@
             </a>
         </li>
         <li class="nav-item">
-            <a href="#" class="nav-link rounded-4 text-body">
+            <a href="/admin/compose" class="nav-link rounded-4  <?php if ($title == 'Compose Mail') : echo ('active'); else : echo ('text-body'); endif; ?>">
                 <!-- <i class="bi bi-stickies me-2"></i> -->
                 <i class="bi bi-envelope-at me-2"></i>
-                Template Mail
+                Compose Mail
             </a>
         </li>
         <li class="nav-item">

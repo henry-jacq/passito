@@ -15,6 +15,7 @@ return function (App $app) {
         $group->any('/dashboard', [AdminController::class, 'dashboard']);
         $group->any('/manage/request', [AdminController::class, 'manageRequests']);
         $group->any('/manage/users', [AdminController::class, 'manageUsers']);
+        $group->any('/compose', [AdminController::class, 'composeMail']);
         $group->any('/analytics', [AdminController::class, 'analytics']);
         $group->any('/create/announcements', [AdminController::class, 'announcements']);
         $group->any('/settings', [AdminController::class, 'settings']);

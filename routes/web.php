@@ -1,6 +1,7 @@
 <?php
 
 use Slim\App;
+use App\Controller\ApiController;
 use App\Controller\AuthController;
 use App\Controller\HomeController;
 use App\Controller\AdminController;
@@ -19,5 +20,10 @@ return function (App $app) {
         $group->any('/analytics', [AdminController::class, 'analytics']);
         $group->any('/create/announcements', [AdminController::class, 'announcements']);
         $group->any('/settings', [AdminController::class, 'settings']);
+    });
+
+    // API Routes
+    $app->group('/api', function (RouteCollectorProxy $group) {
+        $group->any('/{namespace}/{resource}[/{params:.*}]', [ApiController::class, 'process']);
     });
 };

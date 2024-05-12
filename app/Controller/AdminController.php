@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Core\View;
 use App\Core\Controller;
+use App\Core\Mailer;
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -40,6 +42,15 @@ class AdminController extends Controller
             'title' => 'Manage Users'
         ];
         return $this->render($request, $response, 'admin/dashboard', $args, header: false);
+    }
+
+    public function composeMail(Request $request, Response $response): Response
+    {
+        $args = [
+            'title' => 'Compose Mail'
+        ];
+        
+        return $this->render($request, $response, 'admin/compose', $args, header: false);
     }
 
     public function analytics(Request $request, Response $response): Response

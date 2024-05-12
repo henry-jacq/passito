@@ -28,9 +28,13 @@ return [
         'user' => $_ENV['DB_USER'],
         'pass' => $_ENV['DB_PASS'],
     ],
-    'mailer' => [
-        'dsn' => $_ENV['MAILER_DSN'],
-        'from' => $_ENV['MAILER_FROM']
+    'mail' => [
+        'host' => $_ENV['SMTP_HOST'],
+        'user' => $_ENV['SMTP_USER'],
+        'pass' => $_ENV['SMTP_PASS'],
+        'from' => $_ENV['MAILER_FROM'],
+        'port' => $_ENV['SMTP_PORT'],
+        'debug' => $_ENV['SMTP_DEBUG']
     ],
     'session' => [
         'name'       => $appSnakeName . '_session',

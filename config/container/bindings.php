@@ -3,11 +3,14 @@
 use Slim\App;
 use App\Core\View;
 use App\Core\Config;
+use App\Core\Mailer;
 use App\Core\Request;
 use App\Core\Session;
 use function DI\create;
 use Slim\Factory\AppFactory;
 use App\Interfaces\SessionInterface;
+use DI\Container;
+use PHPMailer\PHPMailer\PHPMailer;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 
@@ -38,6 +41,13 @@ return [
     ResponseFactoryInterface::class => fn(App $app) => $app->getResponseFactory(),
     Request::class => function(ContainerInterface $container) {
         return new Request($container->get(SessionInterface::class));
+    },
+    Mailer::class => function (ContainerInterface $container) {
+        $phpMailer = new PHPMailer(true);
+        return new Mailer(
+            $phpMailer,
+            $container->get(Config::class)
+        );
     }
 ];
 

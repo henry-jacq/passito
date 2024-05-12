@@ -5,7 +5,8 @@
         "slim/psr7": "^1.6",
         "php-di/php-di": "^7.0",
         "nesbot/carbon": "^2.68",
-        "mongodb/mongodb": "^1.11"
+        "mongodb/mongodb": "^1.11",
+        "phpmailer/phpmailer": "^6.9"
     },
     "autoload": {
         "psr-4": {

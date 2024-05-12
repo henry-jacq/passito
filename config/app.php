@@ -33,8 +33,8 @@ return [
         'user' => $_ENV['SMTP_USER'],
         'pass' => $_ENV['SMTP_PASS'],
         'from' => $_ENV['MAILER_FROM'],
-        'port' => $_ENV['SMTP_PORT'],
-        'debug' => $_ENV['SMTP_DEBUG']
+        'port' => (int) $_ENV['SMTP_PORT'],
+        'debug' => $boolean($_ENV['SMTP_DEBUG'])
     ],
     'session' => [
         'name'       => $appSnakeName . '_session',

@@ -1,16 +1,17 @@
 <?php
 
 use Slim\App;
+use DI\Container;
 use App\Core\View;
 use App\Core\Config;
 use App\Core\Mailer;
 use App\Core\Request;
 use App\Core\Session;
+use App\Core\Database;
 use function DI\create;
 use Slim\Factory\AppFactory;
-use App\Interfaces\SessionInterface;
-use DI\Container;
 use PHPMailer\PHPMailer\PHPMailer;
+use App\Interfaces\SessionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 
@@ -32,6 +33,16 @@ return [
     Config::class => create(Config::class)->constructor(
         require CONFIG_PATH . '/app.php'
     ),
+    Database::class => function (ContainerInterface $container) {
+        $config = $container->get(Config::class)->get('db');
+        $pdo = new \PDO(
+            "{$config['driver']}:host={$config['host']};port={$config['port']};dbname={$config['dbname']}",
+            $config['user'],
+            $config['pass'],
+            [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]
+        );
+        return Database::getConnection($pdo);
+    },
     View::class => function(ContainerInterface $container){
         return new View($container->get(Config::class));
     },

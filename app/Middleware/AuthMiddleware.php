@@ -17,9 +17,15 @@ class AuthMiddleware implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         if (!empty($_SESSION['user'])) {
+            $location = "/";
+
+            if ($request->getAttribute('role') == 'admin') {
+                $location = "/admin/dashboard";
+            }
+            
             return $this->responseFactory
             ->createResponse(302)
-            ->withHeader('Location', '/');
+            ->withHeader('Location', $location);
         } else {
             $request->withAttribute('role', 'guest');
         }

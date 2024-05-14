@@ -24,6 +24,8 @@ class AdminMiddleware implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        $role = $request->getAttribute('role');
+        
         if (empty($_SESSION['user'])) {
             if ($request->getMethod() === 'GET' && !$this->requestService->isXhr($request)) {
                 $this->session->put('_redirect', (string) $request->getUri());
@@ -33,7 +35,7 @@ class AdminMiddleware implements MiddlewareInterface
             }
         } else {
             $user = $this->user->getUser();
-            $role = $user['username'] === 'admin' ? 'admin' : 'user';
+            $role = $user['role'] === 'admin' ? 'admin' : 'user';
             // $request = $request->withAttribute('role', $role);
             $request = $request->withAttribute('role', 'admin');
             $request = $request->withAttribute('userData', $user);

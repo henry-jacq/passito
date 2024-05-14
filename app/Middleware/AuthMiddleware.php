@@ -19,7 +19,9 @@ class AuthMiddleware implements MiddlewareInterface
         if (!empty($_SESSION['user'])) {
             return $this->responseFactory
             ->createResponse(302)
-            ->withHeader('Location', '/home');
+            ->withHeader('Location', '/');
+        } else {
+            $request->withAttribute('role', 'guest');
         }
         
         return $handler->handle($request);

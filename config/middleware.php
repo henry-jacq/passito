@@ -46,7 +46,7 @@ return function (App $app) {
         ->withHeader('Content-Type', 'application/json');
     };
 
-    // $app->add(SessionStartMiddleware::class);
+    $app->add(SessionStartMiddleware::class);
     $app->addRoutingMiddleware();
     $app->addBodyParsingMiddleware();
     $errorMiddleware = $app->addErrorMiddleware(

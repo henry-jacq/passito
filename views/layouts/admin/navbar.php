@@ -50,7 +50,7 @@
                 </div>
             </div>
         </div>
-        <a role="button" class="text-body-emphasis" href="#">
+        <a role="button" class="text-body-emphasis" href="/admin/logout">
             <i class="bi bi-box-arrow-left me-md-1"></i>
             <span class="d-none d-md-inline-block">Logout</span>
         </a>

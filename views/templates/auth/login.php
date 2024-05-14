@@ -5,7 +5,7 @@
                 <img src="/assets/brand/passito-logo.png" alt="logo" class="img-fluid mx-auto d-block mb-2" width="63" height="63">
                 <h4 class="fw-light text-center mb-4">Passito</h4>
                 <h5 class="fw-semi-bold mb-4">Login</h5>
-                <label for="user" class="form-label">Digital ID</label>
+                <label for="user" class="form-label">Email ID</label>
                 <input type="text" id="user" name="user" class="form-control mb-3 bg-transparent" required="">
                 <label for="pass" class="form-label">Password</label>
                 <div class="input-group mb-3">

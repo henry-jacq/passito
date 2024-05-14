@@ -27,7 +27,7 @@
                             <li><a class="dropdown-item" href="#"><i class="bi bi-pencil-square me-2"></i>Edit Profile</a></li>
                             <li><a class="dropdown-item" href="#"><i class="bi bi-clock-history me-2"></i>Outpass History</a></li>
                             <li class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-box-arrow-left me-2"></i>Logout</a></li>
+                            <li><a class="dropdown-item" href="/logout"><i class="bi bi-box-arrow-left me-2"></i>Logout</a></li>
                         </ul>
                     </li>
                 </ul>

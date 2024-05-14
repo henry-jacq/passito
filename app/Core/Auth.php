@@ -25,6 +25,22 @@ class Auth
      */
     public function login(array $credentials)
     {
+        $email = $credentials['user'];
+        $pass = $credentials['password'];
+
+        $result = $this->user->exists($email);
+        
+        if ($result !== false) {
+            if ($result['password'] !== $pass) {
+                return false;
+            }
+            // Do hashing
+            $this->session->put('user', $result['id']);
+            $this->user->id = $this->session->get('user');
+            return $result;
+        }
+
+        return false;
     }
 
     /**

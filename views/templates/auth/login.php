@@ -25,9 +25,9 @@
                         <a href="/forgot-password">Forgot password?</a>
                     </div>
                 </div>
-                <div class="d-grid gap-3">
+                <div class="d-grid my-4">
                     <button type="submit" class="btn btn-login text-body border-0 bg-prime bg-opacity-75 focus-ring focus-ring-prime">Login now!</button>
-                    <p class="text-center text-muted">Want to join Passito? <a href="/register">Register now</a>.</p>
+                    <!-- <p class="text-center text-muted">Want to join Passito? <a href="/register">Register now</a>.</p> -->
                 </div>
             </div>
         </form>

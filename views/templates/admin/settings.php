@@ -1,6 +1,16 @@
 <div class="row justify-content-center">
     <div class="col-md-10">
         <form>
+            <div class="mb-3">
+                <label for="addInstitution" class="form-label">Add Institution</label>
+                <hr>
+                <ul>
+                    <li>SSN</li>
+                    <li>SNU</li>
+                </ul>
+                <input type="text" class="form-control mb-3" id="addInstitution" name="newInstitution" placeholder="Institution Name" required="">
+                <button class="btn btn-prime">Add Institution</button>
+            </div>
             <h5 class="fw-normal">Notification Settings</h5>
             <hr class="mt-1">
             <div class="form-group mb-3">

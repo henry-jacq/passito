@@ -175,9 +175,9 @@ class ApiController
     /**
      * Get redirect URL
      */
-    public function getRedirect()
+    public function getRedirect($default = "/")
     {
-        $redirect = $this->session->get('_redirect', '/home');
+        $redirect = $this->session->get('_redirect', $default);
         $this->session->forget('_redirect');
         return $redirect;
     }

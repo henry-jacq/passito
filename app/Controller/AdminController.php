@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Core\Auth;
 use App\Core\View;
 use App\Core\Controller;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -10,6 +11,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 class AdminController extends Controller
 {
     public function __construct(
+        private readonly Auth $auth,
         private readonly View $view,
     ) {
         parent::__construct($view);
@@ -77,4 +79,11 @@ class AdminController extends Controller
         ];
         return $this->render($request, $response, 'admin/settings', $args, header: false);
     }
+
+    public function logout(Request $request, Response $response): Response
+    {
+        $this->auth->logout();
+        return $response->withHeader('Location', '/login')->withStatus(302);
+    }
+    
 }

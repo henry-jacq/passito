@@ -33,9 +33,13 @@ class AuthoriseMiddleware implements MiddlewareInterface
             }
         } else {
             $user = $this->user->getUser();
-            $role = $user['role'] === 'admin' ? 'admin' : 'user';
-            $request = $request->withAttribute('role', $role);
+            if ($user['role'] !== 'user') {
+                return $this->responseFactory
+                    ->createResponse(302)
+                    ->withHeader('Location', '/admin/dashboard');
+            }
             $request = $request->withAttribute('userData', $user);
+            $request = $request->withAttribute('role', $user['role']);
         }
 
         return $handler->handle($request);

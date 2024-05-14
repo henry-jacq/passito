@@ -18,17 +18,15 @@ class AuthMiddleware implements MiddlewareInterface
     {
         if (!empty($_SESSION['user'])) {
             $location = "/";
-
             if ($request->getAttribute('role') == 'admin') {
                 $location = "/admin/dashboard";
             }
-            
             return $this->responseFactory
             ->createResponse(302)
             ->withHeader('Location', $location);
-        } else {
-            $request->withAttribute('role', 'guest');
         }
+        
+        $request->withAttribute('role', 'guest');
         
         return $handler->handle($request);
     }

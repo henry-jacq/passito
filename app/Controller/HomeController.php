@@ -31,4 +31,11 @@ class HomeController extends Controller
         return $this->render($request, $response, 'user/request', $args, footer: true);
     }
 
+    public function status(Request $request, Response $response): Response
+    {
+        $args = [
+            'title' => 'Status'
+        ];
+        return $this->render($request, $response, 'user/status', $args, footer: true);
+    }
 }

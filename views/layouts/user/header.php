@@ -12,10 +12,10 @@
                         <a class="nav-link <?php if($title == 'Home'): echo('active'); endif; ?>" aria-current="page" href="/"><i class="bi bi-house-door-fill me-2"></i>Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?php if($title == 'Request'): echo('active'); endif; ?>" href="/request"><i class="bi bi-file-text me-2"></i>Request</a>
+                        <a class="nav-link <?php if($title == 'Request'): echo('active'); endif; ?>" href="/pass/request"><i class="bi bi-file-text me-2"></i>Request</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?php if($title == 'Status'): echo('active'); endif; ?>" href="#"><i class="bi bi-ui-checks me-2"></i>Status</a>
+                        <a class="nav-link <?php if($title == 'Status'): echo('active'); endif; ?>" href="/pass/status"><i class="bi bi-ui-checks me-2"></i>Status</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link <?php if($title == 'Inbox'): echo('active'); endif; ?>" href="#"><i class="bi bi-bell me-2"></i>Inbox</a>

@@ -4,11 +4,11 @@ use Slim\App;
 use App\Controller\ApiController;
 use App\Controller\AuthController;
 use App\Controller\HomeController;
+use App\Middleware\AuthMiddleware;
 use App\Controller\AdminController;
 use App\Middleware\AdminMiddleware;
-use App\Middleware\AuthMiddleware;
-use App\Middleware\AuthoriseMiddleware;
 use Slim\Routing\RouteCollectorProxy;
+use App\Middleware\AuthoriseMiddleware;
 
 return function (App $app) {
     $app->any('/login', [AuthController::class, 'login'])->add(AuthMiddleware::class);
@@ -16,7 +16,8 @@ return function (App $app) {
     
     $app->group('/', function(RouteCollectorProxy $group) {
         $group->any('', [HomeController::class, 'index']);
-        $group->any('request', [HomeController::class, 'request']);
+        $group->any('pass/request', [HomeController::class, 'request']);
+        $group->any('pass/status', [HomeController::class, 'status']);
     })->add(AuthoriseMiddleware::class);   
 
     $app->group('/admin', function(RouteCollectorProxy $group) {

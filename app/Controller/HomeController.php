@@ -38,4 +38,12 @@ class HomeController extends Controller
         ];
         return $this->render($request, $response, 'user/status', $args, footer: true);
     }
+
+    public function inbox(Request $request, Response $response): Response
+    {
+        $args = [
+            'title' => 'Inbox'
+        ];
+        return $this->render($request, $response, 'user/inbox', $args, footer: true);
+    }
 }

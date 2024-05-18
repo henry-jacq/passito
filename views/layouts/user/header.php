@@ -18,7 +18,7 @@
                         <a class="nav-link <?php if($title == 'Status'): echo('active'); endif; ?>" href="/pass/status"><i class="bi bi-ui-checks me-2"></i>Status</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?php if($title == 'Inbox'): echo('active'); endif; ?>" href="#"><i class="bi bi-bell me-2"></i>Inbox</a>
+                        <a class="nav-link <?php if($title == 'Inbox'): echo('active'); endif; ?>" href="/my/inbox"><i class="bi bi-bell me-2"></i>Inbox</a>
                     </li>
                     <li class="ms-lg-2 nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-person-circle"></i></a>

@@ -18,7 +18,8 @@ return function (App $app) {
         $group->any('', [HomeController::class, 'index']);
         $group->any('pass/request', [HomeController::class, 'request']);
         $group->any('pass/status', [HomeController::class, 'status']);
-    })->add(AuthoriseMiddleware::class);   
+        $group->any('my/inbox', [HomeController::class, 'inbox']);
+    })->add(AuthoriseMiddleware::class);
 
     $app->group('/admin', function(RouteCollectorProxy $group) {
         $group->any('/dashboard', [AdminController::class, 'dashboard']);

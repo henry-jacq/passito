@@ -7,6 +7,7 @@ use App\Core\Auth;
 use App\Core\View;
 use App\Core\Mailer;
 use App\Core\Session;
+use App\Model\Outpass;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -41,7 +42,8 @@ class ApiController
         private readonly Auth $auth,
         private readonly View $view,
         private readonly Session $session,
-        public readonly Mailer $mail
+        private readonly Mailer $mail,
+        private readonly Outpass $outpass
     )
     {
     }

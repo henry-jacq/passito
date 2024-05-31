@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Core\View;
+use App\Model\Outpass;
 use App\Core\Controller;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -11,6 +12,7 @@ class HomeController extends Controller
 {
     public function __construct(
         private readonly View $view,
+        private readonly Outpass $outpass
     ) {
         parent::__construct($view);
     }
@@ -24,7 +26,7 @@ class HomeController extends Controller
     }
 
     public function request(Request $request, Response $response): Response
-    {
+    {        
         $args = [
             'title' => 'Request'
         ];

@@ -82,12 +82,12 @@ class Database
         return $this->run($sql, $args)->fetchAll($fetchMode);
     }
 
-    public function getRowById($id, $fetchMode = null)
+    public function getRowById($id, $param = 'id', $fetchMode = null)
     {
         if ($fetchMode === null) {
             $fetchMode = $this->fetchMode;
         }
-        return $this->run("SELECT * FROM $this->table WHERE id = ?", [$id])->fetch($fetchMode);
+        return $this->run("SELECT * FROM $this->table WHERE $param = ?", [$id])->fetch($fetchMode);
     }
 
     public function getCount($sql, $args = [])

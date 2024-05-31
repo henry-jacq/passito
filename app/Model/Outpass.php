@@ -60,7 +60,7 @@ class Outpass
         if (!isset($this->id)) {
             $this->id = $this->session->get('user');
         }
-        return $this->db->getRowById($this->id);
+        return $this->db->getRowById($this->id, 'student_id');
     }
 
     public function getID()

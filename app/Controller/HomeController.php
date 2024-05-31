@@ -35,12 +35,28 @@ class HomeController extends Controller
 
     public function status(Request $request, Response $response): Response
     {
+        $data = $this->outpass->getOutpass();
+        
         $args = [
-            'title' => 'Status'
+            'title' => 'Status',
+            'data' => $data
         ];
+
         return $this->render($request, $response, 'user/status', $args, footer: true);
     }
 
+    public function details(Request $request, Response $response): Response
+    {
+        $data = $this->outpass->getOutpass();
+
+        $args = [
+            'title' => 'Status',
+            'data' => $data
+        ];
+
+        return $this->render($request, $response, 'user/details', $args, footer: true);
+    }
+    
     public function inbox(Request $request, Response $response): Response
     {
         $args = [

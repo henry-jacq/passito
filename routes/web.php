@@ -18,6 +18,7 @@ return function (App $app) {
         $group->any('', [HomeController::class, 'index']);
         $group->any('pass/request', [HomeController::class, 'request']);
         $group->any('pass/status', [HomeController::class, 'status']);
+        $group->any('pass/status/{id}', [HomeController::class, 'details']);
         $group->any('my/inbox', [HomeController::class, 'inbox']);
     })->add(AuthoriseMiddleware::class);
 

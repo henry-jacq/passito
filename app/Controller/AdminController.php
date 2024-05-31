@@ -41,7 +41,7 @@ class AdminController extends Controller
         $args = [
             'title' => 'Manage Users'
         ];
-        return $this->render($request, $response, 'admin/dashboard', $args, header: false);
+        return $this->render($request, $response, 'admin/manageuser', $args, header: false);
     }
 
     public function composeMail(Request $request, Response $response): Response

@@ -11,38 +11,38 @@
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label class="form-label"><strong>From Date:</strong></label>
-                    <p>2024-08-10</p>
+                    <p><?= $data['from_date'] ?></p>
                 </div>
                 <div class="col-md-6">
                     <label class="form-label"><strong>To Date:</strong></label>
-                    <p>2024-08-20</p>
+                    <p><?= $data['to_date'] ?></p>
                 </div>
             </div>
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label class="form-label"><strong>From Time:</strong></label>
-                    <p>08:00</p>
+                    <p><?= $data['from_time'] ?></p>
                 </div>
                 <div class="col-md-6">
                     <label class="form-label"><strong>To Time:</strong></label>
-                    <p>20:00</p>
+                    <p><?= $data['to_time'] ?></p>
                 </div>
             </div>
             <div class="mb-3">
                 <label class="form-label"><strong>Pass Type:</strong></label>
-                <p>Home</p>
+                <p><?= ucfirst($data['pass_type']) ?></p>
             </div>
             <div class="mb-3">
                 <label class="form-label"><strong>Destination:</strong></label>
-                <p>Chennai</p>
+                <p><?= ucfirst($data['destination']) ?></p>
             </div>
             <div class="mb-3">
                 <label class="form-label"><strong>Subject:</strong></label>
-                <p>To attend a function</p>
+                <p><?= ucfirst($data['subject']) ?></p>
             </div>
             <div class="mb-3">
                 <label class="form-label"><strong>Purpose:</strong></label>
-                <p>Sir, I'm going to my hometown to attend a function. So I need outpass!</p>
+                <p><?= ucfirst($data['purpose']) ?></p>
             </div>
             <div class="mb-3">
                 <label class="form-label"><strong>Attachments:</strong></label>
@@ -52,15 +52,21 @@
             </div>
             <div class="mb-3">
                 <label class="form-label"><strong>Status:</strong></label>
-                <p class="text-warning">Pending</p>
+                <p class="text-warning"><?= $data['status'] ?></p>
             </div>
             <div class="mb-3">
                 <label class="form-label"><strong>Warden Approval Time:</strong></label>
                 <p>-</p>
             </div>
             <div class="mb-3">
-                <label class="form-label"><strong>Warden Remarks:</strong></label>
-                <p>-</p>
+                <label class="form-label"><strong>Created on:</strong></label>
+                <p><?= $data['created_at'] ?></p>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">
+                    <strong>Warden Remarks:</strong>
+                </label>
+                <p>- <?= $data['remarks'] ?></p>
             </div>
         </div>
     </div>

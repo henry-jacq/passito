@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  passito-web:
+    build:
+      context: ./docker/web
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www/html
+    restart: always
+
+  passito-db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: passito
+      MYSQL_USER: myuser
+      MYSQL_PASSWORD: mypassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - passito_db_data:/var/lib/mysql  # Add this line for data persistence
+    restart: always
+
+  passito-adminer:
+    build: 
+      context: ./docker/adminer
+    ports:
+      - "8080:8080"
+    restart: always
+    
+volumes:
+  passito_db_data:  # Define the named volume

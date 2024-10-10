@@ -1,18 +1,18 @@
 <?php
 
 use Slim\App;
-use DI\Container;
 use App\Core\View;
 use App\Core\Config;
 use App\Core\Mailer;
 use App\Core\Request;
 use App\Core\Session;
-use App\Core\Database;
 use function DI\create;
+use Doctrine\ORM\ORMSetup;
 use Slim\Factory\AppFactory;
-use PHPMailer\PHPMailer\PHPMailer;
-use App\Interfaces\SessionInterface;
+use Doctrine\ORM\EntityManager;
+use Doctrine\DBAL\DriverManager;
 use Psr\Container\ContainerInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 
 return [
@@ -33,25 +33,29 @@ return [
     Config::class => create(Config::class)->constructor(
         require CONFIG_PATH . '/app.php'
     ),
-    Database::class => function (ContainerInterface $container) {
-        $config = $container->get(Config::class)->get('db');
-        $pdo = new \PDO(
-            "{$config['driver']}:host={$config['host']};port={$config['port']};dbname={$config['dbname']}",
-            $config['user'],
-            $config['pass'],
-            [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]
+    EntityManagerInterface::class => function (Config $config) {
+        $ormConfig = ORMSetup::createAttributeMetadataConfiguration(
+            $config->get('doctrine.entity_dir'),
+            $config->get('doctrine.dev_mode')
         );
-        return Database::getConnection($pdo);
-    },
-    View::class => function(ContainerInterface $container){
-        return new View($container->get(Config::class));
-    },
-    SessionInterface::class => function (ContainerInterface $container) {
-        return new Session($container->get(Config::class));
+
+        return new EntityManager(
+            DriverManager::getConnection($config->get('doctrine.connection'), $ormConfig),
+            $ormConfig
+        );
     },
     ResponseFactoryInterface::class => fn(App $app) => $app->getResponseFactory(),
     Request::class => function(ContainerInterface $container) {
-        return new Request($container->get(SessionInterface::class));
+        return new Request($container->get(Session::class));
+    },
+    View::class => function (ContainerInterface $container) {
+        return new View(
+            $container->get(Config::class),
+            $container->get(Session::class)
+        );
+    },
+    Session::class => function (ContainerInterface $container) {
+        return new Session($container->get(Config::class));
     },
     Mailer::class => function (ContainerInterface $container) {
         $phpMailer = new PHPMailer(true);

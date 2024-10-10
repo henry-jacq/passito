@@ -2,9 +2,9 @@
 
 namespace App\Middleware;
 
+use App\Entity\User;
 use App\Core\Request;
 use App\Core\Session;
-use App\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;

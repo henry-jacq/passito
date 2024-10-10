@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use DateTime;
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\EntityManagerInterface;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'outpasses')]
@@ -62,8 +63,14 @@ class Outpass
     #[ORM\Column(type: 'datetime', nullable: true)]
     private ?DateTime $updatedAt = null;
 
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager
+    )
+    {
+        $this->createdAt = new DateTime();
+    }
+    
     // Getters and Setters
-
     public function getId(): int
     {
         return $id;
@@ -232,5 +239,12 @@ class Outpass
     {
         $this->updatedAt = $updatedAt;
         return $this;
+    }
+
+    public function getOutpass()
+    {
+        return $this->entityManager
+            ->getRepository(Outpass::class)
+            ->findAll();
     }
 }

@@ -4,99 +4,105 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use Exception;
-use App\Core\Session;
-use App\Core\Database;
+use Doctrine\ORM\Mapping as ORM;
 
+#[ORM\Entity]
+#[ORM\Table(name: 'users')]
 class User
 {
-    public $id;
-    private $conn;
-    protected $length = 32;
-    protected $table = 'users';
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private int $id;
 
-    public function __construct(
-        private readonly Database $db,
-        private readonly Session $session,
-    ) {
-        $this->db->setTable($this->table);
+    #[ORM\Column(type: 'string', length: 64, unique: true)]
+    private string $email;
 
-        if (!$this->conn) {
-            $this->conn = $this->db->getDB();
-        }
-    }
+    #[ORM\Column(type: 'string', length: 256)]
+    private string $password;
 
-    public function create(array $data)
+    #[ORM\Column(type: 'string', columnDefinition: "ENUM('admin', 'user')")]
+    private string $role;
+
+    #[ORM\Column(type: 'datetime')]
+    private \DateTime $createdAt;
+
+    #[ORM\Column(type: 'datetime', nullable: true, onUpdate: "CURRENT_TIMESTAMP")]
+    private \DateTime $updatedAt;
+
+    public function __construct()
     {
-        try {
-            if ($result = $this->db->insert($data)) {
-                return $result;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
-        }
+        $this->createdAt = new \DateTime();
     }
-
-    /**
-     * Return user data if it exists in the DB
-     */
-    public function exists(string $data): array|bool
-    {
-        $query = "SELECT * FROM $this->table WHERE `email` = '{$data}'";
-
-        $result = $this->db->rows($query);
-
-        if (count($result) > 1) {
-            throw new Exception('Duplicate User Entry Found!');
-        }
-
-        return empty($result) ? false : $result[0];
-    }
-
-    public function getUser()
-    {
-        if (!isset($this->id)) {
-            $this->id = $this->session->get('user');
-        }
-        return $this->db->getRowById($this->id);
-    }
-
-    public function getID()
+    
+    public function getId()
     {
         return $this->id;
     }
 
-    public function getUserById(int $uid)
+    public function getEmail()
     {
-        return $this->db->run("SELECT * FROM auth WHERE id = ?", [$uid])->fetch();
+        return $this->email;
     }
 
-    public function getByEmail(string $email)
+    public function getPassword()
     {
-        $query = "SELECT * FROM $this->table WHERE `email` = ?'";
-
-        if ($this->validateEmail($email)) {
-            return $this->db->run($query, [$email]);
-        }
-
-        return false;
+        return $this->password;
     }
 
-    public function validateEmail(string $email)
+    public function getRole()
     {
-        return filterEmail($email);
+        return $this->role;
     }
 
-    /**
-     * Sanitize the username according to the app needs
-     */
-    public function validateUsername(string $username)
+    public function getCreatedAt()
     {
-        // Replace whitespace with underscore
-        $username = str_replace(' ', '_', trim($username));
+        return $this->createdAt;
+    }
 
-        return strtolower($username);
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
+
+    public function setPassword($password)
+    {
+        $this->password = $password;
+    }
+
+    public function setRole($role)
+    {
+        $this->role = $role;
+    }
+
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+    }
+
+    public function __toString()
+    {
+        return $this->email;
+    }
+
+    public function __toArray()
+    {
+        return [
+            'id' => $this->id,
+            'email' => $this->email,
+            'role' => $this->role,
+            'created_at' => $this->createdAt,
+            'updated_at' => $this->updatedAt
+        ];
     }
 }

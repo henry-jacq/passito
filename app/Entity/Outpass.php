@@ -4,68 +4,233 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use Exception;
-use App\Core\Session;
-use App\Core\Database;
+use Doctrine\ORM\Mapping as ORM;
+use DateTime;
 
+#[ORM\Entity]
+#[ORM\Table(name: 'outpasses')]
 class Outpass
 {
-    public $id;
-    private $conn;
-    protected $length = 32;
-    protected $table = 'outpass_requests';
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private int $id;
 
-    public function __construct(
-        private readonly Database $db,
-        private readonly Session $session,
-    ) {
-        $this->db->setTable($this->table);
+    #[ORM\ManyToOne(targetEntity: Student::class)]
+    #[ORM\JoinColumn(name: 'student_id', referencedColumnName: 'id')]
+    private Student $student;
 
-        if (!$this->conn) {
-            $this->conn = $this->db->getDB();
-        }
-    }
+    #[ORM\Column(type: 'date')]
+    private DateTime $fromDate;
 
-    public function create(array $data)
+    #[ORM\Column(type: 'date')]
+    private DateTime $toDate;
+
+    #[ORM\Column(type: 'time')]
+    private DateTime $fromTime;
+
+    #[ORM\Column(type: 'time')]
+    private DateTime $toTime;
+
+    #[ORM\Column(type: 'string', length: 64)]
+    private string $passType;
+
+    #[ORM\Column(type: 'string', length: 128)]
+    private string $destination;
+
+    #[ORM\Column(type: 'string', length: 256)]
+    private string $subject;
+
+    #[ORM\Column(type: 'text')]
+    private string $purpose;
+
+    #[ORM\Column(type: 'json', nullable: true)]
+    private array $attachments = [];
+
+    #[ORM\Column(type: 'string', length: 20)]
+    private string $status;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?DateTime $wardenApprovalTime = null;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $wardenRemarks = null;
+
+    #[ORM\Column(type: 'datetime')]
+    private DateTime $createdAt;
+
+    #[ORM\Column(type: 'datetime', nullable: true, onUpdate: "CURRENT_TIMESTAMP")]
+    private ?DateTime $updatedAt;
+
+    // Getters and Setters
+
+    public function getId(): int
     {
-        try {
-            if ($result = $this->db->insert($data)) {
-                return $result;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
-        }
+        return $id;
     }
 
-    /**
-     * Return user data if it exists in the DB
-     */
-    public function exists(string $data): array|bool
+    public function getStudent(): Student
     {
-        $query = "SELECT * FROM $this->table WHERE `email` = '{$data}'";
-
-        $result = $this->db->rows($query);
-
-        if (count($result) > 1) {
-            throw new Exception('Duplicate User Entry Found!');
-        }
-
-        return empty($result) ? false : $result[0];
+        return $this->student;
     }
 
-    public function getOutpass()
+    public function setStudent(Student $student): self
     {
-        if (!isset($this->id)) {
-            $this->id = $this->session->get('user');
-        }
-        return $this->db->getRowById($this->id, 'student_id');
+        $this->student = $student;
+        return $this;
     }
 
-    public function getID()
+    public function getFromDate(): DateTime
     {
-        return $this->id;
+        return $this->fromDate;
     }
-    
+
+    public function setFromDate(DateTime $fromDate): self
+    {
+        $this->fromDate = $fromDate;
+        return $this;
+    }
+
+    public function getToDate(): DateTime
+    {
+        return $this->toDate;
+    }
+
+    public function setToDate(DateTime $toDate): self
+    {
+        $this->toDate = $toDate;
+        return $this;
+    }
+
+    public function getFromTime(): DateTime
+    {
+        return $this->fromTime;
+    }
+
+    public function setFromTime(DateTime $fromTime): self
+    {
+        $this->fromTime = $fromTime;
+        return $this;
+    }
+
+    public function getToTime(): DateTime
+    {
+        return $this->toTime;
+    }
+
+    public function setToTime(DateTime $toTime): self
+    {
+        $this->toTime = $toTime;
+        return $this;
+    }
+
+    public function getPassType(): string
+    {
+        return $this->passType;
+    }
+
+    public function setPassType(string $passType): self
+    {
+        $this->passType = $passType;
+        return $this;
+    }
+
+    public function getDestination(): string
+    {
+        return $this->destination;
+    }
+
+    public function setDestination(string $destination): self
+    {
+        $this->destination = $destination;
+        return $this;
+    }
+
+    public function getSubject(): string
+    {
+        return $this->subject;
+    }
+
+    public function setSubject(string $subject): self
+    {
+        $this->subject = $subject;
+        return $this;
+    }
+
+    public function getPurpose(): string
+    {
+        return $this->purpose;
+    }
+
+    public function setPurpose(string $purpose): self
+    {
+        $this->purpose = $purpose;
+        return $this;
+    }
+
+    public function getAttachments(): array
+    {
+        return $this->attachments;
+    }
+
+    public function setAttachments(array $attachments): self
+    {
+        $this->attachments = $attachments;
+        return $this;
+    }
+
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): self
+    {
+        $this->status = $status;
+        return $this;
+    }
+
+    public function getWardenApprovalTime(): ?DateTime
+    {
+        return $this->wardenApprovalTime;
+    }
+
+    public function setWardenApprovalTime(?DateTime $wardenApprovalTime): self
+    {
+        $this->wardenApprovalTime = $wardenApprovalTime;
+        return $this;
+    }
+
+    public function getWardenRemarks(): ?string
+    {
+        return $this->wardenRemarks;
+    }
+
+    public function setWardenRemarks(?string $wardenRemarks): self
+    {
+        $this->wardenRemarks = $wardenRemarks;
+        return $this;
+    }
+
+    public function getCreatedAt(): DateTime
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(DateTime $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?DateTime
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?DateTime $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+        return $this;
+    }
 }

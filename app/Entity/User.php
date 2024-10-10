@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\Model;
+namespace App\Entity;
 
 use Exception;
 use App\Core\Session;
 use App\Core\Database;
 
-class Outpass
+class User
 {
     public $id;
     private $conn;
     protected $length = 32;
-    protected $table = 'outpass_requests';
+    protected $table = 'users';
 
     public function __construct(
         private readonly Database $db,
@@ -55,17 +55,48 @@ class Outpass
         return empty($result) ? false : $result[0];
     }
 
-    public function getOutpass()
+    public function getUser()
     {
         if (!isset($this->id)) {
             $this->id = $this->session->get('user');
         }
-        return $this->db->getRowById($this->id, 'student_id');
+        return $this->db->getRowById($this->id);
     }
 
     public function getID()
     {
         return $this->id;
     }
-    
+
+    public function getUserById(int $uid)
+    {
+        return $this->db->run("SELECT * FROM auth WHERE id = ?", [$uid])->fetch();
+    }
+
+    public function getByEmail(string $email)
+    {
+        $query = "SELECT * FROM $this->table WHERE `email` = ?'";
+
+        if ($this->validateEmail($email)) {
+            return $this->db->run($query, [$email]);
+        }
+
+        return false;
+    }
+
+    public function validateEmail(string $email)
+    {
+        return filterEmail($email);
+    }
+
+    /**
+     * Sanitize the username according to the app needs
+     */
+    public function validateUsername(string $username)
+    {
+        // Replace whitespace with underscore
+        $username = str_replace(' ', '_', trim($username));
+
+        return strtolower($username);
+    }
 }

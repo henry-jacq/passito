@@ -1,6 +1,7 @@
 <?php
 
 use Dotenv\Dotenv;
+use Slim\Factory\AppFactory;
 
 require 'vendor/autoload.php';
 require 'config/constants.php';
@@ -12,5 +13,16 @@ ini_set('log_errors_max_len', 0);
 ini_set('assert.exception', 1);
 ini_set('memory_limit', -1);
 
-$dotenv = Dotenv::createImmutable(APP_PATH);
+$dotenv = Dotenv::createImmutable(ROOT_PATH);
 $dotenv->load();
+
+$container      = require CONFIG_PATH . '/container/container.php';
+$addMiddlewares = require CONFIG_PATH . '/middleware.php';
+
+AppFactory::setContainer($container);
+
+$app = AppFactory::create();
+
+$addMiddlewares($app);
+
+return $app;

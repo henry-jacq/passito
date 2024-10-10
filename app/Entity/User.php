@@ -25,10 +25,10 @@ class User
     private string $role;
 
     #[ORM\Column(type: 'datetime')]
-    private \DateTime $createdAt;
+    private DateTime $createdAt;
 
-    #[ORM\Column(type: 'datetime', nullable: true, onUpdate: "CURRENT_TIMESTAMP")]
-    private \DateTime $updatedAt;
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?DateTime $updatedAt = null;
 
     public function __construct()
     {

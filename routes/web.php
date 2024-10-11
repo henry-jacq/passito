@@ -22,19 +22,6 @@ return function (App $app) {
         $group->any('pass/status/{id}', [HomeController::class, 'details']);
         $group->any('my/inbox', [HomeController::class, 'inbox']);
     });
-    // ->add(AuthoriseMiddleware::class);
-
-    $app->group('/admin', function(RouteCollectorProxy $group) {
-        $group->any('/dashboard', [AdminController::class, 'dashboard']);
-        $group->any('/manage/request', [AdminController::class, 'manageRequests']);
-        $group->any('/manage/users', [AdminController::class, 'manageUsers']);
-        $group->any('/compose', [AdminController::class, 'composeMail']);
-        $group->any('/analytics', [AdminController::class, 'analytics']);
-        $group->any('/create/announcements', [AdminController::class, 'announcements']);
-        $group->any('/settings', [AdminController::class, 'settings']);
-        $group->any('/logout', [AdminController::class, 'logout']);
-    });
-    // ->add(AdminMiddleware::class);
 
     // API Routes
     $app->group('/api', function (RouteCollectorProxy $group) {

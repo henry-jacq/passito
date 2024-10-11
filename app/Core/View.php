@@ -2,7 +2,6 @@
 
 namespace App\Core;
 
-use Exception;
 
 class View
 {
@@ -11,8 +10,6 @@ class View
     public string $appDesc;
     private mixed $resultView;
     private array $globals = [];
-    private string $headerBlock;
-    private string $footerBlock;
     private string $baseViewName;
     private string $contentsBlock;
     
@@ -22,8 +19,6 @@ class View
         $this->appName = $config->get('app.name');
         $this->appDesc = $config->get('app.desc');
         $this->baseViewName = $config->get('view.base_view');
-        $this->headerBlock = $config->get('view.placeholder.header');
-        $this->footerBlock = $config->get('view.placeholder.footer');
         $this->contentsBlock = $config->get('view.placeholder.contents');
     }
 
@@ -45,10 +40,7 @@ class View
             $layoutName = $layoutName . '.php';
         }
 
-        // Load layouts for either admin or user
-        $role = isset($role) && $role == "admin" ? 'admin' : 'user';
-
-        $path = VIEW_PATH . "/layouts/{$role}" . DIRECTORY_SEPARATOR . $layoutName;
+        $path = VIEW_PATH . "/layouts/" . $layoutName;
 
         if (file_exists($path)) {
             ob_start();
@@ -61,7 +53,7 @@ class View
     }
 
     /**
-     * Render components
+     * Generates the component view
      */
     public function renderComponent($component, $params = [])
     {
@@ -78,7 +70,7 @@ class View
             $$key = $value;
         }
 
-        $path = VIEW_PATH . DIRECTORY_SEPARATOR . "components" . DIRECTORY_SEPARATOR . $component;
+        $path = VIEW_PATH . '/components/' . $component;
 
         if (file_exists($path)) {
             include $path;
@@ -128,10 +120,14 @@ class View
         if (!str_contains($this->baseViewName ,'.php')) {
             $this->baseViewName = $this->baseViewName . '.php';
         }
+
+        if (!empty($params['title'])) {
+            $this->title = $params['title'];
+        }
+        
         $mainView = $this->renderLayout($this->baseViewName, $params);
         $templateView = $this->renderTemplate($view, $params);
         $this->resultView = str_replace($this->contentsBlock, $templateView, $mainView);
-        $this->pageFrame($params);
         return $this;
     }
 
@@ -163,40 +159,6 @@ class View
         }
 
         return [];
-    }
-
-    /**
-     * Render page with or without header and footer
-     * 
-     * It is a custom implementation, you can modify this to your needs.
-     */
-    public function pageFrame(array $params): View
-    {
-        if (null == $this->resultView) {
-            throw new Exception('Page is not rendered');
-        }
-
-        $baseView = $this->resultView;
-
-        $header = $params['header'] ?? false;
-        if ($header) {
-            $headerContent = $this->renderLayout('header', $params);
-            $baseView = str_replace($this->headerBlock, $headerContent, $baseView);
-        } else {
-            $baseView = str_replace($this->headerBlock, '', $baseView);
-        }
-
-        $footer = $params['footer'] ?? false;
-        if ($footer) {
-            $footerContent = $this->renderLayout('footer');
-            $baseView = str_replace($this->footerBlock, $footerContent, $baseView);
-        } else {
-            $baseView = str_replace($this->footerBlock, '', $baseView);
-        }
-
-        $this->resultView = $baseView;
-
-        return $this;
     }
 
     public function isAuthenticated()

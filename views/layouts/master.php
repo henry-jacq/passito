@@ -1,16 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="<?= $appTheme ?>">
+<html lang="en">
 
 <?php echo ($this->renderLayout('head', $params)); ?>
 
 <body>
 
-    <section class="container">
-        {{contents}}
-    </section>
+    {{contents}}
 
-    <?php echo ($this->renderComponent('modal', $params));
-    echo ($this->renderLayout('script', $params)); ?>
+    <?php echo ($this->renderLayout('script', $params)); ?>
     
 </body>
 

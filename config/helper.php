@@ -75,8 +75,16 @@ function dump($var)
     }
 }
 
-function hashtag(string $text)
-{
-    $filteredText = preg_replace('/#(\w+)/', '<a href="/discover/tags/$1">#$1</a>', $text);
-    return $filteredText;
+function vite_asset($path) {
+    // Check if Vite dev server is running
+    $devServer = @fsockopen('host.docker.internal', 5173);
+
+    if ($devServer) {
+        // Dev mode - point to Vite dev server on host
+        return "http://host.docker.internal:5173/" . $path;
+    } else {
+        // Prod mode - point to the built file in the public folder
+        return "/build/" . $path;
+    }
 }
+

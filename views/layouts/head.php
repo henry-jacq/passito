@@ -18,5 +18,5 @@
     <meta name="twitter:description" content="<?= $this->appName ?> is an easy-to-use web app for applying gatepass instantly.">
     <!-- <meta name="twitter:image" content="/assets/screenshot-2.png"> -->
     <link rel="shortcut icon" href="/assets/brand/favicon.ico">
-    <link rel="stylesheet" href="/dist/assets/main-BfibREyH.css">
+    <link rel="stylesheet" href="<?= vite_asset('style.css') ?>">
 </head>

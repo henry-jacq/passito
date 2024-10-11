@@ -5,7 +5,8 @@ services:
     build:
       context: ./docker/web
     ports:
-      - "8000:80"
+      - "8000:80"  # PHP app exposed to localhost:8000
+      - "5173:5173"  # Expose Vite's port to host machine
     volumes:
       - .:/var/www/html
     restart: always
@@ -24,11 +25,11 @@ services:
     restart: always
 
   passito-adminer:
-    build: 
+    build:
       context: ./docker/adminer
     ports:
       - "8080:8080"
     restart: always
-    
+
 volumes:
-  passito_db_data:  # Define the named volume
+  passito_db_data:

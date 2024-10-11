@@ -1,0 +1,30 @@
+{
+  "name": "Passito",
+  "version": "1.1.3",
+  "description": "Hostel gatepass management system.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npx vite --force --strictPort",
+    "build": "npx vite build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/henry-jacq/passito.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/henry-jacq/passito/issues"
+  },
+  "homepage": "https://github.com/henry-jacq/passito#readme",
+  "dependencies": {
+    "postcss": "^8.4.47",
+    "vite": "^5.4.8"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "tailwindcss": "^3.4.13",
+    "vite-plugin-live-reload": "^3.0.3"
+  }
+}

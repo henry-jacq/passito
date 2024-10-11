@@ -1,3 +1,3 @@
-<div class="bg-slate-700 text-black p-4">
-    <h3>Hello Henry!</h3>
+<div class="bg-blue-600 text-white p-4">
+    <h3>Hello All!</h3>
 </div>

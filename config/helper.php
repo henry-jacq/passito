@@ -76,15 +76,14 @@ function dump($var)
 }
 
 function vite_asset($path) {
-    // Check if Vite dev server is running
-    $devServer = @fsockopen('host.docker.internal', 5173);
+    // Check if Vite dev server is running inside Docker container on port 5173
+    $devServer = @fsockopen('localhost', 5173);
 
     if ($devServer) {
-        // Dev mode - point to Vite dev server on host
-        return "http://host.docker.internal:5173/" . $path;
+        // Dev mode - point to Vite dev server exposed on Windows host
+        return "http://localhost:5173/" . $path;
     } else {
         // Prod mode - point to the built file in the public folder
         return "/build/" . $path;
     }
 }
-

@@ -2,7 +2,6 @@
 
 namespace App\Core;
 
-
 class View
 {
     public string $title;
@@ -12,7 +11,7 @@ class View
     private array $globals = [];
     private string $baseViewName;
     private string $contentsBlock;
-    
+
     public function __construct(private readonly Config $config)
     {
         $this->title = $config->get('app.name');
@@ -23,9 +22,9 @@ class View
     }
 
     /**
-     * Render layout view
+     * Generates the layout view
      */
-    public function renderLayout(string $layoutName, array $params = [])
+    public function getLayout(string $layoutName, array $params = [])
     {
         foreach ($params as $key => $value) {
             $$key = $value;
@@ -35,7 +34,7 @@ class View
         foreach ($this->globals as $key => $value) {
             $$key = $value;
         }
-        
+
         if (!str_contains($layoutName, '.php')) {
             $layoutName = $layoutName . '.php';
         }
@@ -44,7 +43,7 @@ class View
 
         if (file_exists($path)) {
             ob_start();
-            include $path;
+            include_once $path;
             $contents = ob_get_clean();
             return $contents;
         } else {
@@ -108,7 +107,7 @@ class View
             }
             return $contents;
         } else {
-            return false;
+            throw new \Exception("Template not found: " . $template);
         }
     }
 
@@ -117,15 +116,15 @@ class View
      */
     public function createPage(string $view, $params = []): View
     {
-        if (!str_contains($this->baseViewName ,'.php')) {
+        if (!str_contains($this->baseViewName, '.php')) {
             $this->baseViewName = $this->baseViewName . '.php';
         }
 
         if (!empty($params['title'])) {
             $this->title = $params['title'];
         }
-        
-        $mainView = $this->renderLayout($this->baseViewName, $params);
+
+        $mainView = $this->getLayout($this->baseViewName, $params);
         $templateView = $this->renderTemplate($view, $params);
         $this->resultView = str_replace($this->contentsBlock, $templateView, $mainView);
         return $this;
@@ -169,5 +168,5 @@ class View
 
         return true;
     }
-    
+
 }

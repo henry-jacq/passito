@@ -53,11 +53,9 @@ return [
         'samesite'   => $_ENV['SESSION_SAME_SITE'] ?? 'lax',
     ],
     'view' => [
-        'base_view' => 'master.php',
+        'base_view' => 'user.php',
         'placeholder' => [
-            'header' => '{{header}}',
-            'contents' => '{{contents}}',
-            'footer' => '{{footer}}'
+            'contents' => '{{contents}}'
         ]
     ]
 ];

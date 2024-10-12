@@ -4,7 +4,7 @@
   "description": "Hostel gatepass management system.",
   "main": "index.js",
   "scripts": {
-    "dev": "npx vite --force --strictPort",
+    "dev": "npx vite",
     "build": "npx vite build"
   },
   "repository": {
@@ -19,6 +19,9 @@
   },
   "homepage": "https://github.com/henry-jacq/passito#readme",
   "dependencies": {
+    "@tailwindcss/aspect-ratio": "^0.4.2",
+    "@tailwindcss/forms": "^0.5.9",
+    "@tailwindcss/typography": "^0.5.15",
     "postcss": "^8.4.47",
     "vite": "^5.4.8"
   },

@@ -5,7 +5,7 @@
             <span class="display-4 d-block mb-3">Error</span>
             <div class="mb-4 lead px-sm-5">The page you are looking for was not found or other error occured.</div>
             <div class="d-grid col-sm-8 col-md-5 col-lg-3 mx-auto">
-                <a href="/" class="btn text-body border-0 text-decoration-none hvr-icon-back"><i class="fa fa-arrow-left me-2 hvr-icon"></i>Back to Photogram</a>
+                <a href="/" class="btn text-body border-0 text-decoration-none hvr-icon-back"><i class="fa fa-arrow-left me-2 hvr-icon"></i>Go Back</a>
             </div>
         </div>
     </div>

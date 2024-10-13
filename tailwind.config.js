@@ -17,30 +17,64 @@ module.exports = {
         warning: '#FBBF24',     // Warning yellow
         success: '#34D399',     // Success green
         danger: '#EF4444',      // Danger red
+        dark: '#1F2937',        // Dark gray for header/footer
+        lightAccent: '#D1FAE5', // Light version of accent green
       },
       boxShadow: {
         'inner-lg': 'inset 0 4px 6px rgba(0, 0, 0, 0.1)',   // Large inner shadow
         'glow': '0 4px 12px rgba(31, 41, 55, 0.25)',        // Glow shadow
+        'soft-xl': '0 8px 20px rgba(31, 41, 55, 0.1)',      // Softer shadow for elements
       },
       fontFamily: {
-        sans: ['Roboto', 'sans-serif'],    // Custom font family (Roboto)
+        sans: ['Roboto', 'sans-serif'],        // Default sans font
+        heading: ['Poppins', 'sans-serif'],    // For headings and titles
+        display: ['Merriweather', 'serif'],    // For display/important text
+        mono: ['Source Code Pro', 'monospace'],// Monospace for code
+      },
+      fontWeight: {
+        light: '300',
+        normal: '400',
+        medium: '500',
+        semibold: '600',
+        bold: '700',
+        extrabold: '800',
+      },
+      fontStyle: {
+        normal: 'normal',
+        italic: 'italic',
+      },
+      fontSize: {
+        'xs': '.75rem',      // Small text
+        'sm': '.875rem',     // Slightly bigger small text
+        'base': '1rem',      // Default size (16px)
+        'lg': '1.125rem',    // Larger text
+        'xl': '1.25rem',     // Extra large text
+        '2xl': '1.5rem',     // 2x larger text
+        '3xl': '1.875rem',   // 3x larger text
+        '4xl': '2.25rem',    // 4x larger text
+        '5xl': '3rem',       // 5x larger text
+        '6xl': '3.75rem',    // 6x larger text
       },
       spacing: {
         '18': '4.5rem',      // Custom spacing size
         '22': '5.5rem',
+        '72': '18rem',       // Extra large spacing for cards
+        '84': '21rem',
       },
       borderRadius: {
         'xl': '1.25rem',     // Custom large border radius
+        '2xl': '1.75rem',    // Even larger for cards or containers
       },
     },
   },
   plugins: [
-    require('@tailwindcss/forms'),      // Forms plugin
-    require('@tailwindcss/typography'), // Typography plugin
-    require('@tailwindcss/aspect-ratio'), // Aspect-ratio plugin
+    require('@tailwindcss/forms'),          // Forms plugin
+    require('@tailwindcss/typography'),     // Typography plugin
+    require('@tailwindcss/aspect-ratio'),   // Aspect-ratio plugin
   ],
   safelist: [
     'bg-primary', 'text-secondary', 'shadow-glow', // Include any dynamically generated classes to avoid purge
+    'font-heading', 'font-display',               // Safeguard for dynamic font classes
   ],
   corePlugins: {
     preflight: true, // Ensures base styles like reset.css are included

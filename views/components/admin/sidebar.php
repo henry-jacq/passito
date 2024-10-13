@@ -1,6 +1,5 @@
 <aside id="sidebar"
     class="fixed inset-y-0 left-0 w-64 bg-white border-r flex flex-col lg:translate-x-0 -translate-x-full transition-transform duration-300 ease-in-out z-40">
-    <!-- Flexbox for Sidebar Sections -->
     <nav class="flex flex-col h-full bg-white">
         <!-- Brand Section (Fixed) -->
         <div class="p-6 flex justify-center items-center border-b">
@@ -19,26 +18,60 @@
             <!-- Main Menu Category -->
             <h4 class="text-gray-600 px-2 mt-4 font-semibold uppercase text-xs">Main Menu</h4>
             <ul>
+                <!-- Dashboard Item -->
                 <li class="my-2">
                     <a href="#"
-                        class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-md transition duration-200 active:bg-gray-100">
+                        class="flex items-center px-4 py-3 bg-indigo-100 text-indigo-600 hover:bg-indigo-200 rounded-md transition duration-200">
                         <i class="fas fa-tachometer-alt mr-3"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
+
+                <!-- Additional Menu Items -->
                 <li class="my-2">
                     <a href="#"
-                        class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-md transition duration-200 active:bg-gray-100">
+                        class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-md transition duration-200">
                         <i class="fas fa-tasks mr-3"></i>
                         <span>Manage Requests</span>
                     </a>
                 </li>
-                <li class="my-2">
-                    <a href="#"
-                        class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-md transition duration-200 active:bg-gray-100">
-                        <i class="fas fa-users mr-3"></i>
-                        <span>User Management</span>
-                    </a>
+                
+                <!-- User Management with Nested Options -->
+                <li class="my-2 relative">
+                    <button id="userManagementToggle"
+                        class="flex justify-between items-center w-full px-4 py-3 text-gray-600 hover:bg-gray-50 active:bg-gray-100 rounded-md transition duration-200">
+                        <span class="flex items-center">
+                            <i class="fas fa-users mr-3"></i>
+                            <span>User Management</span>
+                        </span>
+                        <span id="userManagementArrow" class="transform transition-transform duration-300">
+                            <i class="fas fa-chevron-down"></i>
+                        </span>
+                    </button>
+
+                    <ul id="userManagementSubmenu" class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out pl-4 mt-2">
+                        <li class="relative">
+                            <a href="#"
+                                class="flex items-center ml-5 px-3 py-2 text-gray-600 hover:bg-gray-50 hover:text-indigo-600 rounded-md transition duration-200">
+                                <span>Add User</span>
+                            </a>
+                            <div class="absolute left-2 top-1/2 w-0.5 h-full bg-indigo-600 transform -translate-y-1/2"></div>
+                        </li>
+                        <li class="relative">
+                            <a href="#"
+                                class="flex items-center ml-5 px-3 py-2 text-gray-600 hover:bg-gray-50 hover:text-indigo-600 rounded-md transition duration-200">
+                                <span>Manage Roles</span>
+                            </a>
+                            <div class="absolute left-2 top-1/2 w-0.5 h-full bg-indigo-600 transform -translate-y-1/2"></div>
+                        </li>
+                        <li class="relative">
+                            <a href="#"
+                                class="flex items-center ml-5 px-3 py-2 text-gray-600 hover:bg-gray-50 hover:text-indigo-600 rounded-md transition duration-200">
+                                <span>View Users</span>
+                            </a>
+                            <div class="absolute left-2 top-1/2 w-0.5 h-full bg-indigo-600 transform -translate-y-1/2"></div>
+                        </li>
+                    </ul>
                 </li>
             </ul>
 
@@ -47,14 +80,14 @@
             <ul>
                 <li class="my-2">
                     <a href="#"
-                        class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-md transition duration-200 active:bg-gray-100">
+                        class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-md transition duration-200">
                         <i class="fas fa-chart-line mr-3"></i>
                         <span>Reports & Analytics</span>
                     </a>
                 </li>
                 <li class="my-2">
                     <a href="#"
-                        class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-md transition duration-200 active:bg-gray-100">
+                        class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-md transition duration-200">
                         <i class="fas fa-cog mr-3"></i>
                         <span>Settings</span>
                     </a>
@@ -73,3 +106,17 @@
         </div>
     </nav>
 </aside>
+
+<script>
+    // Toggle nested submenu for 'User Management'
+    const userManagementToggle = document.getElementById('userManagementToggle');
+    const userManagementSubmenu = document.getElementById('userManagementSubmenu');
+    const userManagementArrow = document.getElementById('userManagementArrow');
+
+    userManagementToggle.addEventListener('click', () => {
+        userManagementToggle.classList.toggle('bg-gray-100'); // Highlights the menu item
+        userManagementSubmenu.classList.toggle('max-h-0'); // Toggles max-height
+        userManagementSubmenu.classList.toggle('max-h-32'); // Set a max-height for transition
+        userManagementArrow.classList.toggle('rotate-180'); // Rotates the arrow
+    });
+</script>

@@ -66,8 +66,8 @@
 
             <!-- User Info Section (Fixed at Bottom) -->
             <div class="border-t p-4 flex items-center">
-                <img src="https://ui-avatars.com/api/?name=Henry&background=c7d2fe&color=3730a3&bold=true" alt="User Avatar"
-                    class="w-10 h-10 rounded-md">
+                <img src="https://ui-avatars.com/api/?name=Henry&background=c7d2fe&color=3730a3&bold=true"
+                    alt="User Avatar" class="w-10 h-10 rounded-md">
                 <div class="ml-3 truncate">
                     <h4 class="font-semibold text-gray-800">Henry</h4>
                     <span class="text-xs text-gray-500">henry2212023@gmail.com</span>
@@ -77,38 +77,42 @@
     </aside>
 
     <!-- Main Content -->
-    <div class="flex-1 lg:ml-64">
-        <header class="flex items-center justify-between p-5 bg-white border-b relative">
+    <div class="flex-1 flex flex-col lg:ml-64">
+        <header class="flex items-center justify-between p-5 bg-white border-b fixed top-0 left-0 w-full z-30">
             <!-- Breadcrumb -->
             <nav class="flex items-center space-x-2 text-gray-600">
-                <a href="#" class="hover:text-muted">Admin Panel</a>
+                <a href="#" class="hover:text-gray-500">Admin Panel</a>
                 <span>/</span>
-                <a href="#" class="hover:text-muted">Dashboard</a>
+                <a href="#" class="hover:text-gray-500">Dashboard</a>
             </nav>
 
             <!-- Actions -->
             <div class="flex items-center space-x-4">
                 <!-- Sidebar Toggle Button -->
-                <button id="sidebarToggle" class="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition duration-200 lg:hidden">
+                <button id="sidebarToggle"
+                    class="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition duration-200 lg:hidden">
                     <i class="fas fa-bars"></i>
                 </button>
 
                 <!-- Notification Button with Dropdown -->
                 <div class="relative">
-                    <button id="notificationButton" class="relative p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition duration-200">
+                    <button id="notificationButton"
+                        class="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition duration-200">
                         <i class="fas fa-bell"></i>
                         <span class="absolute top-0 right-0 w-2.5 h-2.5 bg-red-600 rounded-full"></span>
                     </button>
 
                     <!-- Improved Dropdown -->
-                    <div id="notificationDropdown" class="hidden absolute right-0 mt-2 w-80 bg-white border border-gray-100 rounded-lg shadow-lg overflow-hidden transition-all transform scale-95 opacity-0 origin-top-right ease-in-out z-50">
+                    <div id="notificationDropdown"
+                        class="hidden absolute right-0 mt-2 w-80 bg-white border border-gray-100 rounded-lg shadow-lg overflow-hidden transition-all transform scale-95 opacity-0 origin-top-right ease-in-out z-50">
                         <!-- Dropdown Header -->
                         <div class="p-4 bg-gray-100 font-semibold border-b text-gray-700">Notifications</div>
 
                         <!-- Notification List -->
                         <ul class="flex-1 p-2 space-y-2 bg-white">
                             <!-- Notification Item 1 - Unread -->
-                            <li class="flex items-center p-3 bg-white hover:bg-gray-50 rounded-lg shadow transition duration-200 cursor-pointer">
+                            <li
+                                class="flex items-center p-3 hover:bg-gray-50 rounded-lg shadow transition duration-200 cursor-pointer">
                                 <!-- Unread Indicator -->
                                 <span class="w-2 h-2 bg-blue-200 rounded-full mr-3"></span>
                                 <i class="fas fa-envelope text-blue-500 mr-3"></i>
@@ -118,7 +122,8 @@
                                 </div>
                             </li>
                             <!-- Notification Item 2 - Unread -->
-                            <li class="flex items-center p-3 bg-white hover:bg-gray-50 rounded-lg shadow transition duration-200 cursor-pointer">
+                            <li
+                                class="flex items-center p-3 hover:bg-gray-50 rounded-lg shadow transition duration-200 cursor-pointer">
                                 <!-- Unread Indicator -->
                                 <span class="w-2 h-2 bg-blue-200 rounded-full mr-3"></span>
                                 <i class="fas fa-exclamation-circle text-red-500 mr-3"></i>
@@ -128,7 +133,8 @@
                                 </div>
                             </li>
                             <!-- Notification Item 3 - Read -->
-                            <li class="flex items-center p-3 bg-gray-100 hover:bg-gray-50 rounded-lg shadow transition duration-200 cursor-pointer">
+                            <li
+                                class="flex items-center p-3 bg-gray-100 hover:bg-gray-50 rounded-lg shadow transition duration-200 cursor-pointer">
                                 <i class="fas fa-tasks text-green-500 mr-3"></i>
                                 <div>
                                     <p class="text-sm text-gray-800 font-medium">Request #105 has been approved.</p>
@@ -148,10 +154,8 @@
                 </button>
             </div>
         </header>
-
-
         <!-- Content Area -->
-        <main class="flex-1 p-6">
+        <main class="flex-1 p-6 mt-20 overflow-y-auto">
             <!-- Key Metrics -->
             <section>
                 <h3 class="text-xl font-semibold text-gray-700 mb-4">Dashboard</h3>
@@ -219,19 +223,22 @@
                     <ul class="divide-y divide-gray-200">
                         <li class="py-3 flex justify-between items-center">
                             <div>
-                                <p class="text-sm text-gray-600">New user <span class="font-semibold">John Doe</span> signed up.</p>
+                                <p class="text-sm text-gray-600">New user <span class="font-semibold">John Doe</span>
+                                    signed up.</p>
                             </div>
                             <p class="text-xs text-gray-400">5 min ago</p>
                         </li>
                         <li class="py-3 flex justify-between items-center">
                             <div>
-                                <p class="text-sm text-gray-600">Outpass Request <span class="font-semibold">#202</span> was approved.</p>
+                                <p class="text-sm text-gray-600">Outpass Request <span class="font-semibold">#202</span>
+                                    was approved.</p>
                             </div>
                             <p class="text-xs text-gray-400">30 min ago</p>
                         </li>
                         <li class="py-3 flex justify-between items-center">
                             <div>
-                                <p class="text-sm text-gray-600">Outpass Request <span class="font-semibold">#198</span> was rejected.</p>
+                                <p class="text-sm text-gray-600">Outpass Request <span class="font-semibold">#198</span>
+                                    was rejected.</p>
                             </div>
                             <p class="text-xs text-gray-400">1 hour ago</p>
                         </li>
@@ -268,11 +275,37 @@
     const sidebarToggle = document.getElementById('sidebarToggle');
     const notificationButton = document.getElementById('notificationButton');
     const notificationDropdown = document.getElementById('notificationDropdown');
+    const header = document.querySelector('header');
 
     // Toggle sidebar visibility on smaller screens
     sidebarToggle.addEventListener('click', () => {
         sidebar.classList.toggle('-translate-x-full');
+        adjustHeaderWidth();
     });
+
+    // Adjust header width and margin-left based on the window size
+    function adjustHeaderWidth() {
+        if (window.innerWidth >= 1024) {
+            header.style.marginLeft = '16rem';  // Matches lg:ml-64 (64 * 0.25rem = 16rem)
+            header.style.width = `calc(100% - 16rem)`;
+        } else {
+            header.style.marginLeft = '0';
+            header.style.width = '100%';
+        }
+    }
+
+    // Ensure the sidebar is visible on larger screens (if resized)
+    window.addEventListener('resize', () => {
+        if (window.innerWidth >= 1024) {
+            sidebar.classList.remove('-translate-x-full');
+        } else {
+            sidebar.classList.add('-translate-x-full');
+        }
+        adjustHeaderWidth();
+    });
+
+    // Call adjustHeaderWidth initially to set the correct state on page load
+    adjustHeaderWidth();
 
     // Toggle notification dropdown
     notificationButton.addEventListener('click', (event) => {
@@ -284,19 +317,12 @@
 
     // Close the dropdown when clicking outside
     window.addEventListener('click', (event) => {
-        if (!notificationDropdown.classList.contains('hidden') && !notificationDropdown.contains(event.target) && !notificationButton.contains(event.target)) {
+        if (!notificationDropdown.classList.contains('hidden') &&
+            !notificationDropdown.contains(event.target) &&
+            !notificationButton.contains(event.target)) {
             notificationDropdown.classList.add('hidden');
             notificationDropdown.classList.add('scale-95');
             notificationDropdown.classList.add('opacity-0');
-        }
-    });
-
-    // Ensure the sidebar is visible on larger screens (if resized)
-    window.addEventListener('resize', () => {
-        if (window.innerWidth >= 1024) {
-            sidebar.classList.remove('-translate-x-full');
-        } else {
-            sidebar.classList.add('-translate-x-full');
         }
     });
 </script>

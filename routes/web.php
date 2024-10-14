@@ -4,23 +4,18 @@ use Slim\App;
 use App\Controller\ApiController;
 use App\Controller\AuthController;
 use App\Controller\HomeController;
-use App\Middleware\AuthMiddleware;
-use App\Controller\AdminController;
-use App\Middleware\AdminMiddleware;
 use Slim\Routing\RouteCollectorProxy;
-use App\Middleware\AuthoriseMiddleware;
 
 return function (App $app) {
+    // Auth Routes
     $app->any('/login', [AuthController::class, 'login']);
-    // ->add(AuthMiddleware::class);
     $app->any('/logout', [AuthController::class, 'logout']);
-    
-    $app->group('/', function(RouteCollectorProxy $group) {
-        $group->any('', [HomeController::class, 'index']);
-        $group->any('pass/request', [HomeController::class, 'request']);
-        $group->any('pass/status', [HomeController::class, 'status']);
-        $group->any('pass/status/{id}', [HomeController::class, 'details']);
-        $group->any('my/inbox', [HomeController::class, 'inbox']);
+
+    // Admin Routes
+    $app->group('/admin', function (RouteCollectorProxy $group) {
+        $group->any('/dashboard', [HomeController::class, 'index'])->setName('admin.dashboard');
+        $group->any('/manage/requests', [HomeController::class, 'manageRequests'])->setName('admin.manage.requests');
+        $group->any('/manage/users', [HomeController::class, 'manageUsers'])->setName('admin.manage.users');
     });
 
     // API Routes

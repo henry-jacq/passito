@@ -2,6 +2,9 @@
 
 namespace App\Core;
 
+use FastRoute\Route;
+use Slim\Routing\RouteParser;
+
 class View
 {
     public string $title;
@@ -11,11 +14,24 @@ class View
     private array $globals = [];
     private string $baseViewName;
     private string $contentsBlock;
+    private RouteParser $router;
 
-    public function __construct(private readonly Config $config)
-    {
+    public function __construct(
+        private readonly Config $config,
+        private readonly Session $session,
+        RouteParser $router
+    ) {
+        $this->router = $router;
         $this->title = $config->get('app.name');
         $this->contentsBlock = $config->get('view.placeholder.contents');
+    }
+
+    /**
+     * Generates a URL for a given named route
+     */
+    public function urlFor(string $routeName, array $params = [], array $queryParams = []): string
+    {
+        return $this->router->urlFor($routeName, $params, $queryParams);
     }
 
     /**
@@ -114,7 +130,7 @@ class View
     public function createPage(string $view, $params = []): View
     {
         // Get the user role
-        $role = $_SESSION['role'] ?? 'user';
+        $role = $_SESSION['role'] ?? 'admin';
 
         // Get the layout config
         $layoutConfig = $this->config->get('view.layouts');

@@ -2,12 +2,12 @@
 
 namespace App\Core;
 
-use App\Interfaces\SessionInterface;
+use App\Core\Session;
 use Psr\Http\Message\ServerRequestInterface;
 
 class Request
 {
-    public function __construct(private readonly SessionInterface $session)
+    public function __construct(private readonly Session $session)
     {        
     }
     

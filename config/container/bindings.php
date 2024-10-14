@@ -6,16 +6,16 @@ use App\Core\Config;
 use App\Core\Mailer;
 use App\Core\Request;
 use App\Core\Session;
-use function DI\create;
 use Doctrine\ORM\ORMSetup;
 use Slim\Factory\AppFactory;
 use Doctrine\ORM\EntityManager;
 use Doctrine\DBAL\DriverManager;
 use PHPMailer\PHPMailer\PHPMailer;
 use Psr\Container\ContainerInterface;
-
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
+
+use function DI\create;
 
 return [
     App::class => function (ContainerInterface $container) {
@@ -48,7 +48,9 @@ return [
     },
     ResponseFactoryInterface::class => fn (App $app) => $app->getResponseFactory(),
     Request::class => function (ContainerInterface $container) {
-        return new Request($container->get(Session::class));
+        return new Request(
+            $container->get(Session::class)
+        );
     },
     View::class => function (ContainerInterface $container) {
         $app = $container->get(App::class);

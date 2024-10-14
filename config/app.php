@@ -53,7 +53,12 @@ return [
         'samesite'   => $_ENV['SESSION_SAME_SITE'] ?? 'lax',
     ],
     'view' => [
-        'base_view' => 'user.php',
+        'layouts' => [
+            'user' => 'user.php',
+            'admin' => 'admin.php',
+            'auth' => 'auth.php',
+            'error' => 'error.php'
+        ],
         'placeholder' => [
             'contents' => '{{contents}}'
         ]

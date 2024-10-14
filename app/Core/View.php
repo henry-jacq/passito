@@ -15,9 +15,6 @@ class View
     public function __construct(private readonly Config $config)
     {
         $this->title = $config->get('app.name');
-        $this->appName = $config->get('app.name');
-        $this->appDesc = $config->get('app.desc');
-        $this->baseViewName = $config->get('view.base_view');
         $this->contentsBlock = $config->get('view.placeholder.contents');
     }
 
@@ -116,6 +113,13 @@ class View
      */
     public function createPage(string $view, $params = []): View
     {
+        // Get the user role
+        $role = $_SESSION['role'] ?? 'user';
+
+        // Get the layout config
+        $layoutConfig = $this->config->get('view.layouts');
+        $this->baseViewName = $layoutConfig[$role] ?? $layoutConfig['user'];
+
         if (!str_contains($this->baseViewName, '.php')) {
             $this->baseViewName = $this->baseViewName . '.php';
         }

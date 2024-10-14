@@ -20,7 +20,7 @@
             <ul>
                 <!-- Dashboard Item -->
                 <li class="my-2">
-                    <a href="#"
+                    <a href="<?= $this->urlFor('admin.dashboard') ?>"
                         class="flex items-center px-4 py-3 bg-indigo-100 text-indigo-600 hover:bg-indigo-200 rounded-md transition duration-200">
                         <i class="fas fa-tachometer-alt mr-3"></i>
                         <span>Dashboard</span>
@@ -29,7 +29,7 @@
 
                 <!-- Additional Menu Items -->
                 <li class="my-2">
-                    <a href="#"
+                    <a href="<?= $this->urlFor('admin.manage.requests') ?>"
                         class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-md transition duration-200">
                         <i class="fas fa-tasks mr-3"></i>
                         <span>Manage Requests</span>

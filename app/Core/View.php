@@ -2,7 +2,6 @@
 
 namespace App\Core;
 
-use FastRoute\Route;
 use Slim\Routing\RouteParser;
 
 class View

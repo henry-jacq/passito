@@ -14,6 +14,6 @@ class HomeController extends BaseController
         $args = [
             'title' => 'Home'
         ];
-        return parent::render($request, $response, 'user/test', $args);
+        return parent::render($request, $response, 'user/home', $args);
     }
 }

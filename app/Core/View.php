@@ -38,11 +38,14 @@ class View
      */
     public function getLayout(string $layoutName, array $params = [])
     {
+        // Escape all string values in the data array
+        $safeParams = $this->escapeData($params);
+
         // Safely extract variables to avoid overwriting
-        extract($params, EXTR_SKIP);
+        extract($safeParams, EXTR_SKIP);
 
         // Inserting global variables
-        extract($this->globals, EXTR_SKIP);
+        extract($this->getGlobals(), EXTR_SKIP);
 
         if (!str_contains($layoutName, '.php')) {
             $layoutName = $layoutName . '.php';
@@ -65,11 +68,14 @@ class View
      */
     public function renderComponent($component, $params = [])
     {
+        // Escape all string values in the data array
+        $safeParams = $this->escapeData($params);
+
         // Safely extract variables to avoid overwriting
-        extract($params, EXTR_SKIP);
+        extract($safeParams, EXTR_SKIP);
 
         // Inserting global variables
-        extract($this->globals, EXTR_SKIP);
+        extract($this->getGlobals(), EXTR_SKIP);
 
         if (!str_contains($component, '.php')) {
             $component = $component . '.php';
@@ -89,11 +95,14 @@ class View
      */
     public function renderTemplate($template, $params = [])
     {
+        // Escape all string values in the data array
+        $safeParams = $this->escapeData($params);
+
         // Safely extract variables to avoid overwriting
-        extract($params, EXTR_SKIP);
+        extract($safeParams, EXTR_SKIP);
 
         // Inserting global variables
-        extract($this->globals, EXTR_SKIP);
+        extract($this->getGlobals(), EXTR_SKIP);
 
         if (!str_contains($template, '.php')) {
             $template = $template . '.php';
@@ -164,19 +173,39 @@ class View
     public function getGlobals(): array
     {
         if (null !== $this->globals) {
-            return $this->globals;
+            return $this->escapeData($this->globals);
         }
 
         return [];
     }
 
-    public function isAuthenticated()
+    public function isAuthenticated($key = 'user')
     {
-        if (empty($_SESSION['user'])) {
+        if (empty($_SESSION[$key])) {
             return false;
         }
 
         return true;
     }
 
+    /**
+     * Recursively escape all string values in the data array using htmlspecialchars.
+     *
+     * @param array $data
+     * @return array
+     */
+    private function escapeData(array $data): array
+    {
+        foreach ($data as $key => $value) {
+            if (is_string($value)) {
+                $data[$key] = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+            } elseif (is_array($value)) {
+                // Recursively apply htmlspecialchars to arrays
+                $data[$key] = $this->escapeData($value);
+            }
+            // Objects and other types are left unchanged
+        }
+
+        return $data;
+    }
 }

@@ -19,6 +19,7 @@ return [
         'name' => $_ENV['APP_NAME'] ?? 'Passito',
         'desc' => $_ENV['APP_DESC'] ?? '',
         'host' => $_ENV['APP_URL'] ?? 'http://passito.local',
+        'env' => $appEnv,
         'version' => $_ENV['APP_VERSION'] ?? '1.0',
         'display_error_details' => $boolean($_ENV['APP_DEBUG'] ?? 0),
         'log_errors' => true,

@@ -9,6 +9,7 @@ class AdminController extends BaseController
 {
     public function dashboard(Request $request, Response $response): Response
     {
+        $this->view->clearCacheIfDev();
         $args = [
             'title' => 'Dashboard',
         ];
@@ -17,6 +18,7 @@ class AdminController extends BaseController
 
     public function manageRequests(Request $request, Response $response): Response
     {
+        $this->view->clearCacheIfDev();
         $args = [
             'title' => 'Manage Requests',
         ];

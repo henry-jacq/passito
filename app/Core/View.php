@@ -15,6 +15,9 @@ class View
     private string $contentsBlock;
     private RouteParser $router;
 
+    // Cache for templates and components
+    private array $viewCache = [];
+
     public function __construct(
         private readonly Config $config,
         private readonly Session $session,
@@ -36,7 +39,7 @@ class View
     /**
      * Generates the layout view
      */
-    public function getLayout(string $layoutName, array $params = [])
+    public function renderLayout(string $layoutName, array $params = [])
     {
         // Escape all string values in the data array
         $safeParams = $this->escapeData($params);
@@ -55,8 +58,10 @@ class View
 
         if (file_exists($path)) {
             ob_start();
-            include_once $path;
+            include $path;
             $contents = ob_get_clean();
+            // Store in cache
+            $this->viewCache[$path] = $contents;
             return $contents;
         } else {
             return false;
@@ -66,7 +71,7 @@ class View
     /**
      * Generates the component view
      */
-    public function renderComponent($component, $params = [])
+    public function getComponent($component, $params = []): void
     {
         // Escape all string values in the data array
         $safeParams = $this->escapeData($params);
@@ -83,10 +88,21 @@ class View
 
         $path = VIEW_PATH . '/components/' . $component;
 
+        // Cache check
+        if (isset($this->viewCache[$path])) {
+            echo $this->viewCache[$path];  // Output cached component
+            return;
+        }
+
         if (file_exists($path)) {
+            ob_start();
             include $path;
+            $contents = ob_get_clean();
+            // Store in cache
+            $this->viewCache[$path] = $contents;
+            echo $contents;
         } else {
-            return false;
+            return;
         }
     }
 
@@ -110,13 +126,18 @@ class View
 
         $path = VIEW_PATH . "/templates/" . DIRECTORY_SEPARATOR . $template;
 
+        // Cache check
+        if (isset($this->viewCache[$path])) {
+            // Return cached template
+            return $this->viewCache[$path];
+        }
+
         if (file_exists($path)) {
             ob_start();
             include $path;
             $contents = ob_get_clean();
-            if (ob_get_length() > 0) {
-                ob_end_clean();
-            }
+            // Store in cache
+            $this->viewCache[$path] = $contents;
             return $contents;
         } else {
             throw new \Exception("Template not found: " . $template);
@@ -128,6 +149,9 @@ class View
      */
     public function createPage(string $view, $params = []): View
     {
+        // Clear previous resultView to avoid multiple render cycles
+        $this->resultView = null;
+
         // Get the user role
         $role = $_SESSION['role'] ?? 'admin';
 
@@ -143,7 +167,7 @@ class View
             $this->title = $params['title'];
         }
 
-        $mainView = $this->getLayout($this->baseViewName, $params);
+        $mainView = $this->renderLayout($this->baseViewName, $params);
         $templateView = $this->renderTemplate($view, $params);
         $this->resultView = str_replace($this->contentsBlock, $templateView, $mainView);
         return $this;
@@ -154,15 +178,17 @@ class View
      */
     public function render(): void
     {
-        echo($this->resultView);
+        echo $this->resultView;
+        // To handle multiple render cycles
+        $this->resultView = null;
     }
 
     /**
      * Add global variables
      */
-    public function addGlobals(string $key, $value): void
+    public function addGlobals(string $key, $value, bool $overwrite = false): void
     {
-        if (!array_key_exists($key, $this->globals)) {
+        if (!array_key_exists($key, $this->globals) || $overwrite) {
             $this->globals[$key] = $value;
         }
     }
@@ -179,9 +205,13 @@ class View
         return [];
     }
 
-    public function isAuthenticated($key = 'user')
+    public function isAuthenticated($key = 'user', $role = null): bool
     {
         if (empty($_SESSION[$key])) {
+            return false;
+        }
+
+        if ($role && $_SESSION[$key]['role'] !== $role) {
             return false;
         }
 
@@ -207,5 +237,17 @@ class View
         }
 
         return $data;
+    }
+
+    public function clearCache(): void
+    {
+        $this->viewCache = [];
+    }
+
+    public function clearCacheIfDev(): void
+    {
+        if ($this->config->get('app.env') === 'development') {
+            $this->clearCache();
+        }
     }
 }

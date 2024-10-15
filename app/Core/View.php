@@ -38,14 +38,11 @@ class View
      */
     public function getLayout(string $layoutName, array $params = [])
     {
-        foreach ($params as $key => $value) {
-            $$key = $value;
-        }
+        // Safely extract variables to avoid overwriting
+        extract($params, EXTR_SKIP);
 
         // Inserting global variables
-        foreach ($this->globals as $key => $value) {
-            $$key = $value;
-        }
+        extract($this->globals, EXTR_SKIP);
 
         if (!str_contains($layoutName, '.php')) {
             $layoutName = $layoutName . '.php';
@@ -68,17 +65,14 @@ class View
      */
     public function renderComponent($component, $params = [])
     {
-        foreach ($params as $key => $value) {
-            $$key = $value;
-        }
+        // Safely extract variables to avoid overwriting
+        extract($params, EXTR_SKIP);
+
+        // Inserting global variables
+        extract($this->globals, EXTR_SKIP);
 
         if (!str_contains($component, '.php')) {
             $component = $component . '.php';
-        }
-
-        // Inserting global variables
-        foreach ($this->globals as $key => $value) {
-            $$key = $value;
         }
 
         $path = VIEW_PATH . '/components/' . $component;
@@ -95,17 +89,14 @@ class View
      */
     public function renderTemplate($template, $params = [])
     {
-        foreach ($params as $key => $value) {
-            $$key = $value;
-        }
+        // Safely extract variables to avoid overwriting
+        extract($params, EXTR_SKIP);
+
+        // Inserting global variables
+        extract($this->globals, EXTR_SKIP);
 
         if (!str_contains($template, '.php')) {
             $template = $template . '.php';
-        }
-
-        // Inserting global variables
-        foreach ($this->globals as $key => $value) {
-            $$key = $value;
         }
 
         $path = VIEW_PATH . "/templates/" . DIRECTORY_SEPARATOR . $template;

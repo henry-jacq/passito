@@ -29,27 +29,27 @@
 
                 <!-- Outpass Manager Section (Nested Menu) -->
                 <li class="my-1 relative">
-                    <button class="flex justify-between items-center w-full px-4 py-3 text-gray-600 hover:bg-gray-50 active:bg-gray-100 rounded-md transition duration-200 btn-nested-toggle">
+                    <button class="flex justify-between items-center w-full px-4 py-3 text-gray-600 hover:bg-gray-50 active:bg-gray-100 rounded-md transition duration-200 btn-nested-toggle <?= (str_starts_with($routeName,'admin.outpass') ?'bg-gray-100':'') ?>">
                         <span class="flex items-center">
                             <i class="fas fa-list-check pr-4"></i>
                             <span>Outpass Manager</span>
                         </span>
-                        <span class="transform transition-transform duration-300 btn-nested-arrow">
+                        <span class="transform transition-transform duration-300 btn-nested-arrow <?= (str_starts_with($routeName,'admin.outpass') ?'rotate-180':'') ?>">
                             <i class="fas fa-chevron-down"></i>
                         </span>
                     </button>
 
-                    <ul class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out pl-4 nested-submenu">
+                    <ul class="<?= (str_starts_with($routeName,'admin.outpass') ?'max-h-32':'max-h-0') ?> overflow-hidden transition-all duration-300 ease-in-out pl-4 nested-submenu">
                         <li class="relative mt-2">
-                            <a href="#"
-                                class="flex items-center ml-5 px-3 py-2 text-gray-600 hover:bg-gray-50 hover:text-indigo-600 rounded-md transition duration-200">
+                            <a href="<?= $this->urlFor('admin.outpass.pending') ?>"
+                                class="flex items-center ml-5 px-3 py-2 <?= ($routeName == 'admin.outpass.pending') ? 'bg-indigo-100 text-indigo-600 hover:bg-indigo-200' : 'text-gray-600 hover:bg-gray-50'; ?> rounded-md transition duration-200">
                                 <span>Pending requests</span>
                             </a>
                             <div class="absolute left-2 top-1/2 w-0.5 h-full bg-indigo-600 transform -translate-y-1/2"></div>
                         </li>
                         <li class="relative">
-                            <a href="#"
-                                class="flex items-center ml-5 px-3 py-2 text-gray-600 hover:bg-gray-50 hover:text-indigo-600 rounded-md transition duration-200">
+                            <a href="<?= $this->urlFor('admin.outpass.records') ?>"
+                                class="flex items-center ml-5 px-3 py-2 <?= ($routeName == 'admin.outpass.records') ? 'bg-indigo-100 text-indigo-600 hover:bg-indigo-200' : 'text-gray-600 hover:bg-gray-50'; ?> rounded-md transition duration-200">
                                 <span>Outpass Records</span>
                             </a>
                             <div class="absolute left-2 top-1/2 w-0.5 h-full bg-indigo-600 transform -translate-y-1/2"></div>

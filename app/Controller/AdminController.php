@@ -27,6 +27,26 @@ class AdminController extends BaseController
         return parent::render($request, $response, 'admin/manage_requests', $args);
     }
 
+    public function pendingRequests(Request $request, Response $response): Response
+    {
+        $this->view->clearCacheIfDev();
+        $args = [
+            'title' => 'Pending Requests',
+            'routeName' => $this->getRouteName($request),
+        ];
+        return parent::render($request, $response, 'admin/pending_requests', $args);
+    }
+
+    public function outpassRecords(Request $request, Response $response): Response
+    {
+        $this->view->clearCacheIfDev();
+        $args = [
+            'title' => 'Outpass Records',
+            'routeName' => $this->getRouteName($request),
+        ];
+        return parent::render($request, $response, 'admin/outpass_records', $args);
+    }
+    
     public function settings(Request $request, Response $response): Response
     {
         $this->view->clearCacheIfDev();

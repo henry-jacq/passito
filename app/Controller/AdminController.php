@@ -26,4 +26,14 @@ class AdminController extends BaseController
         ];
         return parent::render($request, $response, 'admin/manage_requests', $args);
     }
+
+    public function settings(Request $request, Response $response): Response
+    {
+        $this->view->clearCacheIfDev();
+        $args = [
+            'title' => 'Settings',
+            'routeName' => $this->getRouteName($request),
+        ];
+        return parent::render($request, $response, 'admin/settings', $args);
+    }
 }

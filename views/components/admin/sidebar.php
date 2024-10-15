@@ -19,25 +19,24 @@
             <h4 class="text-gray-600 px-2 mt-4 font-semibold uppercase text-xs">Main Menu</h4>
             <ul>
                 <!-- Dashboard Item -->
-                <li class="my-2">
+                <li class="mt-2">
                     <a href="<?= $this->urlFor('admin.dashboard') ?>"
-                        class="flex items-center px-4 py-3 bg-indigo-100 text-indigo-600 hover:bg-indigo-200 rounded-md transition duration-200">
+                        class="flex items-center px-4 py-3 <?= ($routeName == 'admin.dashboard') ? 'bg-indigo-100 text-indigo-600 hover:bg-indigo-200' : 'text-gray-600 hover:bg-gray-50'; ?> rounded-md transition duration-200">
                         <i class="fas fa-tachometer-alt mr-3"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
-
                 <!-- Additional Menu Items -->
-                <li class="my-2">
+                <li class="my-1">
                     <a href="<?= $this->urlFor('admin.manage.requests') ?>"
-                        class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-md transition duration-200">
+                        class="flex items-center px-4 py-3 <?= ($routeName == 'admin.manage.requests') ? 'bg-indigo-100 text-indigo-600 hover:bg-indigo-200' : 'text-gray-600 hover:bg-gray-50'; ?> rounded-md transition duration-200">
                         <i class="fas fa-tasks mr-3"></i>
                         <span>Manage Requests</span>
                     </a>
                 </li>
                 
                 <!-- User Management with Nested Options -->
-                <li class="my-2 relative">
+                <li class="my-1 relative">
                     <button id="userManagementToggle"
                         class="flex justify-between items-center w-full px-4 py-3 text-gray-600 hover:bg-gray-50 active:bg-gray-100 rounded-md transition duration-200">
                         <span class="flex items-center">

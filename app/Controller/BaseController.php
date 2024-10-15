@@ -3,8 +3,9 @@
 namespace App\Controller;
 
 use App\Core\View;
-use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Psr7\Request;
+use Slim\Routing\RouteContext;
+use Psr\Http\Message\ResponseInterface as Response;
 
 class BaseController
 {
@@ -45,5 +46,13 @@ class BaseController
     public function addGlobals(string $key, string $value)
     {
         $this->view->addGlobals($key, $value);
+    }
+
+    protected function getRouteName(Request $request): string
+    {
+        $routeContext = RouteContext::fromRequest($request);
+        $route = $routeContext->getRoute();
+
+        return $route ? $route->getName() : 'unknown_route';
     }
 }

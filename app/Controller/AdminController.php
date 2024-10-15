@@ -12,6 +12,7 @@ class AdminController extends BaseController
         $this->view->clearCacheIfDev();
         $args = [
             'title' => 'Dashboard',
+            'routeName' => $this->getRouteName($request),
         ];
         return parent::render($request, $response, 'admin/dashboard', $args);
     }
@@ -21,6 +22,7 @@ class AdminController extends BaseController
         $this->view->clearCacheIfDev();
         $args = [
             'title' => 'Manage Requests',
+            'routeName' => $this->getRouteName($request),
         ];
         return parent::render($request, $response, 'admin/manage_requests', $args);
     }

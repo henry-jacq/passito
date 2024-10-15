@@ -33,12 +33,16 @@
 
     <div class="flex h-screen">
         <!-- Sidebar -->
-        <?php $this->getComponent('admin/sidebar') ?>
+        <?php $this->getComponent('admin/sidebar', [
+            'routeName' => $routeName
+        ]) ?>
         
         <!-- Contents Area -->
         <div class="flex-1 flex flex-col lg:ml-64">
             <!-- Admin header -->
-            <?php $this->getComponent('admin/header') ?>
+            <?php $this->getComponent('admin/header', [
+                'routeName' => $routeName
+            ]) ?>
             
             {{contents}}
 

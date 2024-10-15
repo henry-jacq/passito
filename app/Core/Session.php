@@ -26,13 +26,13 @@ class Session
             throw new RuntimeException('Headers have already sent by ' . $fileName . ':' . $line);
         }
 
-        // session_set_cookie_params(
-        //     [
-        //         'secure'   => $this->options['secure'],
-        //         'httponly' => $this->options['httponly'],
-        //         'samesite' => $this->options['samesite'],
-        //     ]
-        // );
+        session_set_cookie_params(
+            [
+                'secure'   => $this->options['secure'],
+                'httponly' => $this->options['httponly'],
+                'samesite' => $this->options['samesite'],
+            ]
+        );
 
         if (!empty($this->options['name'])) {
             session_name($this->options['name']);

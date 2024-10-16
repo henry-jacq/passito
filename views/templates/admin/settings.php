@@ -1,120 +1,144 @@
 <main class="flex-1 p-6 mt-20 overflow-y-auto">
-    <h2 class="text-2xl font-semibold text-gray-800">Settings</h2>
+    <h2 class="text-3xl font-semibold text-gray-900">Settings</h2>
 
     <!-- Profile Settings Section -->
-    <div class="mt-6">
-        <h3 class="text-lg font-semibold text-gray-700 mb-4">Profile Settings</h3>
-        <div class="bg-white p-4 rounded-lg shadow">
-            <div class="mb-4">
-                <label for="username" class="block text-gray-600">Username</label>
-                <input type="text" id="username" class="border rounded-md p-2 w-full text-gray-600" placeholder="Enter your username">
+    <div class="mt-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-6">Profile Settings</h3>
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <div>
+                    <label for="username" class="block text-gray-700 font-medium">Username</label>
+                    <input type="text" id="username" class="mt-2 border-gray-300 rounded-lg p-3 w-full text-gray-700 focus:ring-indigo-500" placeholder="Enter your username">
+                </div>
+                <div>
+                    <label for="email" class="block text-gray-700 font-medium">Email Address</label>
+                    <input type="email" id="email" class="mt-2 border-gray-300 rounded-lg p-3 w-full text-gray-700 focus:ring-indigo-500" placeholder="Enter your email">
+                </div>
             </div>
-            <div class="mb-4">
-                <label for="email" class="block text-gray-600">Email Address</label>
-                <input type="email" id="email" class="border rounded-md p-2 w-full text-gray-600" placeholder="Enter your email">
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2 mt-6">
+                <div>
+                    <label for="contact" class="block text-gray-700 font-medium">Contact Info</label>
+                    <input type="tel" id="contact" class="mt-2 border-gray-300 rounded-lg p-3 w-full text-gray-700 focus:ring-indigo-500" placeholder="Enter your contact number">
+                </div>
+                <div>
+                    <label for="password" class="block text-gray-700 font-medium">Password</label>
+                    <input type="password" id="password" class="mt-2 border-gray-300 rounded-lg p-3 w-full text-gray-700 focus:ring-indigo-500" placeholder="Enter your password">
+                </div>
             </div>
-            <div class="mb-4">
-                <label for="contact" class="block text-gray-600">Contact Info</label>
-                <input type="tel" id="contact" class="border rounded-md p-2 w-full text-gray-600" placeholder="Enter your contact number">
-            </div>
-            <div class="mb-4">
-                <label for="password" class="block text-gray-600">Password</label>
-                <input type="password" id="password" class="border rounded-md p-2 w-full text-gray-600" placeholder="Enter your password">
-            </div>
-            <button class="mt-4 bg-indigo-600 text-white rounded-md px-4 py-2 transition duration-200 hover:bg-indigo-700">
-                Update Profile
+            <button class="mt-6 bg-indigo-600 text-white rounded-md px-6 py-3 flex items-center justify-center space-x-2 hover:bg-indigo-700 transition duration-200">
+                <i class="fas fa-save"></i>
+                <span>Update Profile</span>
             </button>
         </div>
     </div>
 
+    <!-- Manage Institutions Section -->
+    <div class="mt-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-6">Manage Institutions</h3>
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <p class="text-gray-600 mb-4">Manage institutions associated with the hostel system:</p>
+            <div class="space-y-4">
+                <div>
+                    <label for="institution-name" class="block text-gray-700">Institution Name</label>
+                    <input type="text" id="institution-name" class="mt-2 border-gray-300 rounded-md p-2 w-full text-gray-700 focus:ring-indigo-500" placeholder="Enter institution name">
+                </div>
+                <div>
+                    <label for="institution-address" class="block text-gray-700">Institution Address</label>
+                    <input type="text" id="institution-address" class="mt-2 border-gray-300 rounded-md p-2 w-full text-gray-700 focus:ring-indigo-500" placeholder="Enter institution address">
+                </div>
+            </div>
+            <button class="mt-6 bg-indigo-600 text-white rounded-md px-6 py-3 hover:bg-indigo-700 transition duration-200">
+                Add Institution
+            </button>
+
+            <div class="mt-6">
+                <h4 class="text-sm font-semibold text-gray-700 mb-2">Current Institutions</h4>
+                <ul class="list-disc pl-4 text-gray-600">
+                    <li>Institution 1 - <span class="text-sm text-indigo-600 hover:underline cursor-pointer">Edit</span></li>
+                    <li>Institution 2 - <span class="text-sm text-indigo-600 hover:underline cursor-pointer">Edit</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manage Hostels Section -->
+    <div class="mt-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-6">Manage Hostels</h3>
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <p class="text-gray-600 mb-4">Manage hostels associated with the institutions:</p>
+            <div class="space-y-4">
+                <div>
+                    <label for="institution-hostel" class="block text-gray-700">Select Institution</label>
+                    <select id="institution-hostel" class="mt-2 border-gray-300 rounded-md p-2 w-full text-gray-700 focus:ring-indigo-500">
+                        <option value="">Select an institution</option>
+                        <option value="institution1">Institution 1</option>
+                        <option value="institution2">Institution 2</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="hostel-name" class="block text-gray-700">Hostel Name</label>
+                    <input type="text" id="hostel-name" class="mt-2 border-gray-300 rounded-md p-2 w-full text-gray-700 focus:ring-indigo-500" placeholder="Enter hostel name">
+                </div>
+            </div>
+            <button class="mt-6 bg-indigo-600 text-white rounded-md px-6 py-3 hover:bg-indigo-700 transition duration-200">
+                Add Hostel
+            </button>
+
+            <div class="mt-6">
+                <h4 class="text-sm font-semibold text-gray-700 mb-2">Current Hostels</h4>
+                <ul class="list-disc pl-4 text-gray-600">
+                    <li>Hostel 1 (Institution 1) - <span class="text-sm text-indigo-600 hover:underline cursor-pointer">Edit</span></li>
+                    <li>Hostel 2 (Institution 2) - <span class="text-sm text-indigo-600 hover:underline cursor-pointer">Edit</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
     <!-- Notification Preferences Section -->
-    <div class="mt-6">
-        <h3 class="text-lg font-semibold text-gray-700 mb-4">Notification Preferences</h3>
-        <div class="bg-white p-4 rounded-lg shadow">
-            <div class="flex items-center justify-between mb-4">
-                <label for="email-notifications" class="text-gray-600">Email Notifications</label>
-                <input type="checkbox" id="email-notifications" class="toggle-checkbox">
-            </div>
-            <div class="flex items-center justify-between mb-4">
-                <label for="sms-notifications" class="text-gray-600">SMS Notifications</label>
-                <input type="checkbox" id="sms-notifications" class="toggle-checkbox">
-            </div>
-            <div class="flex items-center justify-between mb-4">
-                <label for="push-notifications" class="text-gray-600">Push Notifications</label>
-                <input type="checkbox" id="push-notifications" class="toggle-checkbox">
+    <div class="mt-10">
+        <h3 class="text-xl font-semibold text-gray-800 mb-6">Notification Preferences</h3>
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <label for="email-notifications" class="text-gray-700">Email Notifications</label>
+                    <input type="checkbox" id="email-notifications" class="toggle-checkbox focus:ring-indigo-500">
+                </div>
+                <div class="flex items-center justify-between">
+                    <label for="sms-notifications" class="text-gray-700">SMS Notifications</label>
+                    <input type="checkbox" id="sms-notifications" class="toggle-checkbox focus:ring-indigo-500">
+                </div>
+                <div class="flex items-center justify-between">
+                    <label for="push-notifications" class="text-gray-700">Push Notifications</label>
+                    <input type="checkbox" id="push-notifications" class="toggle-checkbox focus:ring-indigo-500">
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Manage Devices Section -->
-    <div class="mt-6">
-        <h3 class="text-lg font-semibold text-gray-700 mb-4">Manage Devices</h3>
-        <div class="bg-white p-4 rounded-lg shadow">
-            <p class="text-gray-600">Currently logged in devices:</p>
-            <ul class="mt-2 text-gray-600">
+    <div class="mt-10">
+        <h3 class="text-xl font-semibold text-gray-800 mb-6">Manage Devices</h3>
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <p class="text-gray-700">Currently logged in devices:</p>
+            <ul class="mt-4 text-gray-600 space-y-2">
                 <li>Device 1 - Last active: 2024-10-10</li>
                 <li>Device 2 - Last active: 2024-10-12</li>
             </ul>
-            <button class="mt-4 text-indigo-600 hover:underline">Logout from all devices</button>
+            <button class="mt-6 text-indigo-600 font-medium hover:underline">
+                Logout from all devices
+            </button>
         </div>
     </div>
 
     <!-- Account Activity Log Section -->
-    <div class="mt-6">
-        <h3 class="text-lg font-semibold text-gray-700 mb-4">Account Activity Log</h3>
-        <div class="bg-white p-4 rounded-lg shadow">
-            <ul class="text-gray-600">
+    <div class="mt-10">
+        <h3 class="text-xl font-semibold text-gray-800 mb-6">Account Activity Log</h3>
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <ul class="text-gray-600 space-y-2">
                 <li>2024-10-10: Password changed</li>
                 <li>2024-10-11: Email updated</li>
                 <li>2024-10-12: Profile updated</li>
             </ul>
         </div>
     </div>
-
-    <!-- System Settings Section -->
-    <div class="mt-6">
-        <h3 class="text-lg font-semibold text-gray-700 mb-4">System Settings</h3>
-        <div class="bg-white p-4 rounded-lg shadow">
-            <div class="mb-4">
-                <label for="outpass-limit" class="block text-gray-600">Outpass Approval Limits</label>
-                <input type="number" id="outpass-limit" class="border rounded-md p-2 w-full text-gray-600" placeholder="Enter outpass approval limit">
-            </div>
-            <div class="mb-4">
-                <label for="auto-approval" class="block text-gray-600">Auto-Approvals</label>
-                <select id="auto-approval" class="border rounded-md p-2 text-gray-600">
-                    <option value="none">None</option>
-                    <option value="criteria1">Criteria 1</option>
-                    <option value="criteria2">Criteria 2</option>
-                </select>
-            </div>
-            <button class="mt-4 bg-indigo-600 text-white rounded-md px-4 py-2 transition duration-200 hover:bg-indigo-700">
-                Save System Settings
-            </button>
-        </div>
-    </div>
-
-    <!-- Hostel Block Settings Section -->
-    <div class="mt-6">
-        <h3 class="text-lg font-semibold text-gray-700 mb-4">Hostel Block Settings</h3>
-        <div class="bg-white p-4 rounded-lg shadow">
-            <p class="text-gray-600">Manage settings related to hostel blocks here.</p>
-            <button class="mt-4 bg-indigo-600 text-white rounded-md px-4 py-2 transition duration-200 hover:bg-indigo-700">
-                Manage Blocks
-            </button>
-        </div>
-    </div>
 </main>
-
-<script>
-    // Toggle switch styling (if necessary)
-    const toggles = document.querySelectorAll('.toggle-checkbox');
-    toggles.forEach(toggle => {
-        toggle.addEventListener('change', () => {
-            if (toggle.checked) {
-                toggle.parentElement.classList.add('bg-indigo-100');
-            } else {
-                toggle.parentElement.classList.remove('bg-indigo-100');
-            }
-        });
-    });
-</script>

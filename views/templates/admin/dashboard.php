@@ -3,7 +3,7 @@
     <!-- Key Metrics -->
     <section>
         <h3 class="text-xl font-semibold text-gray-700 mb-4">Dashboard</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Total Students -->
             <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition duration-200">
                 <h3 class="text-lg font-semibold text-gray-700">Total Students</h3>

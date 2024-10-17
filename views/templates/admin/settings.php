@@ -79,18 +79,30 @@
                     <label for="hostel-name" class="block text-gray-700">Hostel Name</label>
                     <input type="text" id="hostel-name" class="mt-2 border-gray-300 rounded-md p-2 w-full text-gray-700 focus:ring-indigo-500" placeholder="Enter hostel name">
                 </div>
+                <div>
+                    <label for="hostel-type" class="block text-gray-700">Hostel Type</label>
+                    <select id="hostel-type" class="mt-2 border-gray-300 rounded-md p-2 w-full text-gray-700 focus:ring-indigo-500">
+                        <option value="gents">Gents</option>
+                        <option value="ladies">Ladies</option>
+                    </select>
+                </div>
+
+                <!-- Ladies Hostel Security Options -->
+                <div id="ladies-hostel-security" class="hidden mt-6">
+                    <h4 class="text-md font-semibold text-gray-700 mb-2">Ladies Hostel Security</h4>
+                    <div class="flex items-center space-x-4">
+                        <input type="checkbox" id="verification-required" class="focus:ring-indigo-500">
+                        <label for="verification-required" class="text-gray-700">Require Security Verification for Outpass Issuance</label>
+                    </div>
+                    <div class="flex items-center space-x-4 mt-4">
+                        <input type="checkbox" id="outpass-limit" class="focus:ring-indigo-500">
+                        <label for="outpass-limit" class="text-gray-700">Limit Number of Active Outpasses</label>
+                    </div>
+                </div>
             </div>
             <button class="mt-6 bg-indigo-600 text-white rounded-md px-6 py-3 hover:bg-indigo-700 transition duration-200">
                 Add Hostel
             </button>
-
-            <div class="mt-6">
-                <h4 class="text-sm font-semibold text-gray-700 mb-2">Current Hostels</h4>
-                <ul class="list-disc pl-4 text-gray-600">
-                    <li>Hostel 1 (Institution 1) - <span class="text-sm text-indigo-600 hover:underline cursor-pointer">Edit</span></li>
-                    <li>Hostel 2 (Institution 2) - <span class="text-sm text-indigo-600 hover:underline cursor-pointer">Edit</span></li>
-                </ul>
-            </div>
         </div>
     </div>
 
@@ -134,11 +146,25 @@
     <div class="mt-10">
         <h3 class="text-xl font-semibold text-gray-800 mb-6">Account Activity Log</h3>
         <div class="bg-white p-6 rounded-lg shadow-md">
-            <ul class="text-gray-600 space-y-2">
-                <li>2024-10-10: Password changed</li>
-                <li>2024-10-11: Email updated</li>
-                <li>2024-10-12: Profile updated</li>
+            <p class="text-gray-700">Recent account activity:</p>
+            <ul class="mt-4 text-gray-600 space-y-2">
+                <li>Login - 2024-10-10 10:00 AM</li>
+                <li>Outpass approval - 2024-10-09 2:00 PM</li>
+                <li>Password update - 2024-10-08 11:30 AM</li>
             </ul>
         </div>
     </div>
+
 </main>
+
+<!-- Include the necessary script to toggle ladies hostel security section based on hostel type -->
+<script>
+    document.getElementById('hostel-type').addEventListener('change', function () {
+        const ladiesHostelSecurity = document.getElementById('ladies-hostel-security');
+        if (this.value === 'ladies') {
+            ladiesHostelSecurity.classList.remove('hidden');
+        } else {
+            ladiesHostelSecurity.classList.add('hidden');
+        }
+    });
+</script>

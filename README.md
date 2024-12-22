@@ -63,7 +63,7 @@ Follow these steps to set up Passito on your local machine:
 
 6. **Run Migrations** (if applicable):
    ```bash
-   php storylog.php migrations:migrate
+   php passito.php migrations:migrate
    ```
 
 7. **Start the Development Server**:

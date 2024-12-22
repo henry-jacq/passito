@@ -18,7 +18,8 @@
     <meta property="og:url" content="<?= $this->config->get('app.host') ?>">
     <meta property="og:type" content="website">
     <meta property="og:description" content="Join Passito for fast and efficient gatepass management. Create an account for instant approvals.">
-    
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#ffffff">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="<?= $this->config->get('app.name') ?> - <?= $this->config->get('app.desc') ?>">
     <meta name="twitter:description" content="Easily manage your gatepasses with Passito. Sign up today for a seamless experience.">
@@ -34,6 +35,7 @@
     {{contents}}
 
     <script type="module" src="<?= vite_asset('js/main.js') ?>"></script>
+    <script type="module" src="<?= vite_asset('js/common.js') ?>"></script>
 
 </body>
 

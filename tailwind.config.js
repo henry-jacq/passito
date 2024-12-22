@@ -8,17 +8,21 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: '#1E3A8A',     // Primary blue
-        secondary: '#4F46E5',   // Secondary indigo
-        accent: '#10B981',      // Accent green
-        muted: '#9CA3AF',       // Muted gray
-        lightGray: '#F3F4F6',   // Light gray for backgrounds
-        info: '#60A5FA',        // Info blue
-        warning: '#FBBF24',     // Warning yellow
-        success: '#34D399',     // Success green
-        danger: '#EF4444',      // Danger red
-        dark: '#1F2937',        // Dark gray for header/footer
-        lightAccent: '#D1FAE5', // Light version of accent green
+        primary: '#1E3A8A',         // Primary blue
+        secondary: '#4F46E5',       // Secondary indigo
+        accent: '#10B981',          // Accent green
+        muted: '#9CA3AF',           // Muted gray
+        lightGray: '#F3F4F6',       // Light gray for backgrounds
+        info: '#60A5FA',            // Info blue
+        warning: '#FBBF24',         // Warning yellow
+        success: '#34D399',         // Success green
+        danger: '#EF4444',          // Danger red
+        dark: '#1F2937',            // Dark gray for header/footer
+        lightAccent: '#D1FAE5',     // Light version of accent green
+        darkPrimary: '#1E293B',     // Dark mode primary
+        darkSecondary: '#64748B',   // Dark mode secondary
+        wardenPrimary: '#0EA5E9',   // Custom for wardens
+        superAdminPrimary: '#9333EA', // Custom for super-admin
       },
       boxShadow: {
         'inner-lg': 'inset 0 4px 6px rgba(0, 0, 0, 0.1)',   // Large inner shadow
@@ -39,10 +43,6 @@ module.exports = {
         bold: '700',
         extrabold: '800',
       },
-      fontStyle: {
-        normal: 'normal',
-        italic: 'italic',
-      },
       fontSize: {
         'xs': '.75rem',      // Small text
         'sm': '.875rem',     // Slightly bigger small text
@@ -60,10 +60,38 @@ module.exports = {
         '22': '5.5rem',
         '72': '18rem',       // Extra large spacing for cards
         '84': '21rem',
+        '88': '22rem',
+        '96': '24rem',
+        '104': '26rem',
       },
       borderRadius: {
         'xl': '1.25rem',     // Custom large border radius
         '2xl': '1.75rem',    // Even larger for cards or containers
+      },
+      animation: {
+        fadeIn: 'fadeIn 0.5s ease-in-out',
+        slideIn: 'slideIn 0.5s ease-out',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        slideIn: {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(0)' },
+        },
+      },
+      typography: {
+        admin: {
+          css: {
+            color: '#1E3A8A',
+            a: {
+              color: '#4F46E5',
+              '&:hover': { color: '#10B981' },
+            },
+          },
+        },
       },
     },
   },
@@ -71,10 +99,13 @@ module.exports = {
     require('@tailwindcss/forms'),          // Forms plugin
     require('@tailwindcss/typography'),     // Typography plugin
     require('@tailwindcss/aspect-ratio'),   // Aspect-ratio plugin
+    require('@tailwindcss/line-clamp'),     // Line clamp plugin for text truncation
   ],
   safelist: [
-    'bg-primary', 'text-secondary', 'shadow-glow', // Include any dynamically generated classes to avoid purge
-    'font-heading', 'font-display',               // Safeguard for dynamic font classes
+    'bg-primary', 'text-secondary', 'shadow-glow',      // Include dynamically generated classes
+    'font-heading', 'font-display',                    // Dynamic font classes
+    'bg-success', 'bg-danger', 'text-warning',         // State-specific colors
+    'border-accent', 'ring-info',                      // Borders and rings
   ],
   corePlugins: {
     preflight: true, // Ensures base styles like reset.css are included

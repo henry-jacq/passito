@@ -73,7 +73,7 @@ class Outpass
     // Getters and Setters
     public function getId(): int
     {
-        return $id;
+        return $this->id;
     }
 
     public function getStudent(): Student

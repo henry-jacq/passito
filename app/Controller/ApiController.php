@@ -7,7 +7,7 @@ use App\Core\Auth;
 use App\Core\View;
 use App\Core\Mailer;
 use App\Core\Session;
-use App\Model\Outpass;
+use App\Entity\Outpass;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;

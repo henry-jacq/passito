@@ -48,6 +48,16 @@ class AdminController extends BaseController
         return parent::render($request, $response, 'admin/outpass_records', $args);
     }
     
+    public function manageVerifiers(Request $request, Response $response): Response
+    {
+        $this->view->clearCacheIfDev();
+        $args = [
+            'title' => 'Manage Verifiers',
+            'routeName' => $this->getRouteName($request),
+        ];
+        return parent::render($request, $response, 'admin/verifiers', $args);
+    }
+    
     public function settings(Request $request, Response $response): Response
     {
         $this->view->clearCacheIfDev();

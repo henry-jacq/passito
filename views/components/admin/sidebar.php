@@ -87,6 +87,15 @@
                     </ul>
                 </li>
 
+                <!-- Verifiers -->
+                <li class="my-1">
+                    <a href="<?= $this->urlFor('admin.manage.verifiers')?>"
+                        class="flex items-center px-4 py-3 <?= ($routeName == 'admin.manage.verifiers') ? 'bg-indigo-100 text-indigo-600 hover:bg-indigo-200' : 'text-gray-600 hover:bg-gray-50'; ?> rounded-md transition duration-200">
+                        <i class="fas fa-qrcode pr-4"></i>
+                        <span>Manage Verifiers</span>
+                    </a>
+                </li>
+
                 <!-- Settings -->
                 <li class="my-1">
                     <a href="<?= $this->urlFor('admin.settings')?>"

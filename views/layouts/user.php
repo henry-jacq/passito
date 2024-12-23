@@ -35,7 +35,6 @@
     {{contents}}
 
     <script type="module" src="<?= vite_asset('js/main.js') ?>"></script>
-    <script type="module" src="<?= vite_asset('js/common.js') ?>"></script>
 
 </body>
 

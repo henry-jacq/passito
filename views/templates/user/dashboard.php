@@ -78,7 +78,7 @@
 </div>
 
 <!-- Include Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>W
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 	// Outpass Trends Chart
 	const ctx1 = document.getElementById('outpassTrendsChart').getContext('2d');

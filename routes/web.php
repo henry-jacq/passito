@@ -9,8 +9,9 @@ use Slim\Routing\RouteCollectorProxy;
 
 return function (App $app) {
     // Auth Routes
-    $app->any('/login', [AuthController::class, 'login']);
-    $app->any('/logout', [AuthController::class, 'logout']);
+    $app->group('/auth', function (RouteCollectorProxy $group) {
+        $group->any('/login', [AuthController::class, 'login'])->setName('login');
+    });
 
     // Student Routes
     $app->group('/student', function (RouteCollectorProxy $group) {
@@ -19,7 +20,7 @@ return function (App $app) {
         $group->any('/outpass/status', [StudentController::class, 'statusOutpass'])->setName('student.outpass.status');
         $group->any('/outpass/history', [StudentController::class, 'outpassHistory'])->setName('student.outpass.history');
         $group->any('/profile', [StudentController::class, 'profile'])->setName('student.profile');
-        $group->any('/logout', [StudentController::class, 'logout'])->setName('student.logout');
+        $group->any('/logout', [AuthController::class, 'logout'])->setName('student.logout');
     });
 
     // Admin Routes

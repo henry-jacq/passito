@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Core;
 
 use RuntimeException;
-use App\Interfaces\SessionInterface;
 
 class Session
 {
@@ -41,6 +40,11 @@ class Session
         if (!session_start()) {
             throw new RuntimeException('Unable to start the session');
         }
+    }
+
+    public function getSessionID(): string
+    {
+        return session_id();
     }
 
     public function save(): void

@@ -2,22 +2,16 @@
 
 namespace App\Core;
 
-use App\Model\User;
+use App\Entity\User;
 use App\Core\Session;
+use Doctrine\ORM\EntityManagerInterface;
 
 class Auth
 {
     public function __construct(
-        private readonly User $user,
+        private readonly EntityManagerInterface $em,
         private readonly Session $session,
     ) {
-    }
-
-    /**
-     * Register user
-     */
-    public function register(array $credentials)
-    {
     }
 
     /**
@@ -25,19 +19,15 @@ class Auth
      */
     public function login(array $credentials)
     {
-        $email = $credentials['user'];
+        $email = $credentials['email'];
         $pass = $credentials['password'];
 
-        $result = $this->user->exists($email);
-        
-        if ($result !== false) {
-            if ($result['password'] !== $pass) {
-                return false;
-            }
-            // Do hashing
-            $this->session->put('user', $result['id']);
-            $this->user->id = $this->session->get('user');
-            return $result;
+        $userRepository = $this->em->getRepository(User::class);
+        $user = $userRepository->findOneBy(['email' => $email]);
+
+        if ($user && password_verify($pass, $user->getPassword())) {
+            $this->session->put('user', $user->getId());
+            return $user;
         }
 
         return false;

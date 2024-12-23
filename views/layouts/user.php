@@ -34,7 +34,12 @@
 
     {{contents}}
 
-    <script type="module" src="<?= vite_asset('js/main.js') ?>"></script>
+    <?php
+    if ($this->isAuthenticated()): ?>
+        <script type="module" src="<?= vite_asset('js/main.js') ?>"></script>
+    <?php else: ?>
+        <script type="module" src="<?= vite_asset('js/auth.js') ?>"></script>
+    <?php endif; ?>
 
 </body>
 

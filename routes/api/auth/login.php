@@ -5,7 +5,7 @@ ${basename(__FILE__, '.php')} = function () {
         $result = $this->auth->login($this->data);
         
         if ($this->auth->login($this->data)) {
-            $path = "/";
+            $path = "/student/dashboard";
 
             if ($result['role'] === 'admin') {
                 $path = "/admin/dashboard";

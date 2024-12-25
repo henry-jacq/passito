@@ -8,9 +8,11 @@ use App\Controller\StudentController;
 use Slim\Routing\RouteCollectorProxy;
 
 return function (App $app) {
+    $app->get('/', [AuthController::class, 'landing'])->setName('landing');
+    
     // Auth Routes
     $app->group('/auth', function (RouteCollectorProxy $group) {
-        $group->any('/login', [AuthController::class, 'login'])->setName('login');
+        $group->any('/login', [AuthController::class, 'login'])->setName('auth.login');
     });
 
     // Student Routes

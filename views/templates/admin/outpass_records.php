@@ -4,8 +4,8 @@
     <!-- Search and Filter Section -->
     <div class="bg-white rounded-lg shadow p-6 mb-8">
         <!-- Row 1: Search Bar with Filter Button -->
-        <div class="flex items-center justify-between">
-            <div class="relative w-full">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+            <div class="relative flex-grow">
                 <input type="text" placeholder="Search by name or digital ID" class="border border-gray-300 rounded-lg p-2 pl-10 w-full text-gray-600 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 transition duration-200">
                 <span class="absolute left-3 top-2 text-gray-500">
                     <i class="fas fa-search"></i>
@@ -13,7 +13,7 @@
             </div>
 
             <!-- Filter Button -->
-            <button id="filter-button" class="ml-4 bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-600 focus:outline-none transition duration-200 flex items-center">
+            <button id="filter-button" class="bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-600 focus:outline-none transition duration-200 flex items-center">
                 <i class="fas fa-filter mr-1"></i>
                 <span>Filter</span>
             </button>
@@ -85,8 +85,8 @@
     </div>
 
     <!-- Records Table -->
-    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-        <table class="min-w-full divide-y divide-gray-200">
+    <div class="bg-white rounded-lg shadow-lg overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200 table-auto">
             <thead class="bg-gray-100">
                 <tr>
                     <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Student Name</th>
@@ -100,34 +100,34 @@
             <tbody class="bg-white divide-y divide-gray-200">
                 <!-- Record Row Example -->
                 <tr class="hover:bg-gray-50 transition duration-200">
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">John Doe</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">D12345</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Weekend Outpass</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">2024-10-12</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600 font-semibold">Approved</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <td class="px-6 py-4 whitespace-normal text-sm text-gray-700">John Doe</td>
+                    <td class="px-6 py-4 whitespace-normal text-sm text-gray-700">D12345</td>
+                    <td class="px-6 py-4 whitespace-normal text-sm text-gray-700">Weekend</td>
+                    <td class="px-6 py-4 whitespace-normal text-sm text-gray-700">2024-10-12</td>
+                    <td class="px-6 py-4 whitespace-normal text-sm text-green-600 font-semibold">Approved</td>
+                    <td class="px-6 py-4 whitespace-normal text-sm font-medium">
                         <button class="text-indigo-600 hover:text-indigo-900 transition duration-200"><i class="fas fa-eye mr-1"></i>View</button>
                         <button class="text-red-600 hover:text-red-900 transition duration-200 ml-4"><i class="fas fa-trash-alt mr-1"></i>Delete</button>
                     </td>
                 </tr>
                 <tr class="hover:bg-gray-50 transition duration-200">
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Jane Smith</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">D67890</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Emergency Outpass</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">2024-10-10</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-yellow-600 font-semibold">Pending</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <td class="px-6 py-4 whitespace-normal text-sm text-gray-700">Jane Smith</td>
+                    <td class="px-6 py-4 whitespace-normal text-sm text-gray-700">D67890</td>
+                    <td class="px-6 py-4 whitespace-normal text-sm text-gray-700">Emergency</td>
+                    <td class="px-6 py-4 whitespace-normal text-sm text-gray-700">2024-10-10</td>
+                    <td class="px-6 py-4 whitespace-normal text-sm text-yellow-600 font-semibold">Pending</td>
+                    <td class="px-6 py-4 whitespace-normal text-sm font-medium">
                         <button class="text-indigo-600 hover:text-indigo-900 transition duration-200"><i class="fas fa-eye mr-1"></i>View</button>
                         <button class="text-red-600 hover:text-red-900 transition duration-200 ml-4"><i class="fas fa-trash-alt mr-1"></i>Delete</button>
                     </td>
                 </tr>
                 <tr class="hover:bg-gray-50 transition duration-200">
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Alex Johnson</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">D11121</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Medical Outpass</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">2024-10-08</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-red-600 font-semibold">Rejected</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <td class="px-6 py-4 whitespace-normal text-sm text-gray-700">Alex Johnson</td>
+                    <td class="px-6 py-4 whitespace-normal text-sm text-gray-700">D11121</td>
+                    <td class="px-6 py-4 whitespace-normal text-sm text-gray-700">Medical</td>
+                    <td class="px-6 py-4 whitespace-normal text-sm text-gray-700">2024-10-08</td>
+                    <td class="px-6 py-4 whitespace-normal text-sm text-red-600 font-semibold">Rejected</td>
+                    <td class="px-6 py-4 whitespace-normal text-sm font-medium">
                         <button class="text-indigo-600 hover:text-indigo-900 transition duration-200"><i class="fas fa-eye mr-1"></i>View</button>
                         <button class="text-red-600 hover:text-red-900 transition duration-200 ml-4"><i class="fas fa-trash-alt mr-1"></i>Delete</button>
                     </td>

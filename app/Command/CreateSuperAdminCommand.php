@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Entity\User;
+use App\Enum\UserRole;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -53,7 +54,7 @@ class CreateSuperAdminCommand extends Command
         $user = new User();
         $user->setEmail($email);
         $user->setPassword(password_hash($password, PASSWORD_BCRYPT, ['cost' => 12])); // Secure password hashing
-        $user->setRole('super_admin');
+        $user->setRole(UserRole::SUPER_ADMIN->value);
         $user->setCreatedAt(new \DateTime());
 
         $this->entityManager->persist($user);

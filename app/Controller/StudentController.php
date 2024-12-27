@@ -10,6 +10,7 @@ class StudentController extends BaseController
     public function dashboard(Request $request, Response $response): Response
     {
         $_SESSION['role'] = 'student';
+        // $_SESSION['user'] = null;
         $args = [
             'title' => 'Dashboard',
             'routeName' => $this->getRouteName($request),
@@ -57,10 +58,4 @@ class StudentController extends BaseController
         return parent::render($request, $response, 'user/profile', $args);
     }
 
-    public function logout(Request $request, Response $response): Response
-    {
-        $_SESSION['role'] = 'student';
-        unset($_SESSION);
-        return $response->withHeader('Location', '/');
-    }
 }

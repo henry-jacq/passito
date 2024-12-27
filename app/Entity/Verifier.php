@@ -32,7 +32,7 @@ class Verifier
     private string $machineId;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private string $auth_token;
+    private string $authToken;
 
     #[ORM\Column(type: 'datetime')]
     private DateTime $lastSync;
@@ -72,7 +72,7 @@ class Verifier
 
     public function getAuthToken(): string
     {
-        return $this->auth_token;
+        return $this->authToken;
     }
 
     public function getLastSync(): DateTime
@@ -110,9 +110,9 @@ class Verifier
         $this->machineId = $machineId;
     }
 
-    public function setAuthToken(string $auth_token): void
+    public function setAuthToken(string $authToken): void
     {
-        $this->auth_token = $auth_token;
+        $this->authToken = $authToken;
     }
 
     public function setLastSync(DateTime $lastSync): void

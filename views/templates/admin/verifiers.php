@@ -3,8 +3,7 @@
         <!-- Page Heading -->
         <div class="flex items-center justify-between mb-8">
             <h2 class="text-3xl font-bold text-gray-800">Manage Verifiers</h2>
-            <button 
-                class="px-4 py-2 text-white bg-blue-600 rounded-lg shadow hover:bg-blue-700 focus:ring focus:ring-blue-400 focus:outline-none">
+            <button id="open-add-device-modal" class="px-4 py-2 text-white bg-blue-600 rounded-lg shadow hover:bg-blue-700 focus:ring focus:ring-blue-400 ">
                 Add New Device
             </button>
         </div>

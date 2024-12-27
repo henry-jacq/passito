@@ -50,7 +50,10 @@
         </div>
     </div>
 
-    <script type="module" src="<?= vite_asset('js/common.js') ?>"></script>
+    <!-- Modal Stub -->
+    <?php $this->getComponent('admin/modal', []) ?>
+
+    <script type="module" src="<?= vite_asset('js/admin.js') ?>"></script>
 
 </body>
 

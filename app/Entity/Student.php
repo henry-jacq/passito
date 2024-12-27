@@ -7,7 +7,6 @@ namespace App\Entity;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
-
 #[ORM\Entity]
 #[ORM\Table(name: 'students')]
 class Student
@@ -47,8 +46,110 @@ class Student
     private string $status;
 
     #[ORM\Column(type: 'datetime')]
-    private DateTime $createdAt;
-
-    #[ORM\Column(type: 'datetime')]
     private DateTime $updatedAt;
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+    }
+
+    public function getHostel(): Hostel
+    {
+        return $this->hostel;
+    }
+
+    public function setHostel(Hostel $hostel): void
+    {
+        $this->hostel = $hostel;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    public function getDigitalId(): int
+    {
+        return $this->digitalId;
+    }
+
+    public function setDigitalId(int $digitalId): void
+    {
+        $this->digitalId = $digitalId;
+    }
+
+    public function getYear(): int
+    {
+        return $this->year;
+    }
+
+    public function setYear(int $year): void
+    {
+        $this->year = $year;
+    }
+
+    public function getBranch(): string
+    {
+        return $this->branch;
+    }
+
+    public function setBranch(string $branch): void
+    {
+        $this->branch = $branch;
+    }
+
+    public function getRoomNo(): string
+    {
+        return $this->roomNo;
+    }
+
+    public function setRoomNo(string $roomNo): void
+    {
+        $this->roomNo = $roomNo;
+    }
+
+    public function getParentNo(): string
+    {
+        return $this->parentNo;
+    }
+
+    public function setParentNo(string $parentNo): void
+    {
+        $this->parentNo = $parentNo;
+    }
+
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): void
+    {
+        $this->status = $status;
+    }
+
+    public function getUpdatedAt(): DateTime
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(DateTime $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
+    }
 }

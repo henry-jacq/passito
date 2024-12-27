@@ -7,7 +7,6 @@ namespace App\Entity;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
-
 #[ORM\Entity]
 #[ORM\Table(name: 'verifier_logs')]
 class VerifierLog
@@ -33,4 +32,60 @@ class VerifierLog
 
     #[ORM\Column(type: 'datetime')]
     private DateTime $timestamp;
+
+    public function getLogId(): int
+    {
+        return $this->logId;
+    }
+
+    public function getVerifier(): Verifier
+    {
+        return $this->verifier;
+    }
+
+    public function setVerifier(Verifier $verifier): void
+    {
+        $this->verifier = $verifier;
+    }
+
+    public function getOutpass(): OutpassRequest
+    {
+        return $this->outpass;
+    }
+
+    public function setOutpass(OutpassRequest $outpass): void
+    {
+        $this->outpass = $outpass;
+    }
+
+    public function getInTime(): DateTime
+    {
+        return $this->inTime;
+    }
+
+    public function setInTime(DateTime $inTime): void
+    {
+        $this->inTime = $inTime;
+    }
+
+    public function getOutTime(): DateTime
+    {
+        return $this->outTime;
+    }
+
+    public function setOutTime(DateTime $outTime): void
+    {
+        $this->outTime = $outTime;
+    }
+
+    public function getTimestamp(): DateTime
+    {
+        return $this->timestamp;
+    }
+
+    public function setTimestamp(DateTime $timestamp): void
+    {
+        $this->timestamp = $timestamp;
+    }
 }
+

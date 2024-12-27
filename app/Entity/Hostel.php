@@ -29,4 +29,49 @@ class Hostel
 
     #[ORM\Column(type: 'string', length: 255)]
     private string $hostelType;
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getInstitution(): Institution
+    {
+        return $this->institution;
+    }
+
+    public function setInstitution(Institution $institution): void
+    {
+        $this->institution = $institution;
+    }
+
+    public function getWarden(): Warden
+    {
+        return $this->warden;
+    }
+
+    public function setWarden(Warden $warden): void
+    {
+        $this->warden = $warden;
+    }
+
+    public function getHostelName(): string
+    {
+        return $this->hostelName;
+    }
+
+    public function setHostelName(string $hostelName): void
+    {
+        $this->hostelName = $hostelName;
+    }
+
+    public function getHostelType(): string
+    {
+        return $this->hostelType;
+    }
+
+    public function setHostelType(string $hostelType): void
+    {
+        $this->hostelType = $hostelType;
+    }
 }

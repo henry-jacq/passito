@@ -39,9 +39,6 @@ class OutpassRequest
     private string $destination;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private string $subject;
-
-    #[ORM\Column(type: 'string', length: 255)]
     private string $purpose;
 
     #[ORM\Column(type: 'json', nullable: true)]
@@ -62,4 +59,149 @@ class OutpassRequest
 
     #[ORM\Column(type: 'datetime')]
     private DateTime $createdAt;
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getStudent(): Student
+    {
+        return $this->student;
+    }
+
+    public function getFromDate(): DateTime
+    {
+        return $this->fromDate;
+    }
+
+    public function getToDate(): DateTime
+    {
+        return $this->toDate;
+    }
+
+    public function getFromTime(): DateTime
+    {
+        return $this->fromTime;
+    }
+
+    public function getToTime(): DateTime
+    {
+        return $this->toTime;
+    }
+
+    public function getPassType(): string
+    {
+        return $this->passType;
+    }
+
+    public function getDestination(): string
+    {
+        return $this->destination;
+    }
+
+    public function getPurpose(): string
+    {
+        return $this->purpose;
+    }
+
+    public function getAttachments(): ?array
+    {
+        return $this->attachments;
+    }
+
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
+    public function getRemarks(): ?string
+    {
+        return $this->remarks;
+    }
+
+    public function getApprovedBy(): ?Warden
+    {
+        return $this->approvedBy;
+    }
+
+    public function getApprovedTime(): ?DateTime
+    {
+        return $this->approvedTime;
+    }
+
+    public function getCreatedAt(): DateTime
+    {
+        return $this->createdAt;
+    }
+
+    public function setStudent(Student $student): void
+    {
+        $this->student = $student;
+    }
+
+    public function setFromDate(DateTime $fromDate): void
+    {
+        $this->fromDate = $fromDate;
+    }
+
+    public function setToDate(DateTime $toDate): void
+    {
+        $this->toDate = $toDate;
+    }
+
+    public function setFromTime(DateTime $fromTime): void
+    {
+        $this->fromTime = $fromTime;
+    }
+
+    public function setToTime(DateTime $toTime): void
+    {
+        $this->toTime = $toTime;
+    }
+
+    public function setPassType(string $passType): void
+    {
+        $this->passType = $passType;
+    }
+
+    public function setDestination(string $destination): void
+    {
+        $this->destination = $destination;
+    }
+
+    public function setPurpose(string $purpose): void
+    {
+        $this->purpose = $purpose;
+    }
+
+    public function setAttachments(?array $attachments): void
+    {
+        $this->attachments = $attachments;
+    }
+
+    public function setStatus(string $status): void
+    {
+        $this->status = $status;
+    }
+
+    public function setRemarks(?string $remarks): void
+    {
+        $this->remarks = $remarks;
+    }
+
+    public function setApprovedBy(?Warden $approvedBy): void
+    {
+        $this->approvedBy = $approvedBy;
+    }
+
+    public function setApprovedTime(?DateTime $approvedTime): void
+    {
+        $this->approvedTime = $approvedTime;
+    }
+
+    public function setCreatedAt(DateTime $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
 }

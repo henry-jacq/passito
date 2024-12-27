@@ -59,23 +59,29 @@ document.addEventListener('DOMContentLoaded', () => {
         openAddDeviceModalButton.addEventListener('click', () => {
             Modal.open({
                 content: `
-                    <h3 class="text-lg font-medium leading-6 text-gray-900">Add New Device</h3>
-                    <p class="mt-2 text-sm text-gray-500">Please provide the details for the new verifier device.</p>
+                    <div class="p-2 space-y-6">
+                        <h3 class="text-xl font-semibold text-gray-900">Add New Device</h3>
 
-                    <div class="mt-4">
-                        <label for="verifier-name" class="block text-sm font-medium text-gray-700">Verifier Name</label>
-                        <input type="text" id="verifier-name" name="verifier-name" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Enter verifier's name" required>
-                    </div>
+                        <div class="space-y-4">
+                            <div>
+                                <label for="verifier-name" class="block text-sm font-medium text-gray-700">Verifier Name</label>
+                                <input type="text" id="verifier-name" name="verifier-name" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Enter verifier's name" required>
+                            </div>
 
-                    <div class="mt-4">
-                        <label for="device-location" class="block text-sm font-medium text-gray-700">Device Location</label>
-                        <input type="text" id="device-location" name="device-location" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Enter device location" required>
+                            <div>
+                                <label for="device-location" class="block text-sm font-medium text-gray-700">Device Location</label>
+                                <input type="text" id="device-location" name="device-location" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Enter device location" required>
+                            </div>
+
+                        <p class="mt-2 text-sm text-gray-500">Please provide the details for the new verifier device.</p>
+
+                        </div>
                     </div>
                 `,
                 actions: [
                     {
                         label: 'Add Device',
-                        class: 'inline-flex justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 sm:ml-3 sm:w-auto',
+                        class: 'inline-flex justify-center rounded-md bg-green-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 sm:ml-3 sm:w-auto',
                         onClick: () => {
                             const verifierName = document.getElementById('verifier-name').value;
                             const deviceLocation = document.getElementById('device-location').value;
@@ -90,12 +96,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     },
                     {
                         label: 'Cancel',
-                        class: 'mt-3 inline-flex justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto',
+                        class: 'inline-flex justify-center rounded-md bg-white px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-gray-300 hover:bg-gray-50 transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto',
                         onClick: Modal.close
                     }
                 ],
-                size: 'sm:max-w-lg',  // Adjust modal size as needed
-                classes: 'custom-modal-class' // Optional custom classes
+                size: 'sm:max-w-lg',
+                classes: 'custom-modal-class', // Optional custom classes
+                closeOnBackdropClick: false
             });
         });
     }

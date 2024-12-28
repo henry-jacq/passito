@@ -40,16 +40,17 @@ class StudentMiddleware implements MiddlewareInterface
             $user = $this->em->getRepository(User::class)->find(
                 (int) $this->session->get('user')
             );
+            $userRole = $user->getRole()->value;
 
             // Prevent unauthorized users from accessing student routes
-            if (!UserRole::isStudent($user->getRole())) {
+            if (!UserRole::isStudent($userRole)) {
                 return $this->responseFactory
                     ->createResponse(302)
                     ->withHeader('Location', $this->view->urlFor('auth.login'));
             }
 
             // Prevent administrators from accessing student routes
-            if (UserRole::isAdministrator($user->getRole()) === true) {
+            if (UserRole::isAdministrator($userRole) === true) {
                 return $this->responseFactory
                     ->createResponse(302)
                     ->withHeader('Location', $this->view->urlFor('auth.login'));

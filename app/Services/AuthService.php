@@ -29,15 +29,17 @@ class AuthService
             return false; // Authentication failed
         }
 
+        $userRole = $user->getRole()->value;
+
         // Check if the user's role is valid
-        if (!UserRole::isValidRole($user->getRole())) {
+        if (!UserRole::isValidRole($userRole)) {
             return false; // Invalid role
         }
 
         // Authentication successful, initialize session
         // Set user and role in the session
+        $this->session->put('role', $userRole);
         $this->session->put('user', $user->getId());
-        $this->session->put('role', $user->getRole());
 
         return $user;
     }

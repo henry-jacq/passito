@@ -36,9 +36,7 @@ class AuthMiddleware implements MiddlewareInterface
             ->createResponse(302)
             ->withHeader('Location', $location);
         }
-        
-        $request->withAttribute('role', 'guest');
-        
+               
         return $handler->handle($request);
     }
 }

@@ -16,7 +16,7 @@ ${basename(__FILE__, '.php')} = function () {
         if ($user) {
             $path = $this->view->urlFor('student.dashboard');
 
-            if (UserRole::isAdministrator($user->getRole())) {
+            if (UserRole::isAdministrator($user->getRole()->value)) {
                 $path = $this->view->urlFor('admin.dashboard');
             }
             

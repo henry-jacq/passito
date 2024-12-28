@@ -5,6 +5,9 @@ use App\Controller\ApiController;
 use App\Controller\AuthController;
 use App\Controller\AdminController;
 use App\Controller\StudentController;
+use App\Middleware\AdminMiddleware;
+use App\Middleware\AuthMiddleware;
+use App\Middleware\StudentMiddleware;
 use Slim\Routing\RouteCollectorProxy;
 
 return function (App $app) {
@@ -12,7 +15,7 @@ return function (App $app) {
     
     // Auth Routes
     $app->group('/auth', function (RouteCollectorProxy $group) {
-        $group->any('/login', [AuthController::class, 'login'])->setName('auth.login');
+        $group->any('/login', [AuthController::class, 'login'])->setName('auth.login')->add(AuthMiddleware::class);
         $group->any('/logout', [AuthController::class, 'logout'])->setName('auth.logout');
     });
 
@@ -23,7 +26,7 @@ return function (App $app) {
         $group->any('/outpass/status', [StudentController::class, 'statusOutpass'])->setName('student.outpass.status');
         $group->any('/outpass/history', [StudentController::class, 'outpassHistory'])->setName('student.outpass.history');
         $group->any('/profile', [StudentController::class, 'profile'])->setName('student.profile');
-    });
+    })->add(StudentMiddleware::class);
 
     // Admin Routes
     $app->group('/admin', function (RouteCollectorProxy $group) {
@@ -33,7 +36,7 @@ return function (App $app) {
         $group->any('/settings', [AdminController::class, 'settings'])->setName('admin.settings');
         $group->any('/manage/verifiers', [AdminController::class, 'manageVerifiers'])->setName('admin.manage.verifiers');
         $group->any('/manage/requests', [AdminController::class, 'manageRequests'])->setName('admin.manage.requests');
-    });
+    })->add(AdminMiddleware::class);
 
     // API Routes
     $app->group('/api', function (RouteCollectorProxy $group) {

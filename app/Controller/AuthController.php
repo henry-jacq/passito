@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Core\Auth;
 use App\Core\View;
+use App\Services\AuthService;
 use App\Controller\BaseController;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -11,7 +11,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 class AuthController extends BaseController
 {
     public function __construct(
-        protected readonly Auth $auth,
+        protected readonly AuthService $auth,
         protected readonly View $view
     )
     {
@@ -19,7 +19,6 @@ class AuthController extends BaseController
     
     public function login(Request $request, Response $response): Response
     {
-        $_SESSION['role'] = 'guest';
         $args = [
             'title' => 'Login'
         ];
@@ -29,7 +28,6 @@ class AuthController extends BaseController
     // function to landing page
     public function landing(Request $request, Response $response): Response
     {
-        $_SESSION['role'] = 'guest';
         $args = [
             'title' => 'Passito - Seamless Gatepass Management System'
         ];
@@ -49,6 +47,7 @@ class AuthController extends BaseController
     public function logout(Request $request, Response $response): Response
     {
         $this->auth->logout();
-        return $response->withHeader('Location', '/login')->withStatus(302);
+        $loginPage = $this->view->urlFor('auth.login');
+        return $response->withHeader('Location', $loginPage)->withStatus(302);
     }
 }

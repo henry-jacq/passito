@@ -4,6 +4,7 @@ namespace App\Enum;
 
 enum UserRole: string {
     case USER = 'student';
+    case GUEST = 'guest';
     case ADMIN = 'warden';
     case SUPER_ADMIN = 'chief_warden';
 
@@ -19,8 +20,11 @@ enum UserRole: string {
         return self::tryFrom($role) === self::USER;
     }
 
-    // Check if the role is valid
     public static function isValidRole(string $role): bool {
         return in_array($role, [self::USER->value, self::ADMIN->value, self::SUPER_ADMIN->value]);
+    }
+
+    public static function isAdministrator(string $role): bool {
+        return in_array($role, [self::ADMIN->value, self::SUPER_ADMIN->value]);
     }
 }

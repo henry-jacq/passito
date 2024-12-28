@@ -68,9 +68,10 @@
                 </div>
             </div>
         </div>
-        <!-- Logout Button -->
-        <button class="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition duration-200">
-            <i class="fas fa-sign-out-alt"></i>
-        </button>
+        <!-- Logout Button using anchor tag -->
+        <a href="<?= $this->urlFor('auth.logout') ?>" class="inline-flex items-center p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition duration-200">
+            <i class="fas fa-sign-out-alt mr-2"></i>
+            Logout
+        </a>
     </div>
 </header>

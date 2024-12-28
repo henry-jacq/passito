@@ -87,3 +87,26 @@ function vite_asset($path) {
         return "/build/" . $path;
     }
 }
+
+/**
+ * Return the full path to the storage directory
+ */
+function storage_path($path, $create_dir = true, $permissions = 0755)
+{
+    // Construct the full path
+    $fullPath = STORAGE_PATH . DIRECTORY_SEPARATOR . $path;
+
+    // If $create_dir is true, check if the directory exists and create it if it doesn't
+    if ($create_dir) {
+        $dirPath = dirname($fullPath);
+
+        // Check if the directory exists, and create it recursively if it doesn't
+        if (!is_dir($dirPath)) {
+            mkdir($dirPath, $permissions, true); // true enables recursive creation of directories
+        }
+    }
+
+    // Return the full path
+    return $fullPath;
+}
+

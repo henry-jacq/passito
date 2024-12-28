@@ -2,6 +2,7 @@
 
 namespace App\Core;
 
+use App\Enum\UserRole;
 use Slim\Routing\RouteParser;
 
 class View
@@ -153,11 +154,10 @@ class View
         $this->resultView = null;
 
         // Get the user role
-        $role = $_SESSION['role'] ?? 'admin';
-
+        $role = $this->session->get('role') ?? UserRole::USER->value;
         // Get the layout config
         $layoutConfig = $this->config->get('view.layouts');
-        $this->baseViewName = $layoutConfig[$role] ?? $layoutConfig['user'];
+        $this->baseViewName = $layoutConfig[$role] ?? $layoutConfig[UserRole::USER->value];
 
         if (!str_contains($this->baseViewName, '.php')) {
             $this->baseViewName = $this->baseViewName . '.php';

@@ -1,14 +1,23 @@
 <?php
 
-${basename(__FILE__, '.php')} = function () {
-    if ($this->paramsExists(['user', 'password'])) {
-        $result = $this->auth->login($this->data);
-        
-        if ($this->auth->login($this->data)) {
-            $path = "/student/dashboard";
+use App\Enum\UserRole;
 
-            if ($result['role'] === 'admin') {
-                $path = "/admin/dashboard";
+${basename(__FILE__, '.php')} = function () {
+    if ($this->auth->isAuthenticated()) {
+        usleep(mt_rand(400000, 1300000));
+        return $this->response([
+            'message' => 'Already authenticated'
+        ], 202);
+    }
+    
+    if ($this->paramsExists(['email', 'password'])) {
+        $user = $this->auth->login($this->data);
+        
+        if ($user) {
+            $path = $this->view->urlFor('student.dashboard');
+
+            if (UserRole::isAdministrator($user->getRole())) {
+                $path = $this->view->urlFor('admin.dashboard');
             }
             
             usleep(mt_rand(400000, 1300000));

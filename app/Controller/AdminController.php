@@ -10,7 +10,6 @@ class AdminController extends BaseController
     public function dashboard(Request $request, Response $response): Response
     {
         $this->view->clearCacheIfDev();
-        $_SESSION['role'] = 'admin';
         $args = [
             'title' => 'Dashboard',
             'routeName' => $this->getRouteName($request),

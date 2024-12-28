@@ -3,11 +3,10 @@
 namespace App\Controller;
 
 use Closure;
-use App\Core\Auth;
 use App\Core\View;
 use App\Core\Mailer;
 use App\Core\Session;
-use App\Entity\Outpass;
+use App\Services\AuthService;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -39,11 +38,10 @@ class ApiController
     private const API_ROUTE = ROUTES_PATH . DIRECTORY_SEPARATOR . 'api';
 
     public function __construct(
-        private readonly Auth $auth,
+        private readonly AuthService $auth,
         private readonly View $view,
         private readonly Session $session,
-        private readonly Mailer $mail,
-        private readonly Outpass $outpass
+        private readonly Mailer $mail
     )
     {
     }
@@ -121,7 +119,7 @@ class ApiController
         }
         if ($this->fileExists() !== false) {
             include_once $this->fileExists();
-            $this->current_call = Closure::bind(${$func}, $this, get_class());
+            $this->current_call = Closure::bind(${$func}, $this, get_class($this));
             return $this->$func();
         } else {
             return $this->response([

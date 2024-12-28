@@ -9,8 +9,7 @@ class StudentController extends BaseController
 {
     public function dashboard(Request $request, Response $response): Response
     {
-        $_SESSION['role'] = 'student';
-        // $_SESSION['user'] = null;
+        $this->view->clearCacheIfDev();
         $args = [
             'title' => 'Dashboard',
             'routeName' => $this->getRouteName($request),
@@ -20,7 +19,7 @@ class StudentController extends BaseController
 
     public function requestOutpass(Request $request, Response $response): Response
     {
-        $_SESSION['role'] = 'student';
+        $this->view->clearCacheIfDev();
         $args = [
             'title' => 'Outpass Requisition',
             'routeName' => $this->getRouteName($request),
@@ -30,7 +29,7 @@ class StudentController extends BaseController
 
     public function statusOutpass(Request $request, Response $response): Response
     {
-        $_SESSION['role'] = 'student';
+        $this->view->clearCacheIfDev();
         $args = [
             'title' => 'Outpass Status',
             'routeName' => $this->getRouteName($request),
@@ -40,7 +39,7 @@ class StudentController extends BaseController
 
     public function outpassHistory(Request $request, Response $response): Response
     {
-        $_SESSION['role'] = 'student';
+        $this->view->clearCacheIfDev();
         $args = [
             'title' => 'Outpass History',
             'routeName' => $this->getRouteName($request),
@@ -50,7 +49,7 @@ class StudentController extends BaseController
 
     public function profile(Request $request, Response $response): Response
     {
-        $_SESSION['role'] = 'student';
+        $this->view->clearCacheIfDev();
         $args = [
             'title' => 'Profile',
             'routeName' => $this->getRouteName($request),

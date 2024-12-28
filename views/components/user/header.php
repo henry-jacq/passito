@@ -57,7 +57,7 @@
                 <div id="profileMenu"
                     class="hidden absolute right-0 mt-2 w-40 bg-white text-gray-700 rounded-md shadow-lg transition-opacity">
                     <a href="<?= $this->urlFor('student.profile') ?>" class="block px-4 py-2 hover:bg-gray-100 hover:rounded-md">My Profile</a>
-                    <a href="<?= $this->urlFor('student.logout') ?>" class="block px-4 py-2 hover:bg-gray-100 hover:rounded-md">Logout</a>
+                    <a href="<?= $this->urlFor('auth.logout') ?>" class="block px-4 py-2 hover:bg-gray-100 hover:rounded-md">Logout</a>
                 </div>
             </div>
 
@@ -71,12 +71,12 @@
     <!-- Mobile Navigation -->
     <div id="mobileMenu" class="hidden bg-gradient-to-r from-purple-600 to-purple-800 md:hidden">
         <nav class="flex flex-col space-y-3 p-4">
-            <a href="#" class="text-lg transition hover:text-blue-200">Dashboard</a>
-            <a href="#" class="text-lg transition hover:text-blue-200">Request Outpass</a>
-            <a href="#" class="text-lg transition hover:text-blue-200">Status</a>
-            <a href="#" class="text-lg transition hover:text-blue-200">History</a>
-            <button class="text-lg transition hover:text-blue-200">My Profile</button>
-            <button class="text-lg transition hover:text-blue-200">Logout</button>
+            <a href="<?= $this->urlFor('student.dashboard') ?>" class="text-lg transition hover:text-blue-200">Dashboard</a>
+            <a href="<?= $this->urlFor('student.outpass.request') ?>" class="text-lg transition hover:text-blue-200">Request Outpass</a>
+            <a href="<?= $this->urlFor('student.outpass.status') ?>" class="text-lg transition hover:text-blue-200">Status</a>
+            <a href="<?= $this->urlFor('student.outpass.history') ?>" class="text-lg transition hover:text-blue-200">History</a>
+            <a href="<?= $this->urlFor('student.profile') ?>" class="text-lg transition hover:text-blue-200">My Profile</a>
+            <a href="<?= $this->urlFor('auth.logout') ?>" class="text-lg transition hover:text-blue-200">Logout</a>
         </nav>
     </div>
 </header>

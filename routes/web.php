@@ -13,6 +13,7 @@ return function (App $app) {
     // Auth Routes
     $app->group('/auth', function (RouteCollectorProxy $group) {
         $group->any('/login', [AuthController::class, 'login'])->setName('auth.login');
+        $group->any('/logout', [AuthController::class, 'logout'])->setName('auth.logout');
     });
 
     // Student Routes
@@ -22,7 +23,6 @@ return function (App $app) {
         $group->any('/outpass/status', [StudentController::class, 'statusOutpass'])->setName('student.outpass.status');
         $group->any('/outpass/history', [StudentController::class, 'outpassHistory'])->setName('student.outpass.history');
         $group->any('/profile', [StudentController::class, 'profile'])->setName('student.profile');
-        $group->any('/logout', [AuthController::class, 'logout'])->setName('student.logout');
     });
 
     // Admin Routes
@@ -32,7 +32,6 @@ return function (App $app) {
         $group->any('/outpass/records', [AdminController::class, 'outpassRecords'])->setName('admin.outpass.records');
         $group->any('/settings', [AdminController::class, 'settings'])->setName('admin.settings');
         $group->any('/manage/verifiers', [AdminController::class, 'manageVerifiers'])->setName('admin.manage.verifiers');
-        $group->any('/logout', [AuthController::class, 'logout'])->setName('admin.logout');
         $group->any('/manage/requests', [AdminController::class, 'manageRequests'])->setName('admin.manage.requests');
     });
 

@@ -1,6 +1,7 @@
 <?php
 
 use App\Enum\AppEnvironment;
+use App\Enum\UserRole;
 
 $boolean = function (mixed $value) {
     if (in_array($value, ['true', 1, '1', true, 'yes'], true)) {
@@ -55,9 +56,10 @@ return [
     ],
     'view' => [
         'layouts' => [
-            'user' => 'user.php',
-            'admin' => 'admin.php',
-            'auth' => 'auth.php',
+            UserRole::USER->value => 'user.php',
+            UserRole::ADMIN->value => 'admin.php',
+            UserRole::SUPER_ADMIN->value => 'admin.php',
+            'auth' => 'user.php',
             'error' => 'error.php'
         ],
         'placeholder' => [

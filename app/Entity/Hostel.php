@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Enum\HostelType;
 use Doctrine\ORM\Mapping as ORM;
 
-
 #[ORM\Entity]
-#[ORM\Table(name: 'hostels')]
+#[ORM\Table(name: 'hostels', indexes: [
+    new ORM\Index(name: "hostel_type_idx", columns: ["hostelType"])
+])]
 class Hostel
 {
     #[ORM\Id]
@@ -27,7 +29,7 @@ class Hostel
     #[ORM\Column(type: 'string', length: 255)]
     private string $hostelName;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', enumType: HostelType::class)]
     private string $hostelType;
 
     public function getId(): int

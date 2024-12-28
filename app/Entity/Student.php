@@ -8,7 +8,10 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[ORM\Table(name: 'students')]
+#[ORM\Table(name: 'students', indexes: [
+    new ORM\Index(name: "digital_id_idx", columns: ["digitalId"]),
+    new ORM\Index(name: "year_idx", columns: ["year"])
+])]
 class Student
 {
     #[ORM\Id]
@@ -35,6 +38,9 @@ class Student
 
     #[ORM\Column(type: 'string', length: 255)]
     private string $branch;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    private string $department;
 
     #[ORM\Column(type: 'string', length: 255)]
     private string $roomNo;
@@ -111,6 +117,16 @@ class Student
     public function setBranch(string $branch): void
     {
         $this->branch = $branch;
+    }
+
+    public function getDepartment(): string
+    {
+        return $this->department;
+    }
+
+    public function setDepartment(string $department): void
+    {
+        $this->department = $department;
     }
 
     public function getRoomNo(): string

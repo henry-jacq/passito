@@ -8,7 +8,9 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[ORM\Table(name: 'institutions')]
+#[ORM\Table(name: 'institutions', indexes: [
+    new ORM\Index(name: "name_idx", columns: ["name"])
+])]
 class Institution
 {
     #[ORM\Id]

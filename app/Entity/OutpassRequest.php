@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use DateTime;
+use App\Enum\OutpassStatus;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[ORM\Table(name: 'outpass_requests')]
+#[ORM\Table(name: 'outpass_requests', indexes: [
+    new ORM\Index(name: "pass_type_idx", columns: ["passType"])
+])]
 class OutpassRequest
 {
     #[ORM\Id]
@@ -32,7 +35,7 @@ class OutpassRequest
     #[ORM\Column(type: 'time')]
     private DateTime $toTime;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', enumType: OutpassStatus::class)]
     private string $passType;
 
     #[ORM\Column(type: 'string', length: 255)]

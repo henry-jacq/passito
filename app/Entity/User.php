@@ -4,11 +4,16 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Enum\Gender;
+use App\Enum\UserRole;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[ORM\Table(name: 'users')]
+#[ORM\Table(name: 'users', indexes: [
+    new ORM\Index(name: "email_idx", columns: ["email"]),
+    new ORM\Index(name: "gender_idx", columns: ["gender"])
+])]
 class User
 {
     #[ORM\Id]
@@ -22,8 +27,11 @@ class User
     #[ORM\Column(type: 'string', length: 255)]
     private string $password;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', enumType: UserRole::class)]
     private string $role;
+
+    #[ORM\Column(type: 'string', enumType: Gender::class)]
+    private string $gender;
 
     #[ORM\Column(type: 'datetime')]
     private DateTime $createdAt;
@@ -61,6 +69,16 @@ class User
     public function setRole(string $role): void
     {
         $this->role = $role;
+    }
+    
+    public function getGender(): string
+    {
+        return $this->gender;
+    }
+
+    public function setGender(string $gender): void
+    {
+        $this->gender = $gender;
     }
 
     public function getCreatedAt(): DateTime

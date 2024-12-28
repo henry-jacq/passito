@@ -49,7 +49,7 @@
             </button>
 
             <!-- Profile Dropdown -->
-            <div class="relative">
+            <div class="relative hidden md:block">
                 <button id="profileMenuButton" class="focus:outline-none">
                     <img src="https://avatars.githubusercontent.com/u/89177279" alt="Profile"
                         class="w-10 h-10 rounded-full shadow-sm">

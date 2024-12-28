@@ -12,7 +12,7 @@
                     </g>
                 </svg>
             </div>
-            <h1 class="text-2xl font-bold text-gray-800">Passito Login</h1>
+            <h1 class="text-2xl font-display font-bold text-gray-800">Passito Login</h1>
         </div>
 
         <!-- Error Message -->

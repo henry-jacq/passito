@@ -1,8 +1,3 @@
-// Example vanilla JS code
-document.addEventListener('DOMContentLoaded', () => {
-  console.log('Hello Henry, Vite with PHP!');
-});
-
 // Mobile Menu Toggle Logic
 const mobileMenuToggle = document.getElementById('mobileMenuToggle');
 const mobileMenu = document.getElementById('mobileMenu');

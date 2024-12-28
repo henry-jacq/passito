@@ -36,7 +36,7 @@ class OutpassRequest
     private DateTime $toTime;
 
     #[ORM\Column(type: 'string', enumType: OutpassStatus::class)]
-    private string $passType;
+    private OutpassStatus $passType;
 
     #[ORM\Column(type: 'string', length: 255)]
     private string $destination;
@@ -93,7 +93,7 @@ class OutpassRequest
         return $this->toTime;
     }
 
-    public function getPassType(): string
+    public function getPassType(): OutpassStatus
     {
         return $this->passType;
     }
@@ -163,7 +163,7 @@ class OutpassRequest
         $this->toTime = $toTime;
     }
 
-    public function setPassType(string $passType): void
+    public function setPassType(OutpassStatus $passType): void
     {
         $this->passType = $passType;
     }

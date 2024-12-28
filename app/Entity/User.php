@@ -28,10 +28,10 @@ class User
     private string $password;
 
     #[ORM\Column(type: 'string', enumType: UserRole::class)]
-    private string $role;
+    private UserRole $role;
 
     #[ORM\Column(type: 'string', enumType: Gender::class)]
-    private string $gender;
+    private Gender $gender;
 
     #[ORM\Column(type: 'datetime')]
     private DateTime $createdAt;
@@ -61,22 +61,22 @@ class User
         $this->password = $password;
     }
 
-    public function getRole(): string
+    public function getRole(): UserRole
     {
         return $this->role;
     }
 
-    public function setRole(string $role): void
+    public function setRole(UserRole $role): void
     {
         $this->role = $role;
     }
     
-    public function getGender(): string
+    public function getGender(): Gender
     {
         return $this->gender;
     }
 
-    public function setGender(string $gender): void
+    public function setGender(Gender $gender): void
     {
         $this->gender = $gender;
     }

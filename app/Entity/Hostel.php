@@ -30,7 +30,7 @@ class Hostel
     private string $hostelName;
 
     #[ORM\Column(type: 'string', enumType: HostelType::class)]
-    private string $hostelType;
+    private HostelType $hostelType;
 
     public function getId(): int
     {
@@ -67,12 +67,12 @@ class Hostel
         $this->hostelName = $hostelName;
     }
 
-    public function getHostelType(): string
+    public function getHostelType(): HostelType
     {
         return $this->hostelType;
     }
 
-    public function setHostelType(string $hostelType): void
+    public function setHostelType(HostelType $hostelType): void
     {
         $this->hostelType = $hostelType;
     }

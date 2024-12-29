@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use DateTime;
+use App\Enum\InstitutionType;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
@@ -23,6 +24,9 @@ class Institution
 
     #[ORM\Column(type: 'string', length: 255)]
     private string $address;
+
+    #[ORM\Column(type: 'string', enumType: InstitutionType::class)]
+    private InstitutionType $type;
 
     #[ORM\Column(type: 'datetime')]
     private DateTime $createdAt;
@@ -53,6 +57,16 @@ class Institution
     public function setAddress(string $address): void
     {
         $this->address = $address;
+    }
+
+    public function getType(): InstitutionType
+    {
+        return $this->type;
+    }
+
+    public function setType(InstitutionType $type): void
+    {
+        $this->type = $type;
     }
 
     public function getCreatedAt(): DateTime

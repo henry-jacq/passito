@@ -2,7 +2,7 @@
     <div class="w-full max-w-sm p-8 bg-white rounded-lg shadow-lg">
         <!-- Logo and Title -->
         <div class="text-center mb-8">
-            <div class="py-4 flex justify-center items-center text-indigo-600">
+            <div class="py-4 flex justify-center items-center text-indigo-700">
                 <svg class="w-12 h-12" viewBox="0 0 92.105 92.1">
                     <g transform="translate(-2.76 -2.77) scale(0.3254)" fill="currentColor">
                         <g xmlns="http://www.w3.org/2000/svg">
@@ -12,7 +12,7 @@
                     </g>
                 </svg>
             </div>
-            <h1 class="text-2xl font-display font-bold text-gray-800">Passito Login</h1>
+            <h1 class="text-2xl font-heading font-semibold text-gray-800">Passito Login</h1>
         </div>
 
         <!-- Error Message -->

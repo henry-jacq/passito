@@ -56,6 +56,16 @@ class AdminController extends BaseController
         ];
         return parent::render($request, $response, 'admin/verifiers', $args);
     }
+
+    public function manageLogbook(Request $request, Response $response): Response
+    {
+        $this->view->clearCacheIfDev();
+        $args = [
+            'title' => 'Manage Logbook',
+            'routeName' => $this->getRouteName($request),
+        ];
+        return parent::render($request, $response, 'admin/logbook', $args);
+    }
     
     public function settings(Request $request, Response $response): Response
     {

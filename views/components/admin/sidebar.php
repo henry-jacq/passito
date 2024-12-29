@@ -96,6 +96,15 @@
                     </a>
                 </li>
 
+                <!-- Logbook -->
+                <li class="my-1">
+                    <a href="<?= $this->urlFor('admin.manage.logbook')?>"
+                        class="flex items-center px-4 py-3 <?= ($routeName == 'admin.manage.logbook') ? 'bg-indigo-100 text-indigo-600 hover:bg-indigo-200' : 'text-gray-600 hover:bg-gray-50'; ?> rounded-md transition duration-200">
+                        <i class="fas fa-book pr-4"></i>
+                        <span>Manage Logbook</span>
+                    </a>
+                </li>
+
                 <!-- Settings -->
                 <li class="my-1">
                     <a href="<?= $this->urlFor('admin.settings')?>"

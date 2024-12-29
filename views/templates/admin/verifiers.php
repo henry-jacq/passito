@@ -1,13 +1,12 @@
-<main class="flex-1 p-8 mt-20 overflow-y-auto">
+<main class="flex-1 p-6 mt-20 overflow-y-auto">
+    <!-- Page Heading -->
+    <div class="flex items-center justify-between mb-8">
+        <h2 class="text-2xl font-semibold text-gray-700">Manage Verifiers</h2>
+        <button id="open-add-device-modal" class="px-4 py-2 text-sm text-white bg-blue-600 rounded-lg shadow hover:bg-blue-700 focus:ring focus:ring-blue-400 ">
+            Add New Device
+        </button>
+    </div>
     <div class="max-w-7xl mx-auto">
-        <!-- Page Heading -->
-        <div class="flex items-center justify-between mb-8">
-            <h2 class="text-3xl font-bold text-gray-800">Manage Verifiers</h2>
-            <button id="open-add-device-modal" class="px-4 py-2 text-white bg-blue-600 rounded-lg shadow hover:bg-blue-700 focus:ring focus:ring-blue-400 ">
-                Add New Device
-            </button>
-        </div>
-
         <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
             <ul class="list-disc pl-6 text-sm">
                 <li><strong>Tokens are crucial for device setup</strong> and must remain confidential as they <strong>cannot be regenerated</strong>.</li>

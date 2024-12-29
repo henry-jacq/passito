@@ -2,7 +2,7 @@
 <main class="flex-1 p-6 mt-20 overflow-y-auto">
     <!-- Key Metrics -->
     <section>
-        <h3 class="text-xl font-semibold text-gray-700 mb-4">Dashboard</h3>
+        <h2 class="text-2xl font-semibold text-gray-700 mb-4">Dashboard</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Total Students -->
             <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition duration-200">

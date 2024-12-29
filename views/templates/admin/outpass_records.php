@@ -1,5 +1,6 @@
 <main class="flex-1 p-6 mt-20 overflow-y-auto">
-    <h2 class="text-3xl font-semibold text-gray-900 mb-6">Outpass Records</h2>
+    <h2 class="text-2xl font-semibold text-gray-700 mb-4">Outpass Records</h2>
+    <p class="text-gray-700 text-base mb-8">View and manage the records of issued outpasses.</p>
 
     <!-- Search and Filter Section -->
     <div class="bg-white rounded-lg shadow p-6 mb-8">

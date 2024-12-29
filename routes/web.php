@@ -36,6 +36,7 @@ return function (App $app) {
         $group->any('/outpass/records', [AdminController::class, 'outpassRecords'])->setName('admin.outpass.records');
         $group->any('/settings', [AdminController::class, 'settings'])->setName('admin.settings');
         $group->any('/manage/verifiers', [AdminController::class, 'manageVerifiers'])->setName('admin.manage.verifiers');
+        $group->any('/manage/logbook', [AdminController::class, 'manageLogbook'])->setName('admin.manage.logbook');
         $group->any('/manage/requests', [AdminController::class, 'manageRequests'])->setName('admin.manage.requests');
     })->add(AdminMiddleware::class);
 

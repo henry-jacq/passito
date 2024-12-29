@@ -5,9 +5,9 @@
     ]) ?>
 
     <!-- Main Content -->
-    <main class="container mx-auto p-6 space-y-8">
+    <main class="container mx-auto py-8 px-6 lg:px-12">
         <!-- Page Title -->
-        <header class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-4 border-b space-y-2 sm:space-y-0">
+        <header class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-4 border-b space-y-2 sm:space-y-0 mb-6">
             <div>
                 <h1 class="text-3xl font-bold text-gray-800">Outpass History</h1>
                 <p class="text-base text-gray-500 mt-1">Manage your outpass requests history.</p>
@@ -26,8 +26,6 @@
 
         <!-- Status Table Section -->
         <section class="bg-white rounded-lg shadow p-8">
-            <h2 class="text-lg font-medium text-gray-700 mb-4">Older Requests</h2>
-
             <!-- Status Table -->
             <div class="overflow-x-auto">
                 <table class="min-w-full text-left text-sm">

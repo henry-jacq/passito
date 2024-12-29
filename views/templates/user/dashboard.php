@@ -5,18 +5,17 @@
 	]) ?>
 
 	<!-- Main Content -->
-	<main class="container mx-auto p-6 space-y-10">
+	<main class="container mx-auto py-8 px-6 lg:px-12">
 		<!-- Welcome Section -->
-		<section
-			class="bg-gradient-to-r from-purple-100 to-white shadow-lg rounded-xl p-8 flex flex-col md:flex-row justify-between">
+		<section class="bg-gradient-to-r from-purple-100 to-white shadow-lg rounded-xl p-8 flex flex-col md:flex-row justify-between mb-8">
 			<div>
 				<h2 class="text-4xl font-bold text-gray-800">Welcome, Henry!</h2>
-				<p class="mt-2 text-gray-800 text-lg">It’s Wednesday, 23 December 2024</p>
+				<p class="mt-2 text-gray-800 text-lg">It’s <?= date("l, d F Y") ?></p>
 			</div>
 		</section>
 
 		<!-- Overview Cards -->
-		<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+		<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
 			<div class="p-6 rounded-lg shadow-lg hover:shadow-xl transition-all transform hover:scale-105">
 				<div class="flex items-center gap-4">
 					<i class="fas fa-file-alt text-purple-600 text-3xl"></i>
@@ -48,7 +47,7 @@
 		</section>
 
 		<!-- Analytics Section -->
-		<section class="bg-white shadow-lg rounded-xl p-8">
+		<section class="bg-white shadow-lg rounded-xl p-8 mb-8">
 			<h3 class="text-2xl font-semibold text-gray-800 mb-6 flex items-center">
 				<i class="fa-solid fa-chart-line text-purple-600 mr-3"></i> Analytics Overview
 			</h3>

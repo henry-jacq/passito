@@ -17,7 +17,7 @@
                     </g>
                 </svg>
             </div>
-            <h1 class="text-2xl font-bold tracking-tight hidden md:block">Passito</h1>
+            <h1 class="text-2xl font-heading font-medium tracking-tight hidden md:block">Passito</h1>
         </div>
 
         <!-- Center: Navigation -->

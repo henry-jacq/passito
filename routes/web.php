@@ -24,6 +24,7 @@ return function (App $app) {
         $group->any('/dashboard', [StudentController::class, 'dashboard'])->setName('student.dashboard');
         $group->any('/outpass/request', [StudentController::class, 'requestOutpass'])->setName('student.outpass.request');
         $group->any('/outpass/status', [StudentController::class, 'statusOutpass'])->setName('student.outpass.status');
+        $group->any('/outpass/status/{outpass_id}', [StudentController::class, 'outpassDetails'])->setName('student.outpass.details');
         $group->any('/outpass/history', [StudentController::class, 'outpassHistory'])->setName('student.outpass.history');
         $group->any('/profile', [StudentController::class, 'profile'])->setName('student.profile');
     })->add(StudentMiddleware::class);

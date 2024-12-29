@@ -37,6 +37,16 @@ class StudentController extends BaseController
         return parent::render($request, $response, 'user/outpass_status', $args);
     }
 
+    public function outpassDetails(Request $request, Response $response): Response
+    {
+        $this->view->clearCacheIfDev();
+        $args = [
+            'title' => 'Outpass Details',
+            'routeName' => $this->getRouteName($request),
+        ];
+        return parent::render($request, $response, 'user/outpass_details', $args);
+    }
+
     public function outpassHistory(Request $request, Response $response): Response
     {
         $this->view->clearCacheIfDev();

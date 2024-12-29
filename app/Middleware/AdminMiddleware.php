@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Core\Request;
 use App\Core\Session;
 use App\Enum\UserRole;
+use App\Entity\Settings;
 use Psr\Http\Message\ResponseInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -38,10 +39,26 @@ class AdminMiddleware implements MiddlewareInterface
             }
         } else { // User is authenticated
             // Get the user by id
-            $user = $this->em->getRepository(User::class)
-                        ->find((int) $this->session->get('user'));
-
+            $user = $this->em->getRepository(User::class)->find((int) $this->session->get('user'));
+            $settings = $this->em->getRepository(Settings::class)->findAll();
             $userRole = $user->getRole()->value;
+
+            // Check if application setup is complete
+            $setupComplete = false;
+            foreach ($settings as $setting) {
+                if ($setting->getKeyName() === 'setup_complete' && $setting->getValue() === 'true') {
+                    $setupComplete = true;
+                    break;
+                }
+            }
+
+            // If setup is not complete, redirect to setup page with a message
+            if ($setupComplete === false && UserRole::isSuperAdmin($userRole)) {
+                return $this->responseFactory
+                    ->createResponse(302)
+                    ->withHeader('Location', $this->view->urlFor('setup.install'));
+            }
+
             // Prevent unauthorized users from accessing admin routes
             if (UserRole::isStudent($userRole)) {
                 return $this->responseFactory

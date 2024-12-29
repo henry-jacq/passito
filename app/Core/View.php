@@ -157,7 +157,12 @@ class View
         $role = $this->session->get('role') ?? UserRole::USER->value;
         // Get the layout config
         $layoutConfig = $this->config->get('view.layouts');
-        $this->baseViewName = $layoutConfig[$role] ?? $layoutConfig[UserRole::USER->value];
+
+        if (is_array($layoutConfig[$role])) {
+            $this->baseViewName = $layoutConfig[$role][dirname($view)] ?? $layoutConfig[UserRole::USER->value];
+        } else {
+            $this->baseViewName = $layoutConfig[$role] ?? $layoutConfig[UserRole::USER->value];
+        }
 
         if (!str_contains($this->baseViewName, '.php')) {
             $this->baseViewName = $this->baseViewName . '.php';

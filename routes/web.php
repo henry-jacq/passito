@@ -3,10 +3,12 @@
 use Slim\App;
 use App\Controller\ApiController;
 use App\Controller\AuthController;
-use App\Controller\AdminController;
-use App\Controller\StudentController;
-use App\Middleware\AdminMiddleware;
 use App\Middleware\AuthMiddleware;
+use App\Controller\AdminController;
+use App\Controller\SetupController;
+use App\Middleware\AdminMiddleware;
+use App\Controller\StudentController;
+use App\Middleware\SetupMiddleware;
 use App\Middleware\StudentMiddleware;
 use Slim\Routing\RouteCollectorProxy;
 
@@ -18,6 +20,12 @@ return function (App $app) {
         $group->any('/login', [AuthController::class, 'login'])->setName('auth.login')->add(AuthMiddleware::class);
         $group->any('/logout', [AuthController::class, 'logout'])->setName('auth.logout');
     });
+
+    // Admin Setup Routes
+    $app->group('/setup', function (RouteCollectorProxy $group) {
+        $group->any('/install', [SetupController::class, 'install'])->setName('setup.install');
+        $group->any('/update', [SetupController::class, 'update'])->setName('setup.update');
+    })->add(SetupMiddleware::class);
 
     // Student Routes
     $app->group('/student', function (RouteCollectorProxy $group) {

@@ -1,143 +1,185 @@
-<div class="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-gray-100 via-gray-200 to-gray-300 p-6">
-    <div class="max-w-3xl w-full bg-white rounded-lg shadow-2xl p-8">
-        <h1 class="text-4xl font-semibold text-center text-gray-800 mb-6">Application Setup</h1>
-        <p class="text-lg text-center text-gray-600 mb-8">Welcome, Super Admin! Please complete the application setup to get started.</p>
-        
-        <!-- Progress Bar -->
-        <div class="w-full mb-8">
-            <div class="flex justify-between mb-4">
-                <span id="setup-institution-heading" class="text-sm font-semibold text-blue-600">Setup Institution</span>
-                <span id="setup-hostel-heading" class="text-sm font-semibold text-gray-400">Setup Hostels</span>
-                <span id="setup-warden-heading" class="text-sm font-semibold text-gray-400">Setup Wardens</span>
-                <span id="setup-finish-heading" class="text-sm font-semibold text-gray-400">Finish</span>
+<!-- Main Container -->
+<div class="min-h-screen flex items-center justify-center bg-gray-100">
+    <!-- Setup Box -->
+    <div id="setup-container" class="bg-white rounded-2xl shadow-xl w-full max-w-3xl p-10 md:p-16">
+        <!-- Welcome Screen -->
+        <div id="welcome-screen" class="text-center space-y-10">
+            <!-- Logo and Title -->
+            <div class="flex justify-center items-center space-x-4">
+                    <svg class="w-10 h-10 text-gray-800" viewBox="0 0 92.105 92.1">
+                        <g transform="translate(-2.76 -2.77) scale(0.3254)" fill="currentColor">
+                            <!-- Icon Content -->
+                            <g xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M202.9,120.4L156,82.2c-3.5-2.9-8.6-2.9-12.1,0L97,120.5c-1.9,1.5-1.9,4.5,0,6l14.7,12c2.1,1.7,5.1,1.7,7.3,0l30.9-25.2l30.9,25.3c2.1,1.7,5.1,1.7,7.3,0l14.7-12C204.8,124.9,204.8,122,202.9,120.4z">
+                                </path>
+                                <path
+                                    d="M249.9,158.9l40.2-32.7c1.9-1.5,1.9-4.5,0-6L156,10.7c-3.5-2.9-8.6-2.9-12.1,0L9.9,120c-1.9,1.5-1.9,4.5,0,6l40.2,32.8L9.9,191.6c-1.9,1.5-1.9,4.5,0,6L124,290.7c2.5,2,6.2,0.3,6.2-3V193c0-2.9-1.3-5.7-3.6-7.5L94,158.9L72,141l-19-15.7c-1.4-1.1-1.4-3.3,0-4.5l93.4-76.2c2.1-1.7,5.1-1.7,7.3,0l93.4,76.2c1.4,1.1,1.4,3.3,0,4.5L228,140.9l-22.1,18l-32.6,26.6c-2.3,1.8-3.6,4.6-3.6,7.5v94.7c0,3.2,3.8,5,6.2,3L290,197.6c1.9-1.5,1.9-4.5,0-6L249.9,158.9zM73.9,178.3l26.7,21.8c1.3,1.1,2.2,2.8,2.2,4.5v28.8c0,1.6-1.9,2.6-3.1,1.5L53,196.8c-1.4-1.1-1.4-3.3,0-4.5l17.3-14.1C71.3,177.3,72.8,177.3,73.9,178.3zM197.3,233.4v-28.8c0-1.7,0.8-3.4,2.2-4.5l26.7-21.8c1-0.9,2.5-0.9,3.6,0l17.3,14.1c1.4,1.1,1.4,3.3,0,4.5L200.4,235C199.1,235.9,197.3,235.1,197.3,233.4z">
+                                </path>
+                            </g>
+                        </g>
+                    </svg>
+                <span class="font-heading font-medium text-3xl text-gray-800">Passito</span>
             </div>
-            <div class="relative w-full h-2 bg-gray-300 rounded-full">
-                <div class="absolute h-full bg-blue-500 rounded-full transition-all duration-500" style="width: 10%;"></div>
+            <!-- Welcome Message -->
+            <div class="space-y-4">
+                <h1 class="text-2xl md:text-3xl font-medium text-gray-800">Welcome to Setup</h1>
+                <p class="text-gray-500 text-base md:text-lg">
+                    Follow the steps to set up your application and get it ready for use.
+                </p>
+            </div>
+            <!-- Start Button -->
+            <div>
+                <button onclick="startSetup()"
+                    class="px-8 py-3 bg-blue-600 text-white text-lg font-medium rounded-full shadow-lg hover:bg-blue-700 hover:shadow-xl transition duration-300 ease-in-out">
+                    Get Started
+                </button>
             </div>
         </div>
 
-        <!-- Multi-step Form -->
-        <div class="space-y-8">
-            <!-- Step 1: Institution Setup -->
-            <div class="step step-1">
-                <h3 class="text-2xl font-semibold text-gray-800 mb-4">Step 1: Institution Setup</h3>
-                <form id="institutionForm">
-                    <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-                        <div class="mb-4">
-                            <label for="institutionName" class="block text-gray-700 text-sm font-medium mb-2">Institution Name</label>
-                            <input type="text" id="institutionName" class="block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500" placeholder="Enter institution name" required>
-                        </div>
-                        <div class="mb-4">
-                            <label for="institutionAddress" class="block text-gray-700 text-sm font-medium mb-2">Institution Address</label>
-                            <input type="text" id="institutionAddress" class="block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500" placeholder="Enter institution address" required>
-                        </div>
-                        <div class="mb-4">
-                            <label for="institutionType" class="block text-gray-700 text-sm font-medium mb-2">Institution Type</label>
-                            <select id="institutionType" class="block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500" required>
-                                <option value="college">College</option>
-                                <option value="university">University</option>
-                            </select>
+
+        <!-- Setup Steps -->
+        <div id="setup-steps" class="hidden">
+            <!-- Progress Bar -->
+            <div class="relative mt-6">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <span id="progress-start" class="w-4 h-4 bg-gray-300 rounded-full"></span>
+                    </div>
+                    <div class="flex-1 h-2 bg-gray-300 rounded-full mx-2">
+                        <div id="progress-bar" class="h-2 bg-blue-600 rounded-full transition-all" style="width: 0%;">
                         </div>
                     </div>
-                    <div class="flex justify-end">
-                        <button type="button" id="nextStep1" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 ease-in-out">
-                            Next Step
-                        </button>
+                    <div class="flex items-center">
+                        <span id="progress-end" class="w-4 h-4 bg-gray-300 rounded-full"></span>
                     </div>
-                </form>
-            </div>
-            
-            <!-- Step 2: Hostels Setup -->
-            <div class="step step-2 hidden">
-                <h3 class="text-2xl font-semibold text-gray-800 mb-4">Step 2: Hostels Setup</h3>
-                <form id="hostelForm">
-                    <div class="space-y-6">
-                        <div class="mb-4">
-                            <label for="hostelName" class="block text-gray-700 text-sm font-medium mb-2">Hostel Name</label>
-                            <input type="text" id="hostelName" class="block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500" placeholder="Enter hostel name" required>
-                        </div>
-                        <div class="mb-4">
-                            <label for="hostelType" class="block text-gray-700 text-sm font-medium mb-2">Hostel Type</label>
-                            <select id="hostelType" class="block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500" required>
-                                <option value="gents">Gents</option>
-                                <option value="ladies">Ladies</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="flex justify-between">
-                        <button type="button" id="prevStep2" class="bg-gray-300 text-white font-semibold py-2 px-6 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500">Previous</button>
-                        <button type="button" id="nextStep2" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">Next Step</button>
-                    </div>
-                </form>
+                </div>
+                <div class="absolute inset-0 flex justify-between items-center text-sm text-gray-600">
+                    <span id="step1-icon"
+                        class="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center text-sm font-bold">1</span>
+                    <span id="step2-icon"
+                        class="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center text-sm font-bold">2</span>
+                    <span id="step3-icon"
+                        class="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center text-sm font-bold">3</span>
+                    <span id="step4-icon"
+                        class="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center text-sm font-bold">4</span>
+                </div>
             </div>
 
-            <!-- Step 3: Wardens Setup -->
-            <div class="step step-3 hidden">
-                <h3 class="text-2xl font-semibold text-gray-800 mb-4">Step 3: Wardens Setup</h3>
-                <form id="wardenForm">
-                    <div class="space-y-6">
-                        <div class="mb-4">
-                            <label for="wardenName" class="block text-gray-700 text-sm font-medium mb-2">Warden Name</label>
-                            <input type="text" id="wardenName" class="block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500" placeholder="Enter warden's name" required>
-                        </div>
-                        <div class="mb-4">
-                            <label for="wardenPhone" class="block text-gray-700 text-sm font-medium mb-2">Warden Phone Number</label>
-                            <input type="tel" id="wardenPhone" class="block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500" placeholder="Enter warden's phone number" required>
-                        </div>
-                    </div>
-                    <div class="flex justify-between">
-                        <button type="button" id="prevStep3" class="bg-gray-300 text-white font-semibold py-2 px-6 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500">Previous</button>
-                        <button type="button" id="nextStep3" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">Complete Setup</button>
-                    </div>
-                </form>
+            <!-- Step Content -->
+            <div id="step-content" class="mt-8">
+                <!-- Step 1: Create Super Admin -->
+                <div id="step1" class="hidden">
+                    <h2 class="text-2xl font-semibold text-gray-800">1. Create Super Admin</h2>
+                    <p class="text-gray-500 mt-2">Enter the details for the first super admin of the application.</p>
+                    <form onsubmit="goToStep(2); return false;" class="mt-6 space-y-4">
+                        <input type="text" placeholder="Name"
+                            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500">
+                        <input type="email" placeholder="Email"
+                            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500">
+                        <input type="password" placeholder="Password"
+                            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500">
+                        <select placeholder="Gender"
+                            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500">
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                        <button type="submit"
+                            class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300 ease-in-out">
+                            Next
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Step 2: Create Institution -->
+                <div id="step2" class="hidden">
+                    <h2 class="text-2xl font-semibold text-gray-800">2. Create Institution</h2>
+                    <p class="text-gray-500 mt-2">Enter the institution details to proceed.</p>
+                    <form onsubmit="goToStep(3); return false;" class="mt-6 space-y-4">
+                        <input type="text" placeholder="Institution Name"
+                            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500">
+                        <input type="text" placeholder="Institution Address"
+                            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500">
+                        <select
+                            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500">
+                            <option value="college">College</option>
+                            <option value="university">University</option>
+                        </select>
+                        <button type="submit"
+                            class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300 ease-in-out">
+                            Next
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Step 3: Create Wardens -->
+                <div id="step3" class="hidden">
+                    <h2 class="text-2xl font-semibold text-gray-800">3. Create Wardens</h2>
+                    <p class="text-gray-500 mt-2">Add wardens and their details.</p>
+                    <form onsubmit="goToStep(4); return false;" class="mt-6 space-y-4">
+                        <input type="text" placeholder="Warden Name"
+                            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500">
+                        <input type="email" placeholder="Warden Email"
+                            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500">
+                        <input type="text" placeholder="Phone Number"
+                            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500">
+                        <button type="submit"
+                            class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300 ease-in-out">
+                            Next
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Step 4: Create Hostels -->
+                <div id="step4" class="hidden">
+                    <h2 class="text-2xl font-semibold text-gray-800">4. Create Hostels</h2>
+                    <p class="text-gray-500 mt-2">Add hostel details and assign wardens.</p>
+                    <form onsubmit="finishSetup(); return false;" class="mt-6 space-y-4">
+                        <input type="text" placeholder="Hostel Name"
+                            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500">
+                        <select
+                            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500">
+                            <option value="" disabled selected>Assign Warden</option>
+                            <option value="warden1">Warden 1</option>
+                            <option value="warden2">Warden 2</option>
+                        </select>
+                        <button type="submit"
+                            class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300 ease-in-out">
+                            Finish Setup
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Smooth transitions for each step -->
 <script>
-    // Step 1 to Step 2
-    document.getElementById('nextStep1').addEventListener('click', function() {
-        document.querySelector('.step-1').classList.add('hidden');
-        document.querySelector('#setup-hostel-heading').classList.add('text-blue-600');
-        document.querySelector('#setup-hostel-heading').classList.remove('text-gray-400');
-        document.querySelector('.step-2').classList.remove('hidden');
-        document.querySelector('.relative div').style.width = '40%';
-    });
+    function startSetup() {
+        document.getElementById('welcome-screen').classList.add('hidden');
+        document.getElementById('setup-steps').classList.remove('hidden');
+        goToStep(1);
+    }
 
-    // Step 2 to Step 1
-    document.getElementById('prevStep2').addEventListener('click', function() {
-        document.querySelector('.step-2').classList.add('hidden');
-        document.querySelector('#setup-hostel-heading').classList.remove('text-blue-600');
-        document.querySelector('#setup-hostel-heading').classList.add('text-gray-400');
-        document.querySelector('.step-1').classList.remove('hidden');
-        document.querySelector('.relative div').style.width = '10%';
-    });
+    function goToStep(step) {
+        const steps = [1, 2, 3, 4];
+        steps.forEach((s) => {
+            document.getElementById(`step${s}`).classList.toggle('hidden', s !== step);
+            const stepIcon = document.getElementById(`step${s}-icon`);
+            stepIcon.classList.toggle('bg-blue-600', s <= step);
+            stepIcon.classList.toggle('text-white', s <= step);
+            stepIcon.classList.toggle('bg-gray-300', s > step);
+            stepIcon.classList.toggle('text-gray-600', s > step);
+        });
 
-    // Step 2 to Step 3
-    document.getElementById('nextStep2').addEventListener('click', function() {
-        document.querySelector('.step-2').classList.add('hidden');
-        document.querySelector('.step-3').classList.remove('hidden');
-        document.querySelector('#setup-warden-heading').classList.add('text-blue-600');
-        document.querySelector('#setup-warden-heading').classList.remove('text-gray-400');
-        document.querySelector('.relative div').style.width = '70%';
-    });
+        const progressBar = document.getElementById('progress-bar');
+        if (progressBar) {
+            progressBar.style.width = `${((step - 1) / (steps.length - 1)) * 100}%`;
+        }
+    }
 
-    // Step 3 to Step 2
-    document.getElementById('prevStep3').addEventListener('click', function() {
-        document.querySelector('.step-3').classList.add('hidden');
-        document.querySelector('.step-2').classList.remove('hidden');
-        document.querySelector('#setup-warden-heading').classList.remove('text-blue-600');
-        document.querySelector('#setup-warden-heading').classList.add('text-gray-400');
-        document.querySelector('.relative div').style.width = '40%';
-    });
-
-    // Step 3 to Step 4
-    document.getElementById('nextStep3').addEventListener('click', function() {
-        document.querySelector('.step-3').classList.add('hidden');
-        document.querySelector('#setup-finish-heading').classList.add('text-blue-600');
-        document.querySelector('#setup-finish-heading').classList.remove('text-gray-400');
-        document.querySelector('.relative div').style.width = '100%';
-    });
+    function finishSetup() {
+        alert('Setup Complete! Redirecting...');
+        window.location.href = '/dashboard';
+    }
 </script>

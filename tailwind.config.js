@@ -32,7 +32,7 @@ module.exports = {
       fontFamily: {
         sans: ['Roboto', 'sans-serif'],        // Default sans font
         heading: ['Poppins', 'sans-serif'],    // For headings and titles
-        display: ['Merriweather', 'serif'],    // For display/important text
+        display: ['Inter', 'serif'],    // For display/important text
         mono: ['Source Code Pro', 'monospace'],// Monospace for code
       },
       fontWeight: {
@@ -70,7 +70,9 @@ module.exports = {
       },
       animation: {
         fadeIn: 'fadeIn 0.5s ease-in-out',
+        fadeOut: 'fadeOut 0.5s ease-in-out',
         slideIn: 'slideIn 0.5s ease-out',
+        slideOut: 'slideOut 0.5s ease-out',
       },
       keyframes: {
         fadeIn: {

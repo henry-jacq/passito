@@ -33,6 +33,6 @@ class SetupMiddleware implements MiddlewareInterface
         
         return $this->responseFactory
             ->createResponse(302)
-            ->withHeader('Location', $this->view->urlFor('landing'));
+            ->withHeader('Location', $this->view->urlFor('auth.login'));
     }
 }

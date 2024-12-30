@@ -1,47 +1,60 @@
 <!-- Main Container -->
 <div class="min-h-screen flex items-center justify-center bg-gray-100">
     <!-- Setup Box -->
-    <div id="setup-container" class="bg-white rounded-2xl shadow-xl w-full max-w-3xl p-10 md:p-16">
+    <div id="setup-container" class="bg-white rounded-2xl shadow-xl w-full p-10 md:p-16">
         <!-- Welcome Screen -->
-        <div id="welcome-screen" class="text-center space-y-10">
+        <div id="welcome-screen" class="text-center space-y-14 max-w-3xl">
             <!-- Logo and Title -->
-            <div class="flex justify-center items-center space-x-4">
-                    <svg class="w-10 h-10 text-gray-800" viewBox="0 0 92.105 92.1">
-                        <g transform="translate(-2.76 -2.77) scale(0.3254)" fill="currentColor">
-                            <!-- Icon Content -->
-                            <g xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M202.9,120.4L156,82.2c-3.5-2.9-8.6-2.9-12.1,0L97,120.5c-1.9,1.5-1.9,4.5,0,6l14.7,12c2.1,1.7,5.1,1.7,7.3,0l30.9-25.2l30.9,25.3c2.1,1.7,5.1,1.7,7.3,0l14.7-12C204.8,124.9,204.8,122,202.9,120.4z">
-                                </path>
-                                <path
-                                    d="M249.9,158.9l40.2-32.7c1.9-1.5,1.9-4.5,0-6L156,10.7c-3.5-2.9-8.6-2.9-12.1,0L9.9,120c-1.9,1.5-1.9,4.5,0,6l40.2,32.8L9.9,191.6c-1.9,1.5-1.9,4.5,0,6L124,290.7c2.5,2,6.2,0.3,6.2-3V193c0-2.9-1.3-5.7-3.6-7.5L94,158.9L72,141l-19-15.7c-1.4-1.1-1.4-3.3,0-4.5l93.4-76.2c2.1-1.7,5.1-1.7,7.3,0l93.4,76.2c1.4,1.1,1.4,3.3,0,4.5L228,140.9l-22.1,18l-32.6,26.6c-2.3,1.8-3.6,4.6-3.6,7.5v94.7c0,3.2,3.8,5,6.2,3L290,197.6c1.9-1.5,1.9-4.5,0-6L249.9,158.9zM73.9,178.3l26.7,21.8c1.3,1.1,2.2,2.8,2.2,4.5v28.8c0,1.6-1.9,2.6-3.1,1.5L53,196.8c-1.4-1.1-1.4-3.3,0-4.5l17.3-14.1C71.3,177.3,72.8,177.3,73.9,178.3zM197.3,233.4v-28.8c0-1.7,0.8-3.4,2.2-4.5l26.7-21.8c1-0.9,2.5-0.9,3.6,0l17.3,14.1c1.4,1.1,1.4,3.3,0,4.5L200.4,235C199.1,235.9,197.3,235.1,197.3,233.4z">
-                                </path>
-                            </g>
+            <div class="flex justify-center items-center space-x-3">
+                <svg class="w-9 h-9 text-gray-800" viewBox="0 0 92.105 92.1">
+                    <g transform="translate(-2.76 -2.77) scale(0.3254)" fill="currentColor">
+                        <!-- Icon Content -->
+                        <g xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M202.9,120.4L156,82.2c-3.5-2.9-8.6-2.9-12.1,0L97,120.5c-1.9,1.5-1.9,4.5,0,6l14.7,12c2.1,1.7,5.1,1.7,7.3,0l30.9-25.2l30.9,25.3c2.1,1.7,5.1,1.7,7.3,0l14.7-12C204.8,124.9,204.8,122,202.9,120.4z">
+                            </path>
+                            <path
+                                d="M249.9,158.9l40.2-32.7c1.9-1.5,1.9-4.5,0-6L156,10.7c-3.5-2.9-8.6-2.9-12.1,0L9.9,120c-1.9,1.5-1.9,4.5,0,6l40.2,32.8L9.9,191.6c-1.9,1.5-1.9,4.5,0,6L124,290.7c2.5,2,6.2,0.3,6.2-3V193c0-2.9-1.3-5.7-3.6-7.5L94,158.9L72,141l-19-15.7c-1.4-1.1-1.4-3.3,0-4.5l93.4-76.2c2.1-1.7,5.1-1.7,7.3,0l93.4,76.2c1.4,1.1,1.4,3.3,0,4.5L228,140.9l-22.1,18l-32.6,26.6c-2.3,1.8-3.6,4.6-3.6,7.5v94.7c0,3.2,3.8,5,6.2,3L290,197.6c1.9-1.5,1.9-4.5,0-6L249.9,158.9zM73.9,178.3l26.7,21.8c1.3,1.1,2.2,2.8,2.2,4.5v28.8c0,1.6-1.9,2.6-3.1,1.5L53,196.8c-1.4-1.1-1.4-3.3,0-4.5l17.3-14.1C71.3,177.3,72.8,177.3,73.9,178.3zM197.3,233.4v-28.8c0-1.7,0.8-3.4,2.2-4.5l26.7-21.8c1-0.9,2.5-0.9,3.6,0l17.3,14.1c1.4,1.1,1.4,3.3,0,4.5L200.4,235C199.1,235.9,197.3,235.1,197.3,233.4z">
+                            </path>
                         </g>
-                    </svg>
+                    </g>
+                </svg>
                 <span class="font-heading font-medium text-3xl text-gray-800">Passito</span>
             </div>
-            <!-- Welcome Message -->
-            <div class="space-y-4">
-                <h1 class="text-2xl md:text-3xl font-medium text-gray-800">Welcome to Setup</h1>
-                <p class="text-gray-500 text-base md:text-lg">
-                    Follow the steps to set up your application and get it ready for use.
+            <div class="space-y-6">
+                <h1 class="text-2xl md:text-3xl font-medium text-gray-800">Welcome to the Setup Wizard</h1>
+                <p class="text-gray-500 text-sm md:text-md text-start">
+                    We're excited to have you on board! This setup wizard will guide you through a few simple steps to
+                    configure
+                    your application and get everything up and running in no time.
                 </p>
+                <div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-md text-start">
+                    <p class="text-blue-700 text-sm md:text-md">
+                        Make sure you have the necessary details like institution information and user roles ready. If
+                        you need
+                        assistance, check out our <a href="#" class="text-blue-600 underline">documentation</a> or
+                        contact
+                        <a href="#" class="text-blue-600 underline">support</a>.
+                    </p>
+                </div>
             </div>
+
             <!-- Start Button -->
             <div>
                 <button onclick="startSetup()"
-                    class="px-8 py-3 bg-blue-600 text-white text-lg font-medium rounded-full shadow-lg hover:bg-blue-700 hover:shadow-xl transition duration-300 ease-in-out">
+                    class="px-8 py-3 bg-blue-600 text-white text-lg font-medium rounded-3xl shadow-lg hover:bg-blue-700 hover:shadow-xl transition duration-300 ease-in-out">
                     Get Started
+                    <i class="fa-solid fa-arrow-right ms-2"></i>
                 </button>
             </div>
+
         </div>
 
 
         <!-- Setup Steps -->
-        <div id="setup-steps" class="hidden">
+        <div id="setup-steps" class="hidden px-6 py-0 w-full">
             <!-- Progress Bar -->
-            <div class="relative mt-6">
+            <div class="relative mb-10">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center">
                         <span id="progress-start" class="w-4 h-4 bg-gray-300 rounded-full"></span>
@@ -70,20 +83,23 @@
             <div id="step-content" class="mt-8">
                 <!-- Step 1: Create Super Admin -->
                 <div id="step1" class="hidden">
-                    <h2 class="text-2xl font-semibold text-gray-800">1. Create Super Admin</h2>
-                    <p class="text-gray-500 mt-2">Enter the details for the first super admin of the application.</p>
+                    <h2 class="text-2xl font-semibold text-gray-800">1. Create Chief Warden</h2>
+                    <p class="text-gray-500 mt-2">Enter the details for the first chief warden of the application.</p>
                     <form onsubmit="goToStep(2); return false;" class="mt-6 space-y-4">
-                        <input type="text" placeholder="Name"
-                            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500">
                         <input type="email" placeholder="Email"
                             class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500">
                         <input type="password" placeholder="Password"
                             class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500">
-                        <select placeholder="Gender"
-                            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500">
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                        </select>
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="text" placeholder="Full Name"
+                                class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500">
+                            <select
+                                class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500">
+                                <option value="" disabled selected>Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                            </select>
+                        </div>
                         <button type="submit"
                             class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300 ease-in-out">
                             Next
@@ -139,6 +155,12 @@
                             class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500">
                         <select
                             class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500">
+                            <option value="" disabled selected>Hostel Type</option>
+                            <option value="gents">Gents Hostel</option>
+                            <option value="ladies">Ladies Hostel</option>
+                        </select>
+                        <select
+                            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500">
                             <option value="" disabled selected>Assign Warden</option>
                             <option value="warden1">Warden 1</option>
                             <option value="warden2">Warden 2</option>
@@ -162,6 +184,9 @@
     }
 
     function goToStep(step) {
+        document.getElementById('setup-container').classList.remove('md:p-16')
+        document.getElementById('setup-container').classList.remove('p-10')
+        document.getElementById('setup-container').classList.add('px-8', 'py-18')
         const steps = [1, 2, 3, 4];
         steps.forEach((s) => {
             document.getElementById(`step${s}`).classList.toggle('hidden', s !== step);
@@ -180,6 +205,6 @@
 
     function finishSetup() {
         alert('Setup Complete! Redirecting...');
-        window.location.href = '/dashboard';
+        window.location.href = '/admin/dashboard';
     }
 </script>

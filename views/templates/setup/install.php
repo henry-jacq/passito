@@ -1,7 +1,7 @@
 <!-- Main Container -->
 <div class="min-h-screen flex items-center justify-center bg-gray-100">
     <!-- Setup Box -->
-    <div id="setup-container" class="bg-white rounded-2xl shadow-xl w-full p-10 md:p-16">
+    <div id="setup-container" class="bg-white rounded-2xl shadow-xl p-10 md:p-16">
         <!-- Welcome Screen -->
         <div id="welcome-screen" class="text-center space-y-14 max-w-3xl">
             <!-- Logo and Title -->
@@ -51,7 +51,7 @@
 
         <!-- Setup Steps -->
         <div id="setup-steps" class="hidden flex justify-center items-center w-full h-full">
-            <div class="max-w-3xl w-full space-y-10">
+            <div class="max-w-3xl w-full mx-auto space-y-10">
                 <!-- Progress Bar -->
                 <div class="relative mb-8">
                     <div class="flex items-center justify-between">
@@ -67,14 +67,10 @@
                         </div>
                     </div>
                     <div class="absolute inset-0 flex justify-between items-center text-sm text-gray-600">
-                        <span id="step1-icon"
-                            class="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center text-sm font-bold">1</span>
-                        <span id="step2-icon"
-                            class="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center text-sm font-bold">2</span>
-                        <span id="step3-icon"
-                            class="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center text-sm font-bold">3</span>
-                        <span id="step4-icon"
-                            class="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center text-sm font-bold">4</span>
+                        <span id="step1-icon" class="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center text-sm font-bold">1</span>
+                        <span id="step2-icon" class="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center text-sm font-bold">2</span>
+                        <span id="step3-icon" class="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center text-sm font-bold">3</span>
+                        <span id="step4-icon" class="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center text-sm font-bold">4</span>
                     </div>
                 </div>
 
@@ -86,13 +82,10 @@
                         <p class="text-gray-500 text-sm">Enter the details for the first chief warden of the
                             application.</p>
                         <form onsubmit="goToStep(2); return false;" class="space-y-6">
-                            <input type="email" placeholder="Email"
-                                class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 overflow-hidden">
-                            <input type="password" placeholder="Password"
-                                class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 overflow-hidden">
+                            <input type="email" placeholder="Email" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 overflow-hidden">
+                            <input type="password" placeholder="Password" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 overflow-hidden">
                             <div class="grid grid-cols-2 gap-6">
-                                <input type="text" placeholder="Full Name"
-                                    class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 overflow-hidden">
+                                <input type="text" placeholder="Full Name" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 overflow-hidden">
                                 <select
                                     class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 overflow-hidden">
                                     <option disabled selected>Select Gender</option>
@@ -100,8 +93,7 @@
                                     <option value="female">Female</option>
                                 </select>
                             </div>
-                            <button type="submit"
-                                class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg shadow-lg hover:bg-blue-700 transition duration-300">
+                            <button type="submit" class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg shadow-lg hover:bg-blue-700 transition duration-300">
                                 Next
                             </button>
                         </form>
@@ -112,17 +104,13 @@
                         <h2 class="text-3xl font-medium text-gray-800">2. Create Institution</h2>
                         <p class="text-gray-500 text-sm">Enter the institution details to proceed.</p>
                         <form onsubmit="goToStep(3); return false;" class="space-y-6">
-                            <input type="text" placeholder="Institution Name"
-                                class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 overflow-hidden">
-                            <input type="text" placeholder="Institution Address"
-                                class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 overflow-hidden">
-                            <select
-                                class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 overflow-hidden">
+                            <input type="text" placeholder="Institution Name" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 overflow-hidden">
+                            <input type="text" placeholder="Institution Address" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 overflow-hidden">
+                            <select class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 overflow-hidden">
                                 <option value="college">College</option>
                                 <option value="university">University</option>
                             </select>
-                            <button type="submit"
-                                class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300">
+                            <button type="submit" class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300">
                                 Next
                             </button>
                         </form>
@@ -133,14 +121,10 @@
                         <h2 class="text-3xl font-medium text-gray-800">3. Create Wardens</h2>
                         <p class="text-gray-500 text-sm">Add wardens and their details.</p>
                         <form onsubmit="goToStep(4); return false;" class="space-y-6">
-                            <input type="text" placeholder="Warden Name"
-                                class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 overflow-hidden">
-                            <input type="email" placeholder="Warden Email"
-                                class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 overflow-hidden">
-                            <input type="text" placeholder="Phone Number"
-                                class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 overflow-hidden">
-                            <button type="submit"
-                                class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300">
+                            <input type="text" placeholder="Warden Name" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 overflow-hidden">
+                            <input type="email" placeholder="Warden Email" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 overflow-hidden">
+                            <input type="text" placeholder="Phone Number" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 overflow-hidden">
+                            <button type="submit" class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300">
                                 Next
                             </button>
                         </form>
@@ -151,22 +135,18 @@
                         <h2 class="text-3xl font-medium text-gray-800">4. Create Hostels</h2>
                         <p class="text-gray-500 text-sm">Add hostel details and assign wardens.</p>
                         <form onsubmit="finishSetup(); return false;" class="space-y-6">
-                            <input type="text" placeholder="Hostel Name"
-                                class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 overflow-hidden">
-                            <select
-                                class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 overflow-hidden">
+                            <input type="text" placeholder="Hostel Name" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 overflow-hidden">
+                            <select class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 overflow-hidden">
                                 <option value="" disabled selected>Hostel Type</option>
                                 <option value="gents">Gents Hostel</option>
                                 <option value="ladies">Ladies Hostel</option>
                             </select>
-                            <select
-                                class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 overflow-hidden">
+                            <select class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 overflow-hidden">
                                 <option value="" disabled selected>Assign Warden</option>
                                 <option value="warden1">Warden 1</option>
                                 <option value="warden2">Warden 2</option>
                             </select>
-                            <button type="submit"
-                                class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300">
+                            <button type="submit" class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300">
                                 Finish Setup
                             </button>
                         </form>
@@ -203,7 +183,7 @@
     }
 
     function finishSetup() {
-        alert('Setup Complete! Redirecting...');
-        window.location.href = '/admin/dashboard';
+        alert('Setup Complete! Redirecting to <?= $this->urlFor('auth.login') ?>...');
+        window.location.href = '<?= $this->urlFor('auth.login') ?>';
     }
 </script>

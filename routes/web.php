@@ -21,11 +21,11 @@ return function (App $app) {
         $group->any('/logout', [AuthController::class, 'logout'])->setName('auth.logout');
     });
 
-    // Admin Setup Routes
+    // Setup wizard routes
     $app->group('/setup', function (RouteCollectorProxy $group) {
         $group->any('/install', [SetupController::class, 'install'])->setName('setup.install');
         $group->any('/update', [SetupController::class, 'update'])->setName('setup.update');
-    })->add(SetupMiddleware::class);
+    });
 
     // Student Routes
     $app->group('/student', function (RouteCollectorProxy $group) {

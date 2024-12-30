@@ -5,6 +5,7 @@ use App\Core\View;
 use App\Core\Config;
 use Slim\Psr7\Request;
 use App\Middleware\SessionStartMiddleware;
+use App\Middleware\SetupMiddleware;
 
 return function (App $app) {
 
@@ -46,6 +47,7 @@ return function (App $app) {
         ->withHeader('Content-Type', 'application/json');
     };
 
+    $app->add(SetupMiddleware::class);
     $app->add(SessionStartMiddleware::class);
     $app->addRoutingMiddleware();
     $app->addBodyParsingMiddleware();

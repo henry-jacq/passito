@@ -7,18 +7,18 @@
         <div class="bg-white p-6 rounded-lg shadow-md">
             <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div>
-                    <label for="username" class="block text-gray-700 font-medium">Username</label>
-                    <input type="text" id="username" class="mt-2 border-gray-300 rounded-lg p-3 w-full text-gray-700 focus:ring-indigo-500" placeholder="Enter your username">
+                    <label for="fullname" class="block text-gray-700 font-medium">Full Name</label>
+                    <input type="text" id="fullname" class="mt-2 border-gray-300 rounded-lg p-3 w-full text-gray-700 focus:ring-indigo-500" placeholder="Enter your fullname" value="<?= $user->getName() ?>">
                 </div>
                 <div>
                     <label for="email" class="block text-gray-700 font-medium">Email Address</label>
-                    <input type="email" id="email" class="mt-2 border-gray-300 rounded-lg p-3 w-full text-gray-700 focus:ring-indigo-500" placeholder="Enter your email">
+                    <input type="email" id="email" class="mt-2 border-gray-300 rounded-lg p-3 w-full text-gray-700 focus:ring-indigo-500" placeholder="Enter your email" value="<?= $user->getEmail() ?>">
                 </div>
             </div>
             <div class="grid grid-cols-1 gap-6 md:grid-cols-2 mt-6">
                 <div>
                     <label for="contact" class="block text-gray-700 font-medium">Contact Info</label>
-                    <input type="tel" id="contact" class="mt-2 border-gray-300 rounded-lg p-3 w-full text-gray-700 focus:ring-indigo-500" placeholder="Enter your contact number">
+                    <input type="tel" id="contact" class="mt-2 border-gray-300 rounded-lg p-3 w-full text-gray-700 focus:ring-indigo-500" placeholder="Enter your contact number" value="<?= $user->getContactNo() ?>">
                 </div>
                 <div>
                     <label for="password" class="block text-gray-700 font-medium">Password</label>
@@ -102,6 +102,23 @@
             </div>
             <button class="mt-6 bg-indigo-600 text-white rounded-md px-6 py-3 hover:bg-indigo-700 transition duration-200">
                 Add Hostel
+            </button>
+        </div>
+    </div>
+
+    <!-- Transfer Ownership Section (Super Admin only) -->
+    <div class="mt-10">
+        <h3 class="text-xl font-semibold text-gray-800 mb-6">Transfer Ownership</h3>
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <p class="text-gray-600 mb-4">Transfer ownership of the application to another super admin:</p>
+            <div class="space-y-4">
+                <div>
+                    <label for="new-owner-email" class="block text-gray-700">New Owner's Email</label>
+                    <input type="email" id="new-owner-email" class="mt-2 border-gray-300 rounded-md p-2 w-full text-gray-700 focus:ring-indigo-500" placeholder="Enter the new owner's email">
+                </div>
+            </div>
+            <button class="mt-6 bg-indigo-600 text-white rounded-md px-6 py-3 hover:bg-indigo-700 transition duration-200">
+                Transfer Ownership
             </button>
         </div>
     </div>

@@ -42,6 +42,8 @@ return function (App $app) {
         $group->any('/dashboard', [AdminController::class, 'dashboard'])->setName('admin.dashboard');
         $group->any('/outpass/pending', [AdminController::class, 'pendingRequests'])->setName('admin.outpass.pending');
         $group->any('/outpass/records', [AdminController::class, 'outpassRecords'])->setName('admin.outpass.records');
+        $group->any('/manage/students', [AdminController::class, 'manageStudents'])->setName('admin.manage.students');
+        $group->any('/manage/wardens', [AdminController::class, 'manageWardens'])->setName('admin.manage.wardens');
         $group->any('/settings', [AdminController::class, 'settings'])->setName('admin.settings');
         $group->any('/manage/verifiers', [AdminController::class, 'manageVerifiers'])->setName('admin.manage.verifiers');
         $group->any('/manage/logbook', [AdminController::class, 'manageLogbook'])->setName('admin.manage.logbook');

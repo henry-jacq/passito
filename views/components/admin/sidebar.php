@@ -57,36 +57,24 @@
                     </ul>
                 </li>
 
-                <!-- Manage Students Section (Nested Menu) -->
-                <li class="my-1 relative">
-                    <button class="flex justify-between items-center w-full px-4 py-3 text-gray-600 hover:bg-gray-50 active:bg-gray-100 rounded-md transition duration-200 btn-nested-toggle">
-                        <span class="flex items-center">
-                            <i class="fas fa-users pr-3"></i>
-                            <span>Manage Students</span>
-                        </span>
-                        <span class="transform transition-transform duration-300 btn-nested-arrow">
-                            <i class="fas fa-chevron-down"></i>
-                        </span>
-                    </button>
-
-                    <ul class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out pl-4 nested-submenu">
-                        <li class="relative mt-2">
-                            <a href="#"
-                                class="flex items-center ml-5 px-3 py-2 text-gray-600 hover:bg-gray-50 hover:text-indigo-600 rounded-md transition duration-200">
-                                <span>Add Student</span>
-                            </a>
-                            <div class="absolute left-2 top-1/2 w-0.5 h-full bg-indigo-600 transform -translate-y-1/2"></div>
-                        </li>
-                        <li class="relative">
-                            <a href="#"
-                                class="flex items-center ml-5 px-3 py-2 text-gray-600 hover:bg-gray-50 hover:text-indigo-600 rounded-md transition duration-200">
-                                <span>Search Students</span>
-                            </a>
-                            <div class="absolute left-2 top-1/2 w-0.5 h-full bg-indigo-600 transform -translate-y-1/2"></div>
-                        </li>
-                    </ul>
+                <!-- Students -->
+                <li class="my-1">
+                    <a href="<?= $this->urlFor('admin.manage.students')?>"
+                        class="flex items-center px-4 py-3 <?= ($routeName == 'admin.manage.students') ? 'bg-indigo-100 text-indigo-600 hover:bg-indigo-200' : 'text-gray-600 hover:bg-gray-50'; ?> rounded-md transition duration-200">
+                        <i class="fas fa-users pr-3"></i>
+                        <span>Manage Students</span>
+                    </a>
                 </li>
 
+                <!-- Wardens -->
+                <li class="my-1">
+                    <a href="<?= $this->urlFor('admin.manage.wardens')?>"
+                        class="flex items-center px-4 py-3 <?= ($routeName == 'admin.manage.wardens') ? 'bg-indigo-100 text-indigo-600 hover:bg-indigo-200' : 'text-gray-600 hover:bg-gray-50'; ?> rounded-md transition duration-200">
+                        <i class="fas fa-user-shield pr-3"></i>
+                        <span>Manage Wardens</span>
+                    </a>
+                </li>
+                
                 <!-- Verifiers -->
                 <li class="my-1">
                     <a href="<?= $this->urlFor('admin.manage.verifiers')?>"
@@ -118,11 +106,11 @@
 
         <!-- User Info Section (Fixed at Bottom) -->
         <div class="border-t p-4 flex items-center">
-            <img src="https://ui-avatars.com/api/?name=Henry&background=c7d2fe&color=3730a3&bold=true"
+            <img src="https://ui-avatars.com/api/?name=<?= $user->getName() ?>&background=c7d2fe&color=3730a3&bold=true"
                 alt="User Avatar" class="w-10 h-10 rounded-md">
             <div class="ml-3 truncate">
-                <h4 class="font-semibold text-gray-800">Henry</h4>
-                <span class="text-xs text-gray-500">henry2212023@gmail.com</span>
+                <h4 class="font-semibold text-gray-800"><?= ucwords($user->getName()) ?></h4>
+                <span class="text-xs text-gray-500"><?= $user->getEmail()?></span>
             </div>
         </div>
     </nav>

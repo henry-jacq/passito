@@ -34,16 +34,12 @@
 
     <div class="flex h-screen">
         <!-- Sidebar -->
-        <?php $this->getComponent('admin/sidebar', [
-            'routeName' => $routeName
-        ]) ?>
+        <?php $this->getComponent('admin/sidebar', get_defined_vars()) ?>
         
         <!-- Contents Area -->
         <div class="flex-1 flex flex-col lg:ml-64">
             <!-- Admin header -->
-            <?php $this->getComponent('admin/header', [
-                'routeName' => $routeName
-            ]) ?>
+            <?php $this->getComponent('admin/header', get_defined_vars()) ?>
             
             {{contents}}
 
@@ -51,7 +47,7 @@
     </div>
 
     <!-- Modal Stub -->
-    <?php $this->getComponent('admin/modal', []) ?>
+    <?php $this->getComponent('admin/modal', get_defined_vars()) ?>
 
     <script type="module" src="<?= vite_asset('js/admin.js') ?>"></script>
 

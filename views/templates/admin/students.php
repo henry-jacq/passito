@@ -1,7 +1,7 @@
 <main class="flex-1 p-6 mt-20 overflow-y-auto">
     <h2 class="text-2xl font-semibold text-gray-800 mb-4">Manage Students</h2>
     <p class="text-gray-600 text-md mb-10">
-        Manage student details, including their hostel assignments, academic information, and contact details.
+        Manage student details, including their hostel details, academic information, and contact details.
     </p>
 
     <!-- Add, Search, and Export Section -->
@@ -16,7 +16,7 @@
             <input
                 type="text"
                 placeholder="Search students..."
-                class="w-full bg-gray-50 border border-gray-300 text-md rounded-md ps-12 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                class="w-full bg-gray-50 border border-gray-300 text-md rounded-md ps-12 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200"
             />
         </div>
 
@@ -36,20 +36,16 @@
     </div>
 
     <!-- Bulk Import Section -->
-    <div class="mb-6 bg-gray-50 p-6 rounded-lg border border-gray-200">
+    <div class="mb-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
         <div class="flex justify-between items-center">
-            <div>
-                <h3 class="text-lg font-medium font-display text-gray-800">Import Students</h3>
-                <p class="text-gray-500 text-sm">
-                    Upload a CSV file to bulk import students. Ensure the file contains required fields. Get
-                    the sample CSV file format to upload. <a href="#" class="text-blue-600 underline">Download Here</a>
+            <div class="space-y-2">
+                <h3 class="text-md font-display font-semibold text-gray-900">Upload Student Records</h3>
+                <p class="text-gray-600 text-sm">
+                    Upload a CSV file to import student records. Ensure the file meets the required format. 
+                    <a href="#" class="text-blue-500 underline hover:text-blue-600">Download the sample template</a> to get started.
                 </p>
             </div>
-
-            <button
-                id="import-btn"
-                class="bg-green-600 text-white px-3 py-2 rounded-md hover:bg-green-700 transition duration-200"
-            >
+            <button id="import-btn" class="bg-green-600 text-white text-md px-3 py-2 rounded-md hover:bg-green-700 transition duration-200">
                 <i class="fa-solid fa-file-import fa-sm mr-1"></i>
                 Choose File
             </button>
@@ -105,7 +101,7 @@
             <p class="text-sm text-gray-600">Showing 1-10 of 50 students</p>
             <div class="flex justify-end space-x-2">
                 <button class="px-3 py-1 text-sm bg-gray-200 rounded-md hover:bg-gray-300">Previous</button>
-                <button class="px-3 py-1 text-sm bg-indigo-600 text-white rounded-md hover:bg-gray-300">Next</button>
+                <button class="px-3 py-1 text-sm bg-indigo-600 text-white rounded-md hover:bg-indigo-700">Next</button>
             </div>
         </div>
     </section>

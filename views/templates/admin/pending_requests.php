@@ -1,7 +1,7 @@
 <!-- Pending Requests Page -->
 <main class="flex-1 p-6 mt-20 overflow-y-auto">
-    <h2 class="text-2xl font-semibold text-gray-700 mb-4">Pending Requests</h2>
-    <p class="text-gray-700 text-normal mb-8">Manage pending requests by approving, rejecting, or wiping them out.</p>
+    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Pending Requests</h2>
+    <p class="text-gray-600 text-md mb-8">Manage pending requests by approving, rejecting, or wiping them out.</p>
 
     <section class="bg-white shadow-md rounded-lg overflow-hidden">
         <table class="min-w-full table-auto">

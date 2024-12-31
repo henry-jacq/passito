@@ -22,9 +22,9 @@ class Hostel
     #[ORM\JoinColumn(name: 'institution_id', referencedColumnName: 'id', nullable: false)]
     private Institution $institution;
 
-    #[ORM\ManyToOne(targetEntity: Warden::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(name: 'warden_id', referencedColumnName: 'id', nullable: false)]
-    private Warden $warden;
+    private User $warden;
 
     #[ORM\Column(type: 'string', length: 255)]
     private string $hostelName;
@@ -47,12 +47,12 @@ class Hostel
         $this->institution = $institution;
     }
 
-    public function getWarden(): Warden
+    public function getWarden(): User
     {
         return $this->warden;
     }
 
-    public function setWarden(Warden $warden): void
+    public function setWarden(User $warden): void
     {
         $this->warden = $warden;
     }

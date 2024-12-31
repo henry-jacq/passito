@@ -21,6 +21,9 @@ class User
     #[ORM\Column(type: 'integer')]
     private int $id;
 
+    #[ORM\Column(type: 'string', length: 255)]
+    private string $name;
+
     #[ORM\Column(type: 'string', length: 255, unique: true)]
     private string $email;
 
@@ -33,12 +36,25 @@ class User
     #[ORM\Column(type: 'string', enumType: Gender::class)]
     private Gender $gender;
 
+    #[ORM\Column(type: 'string', length: 32)]
+    private string $contactNo;
+
     #[ORM\Column(type: 'datetime')]
     private DateTime $createdAt;
 
     public function getId(): int
     {
         return $this->id;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): void
+    {
+        $this->name = $name;
     }
 
     public function getEmail(): string
@@ -79,6 +95,16 @@ class User
     public function setGender(Gender $gender): void
     {
         $this->gender = $gender;
+    }
+
+    public function getContactNo(): string
+    {
+        return $this->contactNo;
+    }
+
+    public function setContactNo(string $contactNo): void
+    {
+        $this->contactNo = $contactNo;
     }
 
     public function getCreatedAt(): DateTime

@@ -53,9 +53,9 @@ class OutpassRequest
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $remarks = null;
 
-    #[ORM\ManyToOne(targetEntity: Warden::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(name: 'approved_by', referencedColumnName: 'id', nullable: true)]
-    private ?Warden $approvedBy = null;
+    private ?User $approvedBy = null;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
     private ?DateTime $approvedTime = null;
@@ -123,7 +123,7 @@ class OutpassRequest
         return $this->remarks;
     }
 
-    public function getApprovedBy(): ?Warden
+    public function getApprovedBy(): ?User
     {
         return $this->approvedBy;
     }
@@ -193,7 +193,7 @@ class OutpassRequest
         $this->remarks = $remarks;
     }
 
-    public function setApprovedBy(?Warden $approvedBy): void
+    public function setApprovedBy(?User $approvedBy): void
     {
         $this->approvedBy = $approvedBy;
     }

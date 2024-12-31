@@ -27,9 +27,6 @@ class Student
     #[ORM\JoinColumn(name: 'hostel_id', referencedColumnName: 'id', nullable: false)]
     private Hostel $hostel;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private string $name;
-
     #[ORM\Column(type: 'integer', unique: true)]
     private int $digitalId;
 
@@ -77,16 +74,6 @@ class Student
     public function setHostel(Hostel $hostel): void
     {
         $this->hostel = $hostel;
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): void
-    {
-        $this->name = $name;
     }
 
     public function getDigitalId(): int

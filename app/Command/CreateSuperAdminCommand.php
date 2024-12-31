@@ -78,6 +78,8 @@ class CreateSuperAdminCommand extends Command
         $user->setPassword(password_hash($password, PASSWORD_BCRYPT, ['cost' => 12])); // Secure password hashing
         $user->setGender(Gender::from($gender));
         $user->setRole(UserRole::SUPER_ADMIN);
+        $user->setName('Super Admin'); // Default name
+        $user->setContactNo(''); // Empty contact number
         $user->setCreatedAt(new \DateTime());
 
         $this->entityManager->persist($user);

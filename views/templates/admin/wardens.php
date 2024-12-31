@@ -7,7 +7,7 @@
     <!-- Add and Filter Section -->
     <div class="flex flex-wrap justify-between items-center mb-6 space-y-4 md:space-y-0">
         <!-- Add Warden Button -->
-        <button class="relative px-3 py-2 rounded-lg border border-gray-300 hover:bg-gray-200 shadow-sm transition duration-300 hover:border-gray-500">
+        <button id="open-add-warden-modal" class="relative px-3 py-2 rounded-lg border border-gray-300 hover:bg-gray-200 shadow-sm transition duration-300 hover:border-gray-500">
             <span class="absolute inset-0 w-full h-full rounded-lg transition duration-300 hover:bg-gray-100"></span>
             <span class="relative flex items-center text-gray-700 font-medium">
                 <i class="fa-solid fa-user-plus fa-sm mr-2"></i>

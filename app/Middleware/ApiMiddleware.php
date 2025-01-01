@@ -30,15 +30,9 @@ class ApiMiddleware implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        // Check authentication
+        // Check if user is logged in
         if (empty($this->session->get('user'))) {
-            return $this->responseFactory
-                ->createResponse(401)
-                ->withHeader('Content-Type', 'application/json')
-                ->withBody($this->streamFactory->createStream(json_encode([
-                    'message' => 'Unauthorized',
-                    'status' => false,
-                ])));
+            return $handler->handle($request);
         }
 
         // Fetch user and role

@@ -30,7 +30,7 @@
 </head>
 
 
-<body class="bg-lightGray font-sans">
+<body class="bg-lightGray font-sans leading-relaxed">
 
     <div class="flex h-screen">
         <!-- Sidebar -->

@@ -7,6 +7,7 @@ use App\Core\View;
 use App\Core\Mailer;
 use App\Core\Session;
 use App\Services\AuthService;
+use App\Services\UserService;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -38,10 +39,11 @@ class ApiController
     private const API_ROUTE = ROUTES_PATH . DIRECTORY_SEPARATOR . 'api';
 
     public function __construct(
-        private readonly AuthService $auth,
         private readonly View $view,
+        private readonly Mailer $mail,
         private readonly Session $session,
-        private readonly Mailer $mail
+        private readonly AuthService $auth,
+        private readonly UserService $userService,
     )
     {
     }
@@ -283,12 +285,19 @@ class ApiController
     }
 
     /**
-     * Check if user is admin or not
+     * Get user role
+     */
+    public function getRole(): string
+    {
+        return $this->session->get('role');
+    }
+
+    /**
+     * Check if user is admin
      */
     public function isAdmin(): bool
     {
-        $role = $this->getAttribute('role');
-        return $role === 'admin';
+        return $this->auth->isAdmin();
     }
 
     /**

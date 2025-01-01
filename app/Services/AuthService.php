@@ -65,4 +65,15 @@ class AuthService
         }
         return false;
     }
+
+    /**
+     * Check if user is admin
+     */
+    public function isAdmin()
+    {
+        if (UserRole::isAdministrator($this->session->get('role'))) {
+            return true;
+        }
+        return false;
+    }
 }

@@ -8,6 +8,7 @@ use App\Controller\AdminController;
 use App\Controller\SetupController;
 use App\Middleware\AdminMiddleware;
 use App\Controller\StudentController;
+use App\Middleware\ApiMiddleware;
 use App\Middleware\SetupMiddleware;
 use App\Middleware\StudentMiddleware;
 use Slim\Routing\RouteCollectorProxy;
@@ -53,5 +54,5 @@ return function (App $app) {
     // API Routes
     $app->group('/api', function (RouteCollectorProxy $group) {
         $group->any('/{namespace}/{resource}[/{params:.*}]', [ApiController::class, 'process']);
-    });
+    })->add(ApiMiddleware::class);
 };

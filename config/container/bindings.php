@@ -13,7 +13,9 @@ use Doctrine\DBAL\DriverManager;
 use PHPMailer\PHPMailer\PHPMailer;
 use Psr\Container\ContainerInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 use function DI\create;
 
@@ -47,6 +49,7 @@ return [
         );
     },
     ResponseFactoryInterface::class => fn (App $app) => $app->getResponseFactory(),
+    StreamFactoryInterface::class => fn () => new Psr17Factory(),
     Request::class => function (ContainerInterface $container) {
         return new Request(
             $container->get(Session::class)

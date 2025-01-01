@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Core\View;
+use App\Services\FacilityService;
 use App\Services\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -12,6 +13,7 @@ class AdminController extends BaseController
     public function __construct(
         protected readonly View $view,
         private readonly UserService $userService,
+        private readonly FacilityService $facilityService
     )
     {
     }
@@ -123,16 +125,21 @@ class AdminController extends BaseController
         return parent::render($request, $response, 'admin/logbook', $args);
     }
     
-    public function settings(Request $request, Response $response): Response
+    public function manageFacilities(Request $request, Response $response): Response
     {
         $this->view->clearCacheIfDev();
 
         $userData = $request->getAttribute('user');
+        $institutions = $this->facilityService->getInstitutions();
+        $hostels = $this->facilityService->getHostels();
+
         $args = [
-            'title' => 'Settings',
+            'title' => 'Manage Facilities',
             'user' => $userData,
+            'hostels' => $hostels,
+            'institutions' => $institutions,
             'routeName' => $this->getRouteName($request),
         ];
-        return parent::render($request, $response, 'admin/settings', $args);
+        return parent::render($request, $response, 'admin/facilities', $args);
     }
 }

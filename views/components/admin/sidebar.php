@@ -74,6 +74,15 @@
                         <span>Manage Wardens</span>
                     </a>
                 </li>
+
+                <!-- Facilities -->
+                <li class="my-1">
+                    <a href="<?= $this->urlFor('admin.manage.facilities')?>"
+                        class="flex items-center px-4 py-3 <?= ($routeName == 'admin.manage.facilities') ? 'bg-indigo-100 text-indigo-600 hover:bg-indigo-200' : 'text-gray-600 hover:bg-gray-50'; ?> rounded-md transition duration-200">
+                        <i class="fas fa-hotel pr-4"></i>
+                        <span>Manage Facilities</span>
+                    </a>
+                </li>
                 
                 <!-- Verifiers -->
                 <li class="my-1">
@@ -89,16 +98,7 @@
                     <a href="<?= $this->urlFor('admin.manage.logbook')?>"
                         class="flex items-center px-4 py-3 <?= ($routeName == 'admin.manage.logbook') ? 'bg-indigo-100 text-indigo-600 hover:bg-indigo-200' : 'text-gray-600 hover:bg-gray-50'; ?> rounded-md transition duration-200">
                         <i class="fas fa-book pr-4"></i>
-                        <span>Manage Logbook</span>
-                    </a>
-                </li>
-
-                <!-- Settings -->
-                <li class="my-1">
-                    <a href="<?= $this->urlFor('admin.settings')?>"
-                        class="flex items-center px-4 py-3 <?= ($routeName == 'admin.settings') ? 'bg-indigo-100 text-indigo-600 hover:bg-indigo-200' : 'text-gray-600 hover:bg-gray-50'; ?> rounded-md transition duration-200">
-                        <i class="fas fa-screwdriver-wrench pr-4"></i>
-                        <span>Passito Settings</span>
+                        <span>Verifier History</span>
                     </a>
                 </li>
             </ul>

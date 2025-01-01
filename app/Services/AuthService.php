@@ -76,4 +76,6 @@ class AuthService
         }
         return false;
     }
+
+    // TODO: Add more methods for password reset, session management, 2FA, rbac etc.
 }

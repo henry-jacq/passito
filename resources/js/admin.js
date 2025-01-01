@@ -2,12 +2,35 @@
 
 // Import the Modal module
 import Modal from './libs/modal';
+import Ajax from './libs/ajax';
 
 function isValidEmail(email) {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
 }
 
+function handleError(status) {
+    switch (status) {
+        case 400:
+            alert('Bad Request: Please check the form data and try again.');
+            break;
+        case 401:
+            alert('Unauthorized: Please login and try again.');
+            break;
+        case 403:
+            alert('Forbidden: You do not have permission to perform this action.');
+            break;
+        case 404:
+            alert('Not Found: The requested resource was not found.');
+            break;
+        case 500:
+            alert('Internal Server Error: Please try again later.');
+            break;
+        default:
+            alert('An error occurred while processing the request.');
+            break;
+    }
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     const sidebar = document.getElementById('sidebar');
@@ -117,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Add Warden Modal example usage
-    const openAddWardenModalButton = document.getElementById('open-add-warden-modal');
+    const openAddWardenModalButton = document.getElementById('add-warden-modal');
     if (openAddWardenModalButton) {
         openAddWardenModalButton.addEventListener('click', () => {
             Modal.open({
@@ -140,35 +163,51 @@ document.addEventListener('DOMContentLoaded', () => {
                             <label for="warden-contact" class="block text-md font-semibold text-gray-700">Contact Number</label>
                             <input type="text" id="warden-contact" name="warden-contact" class="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 text-md transition duration-200" placeholder="Enter Contact No" required>
                         </div>
-
-                        <div class="space-y-2">
-                            <label for="warden-hostel" class="block text-md font-semibold text-gray-700">Hostel to Assign</label>
-                            <select id="warden-hostel" name="warden-hostel" class="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 sm:text-md transition duration-200"
-                                required>
-                                <option value="" disabled selected>Select a Hostel</option>
-                                <option value="hostelA">Hostel A</option>
-                                <option value="hostelB">Hostel B</option>
-                                <option value="hostelC">Hostel C</option>
-                            </select>
-                        </div>
                     </div>
                 </div>
             `,
                 actions: [
                     {
                         label: 'Add Warden',
-                        class: `inline-flex justify-center rounded-lg bg-indigo-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-indigo-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`,
-                        onClick: () => {
+                        class: `inline-flex justify-center rounded-lg bg-indigo-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-indigo-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50`,
+                        onClick: async (event) => {
                             const wardenName = document.getElementById('warden-name').value;
                             const wardenEmail = document.getElementById('warden-email').value;
                             const wardenContact = document.getElementById('warden-contact').value;
-                            const wardenHostel = document.getElementById('warden-hostel').value;
 
-                            if (wardenName && wardenEmail && wardenContact && wardenHostel) {
-                                alert(`Warden added successfully:\nName: ${wardenName}\nEmail: ${wardenEmail}\nContact: ${wardenContact}\nHostel: ${wardenHostel}`);
-                                Modal.close();
+                            // disable the button to prevent multiple clicks
+                            event.target.disabled = true;
+                            event.target.textContent = 'Adding Warden...';
+
+                            if (wardenName && isValidEmail(wardenEmail) && wardenContact) {
+                                try {
+                                    const response = await Ajax.post('/api/web/admin/wardens/create', {
+                                        name: wardenName,
+                                        email: wardenEmail,
+                                        contact: wardenContact
+                                    });                                    
+
+                                    if (response.ok) {
+                                        const data = response.data;
+                                        if (data.status) {
+                                            location.reload();
+                                        } else {
+                                            alert(data.message);
+                                        }
+                                    } else {
+                                        handleError(response.status);
+                                        event.target.textContent = 'Add Warden';
+                                        event.target.disabled = false;
+                                    }
+                                } catch (error) {
+                                    console.error(error);
+                                } finally {
+                                    Modal.close();
+                                }
                             } else {
-                                alert('Please fill in all the fields.');
+                                alert('Please fill in all the required fields correctly.');
+                                event.target.textContent = 'Add Warden';
+                                event.target.disabled = false;
                             }
                         },
                     },
@@ -184,4 +223,63 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
+
+    // Select all buttons with the class 'remove-warden-modal'
+    const removeWardenButtons = document.querySelectorAll('.remove-warden-modal');
+
+    // Iterate over each button and attach an event listener
+    removeWardenButtons.forEach((button) => {
+        button.addEventListener('click', (event) => {
+            const wardenId = event.target.dataset.id;
+            const wardenName = event.target.dataset.wardenname;
+
+            Modal.open({
+                content: `
+                <div class="p-3 space-y-6">
+                    <h3 class="text-2xl font-bold text-gray-900">Remove Warden</h3>
+
+                    <div class="space-y-5">
+                        <p class="text-gray-700">Are you sure you want to remove the warden <span class="font-semibold">${wardenName}</span>?</p>
+                    </div>
+                </div>
+            `,
+                actions: [
+                    {
+                        label: 'Remove Warden',
+                        class: `inline-flex justify-center rounded-lg bg-red-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-red-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2`,
+                        onClick: async () => {
+                            try {
+                                const response = await Ajax.post(`/api/web/admin/wardens/remove`, {
+                                    warden_id: wardenId
+                                });
+
+                                if (response.ok) {
+                                    const data = response.data;
+                                    if (data.status) {
+                                        location.reload();
+                                    } else {
+                                        alert(data.message);
+                                    }
+                                } else {
+                                    handleError(response.status);
+                                }
+                            } catch (error) {
+                                console.error(error);
+                            } finally {
+                                Modal.close();
+                            }
+                        },
+                    },
+                    {
+                        label: 'Cancel',
+                        class: `inline-flex justify-center rounded-lg bg-gray-100 px-6 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`,
+                        onClick: Modal.close,
+                    },
+                ],
+                size: 'sm:max-w-xl',
+                classes: 'custom-modal-class',
+                closeOnBackdropClick: false,
+            });
+        });
+    });
 });

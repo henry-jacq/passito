@@ -2,11 +2,20 @@
 
 namespace App\Controller;
 
+use App\Core\View;
+use App\Services\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 class AdminController extends BaseController
 {
+    public function __construct(
+        protected readonly View $view,
+        private readonly UserService $userService,
+    )
+    {
+    }
+    
     public function dashboard(Request $request, Response $response): Response
     {
         $this->view->clearCacheIfDev();
@@ -77,9 +86,12 @@ class AdminController extends BaseController
         $this->view->clearCacheIfDev();
 
         $userData = $request->getAttribute('user');
+        $wardens = $this->userService->getWardens();
+
         $args = [
             'title' => 'Manage Wardens',
             'user' => $userData,
+            'wardens' => $wardens,
             'routeName' => $this->getRouteName($request),
         ];
         return parent::render($request, $response, 'admin/wardens', $args);

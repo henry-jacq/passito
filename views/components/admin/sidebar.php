@@ -1,5 +1,5 @@
 <?php use App\Enum\UserRole; ?>
-<aside id="sidebar" class="fixed inset-y-0 left-0 w-64 bg-white border-r flex flex-col lg:translate-x-0 -translate-x-full transition-transform duration-300 ease-in-out z-40">
+<aside id="sidebar" class="fixed inset-y-0 left-0 w-64 bg-white border-r flex flex-col lg:translate-x-0 -translate-x-full transition-transform duration-300 ease-in-out z-40 select-none">
     <nav class="flex flex-col h-full bg-white">
         <!-- Brand Section (Fixed) -->
         <div class="p-6 flex justify-center items-center border-b">
@@ -17,9 +17,9 @@
         <div class="flex-1 overflow-y-auto px-3">
             <!-- Main Menu Category -->
             <h4 class="text-gray-600 px-2 mt-4 font-semibold uppercase text-xs">Admin Panel</h4>
-            <ul>
+            <ul class="mt-2">
                 <!-- Dashboard Item -->
-                <li class="mt-2">
+                <li class="my-1">
                     <a href="<?= $this->urlFor('admin.dashboard') ?>"
                         class="flex items-center px-4 py-3 <?= ($routeName == 'admin.dashboard') ? 'bg-indigo-100 text-indigo-600 hover:bg-indigo-200' : 'text-gray-600 hover:bg-gray-50'; ?> rounded-md transition duration-200">
                         <i class="fas fa-tachometer-alt pr-4"></i>
@@ -46,7 +46,7 @@
                 </li>              
             </ul>
             <h4 class="text-gray-600 px-2 mt-4 font-semibold uppercase text-xs">Management</h4>
-            <ul>
+            <ul class="mt-2">
                 <?php if (UserRole::isSuperAdmin($user->getRole()->value)): ?>
                 <!-- Wardens -->
                 <li class="my-1">
@@ -78,7 +78,7 @@
             </ul>
             <!-- Verifiers -->
             <h4 class="text-gray-600 px-2 mt-4 font-semibold uppercase text-xs">Verifiers</h4>
-            <ul>
+            <ul class="mt-2">
                 <?php if (UserRole::isSuperAdmin($user->getRole()->value)): ?>
                 <li class="my-1">
                     <a href="<?= $this->urlFor('admin.manage.verifiers')?>"

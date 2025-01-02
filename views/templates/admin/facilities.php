@@ -37,10 +37,10 @@
                         <td class="py-3 px-6 text-sm text-gray-600"><?= ucfirst($institution->getType()->value) ?></td>
                         <td class="py-3 px-6 text-right">
                             <div class="inline-flex items-center space-x-4 text-gray-500">
-                                <button title="Edit" class="text-gray-700 hover:text-gray-800">
+                                <button title="Edit" class="text-gray-700 hover:text-gray-800" data-id="<?= $institution->getId() ?>">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <button title="Delete" class="text-red-700 hover:text-red-800">
+                                <button title="Delete" class="text-red-700 hover:text-red-800" data-id="<?= $institution->getId() ?>">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
                             </div>
@@ -94,10 +94,10 @@
                         </td>
                         <td class="py-3 px-6 text-right">
                             <div class="inline-flex items-center space-x-4 text-gray-500">
-                                <button title="Edit" class="text-gray-700 hover:text-gray-800">
+                                <button title="Edit" class="text-gray-700 hover:text-gray-800" data-id="<?= $hostel->getId() ?>">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <button title="Delete" class="text-red-700 hover:text-red-800">
+                                <button title="Delete" class="text-red-700 hover:text-red-800" data-id="<?= $hostel->getId() ?>">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
                             </div>

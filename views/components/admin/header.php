@@ -1,4 +1,4 @@
-<header class="flex items-center justify-between p-5 bg-white border-b fixed top-0 left-0 w-full z-30">
+<header class="flex items-center justify-between p-[18.5px] bg-white border-b fixed top-0 left-0 w-full z-30">
     <!-- Breadcrumb -->
     <nav class="flex items-center space-x-2 text-gray-600">
         <a href="<?= $this->urlFor('admin.dashboard')?>" class="hover:text-gray-500">Admin</a>

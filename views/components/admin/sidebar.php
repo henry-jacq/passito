@@ -55,8 +55,10 @@
                             <div class="absolute left-2 top-1/2 w-0.5 h-full bg-indigo-600 transform -translate-y-1/2"></div>
                         </li>
                     </ul>
-                </li>
-
+                </li>                
+            </ul>
+            <h4 class="text-gray-600 px-2 mt-4 font-semibold uppercase text-xs">Management</h4>
+            <ul>
                 <!-- Students -->
                 <li class="my-1">
                     <a href="<?= $this->urlFor('admin.manage.students')?>"
@@ -83,13 +85,15 @@
                         <span>Manage Facilities</span>
                     </a>
                 </li>
-                
-                <!-- Verifiers -->
+            </ul>
+            <!-- Verifiers -->
+            <h4 class="text-gray-600 px-2 mt-4 font-semibold uppercase text-xs">Verifiers</h4>
+            <ul>
                 <li class="my-1">
                     <a href="<?= $this->urlFor('admin.manage.verifiers')?>"
                         class="flex items-center px-4 py-3 <?= ($routeName == 'admin.manage.verifiers') ? 'bg-indigo-100 text-indigo-600 hover:bg-indigo-200' : 'text-gray-600 hover:bg-gray-50'; ?> rounded-md transition duration-200">
                         <i class="fas fa-qrcode pr-4"></i>
-                        <span>Manage Verifiers</span>
+                        <span>Verifier Manager</span>
                     </a>
                 </li>
 
@@ -98,7 +102,7 @@
                     <a href="<?= $this->urlFor('admin.manage.logbook')?>"
                         class="flex items-center px-4 py-3 <?= ($routeName == 'admin.manage.logbook') ? 'bg-indigo-100 text-indigo-600 hover:bg-indigo-200' : 'text-gray-600 hover:bg-gray-50'; ?> rounded-md transition duration-200">
                         <i class="fas fa-book pr-4"></i>
-                        <span>Verifier History</span>
+                        <span>Verifier Records</span>
                     </a>
                 </li>
             </ul>

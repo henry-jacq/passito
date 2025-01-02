@@ -116,4 +116,17 @@ class User
     {
         $this->createdAt = $createdAt;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'email' => $this->getEmail(),
+            'role' => $this->getRole(),
+            'gender' => $this->getGender(),
+            'contact_no' => $this->getContactNo(),
+            'created_at' => $this->getCreatedAt()->format('Y-m-d H:i:s')
+        ];
+    }
 }

@@ -57,12 +57,12 @@ class Hostel
         $this->warden = $warden;
     }
 
-    public function getHostelName(): string
+    public function getName(): string
     {
         return $this->hostelName;
     }
 
-    public function setHostelName(string $hostelName): void
+    public function setName(string $hostelName): void
     {
         $this->hostelName = $hostelName;
     }
@@ -75,5 +75,16 @@ class Hostel
     public function setHostelType(HostelType $hostelType): void
     {
         $this->hostelType = $hostelType;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->getId(),
+            'institution' => $this->getInstitution()->toArray(),
+            'warden' => $this->getWarden()->toArray(),
+            'hostelName' => $this->getName(),
+            'hostelType' => $this->getHostelType()->value
+        ];
     }
 }

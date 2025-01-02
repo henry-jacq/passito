@@ -88,4 +88,16 @@ class Institution
     {
         $this->updatedAt = $updatedAt;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'address' => $this->getAddress(),
+            'type' => $this->getType()->value,
+            'created_at' => $this->getCreatedAt()->format('Y-m-d H:i:s'),
+            'updated_at' => $this->getUpdatedAt() ? $this->getUpdatedAt()->format('Y-m-d H:i:s') : null,
+        ];
+    }
 }

@@ -2,9 +2,12 @@
 
 namespace App\Services;
 
+use App\Entity\User;
 use App\Core\Session;
 use App\Entity\Hostel;
+use App\Enum\HostelType;
 use App\Entity\Institution;
+use App\Enum\InstitutionType;
 use Doctrine\ORM\EntityManagerInterface;
 
 class FacilityService
@@ -32,7 +35,7 @@ class FacilityService
         $institution = new Institution();
         $institution->setName($data['name']);
         $institution->setAddress($data['address']);
-        $institution->setType($data['type']);
+        $institution->setType(InstitutionType::from($data['type']));
         $institution->setCreatedAt(new \DateTime());
 
         $this->em->persist($institution);
@@ -74,10 +77,13 @@ class FacilityService
 
     public function createHostel(array $data): Hostel
     {
+        $warden = $this->em->getRepository(User::class)->find($data['warden_id']);
+        $institution = $this->getInstitutionById($data['institution_id']);
+        
         $hostel = new Hostel();
-        $hostel->setInstitution($this->getInstitutionById($data['institution_id']));
-        $hostel->setWarden($data['warden_id']);
-        $hostel->setHostelName($data['hostel_name']);
+        $hostel->setInstitution($institution);
+        $hostel->setWarden($warden);
+        $hostel->setName($data['hostel_name']);
         $hostel->setHostelType($data['hostel_type']);
 
         $this->em->persist($hostel);
@@ -91,7 +97,7 @@ class FacilityService
         $hostel = $this->getHostelById($id);
         $hostel->setInstitution($this->getInstitutionById($data['institution_id']));
         $hostel->setWarden($data['warden_id']);
-        $hostel->setHostelName($data['hostel_name']);
+        $hostel->setName($data['hostel_name']);
         $hostel->setHostelType($data['hostel_type']);
 
         $this->em->flush();

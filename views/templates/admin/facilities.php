@@ -9,7 +9,7 @@
                 <h3 class="text-lg font-bold text-gray-800">Institutions</h3>
                 <p class="text-sm text-gray-600">All available institutions are listed below.</p>
             </div>
-            <button class="inline-flex items-center justify-center rounded-lg bg-indigo-600 px-5 py-2 text-sm font-medium text-white shadow hover:bg-indigo-700 transition duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1" onclick="openCreateInstitutionModal()">
+            <button class="inline-flex items-center justify-center rounded-lg bg-indigo-600 px-5 py-2 text-sm font-medium text-white shadow hover:bg-indigo-700 transition duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 add-institution-modal">
                 <i class="fas fa-plus mr-2"></i> Create Institution
             </button>
         </div>
@@ -60,7 +60,7 @@
                 <h3 class="text-lg font-bold text-gray-800">Hostels</h3>
                 <p class="text-sm text-gray-600">Manage all hostels effectively.</p>
             </div>
-            <button class="inline-flex items-center justify-center rounded-lg bg-indigo-600 px-5 py-2 text-sm font-medium text-white shadow hover:bg-indigo-700 transition duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1" onclick="openCreateHostelModal()">
+            <button class="inline-flex items-center justify-center rounded-lg bg-indigo-600 px-5 py-2 text-sm font-medium text-white shadow hover:bg-indigo-700 transition duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 add-hostel-modal">
                 <i class="fas fa-plus mr-2"></i> Create Hostel
             </button>
         </div>
@@ -85,11 +85,11 @@
                     <tr class="hover:bg-gray-50">
                         <td class="py-3 px-6 text-sm text-gray-800"><?= $key + 1 ?></td>
                         <td class="py-3 px-6 text-sm text-gray-800"><?= $hostel->getName() ?></td>
-                        <td class="py-3 px-6 text-sm text-gray-600"><?= $hostel->getInstitution() ?></td>
+                        <td class="py-3 px-6 text-sm text-gray-600"><?= $hostel->getInstitution()->getName() ?></td>
                         <td class="py-3 px-6 text-sm text-gray-600 text-center">
                             <div class="flex items-center justify-center space-x-2">
                                 <div class="w-6 h-6 bg-gray-300 rounded-full"></div>
-                                <span class="ml-2"><?= $hostel->getWarden() ?></span>
+                                <span class="ml-2"><?= $hostel->getWarden()->getName() ?></span>
                             </div>
                         </td>
                         <td class="py-3 px-6 text-right">

@@ -11,6 +11,7 @@ use App\Controller\StudentController;
 use App\Middleware\ApiMiddleware;
 use App\Middleware\SetupMiddleware;
 use App\Middleware\StudentMiddleware;
+use App\Middleware\SuperAdminMiddleware;
 use Slim\Routing\RouteCollectorProxy;
 
 return function (App $app) {
@@ -44,11 +45,11 @@ return function (App $app) {
         $group->any('/outpass/pending', [AdminController::class, 'pendingRequests'])->setName('admin.outpass.pending');
         $group->any('/outpass/records', [AdminController::class, 'outpassRecords'])->setName('admin.outpass.records');
         $group->any('/manage/students', [AdminController::class, 'manageStudents'])->setName('admin.manage.students');
-        $group->any('/manage/wardens', [AdminController::class, 'manageWardens'])->setName('admin.manage.wardens');
-        $group->any('/manage/facilities', [AdminController::class, 'manageFacilities'])->setName('admin.manage.facilities');
-        $group->any('/manage/verifiers', [AdminController::class, 'manageVerifiers'])->setName('admin.manage.verifiers');
+        $group->any('/manage/wardens', [AdminController::class, 'manageWardens'])->setName('admin.manage.wardens')->add(SuperAdminMiddleware::class);
+        $group->any('/manage/facilities', [AdminController::class, 'manageFacilities'])->setName('admin.manage.facilities')->add(SuperAdminMiddleware::class);
+        $group->any('/manage/verifiers', [AdminController::class, 'manageVerifiers'])->setName('admin.manage.verifiers')->add(SuperAdminMiddleware::class);
         $group->any('/manage/logbook', [AdminController::class, 'manageLogbook'])->setName('admin.manage.logbook');
-        $group->any('/manage/requests', [AdminController::class, 'manageRequests'])->setName('admin.manage.requests');
+        $group->any('/settings', [AdminController::class, 'settings'])->setName('admin.settings');
     })->add(AdminMiddleware::class);
 
     // API Routes

@@ -1,5 +1,5 @@
-<aside id="sidebar"
-    class="fixed inset-y-0 left-0 w-64 bg-white border-r flex flex-col lg:translate-x-0 -translate-x-full transition-transform duration-300 ease-in-out z-40">
+<?php use App\Enum\UserRole; ?>
+<aside id="sidebar" class="fixed inset-y-0 left-0 w-64 bg-white border-r flex flex-col lg:translate-x-0 -translate-x-full transition-transform duration-300 ease-in-out z-40">
     <nav class="flex flex-col h-full bg-white">
         <!-- Brand Section (Fixed) -->
         <div class="p-6 flex justify-center items-center border-b">
@@ -27,47 +27,27 @@
                     </a>
                 </li>
 
-                <!-- Outpass Manager Section (Nested Menu) -->
-                <li class="my-1 relative">
-                    <button class="flex justify-between items-center w-full px-4 py-3 text-gray-600 hover:bg-gray-50 active:bg-gray-100 rounded-md transition duration-200 btn-nested-toggle <?= (str_starts_with($routeName,'admin.outpass') ?'bg-gray-100':'') ?>">
-                        <span class="flex items-center">
-                            <i class="fas fa-list-check pr-4"></i>
-                            <span>Outpass Manager</span>
-                        </span>
-                        <span class="transform transition-transform duration-300 btn-nested-arrow <?= (str_starts_with($routeName,'admin.outpass') ?'rotate-180':'') ?>">
-                            <i class="fas fa-chevron-down"></i>
-                        </span>
-                    </button>
-
-                    <ul class="<?= (str_starts_with($routeName,'admin.outpass') ?'max-h-32':'max-h-0') ?> overflow-hidden transition-all duration-300 ease-in-out pl-4 nested-submenu">
-                        <li class="relative mt-2">
-                            <a href="<?= $this->urlFor('admin.outpass.pending') ?>"
-                                class="flex items-center ml-5 px-3 py-2 <?= ($routeName == 'admin.outpass.pending') ? 'bg-indigo-100 text-indigo-600 hover:bg-indigo-200' : 'text-gray-600 hover:bg-gray-50'; ?> rounded-md transition duration-200">
-                                <span>Pending requests</span>
-                            </a>
-                            <div class="absolute left-2 top-1/2 w-0.5 h-full bg-indigo-600 transform -translate-y-1/2"></div>
-                        </li>
-                        <li class="relative">
-                            <a href="<?= $this->urlFor('admin.outpass.records') ?>"
-                                class="flex items-center ml-5 px-3 py-2 <?= ($routeName == 'admin.outpass.records') ? 'bg-indigo-100 text-indigo-600 hover:bg-indigo-200' : 'text-gray-600 hover:bg-gray-50'; ?> rounded-md transition duration-200">
-                                <span>Outpass Records</span>
-                            </a>
-                            <div class="absolute left-2 top-1/2 w-0.5 h-full bg-indigo-600 transform -translate-y-1/2"></div>
-                        </li>
-                    </ul>
-                </li>                
-            </ul>
-            <h4 class="text-gray-600 px-2 mt-4 font-semibold uppercase text-xs">Management</h4>
-            <ul>
-                <!-- Students -->
+                <!-- Pending requests -->
                 <li class="my-1">
-                    <a href="<?= $this->urlFor('admin.manage.students')?>"
-                        class="flex items-center px-4 py-3 <?= ($routeName == 'admin.manage.students') ? 'bg-indigo-100 text-indigo-600 hover:bg-indigo-200' : 'text-gray-600 hover:bg-gray-50'; ?> rounded-md transition duration-200">
-                        <i class="fas fa-users pr-3"></i>
-                        <span>Manage Students</span>
+                    <a href="<?= $this->urlFor('admin.outpass.pending') ?>"
+                        class="flex items-center px-4 py-3 <?= ($routeName == 'admin.outpass.pending') ? 'bg-indigo-100 text-indigo-600 hover:bg-indigo-200' : 'text-gray-600 hover:bg-gray-50'; ?> rounded-md transition duration-200">
+                        <i class="fas fa-clock pr-4"></i>
+                        <span>Pending Requests</span>
                     </a>
                 </li>
 
+                <!-- Outpass Records -->
+                <li class="my-1">
+                    <a href="<?= $this->urlFor('admin.outpass.records') ?>"
+                        class="flex items-center px-4 py-3 <?= ($routeName == 'admin.outpass.records') ? 'bg-indigo-100 text-indigo-600 hover:bg-indigo-200' : 'text-gray-600 hover:bg-gray-50'; ?> rounded-md transition duration-200">
+                        <i class="fas fa-folder-open pr-4"></i>
+                        <span>Outpass Records</span>
+                    </a>
+                </li>              
+            </ul>
+            <h4 class="text-gray-600 px-2 mt-4 font-semibold uppercase text-xs">Management</h4>
+            <ul>
+                <?php if (UserRole::isSuperAdmin($user->getRole()->value)): ?>
                 <!-- Wardens -->
                 <li class="my-1">
                     <a href="<?= $this->urlFor('admin.manage.wardens')?>"
@@ -85,10 +65,21 @@
                         <span>Manage Facilities</span>
                     </a>
                 </li>
+                <?php endif; ?>
+
+                <!-- Students -->
+                <li class="my-1">
+                    <a href="<?= $this->urlFor('admin.manage.students')?>"
+                        class="flex items-center px-4 py-3 <?= ($routeName == 'admin.manage.students') ? 'bg-indigo-100 text-indigo-600 hover:bg-indigo-200' : 'text-gray-600 hover:bg-gray-50'; ?> rounded-md transition duration-200">
+                        <i class="fas fa-user-graduate pr-4"></i>
+                        <span>Manage Students</span>
+                    </a>
+                </li>
             </ul>
             <!-- Verifiers -->
             <h4 class="text-gray-600 px-2 mt-4 font-semibold uppercase text-xs">Verifiers</h4>
             <ul>
+                <?php if (UserRole::isSuperAdmin($user->getRole()->value)): ?>
                 <li class="my-1">
                     <a href="<?= $this->urlFor('admin.manage.verifiers')?>"
                         class="flex items-center px-4 py-3 <?= ($routeName == 'admin.manage.verifiers') ? 'bg-indigo-100 text-indigo-600 hover:bg-indigo-200' : 'text-gray-600 hover:bg-gray-50'; ?> rounded-md transition duration-200">
@@ -96,44 +87,29 @@
                         <span>Verifier Manager</span>
                     </a>
                 </li>
+                <?php endif; ?>
 
                 <!-- Logbook -->
                 <li class="my-1">
                     <a href="<?= $this->urlFor('admin.manage.logbook')?>"
                         class="flex items-center px-4 py-3 <?= ($routeName == 'admin.manage.logbook') ? 'bg-indigo-100 text-indigo-600 hover:bg-indigo-200' : 'text-gray-600 hover:bg-gray-50'; ?> rounded-md transition duration-200">
                         <i class="fas fa-book pr-4"></i>
-                        <span>Verifier Records</span>
+                        <span>Verifier Logbook</span>
                     </a>
                 </li>
             </ul>
         </div>
 
         <!-- User Info Section (Fixed at Bottom) -->
-        <div class="border-t p-4 flex items-center">
-            <img src="https://ui-avatars.com/api/?name=<?= $user->getName() ?>&background=c7d2fe&color=3730a3&bold=true"
-                alt="User Avatar" class="w-10 h-10 rounded-md">
-            <div class="ml-3 truncate">
-                <h4 class="font-semibold text-gray-800"><?= ucwords($user->getName()) ?></h4>
-                <span class="text-xs text-gray-500"><?= $user->getEmail()?></span>
-            </div>
+        <div class="border-t p-2">
+            <button class="w-full flex items-center p-2 rounded-md transition focus:outline-none focus:ring-2 focus:ring-indigo-500 <?= ($routeName == 'admin.settings') ? 'bg-gray-100 text-gray-600 hover:bg-gray-200' : 'text-gray-600 hover:bg-gray-100'; ?>"
+                onclick="window.location.href='<?= $this->urlFor('admin.settings') ?>';" title="Go to Settings">
+                <img src="https://ui-avatars.com/api/?name=<?= $user->getName() ?>&background=c7d2fe&color=3730a3&bold=true" alt="User Avatar" class="w-10 h-10 rounded-md">
+                <div class="ml-3 truncate text-left">
+                    <h4 class="font-semibold text-gray-800"><?= ucwords($user->getName()) ?></h4>
+                    <span class="text-sm text-gray-500"><?= $user->getEmail() ?></span>
+                </div>
+            </button>
         </div>
     </nav>
 </aside>
-
-<script>
-    // Select all nested toggle buttons and submenus
-    const nestedToggles = document.querySelectorAll('.btn-nested-toggle');
-    const nestedSubmenus = document.querySelectorAll('.nested-submenu');
-    const nestedArrows = document.querySelectorAll('.btn-nested-arrow');
-
-    // Loop through all nested toggle buttons
-    nestedToggles.forEach((toggle, index) => {
-        toggle.addEventListener('click', () => {
-            // Toggle the corresponding submenu and arrow rotation
-            toggle.classList.toggle('bg-gray-100'); // Highlights the menu item
-            nestedSubmenus[index].classList.toggle('max-h-0'); // Toggles max-height
-            nestedSubmenus[index].classList.toggle('max-h-32'); // Set a max-height for transition
-            nestedArrows[index].classList.toggle('rotate-180'); // Rotates the arrow
-        });
-    });
-</script>

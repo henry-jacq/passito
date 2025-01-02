@@ -31,19 +31,6 @@ class AdminController extends BaseController
         return parent::render($request, $response, 'admin/dashboard', $args);
     }
 
-    public function manageRequests(Request $request, Response $response): Response
-    {
-        $this->view->clearCacheIfDev();
-
-        $userData = $request->getAttribute('user');
-        $args = [
-            'title' => 'Manage Requests',
-            'user' => $userData,
-            'routeName' => $this->getRouteName($request),
-        ];
-        return parent::render($request, $response, 'admin/manage_requests', $args);
-    }
-
     public function pendingRequests(Request $request, Response $response): Response
     {
         $this->view->clearCacheIfDev();
@@ -141,5 +128,18 @@ class AdminController extends BaseController
             'routeName' => $this->getRouteName($request),
         ];
         return parent::render($request, $response, 'admin/facilities', $args);
+    }
+
+    public function settings(Request $request, Response $response): Response
+    {
+        $this->view->clearCacheIfDev();
+
+        $userData = $request->getAttribute('user');
+        $args = [
+            'title' => 'Settings',
+            'user' => $userData,
+            'routeName' => $this->getRouteName($request),
+        ];
+        return parent::render($request, $response, 'admin/settings', $args);
     }
 }

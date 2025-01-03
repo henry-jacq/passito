@@ -7,10 +7,15 @@ export default defineConfig({
   build: {
     outDir: path.resolve(__dirname, 'public/build'), // Output directory for built files
     emptyOutDir: true,
+    manifest: true,
     rollupOptions: {
       input: {
-        main: path.resolve(__dirname, 'resources/js/main.js'), // Main JS entry point
-        // Add more entries here if needed
+        // Set the entry points for the application
+        style: path.resolve(__dirname, 'resources/css/style.css'),
+        user: path.resolve(__dirname, 'resources/js/user.js'),
+        admin: path.resolve(__dirname, 'resources/js/admin.js'),
+        superAdmin: path.resolve(__dirname, 'resources/js/superAdmin.js'),
+        auth: path.resolve(__dirname, 'resources/js/auth.js'),
       },
     },
   },

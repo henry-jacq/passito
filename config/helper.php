@@ -84,7 +84,19 @@ function vite_asset($path) {
         return "http://localhost:5173/" . $path;
     } else {
         // Prod mode - point to the built file in the public folder
-        return "/build/" . $path;
+        $manifestFile = PUBLIC_PATH . '/build/.vite/manifest.json';
+
+        if (!file_exists($manifestFile)) {
+            throw new Exception('The Vite manifest file does not exist. Please run `npm run build`.');
+        }
+
+        $manifest = json_decode(file_get_contents($manifestFile), true);
+
+        if (isset($manifest[$path])) {
+            return "/build/" . ltrim($manifest[$path]['file'], '/');
+        } else {
+            throw new Exception('The Vite manifest file does not contain the path: ' . $path);
+        }
     }
 }
 

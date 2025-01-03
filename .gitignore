@@ -4,6 +4,7 @@
 vendor/
 node_modules/
 resources/dist/
+public/build/
 public/js/vendor/
 storage/temp/
 storage/posts/

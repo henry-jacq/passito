@@ -10,8 +10,11 @@ class StudentController extends BaseController
     public function dashboard(Request $request, Response $response): Response
     {
         $this->view->clearCacheIfDev();
+        $userData = $request->getAttribute('student');
+
         $args = [
             'title' => 'Dashboard',
+            'userData' => $userData,
             'routeName' => $this->getRouteName($request),
         ];
         return parent::render($request, $response, 'user/dashboard', $args);
@@ -60,8 +63,10 @@ class StudentController extends BaseController
     public function profile(Request $request, Response $response): Response
     {
         $this->view->clearCacheIfDev();
+        $userData = $request->getAttribute('student');
         $args = [
             'title' => 'Profile',
+            'userData' => $userData,
             'routeName' => $this->getRouteName($request),
         ];
         return parent::render($request, $response, 'user/profile', $args);

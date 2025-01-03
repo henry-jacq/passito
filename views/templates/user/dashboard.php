@@ -9,7 +9,7 @@
 		<!-- Welcome Section -->
 		<section class="bg-gradient-to-r from-purple-100 to-white shadow-lg rounded-xl p-8 flex flex-col md:flex-row justify-between mb-8">
 			<div>
-				<h2 class="text-4xl font-bold text-gray-800">Welcome, Henry!</h2>
+				<h2 class="text-4xl font-bold text-gray-800">Welcome, <?= ucwords($userData->getUser()->getName())?>!</h2>
 				<p class="mt-2 text-gray-800 text-lg">It’s <?= date("l, d F Y") ?></p>
 			</div>
 		</section>

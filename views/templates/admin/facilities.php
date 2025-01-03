@@ -97,7 +97,7 @@
                                 <button title="Edit" class="text-gray-700 hover:text-gray-800" data-id="<?= $hostel->getId() ?>">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <button title="Delete" class="text-red-700 hover:text-red-800" data-id="<?= $hostel->getId() ?>">
+                                <button title="Delete" class="text-red-700 hover:text-red-800 remove-hostel-modal" data-id="<?= $hostel->getId() ?>" data-name="<?= $hostel->getName() ?>">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
                             </div>

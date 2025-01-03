@@ -2,7 +2,7 @@
 <aside id="sidebar" class="fixed inset-y-0 left-0 w-64 bg-white border-r flex flex-col lg:translate-x-0 -translate-x-full transition-transform duration-300 ease-in-out z-40 select-none">
     <nav class="flex flex-col h-full bg-white">
         <!-- Brand Section (Fixed) -->
-        <div class="flex items-center justify-center p-[20px] bg-white border-b space-x-4">
+        <div class="flex items-center justify-center p-[20px] bg-white border-b space-x-4 text-gray-700">
             <svg class="w-8 h-8" viewBox="0 0 92.105 92.1">
                 <g transform="translate(-2.76 -2.77) scale(0.3254)" fill="currentColor">
                     <!-- Icon Content -->

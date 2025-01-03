@@ -75,10 +75,17 @@ class FacilityService
         return $this->em->getRepository(Hostel::class)->find($id);
     }
 
-    public function createHostel(array $data): Hostel
+    public function createHostel(array $data): Hostel|bool
     {
         $warden = $this->em->getRepository(User::class)->find($data['warden_id']);
         $institution = $this->getInstitutionById($data['institution_id']);
+
+        // Check If the hostel name already exists
+        $hostel = $this->em->getRepository(Hostel::class)->findOneBy(['hostelName' => $data['hostel_name']]);
+        
+        if ($hostel) {
+            return false;
+        }
         
         $hostel = new Hostel();
         $hostel->setInstitution($institution);
@@ -105,10 +112,12 @@ class FacilityService
         return $hostel;
     }
 
-    public function deleteHostel(int $id): void
+    public function removeHostel(int $id): bool
     {
         $hostel = $this->getHostelById($id);
         $this->em->remove($hostel);
         $this->em->flush();
+
+        return true;
     }
 }

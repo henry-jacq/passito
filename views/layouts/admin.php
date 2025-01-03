@@ -50,6 +50,11 @@
     <?php $this->getComponent('admin/modal', get_defined_vars()) ?>
 
     <script type="module" src="<?= vite_asset('js/admin.js') ?>"></script>
+    <?php 
+    use App\Enum\UserRole;
+    if ($user->getRole() === UserRole::SUPER_ADMIN) : ?>
+        <script type="module" src="<?= vite_asset('js/superAdmin.js') ?>"></script>
+    <?php endif; ?>
 
 </body>
 

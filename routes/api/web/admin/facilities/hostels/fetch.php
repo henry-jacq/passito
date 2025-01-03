@@ -3,11 +3,13 @@
 use App\Enum\UserRole;
 
 ${basename(__FILE__, '.php')} = function () {
-    if ($this->isAuthenticated() && UserRole::isSuperAdmin($this->getRole())) {
+    if ($this->isAuthenticated() && UserRole::isAdministrator($this->getRole())) {
         $hostels = null;
 
         foreach ($this->facilityService->getHostels() as $hostel) {
-            $hostels[] = $hostel->toArray();
+            $hostel = $hostel->toArray();
+            unset($hostel['institution'], $hostel['warden']);
+            $hostels[] = $hostel;
         }
 
         // Check if there are no hostels

@@ -3,7 +3,7 @@
     <p class="text-gray-600 text-md mb-8">Manage institutions, hostels, and related data seamlessly.</p>
 
     <!-- Institutions Section -->
-    <section class="bg-white shadow-sm rounded-lg p-6 mb-10">
+    <section class="bg-white shadow-sm rounded-lg p-6 mb-10 select-none">
         <div class="flex items-center justify-between mb-6 border-b pb-4">
             <div>
                 <h3 class="text-lg font-bold text-gray-800">Institutions</h3>
@@ -54,7 +54,7 @@
     </section>
 
     <!-- Hostels Section -->
-    <section class="bg-white shadow-sm rounded-lg p-6">
+    <section class="bg-white shadow-sm rounded-lg p-6 select-none">
         <div class="flex items-center justify-between mb-6 border-b pb-4">
             <div>
                 <h3 class="text-lg font-bold text-gray-800">Hostels</h3>
@@ -88,7 +88,9 @@
                         <td class="py-3 px-6 text-sm text-gray-600"><?= $hostel->getInstitution()->getName() ?></td>
                         <td class="py-3 px-6 text-sm text-gray-600 text-center">
                             <div class="flex items-center justify-center space-x-2">
-                                <div class="w-6 h-6 bg-gray-300 rounded-full"></div>
+                                <div class="w-6 h-6 bg-gray-300 rounded-full">
+                                    <img class="rounded-full" src="https://ui-avatars.com/api/?name=<?= $hostel->getWarden()->getName() ?>&background=c7d2fe&color=3730a3&bold=true" alt="">
+                                </div>
                                 <span class="ml-2"><?= $hostel->getWarden()->getName() ?></span>
                             </div>
                         </td>

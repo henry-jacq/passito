@@ -21,7 +21,7 @@ ${basename(__FILE__, '.php')} = function () {
         ];
 
 
-        $user = $this->userService->createWarden($warden);
+        $user = $this->userService->createUser($warden);
 
         if ($user instanceof User) {
             return $this->response([

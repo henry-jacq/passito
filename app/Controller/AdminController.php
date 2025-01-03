@@ -62,9 +62,12 @@ class AdminController extends BaseController
         $this->view->clearCacheIfDev();
 
         $userData = $request->getAttribute('user');
+        $students = $this->userService->getStudents();
+
         $args = [
             'title' => 'Manage Students',
             'user' => $userData,
+            'students' => $students,
             'routeName' => $this->getRouteName($request),
         ];
         return parent::render($request, $response, 'admin/students', $args);

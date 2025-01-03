@@ -155,4 +155,21 @@ class Student
     {
         $this->updatedAt = $updatedAt;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->getId(),
+            'user' => $this->getUser()->toArray(),
+            'hostel' => $this->getHostel()->toArray(),
+            'digital_id' => $this->getDigitalId(),
+            'year' => $this->getYear(),
+            'branch' => $this->getBranch(),
+            'department' => $this->getDepartment(),
+            'room_no' => $this->getRoomNo(),
+            'parent_no' => $this->getParentNo(),
+            'status' => $this->getStatus(),
+            'updated_at' => $this->getUpdatedAt()->format('Y-m-d H:i:s')
+        ];
+    }
 }

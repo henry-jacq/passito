@@ -4,7 +4,22 @@
         Manage student details, including their hostel details, academic information, and contact details.
     </p>
 
-    <!-- Add, Search, and Export Section -->
+    <?php if (empty($students)): ?>
+    <div class="mb-6 bg-white p-4 rounded-lg border border-gray-200">
+        <div class="flex justify-between items-center">
+            <div class="space-y-2">
+                <h3 class="text-md font-display font-semibold text-gray-900">No students found</h3>
+                <p class="text-gray-600 text-sm">
+                    No student records found. Click the button to add a new student record.
+                </p>
+            </div>
+            <button id="add-student-modal" class="bg-indigo-600 text-white px-3 py-2 rounded-md hover:bg-indigo-700 focus:ring focus:ring-indigo-400 transition duration-200">
+                <i class="fa-solid fa-user-plus fa-sm mr-2"></i>
+                Add Student
+            </button>
+        </div>
+    </div>
+    <?php else: ?>
     <div class="flex flex-wrap justify-between items-center mb-6 space-x-8 space-y-4 md:space-y-0">
         <!-- Search Bar -->
         <div class="flex-grow relative">
@@ -13,27 +28,24 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
             </span>
-            <input
-                type="text"
-                placeholder="Search students..."
-                class="w-full bg-gray-50 border border-gray-300 text-md rounded-md ps-12 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200"
-            />
+            <input type="text" placeholder="Search students..." class="w-full bg-gray-50 border border-gray-300 text-md rounded-md ps-12 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200"/>
         </div>
 
         <div class="flex space-x-2">
             <!-- Add Student Button -->
-            <button class="bg-indigo-600 text-white px-3 py-2 rounded-md hover:bg-indigo-700 transition duration-200">
+            <button id="add-student-modal" class="bg-indigo-600 text-white px-3 py-2 rounded-md hover:bg-indigo-700 focus:ring focus:ring-indigo-400 transition duration-200">
                 <i class="fa-solid fa-user-plus fa-sm mr-2"></i>
                 Add Student
             </button>
 
             <!-- Export Button -->
-            <button class="bg-blue-600 text-white px-3 py-2 rounded-md hover:bg-blue-700 transition duration-200">
+            <button id="export-student-modal" class="bg-blue-600 text-white px-3 py-2 rounded-md hover:bg-blue-700 focus:ring focus:ring-blue-400 transition duration-200">
                 <i class="fa-solid fa-arrow-up-from-bracket fa-sm mr-2"></i>
                 Export
             </button>
         </div>
     </div>
+    <?php endif; ?>
 
     <!-- Bulk Import Section -->
     <div class="mb-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
@@ -51,16 +63,11 @@
             </button>
         </div>
 
-        <input
-            id="import-file"
-            type="file"
-            class="mt-4 w-full border border-gray-300 text-sm rounded-md p-2 hidden"
-            accept=".csv"
-        />
+        <input id="import-file" type="file" class="mt-4 w-full border border-gray-300 text-sm rounded-md p-2 hidden" accept=".csv"/>
         <div id="import-feedback" class="mt-2 text-sm text-gray-500 hidden">Import in progress...</div>
     </div>
 
-    <!-- Student Table -->
+    <?php if (!empty($students)): ?>
     <section class="bg-white shadow-md rounded-lg overflow-hidden">
         <table class="w-full table-auto border-collapse">
             <thead class="bg-gray-100">
@@ -77,24 +84,24 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- Example Row -->
+                <?php foreach($students as $student): ?>
                 <tr class="border-t hover:bg-gray-50">
-                    <td class="px-4 py-3 text-sm text-gray-700">Jane Doe</td>
-                    <td class="px-4 py-3 text-sm text-gray-700">Hostel A</td>
-                    <td class="px-4 py-3 text-sm text-gray-700">2nd Year</td>
-                    <td class="px-4 py-3 text-sm text-gray-700">Computer Science</td>
-                    <td class="px-4 py-3 text-sm text-gray-700">Engineering</td>
-                    <td class="px-4 py-3 text-sm text-gray-700">101</td>
-                    <td class="px-4 py-3 text-sm text-gray-700">9876543210</td>
+                    <td class="px-4 py-3 text-sm text-gray-700"><?= $student->getUser()->getName() ?></td>
+                    <td class="px-4 py-3 text-sm text-gray-700"><?= $student->getHostel()->getName() ?></td>
+                    <td class="px-4 py-3 text-sm text-gray-700"><?= $student->getYear() ?></td>
+                    <td class="px-4 py-3 text-sm text-gray-700"><?= $student->getBranch() ?></td>
+                    <td class="px-4 py-3 text-sm text-gray-700"><?= $student->getDepartment() ?></td>
+                    <td class="px-4 py-3 text-sm text-gray-700"><?= $student->getRoomNo() ?></td>
+                    <td class="px-4 py-3 text-sm text-gray-700"><?= $student->getParentNo() ?></td>
                     <td class="px-4 py-3 text-sm">
-                        <span class="text-green-600 font-medium">Active</span>
+                        <span class="text-green-600 font-medium"><?= $student->getStatus() ?></span>
                     </td>
                     <td class="px-4 py-3 text-sm">
-                        <button class="text-indigo-600 hover:text-indigo-800 transition duration-200 mr-4">Edit</button>
-                        <button class="text-red-600 hover:text-red-800 transition duration-200">Remove</button>
+                        <button class="text-indigo-600 hover:text-indigo-800 transition duration-200 mr-4" data-id="<?= $student->getId() ?>">Edit</button>
+                        <button class="text-red-600 hover:text-red-800 transition duration-200" data-id="<?= $student->getId() ?>">Remove</button>
                     </td>
                 </tr>
-                <!-- Repeat rows as needed -->
+                <?php endforeach; ?>
             </tbody>
         </table>
         <div class="flex items-center justify-between px-4 py-2 border-t bg-gray-100">
@@ -105,6 +112,7 @@
             </div>
         </div>
     </section>
+    <?php endif; ?>
 </main>
 
 <script>

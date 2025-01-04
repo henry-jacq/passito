@@ -72,6 +72,22 @@ class VerifierService
     }
 
     /**
+     * Check if machine is valid
+     */    
+    public function isValidMachine(string $machineId): bool
+    {
+        return $this->em->getRepository(Verifier::class)->findOneBy(['machineId' => $machineId]) !== null;
+    }
+
+    /**
+     * Check if token is valid
+     */
+    public function isValidToken(string $authToken): bool
+    {
+        return $this->em->getRepository(Verifier::class)->findOneBy(['authToken' => $authToken]) !== null;
+    }
+
+    /**
      * Register verifier
      */
     public function register(string $machine_id, string $host, string $authToken): bool

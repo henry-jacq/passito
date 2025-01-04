@@ -76,9 +76,15 @@
                     </td>
                     <td class="px-4 py-3 text-sm text-gray-700">
                         <div class="flex items-center justify-center space-x-2">
-                            <button class="px-3 py-1 text-sm text-white bg-green-600 rounded-lg hover:bg-green-700 focus:ring focus:ring-green-400 transition duration-200">
-                                Activate
-                            </button>
+                            <?php if (VerifierStatus::isActive($verifier->getStatus()->value)): ?>
+                                <button class="px-3 py-1 text-sm text-white bg-yellow-600 rounded-lg hover:bg-yellow-700 focus:ring focus:ring-yellow-400 transition duration-200">
+                                    Deactivate
+                                </button>
+                            <?php elseif (VerifierStatus::isInactive($verifier->getStatus()->value)): ?>
+                                <button class="px-3 py-1 text-sm text-white bg-green-600 rounded-lg hover:bg-green-700 focus:ring focus:ring-green-400 transition duration-200">
+                                    Activate
+                                </button>
+                            <?php endif; ?>
                             <button class="px-3 py-1 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring focus:ring-red-400 transition duration-200">
                                 Delete
                             </button>

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use DateTime;
+use App\Enum\VerifierStatus;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
@@ -22,20 +23,20 @@ class Verifier
     #[ORM\Column(type: 'string', length: 255)]
     private string $location;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private string $status;
+    #[ORM\Column(type: 'string', enumType: VerifierStatus::class)]
+    private VerifierStatus $status;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private string $ipAddress;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $ipAddress;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private string $machineId;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $machineId;
 
     #[ORM\Column(type: 'string', length: 255)]
     private string $authToken;
 
-    #[ORM\Column(type: 'datetime')]
-    private DateTime $lastSync;
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?DateTime $lastSync;
 
     #[ORM\Column(type: 'datetime')]
     private DateTime $createdAt;
@@ -45,7 +46,7 @@ class Verifier
         return $this->id;
     }
 
-    public function getVerifierName(): string
+    public function getName(): string
     {
         return $this->verifierName;
     }
@@ -55,19 +56,19 @@ class Verifier
         return $this->location;
     }
 
-    public function getStatus(): string
+    public function getStatus(): VerifierStatus
     {
         return $this->status;
     }
 
-    public function getIpAddress(): string
+    public function getIpAddress(): ?string
     {
-        return $this->ipAddress;
+        return $this->ipAddress ?? null;
     }
 
-    public function getMachineId(): string
+    public function getMachineId(): ?string
     {
-        return $this->machineId;
+        return $this->machineId ?? null;
     }
 
     public function getAuthToken(): string
@@ -75,9 +76,9 @@ class Verifier
         return $this->authToken;
     }
 
-    public function getLastSync(): DateTime
+    public function getLastSync(): ?DateTime
     {
-        return $this->lastSync;
+        return $this->lastSync ?? null;
     }
 
     public function getCreatedAt(): DateTime
@@ -85,7 +86,7 @@ class Verifier
         return $this->createdAt;
     }
 
-    public function setVerifierName(string $verifierName): void
+    public function setName(string $verifierName): void
     {
         $this->verifierName = $verifierName;
     }
@@ -95,7 +96,7 @@ class Verifier
         $this->location = $location;
     }
 
-    public function setStatus(string $status): void
+    public function setStatus(VerifierStatus $status): void
     {
         $this->status = $status;
     }

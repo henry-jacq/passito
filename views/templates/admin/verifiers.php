@@ -1,3 +1,4 @@
+<?php use App\Enum\VerifierStatus; ?>
 <main class="flex-1 p-6 mt-20 overflow-y-auto">
     <!-- Page Header -->
     <div class="flex flex-wrap items-center justify-between mb-4">
@@ -21,7 +22,7 @@
         </ul>
     </div>
 
-    <!-- Verifiers Table -->
+    <?php if (!empty($verifiers)): ?>
     <section class="bg-white shadow-md rounded-lg overflow-auto select-none">
         <table class="w-full table-auto border-collapse">
             <thead class="bg-gray-100">
@@ -31,30 +32,44 @@
                     <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">IP Address</th>
                     <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">Status</th>
                     <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">Last Sync</th>
-                    <th class="px-4 py-3 text-center text-sm font-semibold text-gray-600">One-Time Token</th>
+                    <th class="px-4 py-3 text-center text-sm font-semibold text-gray-600">Auth Token</th>
                     <th class="px-4 py-3 text-center text-sm font-semibold text-gray-600">Actions</th>
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
+                <?php foreach($verifiers as $verifier): ?>
                 <tr class="hover:bg-gray-50">
-                    <td class="px-4 py-3 text-sm text-gray-700">Verifier Device 1</td>
-                    <td class="px-4 py-3 text-sm text-gray-700">Building A, Floor 2</td>
-                    <td class="px-4 py-3 text-sm text-gray-700">192.168.1.10</td>
+                    <td class="px-4 py-3 text-sm text-gray-700"><?= $verifier->getName() ?></td>
+                    <td class="px-4 py-3 text-sm text-gray-700"><?= $verifier->getLocation() ?></td>
+                    <td class="px-4 py-3 text-sm text-gray-700"><?= $verifier->getIpAddress() !== null ? $verifier->getIpAddress() : 'N/A' ?></td>
                     <td class="px-4 py-3 text-sm text-gray-700">
-                        <span class="inline-block px-2 py-1 text-xs font-medium bg-green-100 text-green-700 rounded-full">
-                            Active
-                        </span>
+                        <?php 
+                        $statusValue = ucfirst($verifier->getStatus()->value);
+
+                        if (VerifierStatus::isInactive($verifier->getStatus()->value)) {
+                            echo "<span class=\"inline-block px-2 py-1 text-xs font-medium bg-red-100 text-red-700 rounded-full\">$statusValue</span>";
+                        } elseif (VerifierStatus::isActive($verifier->getStatus()->value)) {
+                            echo "<span class=\"inline-block px-2 py-1 text-xs font-medium bg-green-100 text-green-700 rounded-full\">$statusValue</span>";
+                        } else {
+                            echo "<span class=\"inline-block px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-700 rounded-full\">$statusValue</span>";
+                        }
+                        ?>
                     </td>
                     <td class="px-4 py-3">
-                        <div class="text-sm">
-                            <span class="block text-gray-700">24 Dec, 2024</span>
-                            <span class="text-xs text-gray-500">6:00:00 PM</span>
-                        </div>
+                        <?php 
+                        if (is_null($verifier->getLastSync())) {
+                            echo '<span class="text-sm text-gray-400">N/A</span>';
+                        } else {
+                            $date = $verifier->getLastSync()->format('M d, Y');
+                            $time = $verifier->getLastSync()->format('h:i A');
+
+                            echo '<div class="text-sm"><span class="block text-gray-700">'. $date .'</span><span class="text-xs text-gray-500">'.$time.'</span></div>';
+                        } ?>
                     </td>
                     <td class="px-4 py-3 text-sm text-gray-700">
                         <div class="flex items-center justify-center space-x-2">
-                            <span class="truncate lg:max-w-[180px] md:max-w-[80px] block text-gray-700">a610caf8c94879e97aff503b7a</span>
-                            <button class="text-blue-600 hover:text-blue-800" title="Copy Token" onclick="copyToClipboard('a610caf8c94879e97aff503b7a')">
+                            <span class="truncate lg:max-w-[180px] md:max-w-[80px] block text-gray-700"><?= $verifier->getAuthToken() ?></span>
+                            <button class="text-blue-600 hover:text-blue-800" title="Copy Token" onclick="copyToClipboard('<?= $verifier->getAuthToken() ?>')">
                                 <i class="fa-regular fa-copy"></i>
                             </button>
                         </div>
@@ -70,10 +85,13 @@
                         </div>
                     </td>
                 </tr>
+                <?php endforeach; ?>
             </tbody>
         </table>
     </section>
+    <?php endif; ?>
 </main>
+
 <script>
 function copyToClipboard(text) {
     if (navigator.clipboard && navigator.clipboard.writeText) {

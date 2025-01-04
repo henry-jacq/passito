@@ -8,7 +8,6 @@ use App\Core\Session;
 use App\Entity\Hostel;
 use App\Enum\UserRole;
 use App\Entity\Student;
-use InvalidArgumentException;
 use Doctrine\ORM\EntityManagerInterface;
 
 class UserService

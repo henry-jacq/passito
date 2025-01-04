@@ -39,38 +39,52 @@ document.addEventListener('DOMContentLoaded', () => {
         openAddDeviceModalButton.addEventListener('click', () => {
             Modal.open({
                 content: `
-                <div class="p-3 space-y-6">
-                    <h3 class="text-2xl font-bold text-gray-900">Add New Device</h3>
+                <div class="px-2 space-y-6">
+                    <h3 class="text-xl font-bold text-gray-800 border-b pb-3">Add New Device</h3>
 
                     <div class="space-y-5">
                         <div class="space-y-2">
                             <label for="verifier-name" class="block text-md font-semibold text-gray-700">Verifier Name</label>
-                            <input type="text" id="verifier-name" name="verifier-name" 
-                                class="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 text-md transition duration-200" 
-                                placeholder="Enter verifier's name" required>
+                            <input type="text" id="verifier-name" name="verifier-name" class="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 text-md transition duration-200" placeholder="Enter Name" required>
                         </div>
-
                         <div class="space-y-2">
+
                             <label for="device-location" class="block text-md font-semibold text-gray-700">Device Location</label>
-                            <input type="text" id="device-location" name="device-location" 
-                                class="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 text-md transition duration-200" 
-                                placeholder="Enter device location" required>
+                            <input type="text" id="device-location" name="device-location" class="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 text-md transition duration-200" placeholder="Enter Location" required>
                         </div>
 
                         <p class="text-sm text-gray-500">Provide accurate details for the new verifier device to ensure proper setup.</p>
                     </div>
                 </div>
-            `,
+                `,
                 actions: [
                     {
                         label: 'Add Device',
-                        class: `inline-flex justify-center rounded-lg bg-green-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-green-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2`,
-                        onClick: () => {
+                        class: `inline-flex justify-center rounded-lg bg-indigo-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-indigo-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50`,
+                        onClick: async () => {
                             const verifierName = document.getElementById('verifier-name').value;
                             const deviceLocation = document.getElementById('device-location').value;
 
                             if (verifierName && deviceLocation) {
-                                alert(`Device added successfully for ${verifierName} at ${deviceLocation}`);
+                                try {
+                                    const response = await Ajax.post('/api/web/admin/verifiers/create', {
+                                        verifier_name: verifierName,
+                                        location: deviceLocation,
+                                    });
+
+                                    if (response.ok) {
+                                        const data = response.data;
+                                        if (data.status) {
+                                            location.reload();
+                                        } else {
+                                            alert(data.message);
+                                        }
+                                    } else {
+                                        handleError(response.status);
+                                    }                                    
+                                } catch (error) {
+                                    console.error(error);
+                                }
                                 Modal.close();
                             } else {
                                 alert('Please fill in both the verifier name and device location.');
@@ -96,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
         openAddWardenModalButton.addEventListener('click', () => {
             Modal.open({
                 content: `
-                <div class="p-3 space-y-6">
+                <div class="px-2 space-y-6">
                     <h3 class="text-2xl font-bold text-gray-900">Add New Warden</h3>
 
                     <div class="space-y-5">
@@ -186,7 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             Modal.open({
                 content: `
-                <div class="p-3 space-y-6">
+                <div class="px-2 space-y-6">
                     <h3 class="text-2xl font-bold text-gray-900">Remove Warden</h3>
 
                     <div class="space-y-5">
@@ -240,7 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
         addInstitutionButton.addEventListener('click', () => {
             Modal.open({
                 content: `
-                <div class="p-3 space-y-6">
+                <div class="px-2 space-y-6">
                     <h3 class="text-2xl font-bold text-gray-900">Add New Institution</h3>
 
                     <div class="space-y-5">
@@ -348,7 +362,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         // Open the modal with dynamically populated options
                         Modal.open({
                             content: `
-                            <div class="p-3 space-y-6">
+                            <div class="px-2 space-y-6">
                                 <h3 class="text-2xl font-bold text-gray-900">Add New Hostel</h3>
 
                                 <div class="space-y-5">
@@ -447,7 +461,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             Modal.open({
                 content: `
-                <div class="space-y-4">
+                <div class="px-2 space-y-4">
                     <h3 class="text-xl font-bold text-gray-800 border-b pb-3">Remove Hostel</h3>
                     <p class="text-gray-600">
                         Are you sure you want to remove the hostel 

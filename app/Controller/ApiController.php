@@ -10,6 +10,7 @@ use App\Services\AuthService;
 use App\Services\UserService;
 use InvalidArgumentException;
 use App\Services\FacilityService;
+use App\Services\VerifierService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -45,6 +46,7 @@ class ApiController
         private readonly Session $session,
         private readonly AuthService $auth,
         private readonly UserService $userService,
+        private readonly VerifierService $verifierService,
         private readonly FacilityService $facilityService
     )
     {

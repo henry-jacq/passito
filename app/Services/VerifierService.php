@@ -20,6 +20,9 @@ class VerifierService
     {
     }
     
+    /**
+     * Create verifier
+     */
     public function createVerifier(string $name, string $location): Verifier|bool
     {
         try {
@@ -39,6 +42,9 @@ class VerifierService
         }
     }
 
+    /**
+     * Get verifier by id
+     */
     public function getVerifier(int $id): Verifier|bool
     {
         try {
@@ -48,13 +54,41 @@ class VerifierService
         }
     }
 
+
+    /**
+     * Get all verifiers
+     */
     public function getVerifiers(): array
     {
         return $this->em->getRepository(Verifier::class)->findAll();
     }
 
+    /**
+     * Generate auth token
+     */
     public function generateAuthToken()
     {
         return bin2hex(random_bytes(16));
+    }
+
+    /**
+     * Register verifier
+     */
+    public function register(string $machine_id, string $host, string $authToken): bool
+    {
+        $verifier = $this->em->getRepository(Verifier::class)->findOneBy(['authToken' => $authToken]);
+
+        if ($verifier) {
+            $verifier->setMachineId($machine_id);
+            $verifier->setIpAddress($host);
+            $verifier->setStatus(VerifierStatus::INACTIVE);
+
+            $this->em->persist($verifier);
+            $this->em->flush();
+
+            return true;
+        }
+
+        return false;
     }
 }

@@ -6,11 +6,6 @@ use App\Enum\UserRole;
 ${basename(__FILE__, '.php')} = function () {
     if ($this->isAuthenticated() && $this->paramsExists(['verifier_name', 'location'])) {
 
-        // UserRole::isSuperAdmin($this->getRole()
-        // user must be authenticated
-        // super admin is the only one who can create wardens
-        // Gender of super admin will be assigned to warden
-
         if (!UserRole::isSuperAdmin($this->getRole())) {
             return $this->response([
                 'message' => 'Unauthorized',

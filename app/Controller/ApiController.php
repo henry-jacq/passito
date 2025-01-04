@@ -19,6 +19,7 @@ class ApiController
     protected $data;
     protected $files;
     protected $params;
+    protected $headers;
     protected $resource;
     protected $namespace;
     protected $attributes;
@@ -35,8 +36,8 @@ class ApiController
     ];
     private const ALLOWED_HEADERS = [
         'Content-Type', 'Content-Length',
-        'Content-Disposition', 'Pragma',
-        'Cache-Control', 'Expires', 'Last-Modified'
+        'Content-Disposition', 'Pragma', 'Host',
+        'Cache-Control', 'Expires', 'Last-Modified', 'Authorization'
     ];
     private const API_ROUTE = ROUTES_PATH . DIRECTORY_SEPARATOR . 'api';
 
@@ -62,6 +63,7 @@ class ApiController
         $this->files = $request->getUploadedFiles();
         $this->params = $request->getServerParams();
         $this->attributes = $request->getAttributes();
+        $this->headers = $request->getHeaders();
 
         $get = $this->cleanInputs($request->getQueryParams());
         $post = $this->cleanInputs($request->getParsedBody() ?? []);
@@ -208,6 +210,7 @@ class ApiController
         }
     }
 
+    // Not used
     private function negotiateContentType(array $acceptedContentTypes): string
     {
         foreach (self::ALLOWED_CONTENT_TYPES as $allowedContentType) {
@@ -219,7 +222,7 @@ class ApiController
         throw new InvalidArgumentException('Unsupported Content Type');
     }
 
-    private function negotiateHeaders(array $requestHeaders): array
+    public function negotiateHeaders(array $requestHeaders): array
     {
         $negotiatedHeaders = [];
         foreach ($requestHeaders as $header => $values) {

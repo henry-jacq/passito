@@ -5,8 +5,9 @@ use App\Enum\UserRole;
 ${basename(__FILE__, '.php')} = function () {
     if ($this->isAuthenticated() && UserRole::isAdministrator($this->getRole())) {
         $hostels = null;
+        $admin = $this->getAttribute('user');
 
-        foreach ($this->facilityService->getHostels() as $hostel) {
+        foreach ($this->facilityService->getHostelsByType($admin) as $hostel) {
             $hostel = $hostel->toArray();
             unset($hostel['institution'], $hostel['warden']);
             $hostels[] = $hostel;

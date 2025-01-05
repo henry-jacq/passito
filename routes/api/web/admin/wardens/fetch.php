@@ -5,8 +5,9 @@ use App\Enum\UserRole;
 ${basename(__FILE__, '.php')} = function () {
     if ($this->isAuthenticated() && UserRole::isSuperAdmin($this->getRole())) {
         $wardens = null;
+        $superAdmin = $this->getAttribute('user');
 
-        foreach ($this->userService->getWardens() as $warden) {
+        foreach ($this->userService->getWardensByGender($superAdmin) as $warden) {
             $wardens[] = $warden->toArray();
         }
 

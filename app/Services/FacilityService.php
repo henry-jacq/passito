@@ -7,6 +7,7 @@ use App\Core\Session;
 use App\Entity\Hostel;
 use App\Enum\HostelType;
 use App\Entity\Institution;
+use App\Enum\Gender;
 use App\Enum\InstitutionType;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -64,10 +65,13 @@ class FacilityService
         $this->em->flush();
     }
 
-    public function getHostels()
+    public function getHostelsByType(User $user)
     {
-        $hostels = $this->em->getRepository(Hostel::class)->findAll();
-        return $hostels;
+        if ($user->getGender() == Gender::MALE) {
+            return $this->em->getRepository(Hostel::class)->findBy(['hostelType' => HostelType::GENTS]);
+        }
+
+        return $this->em->getRepository(Hostel::class)->findBy(['hostelType' => HostelType::LADIES]);
     }
 
     public function getHostelById(int $id): ?Hostel

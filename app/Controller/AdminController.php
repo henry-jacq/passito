@@ -64,7 +64,7 @@ class AdminController extends BaseController
         $this->view->clearCacheIfDev();
 
         $userData = $request->getAttribute('user');
-        $students = $this->userService->getStudents();
+        $students = $this->userService->getStudentsByGender($userData);
 
         $args = [
             'title' => 'Manage Students',
@@ -80,7 +80,7 @@ class AdminController extends BaseController
         $this->view->clearCacheIfDev();
 
         $userData = $request->getAttribute('user');
-        $wardens = $this->userService->getWardens();
+        $wardens = $this->userService->getWardensByGender($userData);
 
         $args = [
             'title' => 'Manage Wardens',
@@ -126,7 +126,7 @@ class AdminController extends BaseController
 
         $userData = $request->getAttribute('user');
         $institutions = $this->facilityService->getInstitutions();
-        $hostels = $this->facilityService->getHostels();
+        $hostels = $this->facilityService->getHostelsByType($userData);
 
         $args = [
             'title' => 'Manage Facilities',

@@ -47,9 +47,15 @@ class UserService
         return $user;
     }
 
-    public function getWardens(): array
+    public function getWardensByGender(User $user): array
     {
-        return $this->em->getRepository(User::class)->findBy(['role' => UserRole::ADMIN]);
+        return $this->em->getRepository(User::class)->createQueryBuilder('u')
+            ->where('u.role = :role')
+            ->andWhere('u.gender = :gender')
+            ->setParameter('role', UserRole::ADMIN)
+            ->setParameter('gender', $user->getGender())
+            ->getQuery()
+            ->getResult();
     }
 
     public function removeWarden(int $wardenId): bool
@@ -92,9 +98,17 @@ class UserService
         return $student;
     }
 
-    public function getStudents(): array
+    /**
+     * Get students of a admin based on gender
+     */
+    public function getStudentsByGender(User $user)
     {
-        return $this->em->getRepository(Student::class)->findAll();
+        return $this->em->getRepository(Student::class)->createQueryBuilder('s')
+            ->innerJoin('s.user', 'u')
+            ->where('u.gender = :gender')
+            ->setParameter('gender', $user->getGender())
+            ->getQuery()
+            ->getResult();
     }
 
 }

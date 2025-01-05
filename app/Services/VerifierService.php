@@ -72,9 +72,9 @@ class VerifierService
     }
 
     /**
-     * Check if machine is valid
+     * Check if machine ID is valid
      */    
-    public function isValidMachine(string $machineId): bool
+    public function isValidMachineId(string $machineId): bool
     {
         return $this->em->getRepository(Verifier::class)->findOneBy(['machineId' => $machineId]) !== null;
     }

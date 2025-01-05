@@ -107,4 +107,42 @@ class VerifierService
 
         return false;
     }
+
+    /**
+     * Delete verifier
+     */
+    public function deleteVerifier(int $verifier_id)
+    {
+        $verifier = $this->getVerifier($verifier_id);
+        if ($verifier) {
+            $this->em->remove($verifier);
+            $this->em->flush();
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Activate verifier to access API
+     */
+    public function activate(int $verifier_id)
+    {
+        $verifier = $this->getVerifier($verifier_id);
+        $verifier->setStatus(VerifierStatus::ACTIVE);
+        $this->em->persist($verifier);
+        $this->em->flush();
+        return $verifier;
+    }
+
+    /**
+     * Deactive verifier to restrict access to API
+     */
+    public function deactivate(int $verifier_id)
+    {
+        $verifier = $this->getVerifier($verifier_id);
+        $verifier->setStatus(VerifierStatus::INACTIVE);
+        $this->em->persist($verifier);
+        $this->em->flush();
+        return $verifier;
+    }
 }

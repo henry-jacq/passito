@@ -450,68 +450,127 @@ document.addEventListener('DOMContentLoaded', () => {
 
         });
     }
-    // Select all buttons with the class 'remove-hostel-modal'
-    const removeHostelButtons = document.querySelectorAll('.remove-hostel-modal');
+
+    // Activate verifer buttons
+    const activateVerifierButtons = document.querySelectorAll('.activate-verifier-modal');
 
     // Iterate over each button and attach an event listener
-    removeHostelButtons.forEach((button) => {
+    activateVerifierButtons.forEach((button) => {
+        button.addEventListener('click', async (event) => {
+            const activateId = event.target.dataset.id;
+
+            try {
+                const response = await Ajax.post(`/api/web/admin/verifiers/activate`, {
+                    verifier_id: activateId
+                });
+
+                if (response.ok) {
+                    const data = response.data;
+                    
+                    if (data.status) {
+                        location.reload();
+                    } else {
+                        alert(data.message);
+                    }
+                } else {
+                    handleError(response.status);
+                }
+            } catch (error) {
+                console.error(error);
+            } finally {
+                Modal.close();
+            }
+        });
+    });
+    
+    // Activate verifer buttons
+    const deactivateVerifierButtons = document.querySelectorAll('.deactivate-verifier-modal');
+    deactivateVerifierButtons.forEach((button) => {
+        button.addEventListener('click', async (event) => {
+            const activateId = event.target.dataset.id;
+
+            try {
+                const response = await Ajax.post(`/api/web/admin/verifiers/deactivate`, {
+                    verifier_id: activateId
+                });
+
+                if (response.ok) {
+                    const data = response.data;
+
+                    if (data.status) {
+                        location.reload();
+                    } else {
+                        alert(data.message);
+                    }
+                } else {
+                    handleError(response.status);
+                }
+            } catch (error) {
+                console.error(error);
+            } finally {
+                Modal.close();
+            }
+        });
+    });
+    
+    // Delete verifier modal
+    const deleteVerifierModal = document.querySelectorAll('.delete-verifier-modal');
+    deleteVerifierModal.forEach((button) => {
         button.addEventListener('click', (event) => {
-            const hostelId = event.target.closest('button').dataset.id;
-            const hostelName = event.target.closest('button').dataset.name;
+            const verifierId = event.target.dataset.id;
+            const verifierName = event.target.dataset.name;
 
             Modal.open({
                 content: `
-                <div class="px-2 space-y-4">
-                    <h3 class="text-xl font-bold text-gray-800 border-b pb-3">Remove Hostel</h3>
-                    <p class="text-gray-600">
-                        Are you sure you want to remove the hostel 
-                        <span class="font-semibold text-gray-800">${hostelName}</span>?
-                    </p>
-                    <div class="bg-red-100 border-l-4 border-red-400 text-red-600 p-4 rounded-md">
-                        <p class="font-semibold">Warning:</p>
-                        <p class="space-y-1">
-                            Ensure all students are moved to another hostel before proceeding.
+                <div class="px-2 space-y-6">
+                    <h3 class="text-xl font-bold text-gray-800 border-b border-gray-200 pb-3">Delete Verifier</h3>
+                    <div class="space-y-4">
+                        <p class="text-gray-700">
+                            You are about to delete the verifier <span class="font-semibold">${verifierName}</span>. 
+                            This action will prevent the verifier from sending check-in and check-out data for students. Additionally, all existing logs associated with this verifier will be permanently deleted.
+                        </p>
+                        <p class="text-gray-700">
+                            If you are unsure, consider deactivating the verifier instead of deleting it.
                         </p>
                     </div>
                 </div>
-            `,
+                `,
                 actions: [
                     {
-                        label: 'Remove Hostel',
-                        class: `inline-flex justify-center rounded-lg bg-red-600 px-4 py-2 mx-2 text-white font-medium shadow-sm hover:bg-red-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-200`,
+                        label: 'Delete Verifier',
+                        class: `inline-flex justify-center rounded-lg bg-red-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-red-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2`,
                         onClick: async () => {
                             try {
-                                const response = await Ajax.post(`/api/web/admin/facilities/hostels/remove`, {
-                                    hostel_id: hostelId,
+                                const response = await Ajax.post(`/api/web/admin/verifiers/delete`, {
+                                    verifier_id: verifierId
                                 });
 
                                 if (response.ok) {
                                     const data = response.data;
                                     if (data.status) {
-                                        location.reload(); // Refresh the page on success
+                                        location.reload();
                                     } else {
-                                        alert(data.message); // Show error message
+                                        alert(data.message);
                                     }
                                 } else {
-                                    handleError(response.status); // Handle server error
+                                    handleError(response.status);
                                 }
                             } catch (error) {
-                                console.error(error); // Log unexpected errors
+                                console.error(error);
                             } finally {
-                                Modal.close(); // Close the modal
+                                Modal.close();
                             }
                         },
                     },
                     {
                         label: 'Cancel',
-                        class: `inline-flex justify-center rounded-lg bg-gray-100 px-4 py-2 text-gray-700 font-medium shadow-sm hover:bg-gray-200 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 transition-all duration-200`,
-                        onClick: Modal.close, // Close modal on cancel
+                        class: `inline-flex justify-center rounded-lg bg-gray-100 px-6 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`,
+                        onClick: Modal.close,
                     },
                 ],
-
-                size: 'sm:max-w-xl', // Set modal width
-                classes: 'custom-modal-class', // Add custom class if needed
-                closeOnBackdropClick: false, // Disable backdrop click to avoid accidental closure
+                size: 'sm:max-w-xl',
+                classes: 'custom-modal-class',
+                closeOnBackdropClick: false,
             });
         });
     });

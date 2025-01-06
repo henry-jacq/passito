@@ -49,8 +49,8 @@ class ApiMiddleware implements MiddlewareInterface
 
         $userRole = $user->getRole()->value;
 
-        // Prevent unauthorized access
-        if (!UserRole::isAdministrator($userRole)) {
+        // Prevent unauthorized access to admin routes
+        if (str_contains($request->getUri()->getPath(), '/api/web/admin') && $userRole !== UserRole::ADMIN) {
             return $this->responseFactory
                 ->createResponse(403)
                 ->withHeader('Content-Type', 'application/json')

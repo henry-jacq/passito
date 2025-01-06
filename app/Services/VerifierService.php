@@ -157,6 +157,31 @@ class VerifierService
     }
 
     /**
+     * Sync data
+     */
+    public function syncData(string $authToken, string $machineId, $data): bool
+    {
+        $verifier = $this->em->getRepository(Verifier::class)->findOneBy(['authToken' => $authToken, 'machineId' => $machineId]);
+        if ($verifier) {
+
+            $logs = new VerifierLog();
+            $logs->setVerifier($verifier);
+            $logs->setOutpass($data);
+            $logs->setInTime($data);
+            $logs->setOutTime($data);
+            $logs->setTimestamp(new DateTime());
+            
+            $verifier->setLastSync(new DateTime());
+            
+            $this->em->persist($verifier);
+            $this->em->persist($logs);
+            $this->em->flush();
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Get verifier logs
      */
     public function getLogs(int $verifier_id): array

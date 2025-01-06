@@ -1,5 +1,6 @@
 <?php
 
+// Test if the verifier is allowed to access the API
 ${basename(__FILE__, '.php')} = function () {
     if ($this->paramsExists(['name', 'auth_token'])) {
         $name = htmlspecialchars($this->data['name'], ENT_QUOTES, 'UTF-8');

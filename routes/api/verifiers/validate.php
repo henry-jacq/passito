@@ -1,0 +1,1 @@
+<!-- An endpoint to handle QR code validation -->

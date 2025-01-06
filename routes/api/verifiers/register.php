@@ -1,5 +1,6 @@
 <?php
 
+// Register verifier
 ${basename(__FILE__, '.php')} = function () {
     if ($this->paramsExists(['machine_id'])) {
 

@@ -1,8 +1,7 @@
 <?php
 
-// Is verifier active?
 ${basename(__FILE__, '.php')} = function () {
-    if ($this->paramsExists(['machine_id'])) {
+    if ($this->paramsExists(['machine_id', 'data'])) {
 
         $machine_id = $this->data['machine_id'];
         $headers = $this->negotiateHeaders($this->headers);
@@ -14,17 +13,17 @@ ${basename(__FILE__, '.php')} = function () {
             ], 400);
         }
 
-        $verifier = $this->verifierService->isActive($authToken, $machine_id);
+        $verifier = $this->verifierService->syncData($authToken, $machine_id);
 
         if ($verifier) {
             return $this->response([
-                'message' => 'Verifier is active',
+                'message' => 'Data is synced',
                 'status' => true
             ]);
         }
 
         return $this->response([
-            'message' => 'Verifier is not active',
+            'message' => 'Failed to sync data',
             'status' => false
         ], 400);
     }

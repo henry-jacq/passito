@@ -112,9 +112,12 @@ class AdminController extends BaseController
         $this->view->clearCacheIfDev();
 
         $userData = $request->getAttribute('user');
+        $logbook = $this->verifierService->fetchAllLogs();
+
         $args = [
             'title' => 'Manage Logbook',
             'user' => $userData,
+            'logbook' => $logbook,
             'routeName' => $this->getRouteName($request),
         ];
         return parent::render($request, $response, 'admin/logbook', $args);

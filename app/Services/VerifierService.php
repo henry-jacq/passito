@@ -155,4 +155,24 @@ class VerifierService
         $this->em->flush();
         return $verifier;
     }
+
+    /**
+     * Get verifier logs
+     */
+    public function getLogs(int $verifier_id): array
+    {
+        $verifier = $this->getVerifier($verifier_id);
+        if ($verifier) {
+            return $this->em->getRepository(VerifierLog::class)->findBy(['verifier' => $verifier]);
+        }
+        return [];
+    }
+
+    /**
+     * Fetch all logs
+     */
+    public function fetchAllLogs(): array
+    {
+        return $this->em->getRepository(VerifierLog::class)->findAll();
+    }
 }

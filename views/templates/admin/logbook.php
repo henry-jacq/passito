@@ -3,8 +3,13 @@
     <h2 class="text-2xl font-semibold text-gray-800 mb-4">Verifier Logbook</h2>
     <p class="text-gray-600 text-md mb-8">View and manage logs of student check-in and check-out activities.</p>
 
-    <!-- Logbook Table -->
     <section class="bg-white shadow-md rounded-lg p-6">
+        <?php if (empty($logbook)): ?>
+        <div class="flex flex-col items-center justify-center h-64 space-y-4">
+            <i class="fas fa-exclamation-circle text-red-500 text-4xl"></i>
+            <p class="text-gray-600 text-lg font-medium">Logbook is Empty!</p>
+        </div>
+        <?php else: ?>
         <div class="mb-4 flex justify-between items-center">
             <div>
                 <p class="text-gray-600 text-sm">Total Logs: <span class="font-semibold text-gray-800">200</span></p>
@@ -30,30 +35,20 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- Sample Row -->
+                <?php foreach($logbook as $log): ?>
                 <tr class="text-sm border-b hover:bg-gray-50">
-                    <td class="p-3 text-gray-800 font-medium">OP12345</td>
-                    <td class="p-3 text-gray-800">John Doe</td>
-                    <td class="p-3 text-gray-800">ST98765</td>
-                    <td class="p-3 text-gray-800">Computer Science</td>
-                    <td class="p-3 text-gray-800">2024-12-29 08:00</td>
-                    <td class="p-3 text-gray-800">2024-12-29 18:00</td>
+                    <td class="p-3 text-gray-800 font-medium"><?= $log->getOutpass()->getId() ?></td>
+                    <td class="p-3 text-gray-800"><?= $log->getOutpass()->getStudent()->getUser()->getName() ?></td>
+                    <td class="p-3 text-gray-800"><?= $log->getOutpass()->getStudent()->getDigitalId() ?></td>
+                    <td class="p-3 text-gray-800"><?= $log->getOutpass()->getStudent()->getDepartment() ?></td>
+                    <td class="p-3 text-gray-800"><?= $log->getInTime() ?></td>
+                    <td class="p-3 text-gray-800"><?= $log->getOutTime() ?></td>
                     <td class="p-3 text-gray-800 flex items-center">
-                        <span class="mr-2 w-2.5 h-2.5 bg-green-500 rounded-full"></span> Verifier 1
+                        <span class="mr-2 w-2.5 h-2.5 <?= $log->getVerifier()->getName() ? 'bg-green-500' : 'bg-red-500' ?> rounded-full"></span> 
+                        <?= $log->getVerifier()->getName() ?>
                     </td>
                 </tr>
-                <tr class="text-sm border-b hover:bg-gray-50">
-                    <td class="p-3 text-gray-800 font-medium">OP12346</td>
-                    <td class="p-3 text-gray-800">Jane Smith</td>
-                    <td class="p-3 text-gray-800">ST98766</td>
-                    <td class="p-3 text-gray-800">Electrical Engineering</td>
-                    <td class="p-3 text-gray-800">2024-12-29 09:00</td>
-                    <td class="p-3 text-gray-800">2024-12-29 17:30</td>
-                    <td class="p-3 text-gray-800 flex items-center">
-                        <span class="mr-2 w-2.5 h-2.5 bg-green-500 rounded-full"></span> Verifier 2
-                    </td>
-                </tr>
-                <!-- Add more rows dynamically -->
+                <?php endforeach; ?>
             </tbody>
         </table>
         <div class="mt-4 flex justify-between items-center text-sm text-gray-600">
@@ -63,5 +58,6 @@
                 <button class="px-3 py-1 border rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:ring focus:ring-blue-300 focus:outline-none">Next</button>
             </div>
         </div>
+        <?php endif; ?>
     </section>
 </main>

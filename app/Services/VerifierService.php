@@ -5,6 +5,7 @@ namespace App\Services;
 use DateTime;
 use App\Core\Session;
 use App\Entity\Verifier;
+use App\Entity\VerifierLog;
 use App\Enum\VerifierStatus;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -85,6 +86,15 @@ class VerifierService
     public function isValidToken(string $authToken): bool
     {
         return $this->em->getRepository(Verifier::class)->findOneBy(['authToken' => $authToken]) !== null;
+    }
+
+    /**
+     * Check if verifier is active
+     */
+    public function isActive(string $authToken, string $machineId): bool
+    {
+        $verifier = $this->em->getRepository(Verifier::class)->findOneBy(['authToken' => $authToken, 'machineId' => $machineId]);
+        return $verifier && $verifier->getStatus() === VerifierStatus::ACTIVE;
     }
 
     /**

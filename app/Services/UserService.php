@@ -110,5 +110,28 @@ class UserService
             ->getQuery()
             ->getResult();
     }
+    
+    /**
+     * Get student by user
+     */
+    public function getStudentByUser(User $user): Student
+    {
+        return $this->em->getRepository(Student::class)->findOneBy(['user' => $user]);
+    }
+    
+    /**
+     * Remove student
+     */
+    public function removeStudent(int $studentId): bool
+    {
+        $student = $this->em->getRepository(Student::class)->find($studentId);
 
+        if ($student) {
+            $this->em->remove($student);
+            $this->em->flush();
+            return true;
+        }
+
+        return false;
+    }
 }

@@ -6,6 +6,7 @@ namespace App\Entity;
 
 use DateTime;
 use App\Enum\OutpassStatus;
+use App\Enum\OutpassType;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
@@ -35,8 +36,8 @@ class OutpassRequest
     #[ORM\Column(type: 'time')]
     private DateTime $toTime;
 
-    #[ORM\Column(type: 'string', enumType: OutpassStatus::class)]
-    private OutpassStatus $passType;
+    #[ORM\Column(type: 'string', enumType: OutpassType::class)]
+    private OutpassType $passType;
 
     #[ORM\Column(type: 'string', length: 255)]
     private string $destination;
@@ -44,11 +45,11 @@ class OutpassRequest
     #[ORM\Column(type: 'string', length: 255)]
     private string $purpose;
 
+    #[ORM\Column(type: 'string', enumType: OutpassStatus::class)]
+    private OutpassStatus $status;
+
     #[ORM\Column(type: 'json', nullable: true)]
     private ?array $attachments = null;
-
-    #[ORM\Column(type: 'string', length: 255)]
-    private string $status;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $remarks = null;
@@ -93,7 +94,7 @@ class OutpassRequest
         return $this->toTime;
     }
 
-    public function getPassType(): OutpassStatus
+    public function getPassType(): OutpassType
     {
         return $this->passType;
     }
@@ -113,7 +114,7 @@ class OutpassRequest
         return $this->attachments;
     }
 
-    public function getStatus(): string
+    public function getStatus(): OutpassStatus
     {
         return $this->status;
     }
@@ -163,7 +164,7 @@ class OutpassRequest
         $this->toTime = $toTime;
     }
 
-    public function setPassType(OutpassStatus $passType): void
+    public function setPassType(OutpassType $passType): void
     {
         $this->passType = $passType;
     }
@@ -183,7 +184,7 @@ class OutpassRequest
         $this->attachments = $attachments;
     }
 
-    public function setStatus(string $status): void
+    public function setStatus(OutpassStatus $status): void
     {
         $this->status = $status;
     }

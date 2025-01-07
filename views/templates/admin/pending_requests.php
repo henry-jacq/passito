@@ -7,37 +7,45 @@
         <table class="min-w-full table-auto">
             <thead class="bg-gray-100">
                 <tr>
-                    <th class="px-6 py-3 text-left text-sm font-medium text-gray-700">Request ID</th>
                     <th class="px-6 py-3 text-left text-sm font-medium text-gray-700">Student Name</th>
-                    <th class="px-6 py-3 text-left text-sm font-medium text-gray-700">Department</th>
+                    <th class="px-6 py-3 text-left text-sm font-medium text-gray-700">Course</th>
+                    <th class="px-6 py-3 text-left text-sm font-medium text-gray-700">Year</th>
                     <th class="px-6 py-3 text-left text-sm font-medium text-gray-700">Type</th>
+                    <th class="px-6 py-3 text-left text-sm font-medium text-gray-700">Destination</th>
+                    <th class="px-6 py-3 text-left text-sm font-medium text-gray-700">Purpose</th>
                     <th class="px-6 py-3 text-left text-sm font-medium text-gray-700">Date & Duration</th>
                     <th class="px-6 py-3 text-center text-sm font-medium text-gray-700">Files</th>
                     <th class="px-6 py-3 text-center text-sm font-medium text-gray-700">Actions</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
+                <?php foreach($outpasses as $outpass): ?>
                 <tr>
-                    <td class="px-6 py-4 text-sm text-gray-900">REQ001</td>
-                    <td class="px-6 py-4 text-sm text-gray-900">John Doe</td>
-                    <td class="px-6 py-4 text-sm text-gray-900">Computer Science</td>
-                    <td class="px-6 py-4 text-sm text-gray-900">Outpass</td>
+                    <td class="px-6 py-4 text-sm text-gray-900"><?= $outpass->getStudent()->getUser()->getName()?></td>
+                    <td class="px-6 py-4 text-sm text-gray-900"><?= $outpass->getStudent()->getDepartment() . ' ' . $outpass->getStudent()->getBranch()?></td>
+                    <td class="px-6 py-4 text-sm text-gray-900"><?= formatStudentYear($outpass->getStudent()->getYear())?></td>
+                    <td class="px-6 py-4 text-sm text-gray-900"><?= ucwords($outpass->getPassType()->value) ?></td>
+                    <td class="px-6 py-4 text-sm text-gray-900"><?= $outpass->getDestination() ?></td>
+                    <td class="px-6 py-4 text-sm text-gray-900 truncate"><?= $outpass->getPurpose() ?></td>
                     <td class="px-6 py-4">
-                        <span class="block text-sm text-gray-900">23 Dec, 2024 - 24 Dec, 2024</span>
-                        <span class="block text-xs text-gray-600">10:00 AM to 6:00 PM</span>
+                        <span class="block text-sm text-gray-900">
+                            <?= $outpass->getFromDate()->format('d M, Y') ?> - <?= $outpass->getToDate()->format('d M, Y') ?>
+                        </span>
+                        <span class="block text-xs text-gray-600">
+                            <?= $outpass->getFromTime()->format('h:i A') ?> - <?= $outpass->getToTime()->format('h:i A') ?>
+                        </span>
                     </td>
                     <td class="px-6 py-4 text-sm text-center">
                         <a href="#" class="text-indigo-500 hover:underline">
                             <i class="fa-solid fa-link"></i>
-                            <span class="ml-1">Open</span>
                         </a>
                     </td>
-                    <td class="px-6 py-4 whitespace-normal text-sm font-medium space-x-2">
+                    <td class="px-6 py-4 whitespace-normal text-sm text-center font-medium space-x-2">
                         <button class="text-green-600 hover:text-green-900 transition duration-200"><i class="fas fa-circle-check mr-1"></i>Accept</button>
                         <button class="text-red-600 hover:text-red-900 transition duration-200"><i class="fas fa-trash-alt mr-1"></i>Reject</button>
                     </td>
                 </tr>
-                <!-- More rows can be added here dynamically -->
+                <?php endforeach; ?>
             </tbody>
         </table>
 

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Core\View;
 use App\Services\UserService;
 use App\Services\FacilityService;
+use App\Services\OutpassService;
 use App\Services\VerifierService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -14,6 +15,7 @@ class AdminController extends BaseController
     public function __construct(
         protected readonly View $view,
         private readonly UserService $userService,
+        private readonly OutpassService $outpassService,
         private readonly VerifierService $verifierService,
         private readonly FacilityService $facilityService
     )
@@ -38,9 +40,12 @@ class AdminController extends BaseController
         $this->view->clearCacheIfDev();
 
         $userData = $request->getAttribute('user');
+        $outpasses = $this->outpassService->getPendingOutpass();
+
         $args = [
             'title' => 'Pending Requests',
             'user' => $userData,
+            'outpasses' => $outpasses,
             'routeName' => $this->getRouteName($request),
         ];
         return parent::render($request, $response, 'admin/pending_requests', $args);

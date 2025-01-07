@@ -125,3 +125,14 @@ function storage_path($path, $create_dir = true, $permissions = 0755)
     return $fullPath;
 }
 
+// Determine the suffix for the given year number
+function formatStudentYear($year) {
+    $suffix = match ($year % 10) {
+        1 => ($year % 100 === 11) ? 'th' : 'st',
+        2 => ($year % 100 === 12) ? 'th' : 'nd',
+        3 => ($year % 100 === 13) ? 'th' : 'rd',
+        default => 'th',
+    };
+
+    return $year . $suffix;
+}

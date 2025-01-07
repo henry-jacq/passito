@@ -36,4 +36,13 @@ class OutpassService
 
         return $outpass;
     }
+
+    public function getPendingOutpass()
+    {
+        $outpasses = $this->em->getRepository(OutpassRequest::class)->findBy(
+            ['status' => OutpassStatus::PENDING]
+        );
+
+        return $outpasses;
+    }
 }

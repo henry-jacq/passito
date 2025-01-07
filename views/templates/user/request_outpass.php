@@ -16,7 +16,7 @@
 
         <!-- Form Section -->
         <section class="bg-white rounded-lg shadow p-8">
-            <form action="#" method="POST" enctype="multipart/form-data" class="space-y-6">
+            <form id="outpassRequestForm" action="#" method="POST" enctype="multipart/form-data" class="space-y-6">
                 <!-- Date and Time -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
@@ -42,9 +42,9 @@
                     <label for="outpass_type" class="block text-gray-700 font-medium">Outpass Type</label>
                     <select name="outpass_type" id="outpass_type" required class="mt-1 w-full rounded-md border-gray-300 focus:border-purple-500 focus:ring focus:ring-purple-200 transition">
                         <option value="" disabled selected>Select type</option>
-                        <option value="outing">Outing Pass</option>
                         <option value="home">Home Pass</option>
-                        <option value="special">Special Outpass</option>
+                        <option value="outing">Outing Pass</option>
+                        <option value="other">Other</option>
                     </select>
                 </div>
 
@@ -60,25 +60,9 @@
                     <input type="text" name="destination" id="destination" required class="mt-1 w-full rounded-md border-gray-300 focus:border-purple-500 focus:ring focus:ring-purple-200 transition" placeholder="Enter destination">
                 </div>
 
-                <!-- Attachments -->
-                <div>
-                    <label for="attachment" class="block text-gray-700 font-medium">Attachments (if required)</label>
-                    <div class="mt-1 flex items-center">
-                        <div class="relative w-full">
-                        <input id="attachment" name="attachment" type="file" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-purple-500" onchange="updateFileName()">
-                        <div class="flex items-center justify-start space-x-4 w-full border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500">
-                            <div class="bg-gray-600 rounded-l-lg">
-                                <button type="button" class="px-4 py-2 mx-2 text-base text-white font-medium rounded-lg">Choose File</button>
-                            </div>
-                            <span id="file-name" class="text-gray-500">No file chosen</span>
-                        </div>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Submit Button -->
                 <div class="flex justify-end">
-                    <button type="submit" class="px-4 py-2 bg-purple-600 text-lg text-white rounded-lg shadow hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    <button id="outpassSubmitButton" type="submit" class="px-4 py-2 bg-purple-600 text-lg text-white rounded-lg shadow hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500">
                         Submit Request
                     </button>
                 </div>
@@ -86,10 +70,3 @@
         </section>
     </main>
 </div>
-
-<script>
-    document.getElementById('attachment').addEventListener('change', function() {
-        const fileName = this.files[0] ? this.files[0].name : 'No file chosen';
-        document.getElementById('file-name').textContent = fileName;
-    });
-</script>

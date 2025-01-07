@@ -39,7 +39,7 @@
 
     <?php
     if ($this->isAuthenticated()): ?>
-        <script type="module" src="<?= vite_asset('js/user.js') ?>"></script>
+        <script type="module" src="<?= vite_asset('js/student.js') ?>"></script>
     <?php else: ?>
         <script type="module" src="<?= vite_asset('js/auth.js') ?>"></script>
     <?php endif; ?>

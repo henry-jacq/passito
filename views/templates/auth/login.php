@@ -21,7 +21,7 @@
         </div>
 
         <!-- Login Form -->
-        <form id="login_form" action="/login" method="POST">
+        <form id="login_form" method="POST">
             <div class="mb-4">
                 <label for="email_address" class="block text-sm font-medium text-gray-700">Email Address</label>
                 <input type="email" id="email_address" name="email_address" required

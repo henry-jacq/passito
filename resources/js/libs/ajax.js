@@ -40,14 +40,23 @@ const Ajax = (function () {
 
     // Function to handle POST requests
     const post = (url, body = {}, headers = {}) => {
-        return request(url, {
+        let options = {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
                 ...headers,
             },
-            body: JSON.stringify(body),
-        });
+        };
+
+        // Check if body is FormData
+        if (body instanceof FormData) {
+            options.body = body; // FormData is directly assignable to the body
+            // Do not set 'Content-Type'; fetch sets it automatically for FormData
+        } else {
+            options.body = JSON.stringify(body);
+            options.headers['Content-Type'] = 'application/json';
+        }
+
+        return request(url, options);
     };
 
     // Function to handle PUT requests

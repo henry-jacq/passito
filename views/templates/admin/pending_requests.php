@@ -3,6 +3,14 @@
     <h2 class="text-2xl font-semibold text-gray-800 mb-4">Pending Requests</h2>
     <p class="text-gray-600 text-md mb-8">Manage pending requests by approving, rejecting, or wiping them out.</p>
 
+    <?php if(empty($outpasses)): ?>
+    <div class="bg-indigo-50 border-l-4 space-y-2 rounded-lg border-indigo-400 text-indigo-800 p-6 shadow-md leading-relaxed" role="alert" aria-live="polite">
+        <h3 class="text-lg font-semibold">No Pending Outpasses Found</h3>
+        <p class="text-sm">
+            There are currently no pending outpass requests awaiting approval. 
+        </p>
+    </div>
+    <?php else: ?>
     <section class="bg-white shadow-md rounded-lg overflow-hidden">
         <table class="min-w-full table-auto">
             <thead class="bg-gray-100">
@@ -41,8 +49,8 @@
                         </a>
                     </td>
                     <td class="px-6 py-4 whitespace-normal text-sm text-center font-medium space-x-2">
-                        <button class="text-green-600 hover:text-green-900 transition duration-200"><i class="fas fa-circle-check mr-1"></i>Accept</button>
-                        <button class="text-red-600 hover:text-red-900 transition duration-200"><i class="fas fa-trash-alt mr-1"></i>Reject</button>
+                        <button class="text-green-600 hover:text-green-900 transition duration-200 accept-outpass" data-id="<?= $outpass->getId() ?>"><i class="fas fa-circle-check mr-1"></i>Accept</button>
+                        <button class="text-red-600 hover:text-red-900 transition duration-200 reject-outpass" data-id="<?= $outpass->getId() ?>"><i class="fas fa-trash-alt mr-1"></i>Reject</button>
                     </td>
                 </tr>
                 <?php endforeach; ?>
@@ -68,4 +76,5 @@
             </div>
         </div>
     </section>
+    <?php endif; ?>
 </main>

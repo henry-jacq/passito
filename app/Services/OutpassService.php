@@ -31,10 +31,7 @@ class OutpassService
         $outpass->setCreatedAt(new DateTime());
         // $outpass->setAttachments($data['attachments']);
 
-        $this->em->persist($outpass);
-        $this->em->flush();
-
-        return $outpass;
+        return $this->updateOutpass($outpass);
     }
 
     public function getPendingOutpass()
@@ -44,5 +41,18 @@ class OutpassService
         );
 
         return $outpasses;
+    }
+
+    public function getOutpass(int $id): ?OutpassRequest
+    {
+        return $this->em->getRepository(OutpassRequest::class)->find($id);
+    }
+
+    public function updateOutpass(OutpassRequest $outpass)
+    {
+        $this->em->persist($outpass);
+        $this->em->flush();
+
+        return $outpass;
     }
 }

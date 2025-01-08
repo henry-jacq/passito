@@ -82,6 +82,36 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Accept Outpass
+    const acceptOutpassButtons = document.querySelectorAll('.accept-outpass');
+    acceptOutpassButtons.forEach((button) => {
+        button.addEventListener('click', async (event) => {
+            const tr = event.target.closest('tr');
+            const outpassId = event.target.dataset.id;
+            
+            try {
+                const response = await Ajax.post(`/api/web/admin/outpass/accept`, {
+                    id: outpassId
+                });
+
+                if (response.ok) {
+                    const data = response.data;
+                    if (data.status) {
+                        tr.remove();                        
+                    } else {
+                        alert(data.message);
+                    }
+                } else {
+                    handleError(response.status);
+                }
+            } catch (error) {
+                console.error(error);
+            } finally {
+                Modal.close();
+            }
+        });
+    });
+
     // Add Student modal
     const addStudentButton = document.getElementById('add-student-modal');
     if (addStudentButton) {

@@ -13,6 +13,8 @@ ini_set('log_errors_max_len', 0);
 ini_set('assert.exception', 1);
 ini_set('memory_limit', -1);
 
+date_default_timezone_set("Asia/Kolkata");
+
 $dotenv = Dotenv::createImmutable(ROOT_PATH);
 $dotenv->load();
 

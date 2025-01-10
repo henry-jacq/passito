@@ -57,6 +57,7 @@
             </tbody>
         </table>
 
+        <?php if (getLength($outpasses) > 10): ?>
         <!-- Pagination Section -->
         <div class="flex items-center justify-between border-t border-gray-200 bg-gray-50 px-4 py-3 sm:px-6">
             <div class="flex justify-between sm:hidden">
@@ -75,6 +76,7 @@
                 </div>
             </div>
         </div>
+        <?php endif; ?>
     </section>
     <?php endif; ?>
 </main>

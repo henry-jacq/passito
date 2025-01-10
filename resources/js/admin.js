@@ -87,6 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
     acceptOutpassButtons.forEach((button) => {
         button.addEventListener('click', async (event) => {
             const tr = event.target.closest('tr');
+            const table = tr.closest('table');
             const outpassId = event.target.dataset.id;
             
             try {
@@ -97,7 +98,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (response.ok) {
                     const data = response.data;
                     if (data.status) {
-                        tr.remove();                        
+                        tr.remove();
+                        const countEntries = table.querySelectorAll('tr');
+                        if (countEntries.length < 2) {
+                            location.reload();
+                        }
                     } else {
                         alert(data.message);
                     }
@@ -111,6 +116,69 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    // Reject outpass
+    const rejectOutpassButtons = document.querySelectorAll('.reject-outpass');
+    rejectOutpassButtons.forEach((button) => {
+        button.addEventListener('click', (event) => {
+            const outpassId = event.target.dataset.id;
+
+            Modal.open({
+                content: `
+                <div class="px-3 space-y-4">
+                    <h3 class="text-xl font-semibold text-gray-900 border-b border-gray-300 pb-4">
+                        Add Remarks for Rejection
+                    </h3>
+                    <div class="space-y-4">
+                        <label for="rejection-reason" class="block text-sm font-medium text-gray-700">
+                            Reason for Rejection <span class="text-gray-500 text-sm">(Optional)</span>
+                        </label>
+                        <textarea id="rejection-reason" class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm transition duration-200 resize-none" rows="4" placeholder="Provide a reason for rejection..."></textarea>
+                    </div>
+                </div>
+                `,
+                actions: [
+                    {
+                        label: 'Reject',
+                        class: `inline-flex justify-center rounded-lg bg-red-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-red-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50`,
+                        onClick: async () => {
+                            try {
+                                const reason = document.getElementById('rejection-reason').value.trim();
+                                const response = await Ajax.post(`/api/web/admin/outpass/reject`, {
+                                    id: outpassId,
+                                    reason
+                                });
+                                
+                                if (response.ok) {
+                                    const data = response.data;
+                                    if (data.status) {
+                                        location.reload();
+                                    } else {
+                                        alert(data.message);
+                                    }
+                                } else {
+                                    handleError(response.status);
+                                }
+                            } catch (error) {
+                                console.error(error);
+                            } finally {
+                                Modal.close();
+                            }
+                        },
+                    },
+                    {
+                        label: 'Cancel',
+                        class: `inline-flex justify-center rounded-lg bg-gray-100 px-6 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`,
+                        onClick: Modal.close,
+                    },
+                ],
+                size: 'sm:max-w-lg',
+                classes: 'custom-modal-class',
+                closeOnBackdropClick: false,
+            });
+        });
+    });
+
 
     // Add Student modal
     const addStudentButton = document.getElementById('add-student-modal');

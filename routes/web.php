@@ -45,6 +45,7 @@ return function (App $app) {
         $group->any('/outpass/pending', [AdminController::class, 'pendingRequests'])->setName('admin.outpass.pending');
         $group->any('/outpass/records', [AdminController::class, 'outpassRecords'])->setName('admin.outpass.records');
         $group->any('/manage/students', [AdminController::class, 'manageStudents'])->setName('admin.manage.students');
+        $group->any('/outpass/settings', [AdminController::class, 'outpassSettings'])->setName('admin.outpass.settings')->add(SuperAdminMiddleware::class);;
         $group->any('/manage/wardens', [AdminController::class, 'manageWardens'])->setName('admin.manage.wardens')->add(SuperAdminMiddleware::class);
         $group->any('/manage/facilities', [AdminController::class, 'manageFacilities'])->setName('admin.manage.facilities')->add(SuperAdminMiddleware::class);
         $group->any('/manage/verifiers', [AdminController::class, 'manageVerifiers'])->setName('admin.manage.verifiers')->add(SuperAdminMiddleware::class);

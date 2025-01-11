@@ -17,7 +17,7 @@
         <!-- Scrollable Menu (Middle) -->
         <div class="flex-1 overflow-y-auto px-3">
             <!-- Main Menu Category -->
-            <h4 class="text-gray-600 px-2 mt-4 font-semibold uppercase text-xs">Admin Panel</h4>
+            <!-- <h4 class="text-gray-600 px-2 mt-4 font-semibold uppercase text-xs">Admin Panel</h4> -->
             <ul class="mt-2">
                 <!-- Dashboard Item -->
                 <li class="my-1">
@@ -44,9 +44,19 @@
                         <i class="fas fa-folder-open pr-4"></i>
                         <span>Outpass Records</span>
                     </a>
-                </li>              
+                </li>
+                <?php if (UserRole::isSuperAdmin($user->getRole()->value)): ?>
+                <!-- Outpass Settings -->
+                <li class="my-1">
+                    <a href="<?= $this->urlFor('admin.outpass.settings') ?>"
+                        class="flex items-center px-4 py-3 <?= ($routeName == 'admin.outpass.settings') ? 'bg-indigo-100 text-indigo-600 hover:bg-indigo-200' : 'text-gray-600 hover:bg-gray-50'; ?> rounded-md transition duration-200">
+                        <i class="fas fa-sliders-h pr-4"></i>
+                        <span>Outpass Settings</span>
+                    </a>
+                </li> 
+                <?php endif; ?>
             </ul>
-            <h4 class="text-gray-600 px-2 mt-4 font-semibold uppercase text-xs">Management</h4>
+            <h4 class="text-gray-600 px-2 mt-3 font-semibold uppercase text-xs">Management</h4>
             <ul class="mt-2">
                 <?php if (UserRole::isSuperAdmin($user->getRole()->value)): ?>
                 <!-- Wardens -->
@@ -78,7 +88,7 @@
                 </li>
             </ul>
             <!-- Verifiers -->
-            <h4 class="text-gray-600 px-2 mt-4 font-semibold uppercase text-xs">Verifiers</h4>
+            <h4 class="text-gray-600 px-2 mt-3 font-semibold uppercase text-xs">Verifiers</h4>
             <ul class="mt-2">
                 <?php if (UserRole::isSuperAdmin($user->getRole()->value)): ?>
                 <li class="my-1">

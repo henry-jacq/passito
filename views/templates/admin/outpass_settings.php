@@ -30,7 +30,7 @@
     <!-- Outing Time Restrictions Section -->
     <section class="bg-white shadow-lg rounded-lg overflow-hidden mb-8">
         <div class="p-6">
-            <h3 class="text-xl font-semibold text-gray-800 mb-4">Outing Time Restrictions</h3>
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Outing Time Restrictions</h3>
 
             <div class="space-y-6">
                 <div>

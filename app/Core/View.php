@@ -179,6 +179,36 @@ class View
     }
 
     /**
+     * Render email template
+     */
+    public function renderEmail(string $view, $params = []): string
+    {
+        // Escape all string values in the data array
+        $safeParams = $this->escapeData($params);
+
+        // Safely extract variables to avoid overwriting
+        extract($safeParams, EXTR_SKIP);
+
+        // Inserting global variables
+        extract($this->getGlobals(), EXTR_SKIP);
+
+        if (!str_contains($view, '.php')) {
+            $view = $view . '.php';
+        }
+
+        $path = VIEW_PATH . "/emails/" . $view;
+
+        if (file_exists($path)) {
+            ob_start();
+            include $path;
+            $contents = ob_get_clean();
+            return $contents;
+        } else {
+            throw new \Exception("Email template not found: " . $view);
+        }
+    }
+
+    /**
      * Render the page
      */
     public function render(): void

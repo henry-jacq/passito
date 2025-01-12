@@ -4,9 +4,9 @@ namespace App\Controller;
 
 use Closure;
 use App\Core\View;
-use App\Core\Mailer;
 use App\Core\Session;
 use App\Services\AuthService;
+use App\Services\MailService;
 use App\Services\UserService;
 use InvalidArgumentException;
 use App\Services\OutpassService;
@@ -44,9 +44,9 @@ class ApiController
 
     public function __construct(
         private readonly View $view,
-        private readonly Mailer $mail,
         private readonly Session $session,
         private readonly AuthService $auth,
+        private readonly MailService $mail,
         private readonly UserService $userService,
         private readonly OutpassService $outpassService,
         private readonly VerifierService $verifierService,

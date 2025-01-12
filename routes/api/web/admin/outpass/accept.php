@@ -1,6 +1,5 @@
 <?php
 
-use DateTime;
 use App\Enum\UserRole;
 use App\Enum\OutpassStatus;
 use App\Entity\OutpassRequest;
@@ -14,8 +13,18 @@ ${basename(__FILE__, '.php')} = function () {
             if ($outpass instanceof OutpassRequest) {
                 $outpass->setStatus(OutpassStatus::APPROVED);
                 $outpass->setRemarks(null);
-                $outpass->setApprovedTime(new DateTime());
+                $outpass->setApprovedTime($time = new DateTime());
                 $outpass->setApprovedBy($this->getAttribute('user'));
+
+                $accepted = $this->view->renderEmail('accepted', [
+                    'studentName' => $outpass->getStudent()->getUser()->getName(),
+                    'outpass' => $outpass,
+                ]);
+                
+                // Send email notification
+                $subject = "[Passito] Your Outpass Request #{$outpass->getId()} Has Been Approved";
+                $email = $outpass->getStudent()->getUser()->getEmail();
+                $this->mail->sendNotification($email, $subject, $accepted);
 
                 // Update outpass details
                 $this->outpassService->updateOutpass($outpass);

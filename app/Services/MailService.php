@@ -38,7 +38,7 @@ class MailService
         $this->mailer->SMTPAuth = true;
         $this->mailer->Username = $this->config->get('mail.user');
         $this->mailer->Password = $this->config->get('mail.pass');
-        $this->mailer->setFrom($this->config->get('mail.from'));
+        $this->mailer->setFrom($this->config->get('mail.from'), $this->config->get('app.name'));
 
         // Set encryption type
         if ($this->config->get('mail.port') == 587) {

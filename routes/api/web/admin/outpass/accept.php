@@ -21,13 +21,20 @@ ${basename(__FILE__, '.php')} = function () {
                     'outpass' => $outpass,
                 ]);
                 
-                // Send email notification
+                $userEmail = $outpass->getStudent()->getUser()->getEmail();
                 $subject = "[Passito] Your Outpass Request #{$outpass->getId()} Has Been Approved";
-                $email = $outpass->getStudent()->getUser()->getEmail();
-                $this->mail->sendNotification($email, $subject, $accepted);
+                
+                // Update outpass status
+                $result = $this->outpassService->updateOutpass($outpass);
+                $queue = $this->mail->queueEmail($subject, $accepted, $userEmail);
 
                 // Update outpass details
-                $this->outpassService->updateOutpass($outpass);
+                if ($result instanceof OutpassRequest && $queue) {
+                    return $this->response([
+                        'message' => 'Outpass Accepted',
+                        'status' => true
+                    ], 200);
+                }
 
                 return $this->response([
                     'message' => 'Outpass Accepted',

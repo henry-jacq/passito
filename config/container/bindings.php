@@ -3,7 +3,6 @@
 use Slim\App;
 use App\Core\View;
 use App\Core\Config;
-use App\Core\Mailer;
 use App\Core\Request;
 use App\Core\Session;
 use Doctrine\ORM\ORMSetup;
@@ -67,12 +66,5 @@ return [
     },
     Session::class => function (ContainerInterface $container) {
         return new Session($container->get(Config::class));
-    },
-    Mailer::class => function (ContainerInterface $container) {
-        $phpMailer = new PHPMailer(true);
-        return new Mailer(
-            $phpMailer,
-            $container->get(Config::class)
-        );
     }
 ];

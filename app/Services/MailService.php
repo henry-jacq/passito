@@ -15,8 +15,7 @@ class MailService
         protected readonly PHPMailer $mailer,
         protected readonly Config $config,
         protected readonly EntityManagerInterface $entityManager
-    )
-    {
+    ) {
         $this->initServer();
     }
 
@@ -32,7 +31,7 @@ class MailService
 
         // Set the mailer to use SMTP
         $this->mailer->isSMTP();
-        
+
         // Set the SMTP host, port, and security settings
         $this->mailer->Host = $this->config->get('mail.host');
         $this->mailer->Port = $this->config->get('mail.port');
@@ -103,35 +102,40 @@ class MailService
 
     /**
      * Send a notification email (simple usage)
-     * 
-     * @param string $recipientEmail
-     * @param string $subject
-     * @param string $message
-     * @return bool
      */
     public function sendNotification(string $recipientEmail, string $subject, string $message): bool
     {
         try {
+            // Set up the email content
             $this->setContent($subject, $message, true);
             $this->addRecipient($recipientEmail);
+
+            // Dynamically attach the file if it exists
+            $outpassFile = STORAGE_PATH . '/outpass.pdf';
+            if (is_readable($outpassFile)) {
+                $this->attachFile($outpassFile);
+            }
+
+            // Attempt to send the email
             return $this->send();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
+            // Log or handle the exception if needed
             return false;
         }
     }
 
     /**
      * Queue an email to be sent later
-     * 
-     * @param string $subject
-     * @param string $body
-     * @param string $recipient
-     * @return bool
      */
-    public function queueEmail(string $subject, string $body, string $recipient): bool
-    {
+    public function queueEmail(
+        string $subject,
+        string $body,
+        string $recipient,
+        ?array $attachments = null,
+        ?\DateTimeInterface $timeToSend = null
+    ): bool {
         try {
-            $emailQueue = new EmailQueue($subject, $body, $recipient);
+            $emailQueue = new EmailQueue($subject, $body, $recipient, $attachments, $timeToSend);
             $this->entityManager->persist($emailQueue);
             $this->entityManager->flush();
             return true;
@@ -146,15 +150,23 @@ class MailService
      */
     public function processQueue(): void
     {
-        $emails = $this->entityManager->getRepository(EmailQueue::class)->findBy(['sent' => false]);
+        // Fetch emails scheduled to be sent up to the current time
+        $emails = $this->entityManager
+            ->getRepository(EmailQueue::class)
+            ->createQueryBuilder('e')
+            ->where('e.timeToSend <= :now')
+            ->setParameter('now', new \DateTimeImmutable())
+            ->getQuery()
+            ->getResult();
 
         foreach ($emails as $email) {
-            $this->setContent($email->getSubject(), $email->getBody());
+            // Set up the email content
+            $this->setContent($email->getSubject(), $email->getBody(), true);
             $this->addRecipient($email->getRecipient());
 
             if ($this->send()) {
-                // Mark the email as sent
-                $email->setSent(true);
+                // Delete the email from the queue after successful sending
+                $this->entityManager->remove($email);
                 $this->entityManager->flush();
             }
         }

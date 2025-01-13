@@ -23,7 +23,7 @@ ${basename(__FILE__, '.php')} = function () {
                     $outpass->setRemarks($reason);
                 }
 
-                $rejected = $this->view->renderEmail('rejected', [
+                $rejected = $this->view->renderEmail('outpass/rejected', [
                     'studentName' => $outpass->getStudent()->getUser()->getName(),
                     'outpass' => $outpass,
                 ]);

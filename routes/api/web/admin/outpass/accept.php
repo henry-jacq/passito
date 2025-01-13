@@ -16,7 +16,7 @@ ${basename(__FILE__, '.php')} = function () {
                 $outpass->setApprovedTime($time = new DateTime());
                 $outpass->setApprovedBy($this->getAttribute('user'));
 
-                $accepted = $this->view->renderEmail('accepted', [
+                $accepted = $this->view->renderEmail('outpass/accepted', [
                     'studentName' => $outpass->getStudent()->getUser()->getName(),
                     'outpass' => $outpass,
                 ]);

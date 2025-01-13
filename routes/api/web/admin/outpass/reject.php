@@ -23,13 +23,30 @@ ${basename(__FILE__, '.php')} = function () {
                     $outpass->setRemarks($reason);
                 }
 
-                // Update outpass details
-                $this->outpassService->updateOutpass($outpass);
+                $rejected = $this->view->renderEmail('rejected', [
+                    'studentName' => $outpass->getStudent()->getUser()->getName(),
+                    'outpass' => $outpass,
+                ]);
+
+                $userEmail = $outpass->getStudent()->getUser()->getEmail();
+                $subject = "Your Outpass Request #{$outpass->getId()} Has Been Rejected";
+
+                // Update outpass status
+                $result = $this->outpassService->updateOutpass($outpass);
+                $queue = $this->mail->queueEmail($subject, $rejected, $userEmail);
+
+                if ($result instanceof OutpassRequest && $queue) {
+                    return $this->response([
+                        'message' => 'Outpass Rejected',
+                        'status' => true
+                    ], 200);
+                }
 
                 return $this->response([
-                    'message' => 'Outpass Rejected',
-                    'status' => true
-                ], 200);
+                    'message' => 'Failed to reject outpass',
+                    'status' => false
+                ], 500);
+
             } else {
                 return $this->response([
                     'message' => 'Outpass not found',

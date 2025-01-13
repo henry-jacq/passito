@@ -22,7 +22,7 @@ ${basename(__FILE__, '.php')} = function () {
                 ]);
                 
                 $userEmail = $outpass->getStudent()->getUser()->getEmail();
-                $subject = "[Passito] Your Outpass Request #{$outpass->getId()} Has Been Approved";
+                $subject = "Your Outpass Request #{$outpass->getId()} Has Been Approved";
                 
                 // Update outpass status
                 $result = $this->outpassService->updateOutpass($outpass);
@@ -35,11 +35,11 @@ ${basename(__FILE__, '.php')} = function () {
                         'status' => true
                     ], 200);
                 }
-
+                
                 return $this->response([
-                    'message' => 'Outpass Accepted',
-                    'status' => true
-                ], 200);
+                    'message' => 'Failed to accept outpass',
+                    'status' => false
+                ], 500);
             } else {
                 return $this->response([
                     'message' => 'Outpass not found',

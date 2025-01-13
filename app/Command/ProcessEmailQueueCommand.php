@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use Cron\CronExpression;
 use App\Services\MailService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -29,26 +28,18 @@ class ProcessEmailQueueCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        // Define a cron schedule (e.g., every 5 minutes)
-        $cronExpression = new CronExpression('*/5 * * * *');
+        $output->writeln('Processing email queue...');
 
-        // Check if the current time matches the cron schedule
-        if ($cronExpression->isDue()) {
-            $output->writeln('Processing email queue...');
+        try {
+            // Process Email Queue
+            $this->mailService->processQueue();
 
-            try {
-                // Process email queue via the MailService
-                $this->mailService->processQueue();
-
-                $output->writeln('Email queue processing completed successfully.');
-                return Command::SUCCESS;
-            } catch (\Exception $e) {
-                $output->writeln('<error>Error occurred while processing the email queue: ' . $e->getMessage() . '</error>');
-                return Command::FAILURE;
-            }
+            $output->writeln('Email queue processing completed successfully.');
+            return Command::SUCCESS;
+        } catch (\Exception $e) {
+            $output->writeln('<error>Error occurred while processing the email queue: ' . $e->getMessage() . '</error>');
+            return Command::FAILURE;
         }
-
-        $output->writeln('Cron schedule does not match the current time, skipping...');
         return Command::SUCCESS;
     }
 }

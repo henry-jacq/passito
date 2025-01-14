@@ -24,7 +24,9 @@ ${basename(__FILE__, '.php')} = function () {
                 $userEmail = $outpass->getStudent()->getUser()->getEmail();
                 $subject = "Your Outpass Request #{$outpass->getId()} Has Been Approved";
 
-                $attachments = [$this->outpassService->generateOutpassDocument($outpass->getId())];
+                $documentPath = $this->outpassService->generateOutpassDocument($outpass);
+                
+                $attachments = [$documentPath];
                 
                 // Update outpass status
                 $result = $this->outpassService->updateOutpass($outpass);

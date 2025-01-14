@@ -42,13 +42,13 @@
                         <td style="padding: 10px; font-size: 14px; color: #111827;"><?= $outpass->getDestination() ?></td>
                     </tr>
                     <tr>
-                        <td style="padding: 10px; font-size: 14px; color: #6b7280;">Departure:</td>
+                        <td style="padding: 10px; font-size: 14px; color: #6b7280;">Exit Time:</td>
                         <td style="padding: 10px; font-size: 14px; color: #111827;">
                             <?= $outpass->getFromDate()->format('F d, Y') ?> at <?= $outpass->getFromTime()->format('h:i A') ?>
                         </td>
                     </tr>
                     <tr style="background-color: #f9fafb;">
-                        <td style="padding: 10px; font-size: 14px; color: #6b7280;">Return:</td>
+                        <td style="padding: 10px; font-size: 14px; color: #6b7280;">Entry Time:</td>
                         <td style="padding: 10px; font-size: 14px; color: #111827;">
                             <?= $outpass->getToDate()->format('F d, Y') ?> at <?= $outpass->getToTime()->format('h:i A') ?>
                         </td>
@@ -76,9 +76,8 @@
             <td style="background-color: #f9fafb; text-align: center; padding: 20px; font-size: 14px; color: #6b7280;">
                 <p style="margin: 0;">Thank you,</p>
                 <p style="margin: 5px 0; font-weight: bold; color: #4f46e5;">Passito Team</p>
-                <p style="margin: 10px 0 0;">For support, contact us at <a href="mailto:support@passito.com" style="color: #4f46e5; text-decoration: none;">support@passito.com</a></p>
                 <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;">
-                <p style="margin: 0;">© 2025 Passito. All rights reserved.</p>
+                <p style="margin: 10px 0 0;">For support, contact us at <a href="mailto:support@passito.com" style="color: #4f46e5; text-decoration: none;">support@passito.com</a></p>
             </td>
         </tr>
     </table>

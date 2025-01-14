@@ -34,8 +34,16 @@
                         <td style="padding: 10px; font-size: 14px; color: #111827;">#<?= $outpass->getId() ?></td>
                     </tr>
                     <tr>
-                        <td style="padding: 10px; font-size: 14px; color: #6b7280;">Requested On:</td>
-                        <td style="padding: 10px; font-size: 14px; color: #111827;"><?= $outpass->getFromTime()->format('F d, Y') ?></td>
+                        <td style="padding: 10px; font-size: 14px; color: #6b7280;">Exit Time:</td>
+                        <td style="padding: 10px; font-size: 14px; color: #111827;">
+                            <?= $outpass->getFromDate()->format('F d, Y') ?> at <?= $outpass->getFromTime()->format('h:i A') ?>
+                        </td>
+                    </tr>
+                    <tr style="background-color: #f9fafb;">
+                        <td style="padding: 10px; font-size: 14px; color: #6b7280;">Entry Time:</td>
+                        <td style="padding: 10px; font-size: 14px; color: #111827;">
+                            <?= $outpass->getToDate()->format('F d, Y') ?> at <?= $outpass->getToTime()->format('h:i A') ?>
+                        </td>
                     </tr>
                     <tr style="background-color: #f9fafb;">
                         <td style="padding: 10px; font-size: 14px; color: #6b7280;">Destination:</td>
@@ -43,7 +51,8 @@
                     </tr>
                     <tr>
                         <td style="padding: 10px; font-size: 14px; color: #6b7280;">Reason for Rejection:</td>
-                        <td style="padding: 10px; font-size: 14px; color: #111827;"><?= $outpass->getRemarks() ?></td>
+                        <td style="padding: 10px; font-size: 14px; color: #111827;"><?= empty($outpass->getRemarks()) ? 'None' : $outpass->getRemarks() ?>
+                        </td>
                     </tr>
                 </table>
 

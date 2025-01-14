@@ -1,6 +1,5 @@
 <?php
 
-use DateTime;
 use App\Enum\UserRole;
 use App\Enum\OutpassStatus;
 use App\Entity\OutpassRequest;
@@ -16,6 +15,7 @@ ${basename(__FILE__, '.php')} = function () {
                 $outpass->setStatus(OutpassStatus::REJECTED);
                 $outpass->setApprovedBy($this->getAttribute('user'));
                 $outpass->setApprovedTime(new DateTime());
+                $outpass->setAttachments(null);
                 if (empty($reason)) {
                     $outpass->setRemarks(null);
                 } else {
@@ -33,7 +33,7 @@ ${basename(__FILE__, '.php')} = function () {
 
                 // Update outpass status
                 $result = $this->outpassService->updateOutpass($outpass);
-                $queue = $this->mail->queueEmail($subject, $rejected, $userEmail);
+                $queue = $this->mail->queueEmail($subject, $rejected, $userEmail, null);
 
                 if ($result instanceof OutpassRequest && $queue) {
                     return $this->response([

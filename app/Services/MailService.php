@@ -164,6 +164,13 @@ class MailService
             $this->setContent($email->getSubject(), $email->getBody(), true);
             $this->addRecipient($email->getRecipient());
 
+            // Dynamically attach the files if they exist
+            if ($email->getAttachments() !== null) {
+                foreach ($email->getAttachments() as $attachment) {
+                    $this->attachFile($attachment);
+                }
+            }
+
             if ($this->send()) {
                 // Delete the email from the queue after successful sending
                 $this->entityManager->remove($email);

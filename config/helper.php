@@ -106,7 +106,7 @@ function vite_asset($path) {
 /**
  * Return the full path to the storage directory
  */
-function storage_path($path, $create_dir = true, $permissions = 0755)
+function getStoragePath($path, $create_dir = true, $permissions = 0755)
 {
     // Construct the full path
     $fullPath = STORAGE_PATH . DIRECTORY_SEPARATOR . $path;

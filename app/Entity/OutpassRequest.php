@@ -54,6 +54,12 @@ class OutpassRequest
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $remarks = null;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $document = null;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $qrCode = null;
+
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(name: 'approved_by', referencedColumnName: 'id', nullable: true)]
     private ?User $approvedBy = null;
@@ -124,6 +130,16 @@ class OutpassRequest
         return $this->remarks;
     }
 
+    public function getDocument(): ?string
+    {
+        return $this->document;
+    }
+
+    public function getQrCode(): ?string
+    {
+        return $this->qrCode;
+    }
+
     public function getApprovedBy(): ?User
     {
         return $this->approvedBy;
@@ -192,6 +208,16 @@ class OutpassRequest
     public function setRemarks(?string $remarks): void
     {
         $this->remarks = $remarks;
+    }
+
+    public function setDocument(?string $document): void
+    {
+        $this->document = $document;
+    }
+
+    public function setQrCode(?string $qrCode): void
+    {
+        $this->qrCode = $qrCode;
     }
 
     public function setApprovedBy(?User $approvedBy): void

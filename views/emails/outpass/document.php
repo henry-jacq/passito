@@ -10,96 +10,84 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f9f9f9;
-            color: #333;
-        }
-
-        .container {
-            width: 90%;
-            margin: auto;
-            padding: 20px;
-            background: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
         }
 
         .org-header {
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
+            margin-bottom: 30px;
         }
 
         .org-name {
-            font-size: 1.5rem;
-            margin: 0;
+            font-size: x-large;
+            margin-top: 10px;
+            margin-bottom: 10px;
             text-align: center;
-            flex-grow: 1;
         }
 
         .address-line {
-            font-size: 0.9rem;
+            font-size: small;
             text-align: center;
-            margin-bottom: 10px;
+            padding-bottom: 20px;
         }
 
         .form-title {
             text-transform: uppercase;
             text-align: center;
             font-weight: bold;
-            font-size: 1.2rem;
-            margin-bottom: 20px;
         }
 
         .org-header img {
-            width: 100px;
-            height: 100px;
+            width: 130px;
+            height: 130px;
+            float: left;
             margin-right: 20px;
+        }
+
+        .text-container {
+            overflow: hidden;
+            padding: 5px;
+            margin-left: -120px;
+        }
+
+        .text-container p {
+            margin: 0;
+        }
+
+        .fw-bold {
+            font-weight: bold;
         }
 
         .sections-container {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 20px;
-            gap: 10px;
+            margin-bottom: 120px;
         }
 
         .student-section,
         .outpass-section {
-            flex: 1;
+            display: inline-block;
+            vertical-align: top;
+            width: 48%;
         }
 
-        .purpose {
-            margin-bottom: 40px;
-        }
-
-        .instructions-section {
-            margin-top: 20px;
+        .signature-section img {
+            height: 80px;
         }
 
         .instruction-header {
             text-transform: uppercase;
             font-weight: bolder;
-            margin-bottom: 10px;
         }
 
-        ul {
-            padding-left: 20px;
-        }
-
-        ul li {
-            margin-bottom: 8px;
+        .instructions-section {
+            margin-bottom: 60px;
         }
 
         .signature-section {
             display: flex;
-            align-items: center;
-            justify-content: flex-end;
+            justify-content: center;
+            float: right;
             margin-top: 20px;
-        }
-
-        .signature-section img {
-            height: 60px;
-            margin-right: 10px;
+            margin-right: 30px;
         }
 
         hr {
@@ -111,56 +99,52 @@
 </head>
 
 <body>
-    <div class="container">
-        <div class="org-header">
-            <img src="./qrcode.png" alt="QR Code">
-            <div>
-                <h3 class="org-name">SSN College of Engineering</h3>
-                <p class="address-line">Rajiv Gandhi Salai (OMR), Kalavakkam - 603110</p>
-                <p class="form-title">Hostel - Permission Form</p>
-            </div>
+
+    <div class="org-header">
+        <img src="http://localhost/qrcode.png" alt="qrcode">
+        <div class="text-container">
+            <h3 class="org-name"><?= $student->getHostel()->getInstitution()->getName() ?></h3>
+            <p class="address-line"><?= $student->getHostel()->getInstitution()->getAddress() ?></p>
+            <p class="form-title">Hostel - Permission Form</p>
         </div>
-
-        <hr>
-
-        <p><strong>ID:</strong> #354784</p>
-
-        <div class="sections-container">
-            <div class="student-section">
-                <p><strong>Name:</strong> Henry</p>
-                <p><strong>Digital ID:</strong> 2210231</p>
-                <p><strong>Room:</strong> D-218</p>
-                <p><strong>Year:</strong> Second year</p>
-                <p><strong>Branch:</strong> Information Technology (IT)</p>
-            </div>
-            <div class="outpass-section">
-                <p><strong>From:</strong> 08-05-2024 04:30PM</p>
-                <p><strong>To:</strong> 31-05-2024 08:00AM</p>
-                <p><strong>Student No:</strong> +91 9578964262</p>
-                <p><strong>Parent No:</strong> +91 7469812434</p>
-                <p><strong>Date of Approval:</strong> 07/05/2024</p>
-            </div>
+    </div>
+    <hr>
+    <p><strong>No.: #<?= $outpass->getId() ?></strong></p>
+    </strong></p>
+    <div class="sections-container">
+        <div class="student-section">
+            <p><strong>Exit Time:</strong> <?= $outpass->getFromDate()->format('d-m-Y') . ' ' . $outpass->getFromTime()->format('h:iA') ?></p>
+            <p><strong>Name:</strong> <?= $student->getUser()->getName() ?></p>
+            <p><strong>Branch:</strong> <?= $student->getBranch() ?></p>
+            <p><strong>Hostel:</strong> <?= $student->getHostel()->getName() ?></p>
+            <p><strong>Purpose:</strong> <?= $outpass->getPurpose() ?></p>
+            <p><strong>Student No:</strong> <?= $student->getUser()->getContactNo() ?></p>
+            <p><strong>Approved On:</strong> <?= $outpass->getApprovedTime()->format('d-m-Y h:iA') ?></p>
         </div>
-
-        <p><strong>Purpose:</strong></p>
-        <p class="purpose">To visit my hometown.</p>
-
-        <div class="instructions-section">
-            <p class="instruction-header">Instructions:</p>
-            <ul>
-                <li>Ensure that you carry your college ID card at all times during the outpass period.</li>
-                <li>Return to the hostel before the end time specified in the outpass.</li>
-                <li>Inform the warden immediately upon your return.</li>
-                <li>Keep this outpass document with you as it might be required for verification.</li>
-                <li>Any changes to the outpass schedule must be reported and approved in advance.</li>
-                <li>Follow all hostel rules and regulations during the outpass period.</li>
-            </ul>
+        <div class="outpass-section">
+            <p><strong>Entry Time:</strong> <?= $outpass->getToDate()->format('d-m-Y') . ' ' . $outpass->getToTime()->format('h:iA') ?></p>
+            <p><strong>ID No:</strong> <?= $student->getDigitalId() ?></p>
+            <p><strong>Year:</strong> <?= formatStudentYear($student->getYear()) ?> Year</p>
+            <p><strong>Room:</strong> <?= $student->getRoomNo() ?></p>
+            <p><strong>Destination:</strong> <?= $outpass->getDestination() ?></p>
+            <p><strong>Parent No:</strong> <?= $student->getParentNo() ?></p>
+            <p><strong>Approved By:</strong> <?= $outpass->getApprovedBy()->getName() ?></p>
         </div>
-
-        <div class="signature-section">
-            <img src="./sign.png" alt="Signature">
-            <p>Signature of Warden</p>
-        </div>
+        <br><br>
+    </div>
+    <div class="instructions-section">
+        <p class="instruction-header">Instructions:</p>
+        <ul>
+            <li>Ensure that you carry your college ID card during the outpass period.</li>
+            <li>Return to the hostel before the end time specified in the outpass.</li>
+            <li>Keep this outpass document with you as it is required for verification.</li>
+            <li>Any changes to the outpass schedule must be approved in advance.</li>
+            <li>Follow all hostel rules and regulations during the outpass period.</li>
+        </ul>
+    </div>
+    <div class="signature-section">
+        <img src="http://localhost/sign.png" alt="sign">
+        <p>Signature of Warden</p>
     </div>
 </body>
 

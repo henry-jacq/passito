@@ -3,6 +3,9 @@
 namespace App\Services;
 
 use DateTime;
+use App\Core\View;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use App\Enum\OutpassType;
 use App\Enum\OutpassStatus;
 use App\Entity\OutpassRequest;
@@ -11,6 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
 class OutpassService
 {
     public function __construct(
+        private readonly View $view,
         private readonly EntityManagerInterface $em
     )
     {
@@ -55,4 +59,68 @@ class OutpassService
 
         return $outpass;
     }
+
+    /**
+     * Generate outpass document
+     */
+    public function generateOutpassDocument(int $id): string
+    {
+        $outpass = $this->getOutpass($id);
+
+        if (!$outpass) {
+            throw new \Exception('Outpass not found');
+        }
+
+        // Student and outpass details
+        $html = $this->view->renderEmail('outpass/document', [
+            'outpass' => $outpass,
+            'student' => $outpass->getStudent(),
+        ]);
+
+        // Set up Dompdf options
+        $options = new Options();
+        $options->set('isPhpEnabled', true); // Enable PHP (Optional)
+        $options->set('isRemoteEnabled', true); // Enable remote assets like images
+
+        // Initialize Dompdf
+        $dompdf = new Dompdf($options);
+        $dompdf->loadHtml($html);
+
+        // (Optional) Setup the paper size and orientation
+        $dompdf->setPaper('A4', 'portrait');
+
+        // Render the HTML as PDF
+        $dompdf->render();
+
+        // Output the generated PDF
+        $output = $dompdf->output();
+
+        // Generate unique file name
+        $retry = 0;
+        $maxRetries = 5;
+        $outpassName = substr(md5(microtime(true) . $outpass->getId() . random_int(1000, 9999)), 0, 16) . '.pdf';
+        $pdfPath = getStoragePath("outpasses/{$outpassName}");
+
+        // Retry logic if file already exists
+        while (file_exists($pdfPath) && $retry < $maxRetries) {
+            $retry++;
+            error_log("Retrying file creation for outpass ID {$id}. Attempt {$retry}.");
+            $outpassName = substr(md5(microtime(true) . $outpass->getId() . random_int(1000, 9999)), 0, 16) . '.pdf';
+            $pdfPath = getStoragePath("outpasses/{$outpassName}");
+        }
+
+        if (file_exists($pdfPath)) {
+            throw new \Exception('Failed to generate unique file name for outpass document after retries.');
+        }
+
+        // Save the PDF to a file
+        file_put_contents($pdfPath, $output);
+
+        // Update the outpass with the document path
+        $outpass->setDocument($pdfPath);
+        $this->updateOutpass($outpass);
+
+        return $pdfPath;
+    }
+
 }

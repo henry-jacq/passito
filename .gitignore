@@ -7,8 +7,7 @@ resources/dist/
 public/build/
 public/js/vendor/
 storage/temp/
-storage/posts/
-storage/avatars/
+storage/outpasses/
 resources/.sass-cache/
 
 # Logs

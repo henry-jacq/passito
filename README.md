@@ -35,6 +35,13 @@ To run Passito, ensure you have the following installed:
 
 Follow these steps to set up Passito on your local machine:
 
+0. **Enable Apache Modules**:
+   Enable the following Apache modules for the application to work correctly:
+   ```bash
+   sudo a2enmod rewrite
+   sudo a2enmod vhost_alias
+   ```
+
 1. **Clone the Repository**:
    ```bash
    git clone https://github.com/henry-jacq/passito.git
@@ -66,7 +73,19 @@ Follow these steps to set up Passito on your local machine:
    php passito.php migrations:migrate
    ```
 
-7. **Start the Development Server**:
+7. **Setup Crontab for Sending Email**
+   - Open crontab and add the following line to send emails:
+
+   - To open crontab, run:
+     ```bash
+     crontab -e
+     ```
+   - Add the following line to the crontab file:
+      ```bash
+      * * * * * /usr/bin/php /path/to/passito/passito.php app:process-email-queue
+      ```
+
+8. **Start the Development Server**:
    - Make sure Apache is running and configured to serve from the `public` directory.
    - Alternatively, you can use Vite for the front-end development:
      ```bash
@@ -98,17 +117,6 @@ To set up Passito using Docker, follow these steps:
    npm run dev
    ```
    Ensure to adjust the configuration in `vite.config.js` to allow external access if necessary.
-
-## Configuration
-
-Make sure to configure the following settings in your `.env` file:
-
-- `DB_CONNECTION`: Database type (e.g., `pdo_mysql`).
-- `DB_HOST`: Database host (e.g., `localhost`).
-- `DB_PORT`: Database port (e.g., `3306`).
-- `DB_DATABASE`: Name of your database.
-- `DB_USERNAME`: Database username.
-- `DB_PASSWORD`: Database password.
 
 ## Usage
 

@@ -146,7 +146,7 @@ class MailService
     }
 
     /**
-     * Process the email queue and send the queued emails
+     * Process the email queue
      */
     public function processQueue(): void
     {
@@ -160,17 +160,29 @@ class MailService
             ->getResult();
 
         foreach ($emails as $email) {
+            // Reset the PHPMailer instance for a clean state
+            $this->mailer->clearAllRecipients();
+            $this->mailer->clearAttachments();
+
             // Set up the email content
             $this->setContent($email->getSubject(), $email->getBody(), true);
+
+            // TODO: Add recipient name if available (optional)
             $this->addRecipient($email->getRecipient());
 
             // Dynamically attach the files if they exist
-            if ($email->getAttachments() !== null) {
-                foreach ($email->getAttachments() as $attachment) {
-                    $this->attachFile($attachment);
+            $attachments = $email->getAttachments();
+            if (!empty($attachments) && is_iterable($attachments)) {
+                foreach ($attachments as $attachment) {
+                    if (is_readable($attachment)) {
+                        $this->attachFile($attachment); // Attach the file
+                    } else {
+                        error_log("Attachment file not found: $attachment");
+                    }
                 }
             }
 
+            // Send the email
             if ($this->send()) {
                 // Delete the email from the queue after successful sending
                 $this->entityManager->remove($email);

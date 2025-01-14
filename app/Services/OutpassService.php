@@ -61,14 +61,12 @@ class OutpassService
     }
 
     /**
-     * Generate outpass document
+     * Generate outpass document and return the file path
      */
-    public function generateOutpassDocument(int $id): string
+    public function generateOutpassDocument(OutpassRequest $outpass): string
     {
-        $outpass = $this->getOutpass($id);
-
-        if (!$outpass) {
-            throw new \Exception('Outpass not found');
+        if (!$outpass instanceof OutpassRequest) {
+            throw new \Exception('Invalid outpass request provided.');
         }
 
         // Student and outpass details
@@ -104,7 +102,7 @@ class OutpassService
         // Retry logic if file already exists
         while (file_exists($pdfPath) && $retry < $maxRetries) {
             $retry++;
-            error_log("Retrying file creation for outpass ID {$id}. Attempt {$retry}.");
+            error_log("Retrying file creation for outpass ID {$outpass->getId()}. Attempt {$retry}.");
             $outpassName = substr(md5(microtime(true) . $outpass->getId() . random_int(1000, 9999)), 0, 16) . '.pdf';
             $pdfPath = getStoragePath("outpasses/{$outpassName}");
         }
@@ -116,11 +114,6 @@ class OutpassService
         // Save the PDF to a file
         file_put_contents($pdfPath, $output);
 
-        // Update the outpass with the document path
-        $outpass->setDocument($pdfPath);
-        $this->updateOutpass($outpass);
-
         return $pdfPath;
     }
-
 }

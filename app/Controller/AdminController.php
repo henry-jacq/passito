@@ -56,11 +56,34 @@ class AdminController extends BaseController
         $this->view->clearCacheIfDev();
 
         $userData = $request->getAttribute('user');
+        $page = (int) ($request->getQueryParams()['page'] ?? 1);
+        $limit = 10; // You can configure this value.
+
+        // Handle invalid page numbers before proceeding with pagination query
+        if ($page < 1) {
+            $page = 1;
+        }
+
+        // Fetch the pagination data
+        $paginationData = $this->outpassService->getOutpassRecords($page, $limit);
+
+        // If page exceeds total pages, redirect to the last page
+        if ($page > $paginationData['totalPages']) {
+            return $response->withHeader('Location', '?page=' . $paginationData['totalPages'])->withStatus(302);
+        }
+
         $args = [
             'title' => 'Outpass Records',
             'user' => $userData,
+            'outpasses' => $paginationData['data'],
+            'records' => [
+                'currentPage' => $paginationData['currentPage'],
+                'totalPages' => $paginationData['totalPages'],
+                'totalRecords' => $paginationData['total'],
+            ],
             'routeName' => $this->getRouteName($request),
         ];
+
         return parent::render($request, $response, 'admin/outpass_records', $args);
     }
 

@@ -10,6 +10,7 @@ use App\Enum\OutpassType;
 use App\Enum\OutpassStatus;
 use App\Entity\OutpassRequest;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class OutpassService
 {
@@ -45,6 +46,35 @@ class OutpassService
         );
 
         return $outpasses;
+    }
+
+    public function getOutpassRecords(int $page = 1, int $limit = 10)
+    {
+        $offset = ($page - 1) * $limit;
+
+        // Convert OutpassStatus enum to scalar values (e.g., string or integer)
+        $statuses = [
+            OutpassStatus::APPROVED->value,
+            OutpassStatus::EXPIRED->value,
+        ];
+
+        $queryBuilder = $this->em->createQueryBuilder();
+        $queryBuilder->select('o')
+            ->from(OutpassRequest::class, 'o')
+            ->where($queryBuilder->expr()->in('o.status', $statuses))
+            ->orderBy('o.createdAt', 'DESC')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit);
+
+        $query = $queryBuilder->getQuery();
+        $paginator = new Paginator($query, true);
+
+        return [
+            'data' => iterator_to_array($paginator),
+            'total' => count($paginator),
+            'currentPage' => $page,
+            'totalPages' => ceil(count($paginator) / $limit),
+        ];
     }
 
     public function getOutpass(int $id): ?OutpassRequest

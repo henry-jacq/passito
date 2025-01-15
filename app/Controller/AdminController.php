@@ -20,18 +20,21 @@ class AdminController extends BaseController
         private readonly FacilityService $facilityService
     )
     {
+        $pendingOutpasses = $this->outpassService->getPendingOutpass();
+        $this->view->addGlobals('pendingOutpasses', $pendingOutpasses);
     }
     
     public function dashboard(Request $request, Response $response): Response
     {
         $this->view->clearCacheIfDev();
-
         $userData = $request->getAttribute('user');
         $args = [
             'title' => 'Dashboard',
             'user' => $userData,
             'routeName' => $this->getRouteName($request),
         ];
+
+        $args = array_merge($args, $this->view->getGlobals());
         return parent::render($request, $response, 'admin/dashboard', $args);
     }
 
@@ -40,7 +43,7 @@ class AdminController extends BaseController
         $this->view->clearCacheIfDev();
 
         $userData = $request->getAttribute('user');
-        $outpasses = $this->outpassService->getPendingOutpass();
+        $outpasses = $this->view->getGlobals()['pendingOutpasses'];
 
         $args = [
             'title' => 'Pending Requests',
@@ -48,6 +51,8 @@ class AdminController extends BaseController
             'outpasses' => $outpasses,
             'routeName' => $this->getRouteName($request),
         ];
+
+        $args = array_merge($args, $this->view->getGlobals());
         return parent::render($request, $response, 'admin/pending_requests', $args);
     }
 
@@ -84,6 +89,7 @@ class AdminController extends BaseController
             'routeName' => $this->getRouteName($request),
         ];
 
+        $args = array_merge($args, $this->view->getGlobals());
         return parent::render($request, $response, 'admin/outpass_records', $args);
     }
 
@@ -113,6 +119,8 @@ class AdminController extends BaseController
             'students' => $students,
             'routeName' => $this->getRouteName($request),
         ];
+
+        $args = array_merge($args, $this->view->getGlobals());
         return parent::render($request, $response, 'admin/students', $args);
     }
     
@@ -129,6 +137,8 @@ class AdminController extends BaseController
             'wardens' => $wardens,
             'routeName' => $this->getRouteName($request),
         ];
+
+        $args = array_merge($args, $this->view->getGlobals());
         return parent::render($request, $response, 'admin/wardens', $args);
     }
     
@@ -145,6 +155,8 @@ class AdminController extends BaseController
             'verifiers' => $verifiers,
             'routeName' => $this->getRouteName($request),
         ];
+
+        $args = array_merge($args, $this->view->getGlobals());
         return parent::render($request, $response, 'admin/verifiers', $args);
     }
 
@@ -161,6 +173,8 @@ class AdminController extends BaseController
             'logbook' => $logbook,
             'routeName' => $this->getRouteName($request),
         ];
+
+        $args = array_merge($args, $this->view->getGlobals());
         return parent::render($request, $response, 'admin/logbook', $args);
     }
     
@@ -179,6 +193,8 @@ class AdminController extends BaseController
             'institutions' => $institutions,
             'routeName' => $this->getRouteName($request),
         ];
+
+        $args = array_merge($args, $this->view->getGlobals());
         return parent::render($request, $response, 'admin/facilities', $args);
     }
 
@@ -192,6 +208,8 @@ class AdminController extends BaseController
             'user' => $userData,
             'routeName' => $this->getRouteName($request),
         ];
+
+        $args = array_merge($args, $this->view->getGlobals());
         return parent::render($request, $response, 'admin/settings', $args);
     }
 }

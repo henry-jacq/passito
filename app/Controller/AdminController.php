@@ -73,7 +73,7 @@ class AdminController extends BaseController
         $paginationData = $this->outpassService->getOutpassRecords($page, $limit);
 
         // If page exceeds total pages, redirect to the last page
-        if ($page > $paginationData['totalPages']) {
+        if ($paginationData['totalPages'] > 1 && $page > $paginationData['totalPages']) {
             return $response->withHeader('Location', '?page=' . $paginationData['totalPages'])->withStatus(302);
         }
 

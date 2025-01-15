@@ -33,6 +33,42 @@ To run Passito, ensure you have the following installed:
 
 ## Installation
 
+### Ensure Group Ownership is Correct
+
+```bash
+sudo chown -R henry:www-data /home/henry/htdocs/passito/storage
+sudo chown -R www-data:henry /home/henry/htdocs/passito/storage
+```
+
+### Set Group-Writable Permissions
+
+```bash
+sudo chmod -R 775 /home/henry/htdocs/passito/storage
+```
+
+### Set the SGID Bit on the Directory
+
+This ensures new files created in the storage directory inherit the group ownership of the parent directory.
+
+```bash
+sudo chmod g+s /home/henry/htdocs/passito/storage
+```
+
+### Verify Permissions
+
+```bash
+ls -ld /home/henry/htdocs/passito/storage/
+```
+
+Output should be:
+
+```bash
+drwxrwxr-x 3 www-data www-data 4096 Sep  6 14:00 /home/henry/htdocs/passito/storage/
+```
+
+
+### Setup Passito
+
 Follow these steps to set up Passito on your local machine:
 
 0. **Enable Apache Modules**:
@@ -73,9 +109,8 @@ Follow these steps to set up Passito on your local machine:
    php passito.php migrations:migrate
    ```
 
-7. **Setup Crontab for Sending Email**
+7. **Setup Crontab for Sending Email**:
    - Open crontab and add the following line to send emails:
-
    - To open crontab, run:
      ```bash
      crontab -e

@@ -116,4 +116,53 @@ class OutpassService
 
         return $pdfPath;
     }
+
+    public function removeOutpassDocument(OutpassRequest $outpass)
+    {
+        $document = $outpass->getDocument();
+        if (!empty($document)) {
+            $pdfPath = getStoragePath("outpasses/{$document}", false);
+            if (file_exists($pdfPath)) {
+                try {
+                    unlink($pdfPath);
+                } catch (\Exception $e) {
+                    error_log('Failed to delete file: ' . $pdfPath . ' Error: ' . $e->getMessage());
+                }
+            }
+        }
+    }
+
+    /**
+     * Check and expire outpasses that have passed their expiry date
+     */
+    public function checkAndExpireOutpass(): void
+    {
+        $now = new \DateTimeImmutable();
+
+        // Fetch all approved outpasses in one query
+        // NOTE: Ensure the CONCAT function is supported by the database
+        $outpasses = $this->em->getRepository(OutpassRequest::class)
+        ->createQueryBuilder('o')
+        ->where('o.status = :status')
+        ->andWhere("CONCAT(o.toDate, ' ', o.toTime) <= :now")
+        ->setParameter('status', OutpassStatus::APPROVED->value)
+        ->setParameter('now', $now->format('Y-m-d H:i:s'))
+        ->getQuery()
+        ->getResult();
+
+        foreach ($outpasses as $outpass) {
+            // Mark as expired
+            $outpass->setStatus(OutpassStatus::EXPIRED);
+
+            // Remove the document and update the outpass record
+            $this->removeOutpassDocument($outpass);
+            $outpass->setDocument(null);
+
+            // Persist changes (batching handled later)
+            $this->em->persist($outpass);
+        }
+
+        // Persist all changes in one operation
+        $this->em->flush();
+    }
 }

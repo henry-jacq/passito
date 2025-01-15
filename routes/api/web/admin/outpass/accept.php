@@ -25,6 +25,7 @@ ${basename(__FILE__, '.php')} = function () {
                 $subject = "Your Outpass Request #{$outpass->getId()} Has Been Approved";
 
                 $documentPath = $this->outpassService->generateOutpassDocument($outpass);
+                $outpass->setDocument(basename($documentPath));
                 
                 $attachments = [$documentPath];
                 

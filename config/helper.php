@@ -106,24 +106,30 @@ function vite_asset($path) {
 /**
  * Return the full path to the storage directory
  */
-function getStoragePath($path, $create_dir = true, $permissions = 0755)
+function getStoragePath(string $path, bool $create_dir = true, int $permissions = 0775): string
 {
     // Construct the full path
-    $fullPath = STORAGE_PATH . DIRECTORY_SEPARATOR . $path;
+    $fullPath = rtrim(STORAGE_PATH, '/') . DIRECTORY_SEPARATOR . ltrim($path, '/');
 
-    // If $create_dir is true, check if the directory exists and create it if it doesn't
+    // If $create_dir is true, ensure the directory exists
     if ($create_dir) {
-        $dirPath = dirname($fullPath);
+        $dirPath = is_dir($fullPath) ? $fullPath : dirname($fullPath);
 
         // Check if the directory exists, and create it recursively if it doesn't
         if (!is_dir($dirPath)) {
-            mkdir($dirPath, $permissions, true); // true enables recursive creation of directories
+            // Create the directory with initial permissions
+            if (!mkdir($dirPath, $permissions | 02000, true)) {
+                throw new RuntimeException("Failed to create directory: $dirPath");
+            }
         }
+
+        // Ensure the group sticky bit is applied explicitly
+        chmod($dirPath, $permissions | 02000);
     }
 
-    // Return the full path
     return $fullPath;
 }
+
 
 // Determine the suffix for the given year number
 function formatStudentYear($year) {

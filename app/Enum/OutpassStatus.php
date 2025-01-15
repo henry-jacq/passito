@@ -6,6 +6,7 @@ enum OutpassStatus: string {
     case PENDING = 'pending';
     case APPROVED = 'approved';
     case REJECTED = 'rejected';
+    case EXPIRED = 'expired';
 
     public static function isPending(string $status): bool {
         return self::tryFrom($status) === self::PENDING;
@@ -19,7 +20,11 @@ enum OutpassStatus: string {
         return self::tryFrom($status) === self::REJECTED;
     }
 
+    public static function isExpired(string $status): bool {
+        return self::tryFrom($status) === self::EXPIRED;
+    }
+
     public static function isValidStatus(string $role): bool {
-        return in_array($role, [self::PENDING->value, self::APPROVED->value, self::REJECTED->value]);
+        return in_array($role, [self::PENDING->value, self::APPROVED->value, self::REJECTED->value, self::EXPIRED->value]);
     }
 }

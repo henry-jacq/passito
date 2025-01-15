@@ -61,18 +61,13 @@ class AdminController extends BaseController
         $this->view->clearCacheIfDev();
 
         $userData = $request->getAttribute('user');
-        $page = (int) ($request->getQueryParams()['page'] ?? 1);
-        $limit = 10; // You can configure this value.
-
-        // Handle invalid page numbers before proceeding with pagination query
-        if ($page < 1) {
-            $page = 1;
-        }
+        $page = max(1, (int) ($request->getQueryParams()['page'] ?? 1));
+        $limit = 10;
 
         // Fetch the pagination data
         $paginationData = $this->outpassService->getOutpassRecords($page, $limit);
 
-        // If page exceeds total pages, redirect to the last page
+        // Redirect to the last page if the requested page exceeds available pages
         if ($paginationData['totalPages'] > 1 && $page > $paginationData['totalPages']) {
             return $response->withHeader('Location', '?page=' . $paginationData['totalPages'])->withStatus(302);
         }

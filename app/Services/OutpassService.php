@@ -6,6 +6,7 @@ use DateTime;
 use App\Core\View;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use App\Entity\Student;
 use App\Enum\OutpassType;
 use App\Enum\OutpassStatus;
 use App\Entity\OutpassRequest;
@@ -43,6 +44,15 @@ class OutpassService
     {
         $outpasses = $this->em->getRepository(OutpassRequest::class)->findBy(
             ['status' => OutpassStatus::PENDING]
+        );
+
+        return $outpasses;
+    }
+
+    public function getOutpassByStudent(Student $student)
+    {
+        $outpasses = $this->em->getRepository(OutpassRequest::class)->findBy(
+            ['student' => $student]
         );
 
         return $outpasses;
@@ -127,14 +137,14 @@ class OutpassService
         $retry = 0;
         $maxRetries = 5;
         $outpassName = substr(md5(microtime(true) . $outpass->getId() . random_int(1000, 9999)), 0, 16) . '.pdf';
-        $pdfPath = getStoragePath("outpasses/{$outpassName}");
+        $pdfPath = getStoragePath("outpasses/{$outpassName}", true);
 
         // Retry logic if file already exists
         while (file_exists($pdfPath) && $retry < $maxRetries) {
             $retry++;
             error_log("Retrying file creation for outpass ID {$outpass->getId()}. Attempt {$retry}.");
             $outpassName = substr(md5(microtime(true) . $outpass->getId() . random_int(1000, 9999)), 0, 16) . '.pdf';
-            $pdfPath = getStoragePath("outpasses/{$outpassName}");
+            $pdfPath = getStoragePath("outpasses/{$outpassName}", true);
         }
 
         if (file_exists($pdfPath)) {
@@ -151,7 +161,7 @@ class OutpassService
     {
         $document = $outpass->getDocument();
         if (!empty($document)) {
-            $pdfPath = getStoragePath("outpasses/{$document}", false);
+            $pdfPath = getStoragePath("outpasses/{$document}");
             if (file_exists($pdfPath)) {
                 try {
                     unlink($pdfPath);

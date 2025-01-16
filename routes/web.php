@@ -6,6 +6,7 @@ use App\Controller\AuthController;
 use App\Middleware\AuthMiddleware;
 use App\Controller\AdminController;
 use App\Controller\SetupController;
+use App\Controller\StorageController;
 use App\Middleware\AdminMiddleware;
 use App\Controller\StudentController;
 use App\Middleware\ApiMiddleware;
@@ -38,7 +39,11 @@ return function (App $app) {
         $group->any('/outpass/history', [StudentController::class, 'outpassHistory'])->setName('student.outpass.history');
         $group->any('/profile', [StudentController::class, 'profile'])->setName('student.profile');
     })->add(StudentMiddleware::class);
-
+    
+    // Storage Routes
+    $app->any('/storage/admin/{id}[/{params:.*}]', [StorageController::class, 'admin'])->setName('storage.admin')->add(AdminMiddleware::class);
+    $app->any('/storage/student/{id}[/{params:.*}]', [StorageController::class, 'student'])->setName('storage.student')->add(StudentMiddleware::class);
+    
     // Admin Routes
     $app->group('/admin', function (RouteCollectorProxy $group) {
         $group->any('/dashboard', [AdminController::class, 'dashboard'])->setName('admin.dashboard');

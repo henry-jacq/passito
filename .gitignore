@@ -7,6 +7,7 @@ resources/dist/
 public/build/
 public/js/vendor/
 storage/temp/
+storage/qr_codes/
 storage/outpasses/
 resources/.sass-cache/
 

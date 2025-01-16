@@ -49,6 +49,17 @@ class OutpassService
         return $outpasses;
     }
 
+    public function getRecentStudentOutpass(Student $student, int $limit = 5)
+    {
+        $outpasses = $this->em->getRepository(OutpassRequest::class)->findBy(
+            ['student' => $student],
+            ['createdAt' => 'DESC'],
+            $limit
+        );
+
+        return $outpasses;
+    }
+    
     public function getOutpassByStudent(Student $student)
     {
         $outpasses = $this->em->getRepository(OutpassRequest::class)->findBy(
@@ -87,7 +98,7 @@ class OutpassService
         ];
     }
 
-    public function getOutpass(int $id): ?OutpassRequest
+    public function getOutpassById(int $id): ?OutpassRequest
     {
         return $this->em->getRepository(OutpassRequest::class)->find($id);
     }

@@ -1,3 +1,6 @@
+<?php
+
+use App\Enum\OutpassStatus; ?>
 <div class="min-h-screen bg-gray-100">
     <!-- Header Section -->
     <?= $this->getComponent('user/header', [
@@ -9,18 +12,28 @@
         <!-- Page Title -->
         <header class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-4 border-b space-y-2 sm:space-y-0 mb-6">
             <div>
-                <h1 class="text-3xl font-bold text-gray-800">Outpass Details</h1>
+                <h1 class="text-3xl font-bold text-gray-800">Outpass <?= '#' . $outpass->getId() ?> Details</h1>
                 <p class="text-base text-gray-500 mt-1">View your outpass request details.</p>
             </div>
             <!-- Apply outpass button -->
             <div class="mt-4 md:mt-0">
-                <button onclick="window.print()" class="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 shadow-md transition focus:outline-none focus:ring focus:ring-blue-300">
+                <?php $document = $outpass->getDocument();
+                $downloadUrl = $this->urlFor('storage.student', [
+                    'id' => $outpass->getStudent()->getUser()->getId(),
+                    'params' => 'outpasses/' . $document
+                ]); ?>
+                <a <?php if ($document): ?>
+                    href="<?= htmlspecialchars($downloadUrl) ?>" download
+                    <?php else: ?>
+                    href="javascript:void(0)" aria-disabled="true" tabindex="-1"
+                    <?php endif; ?>
+                    class="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 shadow-md transition focus:outline-none focus:ring focus:ring-blue-300 inline-flex items-center <?= $document ? '' : 'opacity-50 cursor-not-allowed' ?>">
                     <i class="fa-solid fa-arrow-down mr-1"></i>
                     <span>Download Outpass</span>
-                </button>
+                </a>
             </div>
         </header>
-        
+
         <!-- Outpass Details Section -->
         <section class="bg-white rounded-xl shadow-md p-6 md:p-8 mb-8">
             <!-- Row 1: Dates and Times -->
@@ -29,14 +42,14 @@
                     <i class="fa-regular fa-clock text-2xl text-gray-500"></i>
                     <div>
                         <label class="block text-base font-medium text-gray-500">From Date & Time</label>
-                        <p class="text-base md:text-lg text-gray-800 font-medium mt-1">2024-08-10, 08:00AM</p>
+                        <p class="text-base md:text-lg text-gray-800 font-medium mt-1"><?= $outpass->getFromDate()->format('Y-m-d, ') . $outpass->getFromTime()->format('h:i A') ?></p>
                     </div>
                 </div>
                 <div class="flex items-center align-center space-x-4">
                     <i class="fa-regular fa-clock text-2xl text-gray-500"></i>
                     <div>
                         <label class="block text-base font-medium text-gray-500">To Date & Time</label>
-                        <p class="text-base md:text-lg text-gray-800 font-medium mt-1">2024-08-12, 08:00PM</p>
+                        <p class="text-base md:text-lg text-gray-800 font-medium mt-1"><?= $outpass->getToDate()->format('Y-m-d, ') . $outpass->getToTime()->format('h:i A') ?></p>
                     </div>
                 </div>
             </div>
@@ -47,14 +60,14 @@
                     <i class="fa-regular fa-id-card text-2xl text-gray-500"></i>
                     <div>
                         <label class="block text-base font-medium text-gray-500">Pass Type</label>
-                        <p class="text-base md:text-lg text-gray-800 font-medium mt-1">Home</p>
+                        <p class="text-base md:text-lg text-gray-800 font-medium mt-1"><?= ucfirst($outpass->getPassType()->value) ?></p>
                     </div>
                 </div>
                 <div class="flex items-center align-center space-x-4">
                     <i class="fa-solid fa-location-dot text-2xl text-gray-500"></i>
                     <div>
                         <label class="block text-base font-medium text-gray-500">Destination</label>
-                        <p class="text-base md:text-lg text-gray-800 font-medium mt-1">Chennai</p>
+                        <p class="text-base md:text-lg text-gray-800 font-medium mt-1"><?= ucwords($outpass->getDestination()) ?></p>
                     </div>
                 </div>
             </div>
@@ -67,28 +80,35 @@
                         <i class="fa-solid fa-info-circle text-2xl text-gray-500"></i>
                         <div>
                             <label class="block text-base font-medium text-gray-500">Status</label>
-                            <p class="text-base md:text-lg text-yellow-800 font-medium mt-1">Pending</p>
+                            <?php $color = match ($outpass->getStatus()->value) {
+                                OutpassStatus::APPROVED->value => 'green',
+                                OutpassStatus::PENDING->value => 'yellow',
+                                OutpassStatus::REJECTED->value => 'red',
+                                OutpassStatus::EXPIRED->value => 'gray',
+                                default => 'gray',
+                            }; ?>
+                            <p class="text-base md:text-lg text-<?= $color ?>-800 font-medium mt-1"><?= ucfirst($outpass->getStatus()->value) ?></p>
                         </div>
                     </div>
                     <div class="flex items-center align-center space-x-4">
                         <i class="fa-solid fa-question-circle text-2xl text-gray-500"></i>
                         <div>
                             <label class="block text-base font-medium text-gray-500">Purpose</label>
-                            <p class="text-lg text-gray-800 leading-relaxed mt-1">Hometown</p>
+                            <p class="text-lg text-gray-800 leading-relaxed mt-1"><?= ucfirst($outpass->getPurpose()) ?></p>
                         </div>
                     </div>
                     <div class="flex items-center align-center space-x-4">
                         <i class="fas fa-calendar-check text-2xl text-gray-500"></i>
                         <div>
                             <label class="block text-base font-medium text-gray-500">Approval Time</label>
-                            <p class="text-base md:text-lg text-gray-800 mt-1">2024-08-10, 10.00AM</p>
+                            <p class="text-base md:text-lg text-gray-800 mt-1"><?= $outpass->getApprovedTime()->format('Y-m-d, h:i A') ?></p>
                         </div>
                     </div>
                     <div class="flex items-center align-center space-x-4">
                         <i class="fas fa-pencil-alt text-2xl text-gray-500"></i>
                         <div>
                             <label class="block text-base font-medium text-gray-500">Warden Remarks</label>
-                            <p class="text-base md:text-lg text-gray-800 mt-1">None</p>
+                            <p class="text-base md:text-lg text-gray-800 mt-1"><?= empty($outpass->getRemarks()) ? 'None' : $outpass->getRemarks() ?></p>
                         </div>
                     </div>
                 </div>

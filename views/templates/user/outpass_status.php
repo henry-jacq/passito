@@ -24,7 +24,21 @@ use App\Enum\OutpassStatus; ?>
         </header>
 
         <?php if (empty($outpasses)): ?>
-            <div class="bg-white rounded-lg shadow-lg p-6 text-center text-gray-600">No outpass records found.</div>
+            <section class="rounded-lg py-22 flex flex-col items-center space-y-6 my-4 bg-white shadow-lg">
+                <div class="flex items-center justify-center bg-indigo-100 text-indigo-600 w-16 h-16 rounded-full shadow-inner animate-bounce">
+                    <i class="fas fa-exclamation-circle text-4xl"></i>
+                </div>
+                <div class="text-center">
+                    <h2 class="text-xl font-bold text-gray-800">
+                        No Outpass Found
+                    </h2>
+                    <p class="mt-2 text-gray-600 text-base max-w-md">
+                        It seems like you haven’t applied for an outpass yet. Use the button in the top-right corner to create one.
+                    </p>
+                </div>
+            </section>
+
+
         <?php else: ?>
             <!-- Current Outpass Section -->
             <section class="bg-white rounded-lg shadow-lg p-6 mb-8">
@@ -53,31 +67,32 @@ use App\Enum\OutpassStatus; ?>
                 </div>
             </section>
 
-            <!-- Recent Outpasses Section -->
-            <section class="bg-white rounded-lg shadow-lg p-6">
-                <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-2xl font-semibold text-gray-700">Past Outpasses</h2>
-                    <a href="<?= $this->urlFor('student.outpass.history') ?>" class="text-blue-600 hover:text-blue-800 hover:underline text-sm font-medium">
-                        View All History &rarr;
-                    </a>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <?php foreach ($outpasses as $i => $pass): if ($i === 0) continue; ?>
-                        <?php $status = $statusMapping[$pass->getStatus()->value]; ?>
-                        <div class="bg-gray-50 border-l-4 border-gray-200 rounded-lg p-5 shadow-md hover:shadow-lg transition">
-                            <h3 class="text-lg font-semibold text-gray-700"><?= ucfirst($pass->getPassType()->value) . ' Pass' ?></h3>
-                            <p class="mt-2 text-gray-600">Outpass from <strong><?= $pass->getFromDate()->format('Y-m-d') ?></strong> to <strong><?= $pass->getToDate()->format('Y-m-d') ?></strong></p>
-                            <p class="text-gray-500">Destination: <?= $pass->getDestination() ?></p>
-                            <div class="mt-4 flex justify-between items-center">
-                                <span class="px-3 py-1 rounded-full text-sm font-medium bg-<?= $status['color'] ?>-100 text-<?= $status['color'] ?>-800">
-                                    <i class="fa <?= $status['icon'] ?> me-2"></i><?= $status['text'] ?>
-                                </span>
-                                <a href="<?= $this->urlFor('student.outpass.status') . '/' . $pass->getId() ?>" class="text-sm text-blue-500 hover:underline">View Details</a>
+            <?php if (count($outpasses) > 1): ?>
+                <section class="bg-white rounded-lg shadow-lg p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-2xl font-semibold text-gray-700">Past Outpasses</h2>
+                        <a href="<?= $this->urlFor('student.outpass.history') ?>" class="text-blue-600 hover:text-blue-800 hover:underline text-sm font-medium">
+                            View All History &rarr;
+                        </a>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <?php foreach ($outpasses as $i => $pass): if ($i === 0) continue; ?>
+                            <?php $status = $statusMapping[$pass->getStatus()->value]; ?>
+                            <div class="bg-gray-50 border-l-4 border-gray-200 rounded-lg p-5 shadow-md hover:shadow-lg transition">
+                                <h3 class="text-lg font-semibold text-gray-700"><?= ucfirst($pass->getPassType()->value) . ' Pass' ?></h3>
+                                <p class="mt-2 text-gray-600">Outpass from <strong><?= $pass->getFromDate()->format('Y-m-d') ?></strong> to <strong><?= $pass->getToDate()->format('Y-m-d') ?></strong></p>
+                                <p class="text-gray-500">Destination: <?= $pass->getDestination() ?></p>
+                                <div class="mt-4 flex justify-between items-center">
+                                    <span class="px-3 py-1 rounded-full text-sm font-medium bg-<?= $status['color'] ?>-100 text-<?= $status['color'] ?>-800">
+                                        <i class="fa <?= $status['icon'] ?> me-2"></i><?= $status['text'] ?>
+                                    </span>
+                                    <a href="<?= $this->urlFor('student.outpass.status') . '/' . $pass->getId() ?>" class="text-sm text-blue-500 hover:underline">View Details</a>
+                                </div>
                             </div>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-            </section>
+                        <?php endforeach; ?>
+                    </div>
+                </section>
+            <?php endif; ?>
         <?php endif; ?>
     </main>
 </div>

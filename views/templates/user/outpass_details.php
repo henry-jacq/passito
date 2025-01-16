@@ -27,7 +27,7 @@ use App\Enum\OutpassStatus; ?>
                     <?php else: ?>
                     href="javascript:void(0)" aria-disabled="true" tabindex="-1"
                     <?php endif; ?>
-                    class="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 shadow-md transition focus:outline-none focus:ring focus:ring-blue-300 inline-flex items-center <?= $document ? '' : 'opacity-50 cursor-not-allowed' ?>">
+                    class="px-4 py-2 text-white bg-blue-600 rounded-md shadow-md transition focus:outline-none inline-flex items-center <?= $document ? 'hover:bg-blue-700 focus:ring focus:ring-blue-300' : 'opacity-50 cursor-not-allowed' ?>">
                     <i class="fa-solid fa-arrow-down mr-1"></i>
                     <span>Download Outpass</span>
                 </a>
@@ -101,7 +101,15 @@ use App\Enum\OutpassStatus; ?>
                         <i class="fas fa-calendar-check text-2xl text-gray-500"></i>
                         <div>
                             <label class="block text-base font-medium text-gray-500">Approval Time</label>
-                            <p class="text-base md:text-lg text-gray-800 mt-1"><?= $outpass->getApprovedTime()->format('Y-m-d, h:i A') ?></p>
+                            <p class="text-base md:text-lg text-gray-800 mt-1">
+                                <?php 
+                                if (!empty($outpass->getApprovedTime())):
+                                    echo $outpass->getApprovedTime()->format('Y-m-d, h:i A');
+                                else:
+                                    echo 'Not Approved';
+                                endif;
+                                ?>
+                            </p>
                         </div>
                     </div>
                     <div class="flex items-center align-center space-x-4">
@@ -117,11 +125,17 @@ use App\Enum\OutpassStatus; ?>
                 <div class="space-y-4">
                     <div class="bg-inherit select-none mb-7">
                         <div class="flex flex-col items-center rounded-lg border p-6">
-                            <div class="flex flex-col justify-center items-center gap-4 w-48 h-48">
-                                <i class="fa-solid fa-qrcode text-gray-600 text-7xl"></i>
-                                <p class="text-gray-600 text-sm">QR Not Available</p>
-                            </div>
-                            <!-- <img class="w-48 h-48 object-contain select-none" src="https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg" alt="Outpass QR Code" oncontextmenu="return false;" draggable="false"> -->
+                            <?php if ($outpass->getStatus() !== OutpassStatus::APPROVED): ?>
+                                <div class="flex flex-col justify-center items-center gap-4 w-48 h-48">
+                                    <i class="fa-solid fa-qrcode text-gray-600 text-7xl"></i>
+                                    <p class="text-gray-600 text-sm">QR Not Available</p>
+                                </div>
+                            <?php else: ?>
+                                <img class="w-48 h-48 object-contain select-none" src="<?= $this->urlFor('storage.student', [
+                                    'id' => $outpass->getStudent()->getUser()->getId(),
+                                    'params' => 'qr_codes/' . $outpass->getQrCode()
+                                ]) ?>" alt="Outpass QR Code" oncontextmenu="return false;" draggable="false">
+                            <?php endif; ?>
                         </div>
                         <p class="font-medium text-gray-600 select-text my-1">QR codes are only valid within the approved outpass time frame.</p>
                     </div>
@@ -130,13 +144,30 @@ use App\Enum\OutpassStatus; ?>
                     <div class="flex justify-between items-center space-x-1">
                         <div class="flex items-center space-x-2">
                             <i class="fa-solid fa-check-circle text-gray-500 text-xl"></i>
-                            <p class="text-sm md:text-base text-gray-600">
-                                QR Health: <span class="px-3 py-1 rounded-full text-md font-medium bg-red-100 text-red-800">Inactive</span>
-                            </p>
+                            <?php if ($outpass->getStatus() === OutpassStatus::APPROVED): ?>
+                                <p class="text-sm md:text-base text-gray-600">
+                                    QR Health: <span class="px-3 py-1 rounded-full text-md font-medium bg-green-100 text-green-800">Active</span>
+                                </p>
+                            <?php else: ?>
+                                <p class="text-sm md:text-base text-gray-600">
+                                    QR Health: <span class="px-3 py-1 rounded-full text-md font-medium bg-red-100 text-red-800">Inactive</span>
+                                </p>
+                            <?php endif; ?>
                         </div>
-                        <a href="#" onclick="window.print()" class="text-blue-600 hover:text-blue-700 hover:underline text-base">
+                        <?php
+                        $qrCode = $outpass->getQrCode();
+                        $qrDownloadUrl = $this->urlFor('storage.student', [
+                            'id' => $outpass->getStudent()->getUser()->getId(),
+                            'params' => 'qr_codes/' . $qrCode
+                        ]); ?>
+                        <a <?php if ($qrCode): ?>
+                            href="<?= htmlspecialchars($qrDownloadUrl) ?>" download
+                            <?php else: ?>
+                            href="javascript:void(0)" aria-disabled="true" tabindex="-1"
+                            <?php endif; ?>
+                            class="text-blue-600 hover:text-blue-700 text-base disabled:opacity-50 <?= $qrCode ? 'hover:underline' : 'opacity-50 cursor-not-allowed' ?>">
                             <i class="fa-solid fa-download mr-1"></i>
-                            Download QR
+                            <span>Download QR</span>
                         </a>
                     </div>
                 </div>

@@ -30,7 +30,7 @@ class StorageController extends BaseController
             $params = implode(DIRECTORY_SEPARATOR, array_map('basename', explode('/', $params)));
         }
 
-        $path = getStoragePath($params, false);
+        $path = getStoragePath($params);
 
         // Validate file existence and accessibility
         if (!is_file($path) || !is_readable($path)) {
@@ -99,10 +99,17 @@ class StorageController extends BaseController
         $outpasses = $this->outpassService->getOutpassByStudent($student);
 
         foreach ($outpasses as $outpass) {
+            $qrCode = $outpass->getQrCode();
             $document = $outpass->getDocument();
+            
+            $qrCodePath = getStoragePath("qr_codes/{$qrCode}");
             $outpassPath = getStoragePath("outpasses/{$document}");
 
             if (strpos($outpassPath, $filePath) !== false) {
+                return true;
+            }
+
+            if (strpos($qrCodePath, $filePath) !== false) {
                 return true;
             }
         }

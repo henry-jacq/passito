@@ -37,7 +37,7 @@ use App\Enum\OutpassStatus; ?>
         <!-- Outpass Details Section -->
         <section class="bg-white rounded-xl shadow-md p-6 md:p-8 mb-8">
             <!-- Row 1: Dates and Times -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-9">
                 <div class="flex items-center align-center space-x-4">
                     <i class="fa-regular fa-clock text-2xl text-gray-500"></i>
                     <div>
@@ -55,7 +55,7 @@ use App\Enum\OutpassStatus; ?>
             </div>
 
             <!-- Row 2: Pass Type and Destination -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-9">
                 <div class="flex items-center align-center space-x-4">
                     <i class="fa-regular fa-id-card text-2xl text-gray-500"></i>
                     <div>
@@ -75,7 +75,7 @@ use App\Enum\OutpassStatus; ?>
             <!-- Split Columns: Status, Purpose, and QR Code -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Column 1: Status, Purpose, Approval Time, and Remarks -->
-                <div class="space-y-8">
+                <div class="space-y-9">
                     <div class="flex items-center align-center space-x-4">
                         <i class="fa-solid fa-info-circle text-2xl text-gray-500"></i>
                         <div>
@@ -114,9 +114,16 @@ use App\Enum\OutpassStatus; ?>
                 </div>
 
                 <!-- Column 2: QR Code and Download Button -->
-                <div class="space-y-10">
-                    <div class="bg-white rounded-lg border p-6 flex flex-col items-center">
-                        <img class="w-48 h-48 object-contain" src="https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg" alt="Outpass QR Code">
+                <div class="space-y-4">
+                    <div class="bg-inherit select-none mb-7">
+                        <div class="flex flex-col items-center rounded-lg border p-6">
+                            <div class="flex flex-col justify-center items-center gap-4 w-48 h-48">
+                                <i class="fa-solid fa-qrcode text-gray-600 text-7xl"></i>
+                                <p class="text-gray-600 text-sm">QR Not Available</p>
+                            </div>
+                            <!-- <img class="w-48 h-48 object-contain select-none" src="https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg" alt="Outpass QR Code" oncontextmenu="return false;" draggable="false"> -->
+                        </div>
+                        <p class="font-medium text-gray-600 select-text my-1">QR codes are only valid within the approved outpass time frame.</p>
                     </div>
 
                     <!-- QR Status and Download Button -->
@@ -124,7 +131,7 @@ use App\Enum\OutpassStatus; ?>
                         <div class="flex items-center space-x-2">
                             <i class="fa-solid fa-check-circle text-gray-500 text-xl"></i>
                             <p class="text-sm md:text-base text-gray-600">
-                                QR Validity: <span class="px-3 py-1 rounded-full text-md font-medium bg-green-100 text-green-800">Active</span>
+                                QR Health: <span class="px-3 py-1 rounded-full text-md font-medium bg-red-100 text-red-800">Inactive</span>
                             </p>
                         </div>
                         <a href="#" onclick="window.print()" class="text-blue-600 hover:text-blue-700 hover:underline text-base">

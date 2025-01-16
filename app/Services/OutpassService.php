@@ -8,9 +8,15 @@ use Dompdf\Dompdf;
 use Dompdf\Options;
 use App\Entity\Student;
 use App\Enum\OutpassType;
+use Endroid\QrCode\QrCode;
 use App\Enum\OutpassStatus;
 use App\Entity\OutpassRequest;
+use Endroid\QrCode\Color\Color;
+use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\RoundBlockSizeMode;
 use Doctrine\ORM\EntityManagerInterface;
+use Endroid\QrCode\ErrorCorrectionLevel;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class OutpassService
@@ -112,6 +118,61 @@ class OutpassService
     }
 
     /**
+     * Generate a QR code for the given data
+     */
+    public function generateQRCode(string $data, int $size = 300, int $margin = 10): string
+    {
+        try {
+            $qrCode = new QrCode(
+                $data, // Data to encode in the QR code
+                new Encoding('UTF-8'), // Encoding
+                ErrorCorrectionLevel::High, // Error correction level
+                $size, // Size
+                $margin, // Margin
+                RoundBlockSizeMode::Margin, // Round block size mode
+                new Color(0, 0, 0), // Foreground color (black)
+                new Color(255, 255, 255) // Background color (white)
+            );
+
+            // Create a writer instance
+            $writer = new PngWriter();
+
+            // Write the QR code to a result
+            $result = $writer->write($qrCode);
+            $mime = $result->getMimeType(); // Get the MIME type of the image
+            
+            // Output the image data
+            $imageData = $result->getString();
+
+            // Retry logic for generating a unique name for the QR code image
+            $retry = 0;
+            $maxRetries = 5;
+            $qrCodeName = substr(md5(microtime(true) . random_int(1000, 9999)), 0, 16) . '.png';
+            $qrCodePath = getStoragePath("qr_codes/{$qrCodeName}", true);
+
+            while (file_exists($qrCodePath) && $retry < $maxRetries) {
+                $retry++;
+                error_log("Retrying file creation for QR code. Attempt {$retry}.");
+                $qrCodeName = substr(md5(microtime(true) . random_int(1000, 9999)), 0, 16) . '.png';
+                $qrCodePath = getStoragePath("qr_codes/{$qrCodeName}", true);
+            }
+
+            if (file_exists($qrCodePath)) {
+                throw new \Exception('Failed to generate unique file name for QR code after retries.');
+            }
+
+            file_put_contents($qrCodePath, $imageData);
+
+            return $qrCodePath;
+    
+        } catch (\Exception $e) {
+            // Handle exceptions
+            error_log('QR Code generation failed: ' . $e->getMessage());
+            echo 'QR Code generation failed: ' . $e->getMessage();
+        }
+    }
+
+    /**
      * Generate outpass document and return the file path
      */
     public function generateOutpassDocument(OutpassRequest $outpass): string
@@ -130,6 +191,8 @@ class OutpassService
         $options = new Options();
         $options->set('isPhpEnabled', true); // Enable PHP (Optional)
         $options->set('isRemoteEnabled', true); // Enable remote assets like images
+        $options->set('isHtml5ParserEnabled', true); // Enable HTML5 parser
+        $options->set('chroot', realpath(STORAGE_PATH)); // Restrict file access to the storage path
 
         // Initialize Dompdf
         $dompdf = new Dompdf($options);
@@ -168,6 +231,25 @@ class OutpassService
         return $pdfPath;
     }
 
+    /**
+     * Remove the QR code file from storage
+     */
+    public function removeQrCode(OutpassRequest $outpass)
+    {
+        $qrCode = $outpass->getQrCode();
+        $qrCodePath = getStoragePath("qr_codes/{$qrCode}");
+        if (file_exists($qrCodePath)) {
+            try {
+                unlink($qrCodePath);
+            } catch (\Exception $e) {
+                error_log('Failed to delete QR code: ' . $qrCodePath . ' Error: ' . $e->getMessage());
+            }
+        }
+    }
+
+    /**
+     * Remove the outpass document file from storage
+     */
     public function removeOutpassDocument(OutpassRequest $outpass)
     {
         $document = $outpass->getDocument();
@@ -206,7 +288,11 @@ class OutpassService
             $outpass->setStatus(OutpassStatus::EXPIRED);
 
             // Remove the document and update the outpass record
+            $this->removeQrCode($outpass);
             $this->removeOutpassDocument($outpass);
+
+            // Clear the document and QR code
+            $outpass->setQrCode(null);
             $outpass->setDocument(null);
 
             // Persist changes (batching handled later)

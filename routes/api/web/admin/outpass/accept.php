@@ -8,7 +8,7 @@ ${basename(__FILE__, '.php')} = function () {
     if ($this->isAuthenticated() && $this->paramsExists(['id'])) {
 
         if (UserRole::isAdministrator($this->getRole())) {
-            $outpass = $this->outpassService->getOutpass($this->data['id']);
+            $outpass = $this->outpassService->getOutpassById($this->data['id']);
 
             if ($outpass instanceof OutpassRequest) {
                 $outpass->setStatus(OutpassStatus::APPROVED);
@@ -24,10 +24,20 @@ ${basename(__FILE__, '.php')} = function () {
                 $userEmail = $outpass->getStudent()->getUser()->getEmail();
                 $subject = "Your Outpass Request #{$outpass->getId()} Has Been Approved";
 
+                $qrData = [
+                    'id' => $outpass->getId(),
+                    'type' => $outpass->getPassType()->value,
+                    'student' => $userEmail,
+                ];
+
+                // Generate QR code and outpass document
+                $qrCodePath = $this->outpassService->generateQRCode(json_encode($qrData));
+                $outpass->setQrCode(basename($qrCodePath));
+                
                 $documentPath = $this->outpassService->generateOutpassDocument($outpass);
                 $outpass->setDocument(basename($documentPath));
                 
-                $attachments = [$documentPath];
+                $attachments = [$documentPath, $qrCodePath];
                 
                 // Update outpass status
                 $result = $this->outpassService->updateOutpass($outpass);

@@ -43,6 +43,10 @@ class StudentMiddleware implements MiddlewareInterface
             $student = $this->em->getRepository(Student::class)->findBy(
                 ['user' => $this->session->get('user')]
             )[0];
+            
+            if (is_array($student)) {
+                $student = $student[0];
+            }
 
             $userRole = $student->getUser()->getRole()->value;
 

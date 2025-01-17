@@ -182,6 +182,8 @@ class OutpassService
 
         // Change the working directory to storage path
         $options = new Options();
+        // To get warden signature image
+        $options->set('isRemoteEnabled', true);
         $options->set('chroot', realpath(STORAGE_PATH));
 
         // Initialize Dompdf

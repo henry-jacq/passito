@@ -27,10 +27,10 @@
                 <tr class="bg-gray-200 text-sm uppercase text-gray-600 font-semibold">
                     <th class="p-3 text-left">Outpass ID</th>
                     <th class="p-3 text-left">Student Name</th>
-                    <th class="p-3 text-left">Student ID</th>
+                    <th class="p-3 text-left">Digital ID</th>
                     <th class="p-3 text-left">Department</th>
-                    <th class="p-3 text-left">Check-In</th>
                     <th class="p-3 text-left">Check-Out</th>
+                    <th class="p-3 text-left">Check-In</th>
                     <th class="p-3 text-left">Verifier</th>
                 </tr>
             </thead>
@@ -41,8 +41,14 @@
                     <td class="p-3 text-gray-800"><?= $log->getOutpass()->getStudent()->getUser()->getName() ?></td>
                     <td class="p-3 text-gray-800"><?= $log->getOutpass()->getStudent()->getDigitalId() ?></td>
                     <td class="p-3 text-gray-800"><?= $log->getOutpass()->getStudent()->getDepartment() ?></td>
-                    <td class="p-3 text-gray-800"><?= $log->getInTime() ?></td>
-                    <td class="p-3 text-gray-800"><?= $log->getOutTime() ?></td>
+                    <td class="p-3 text-gray-800"><?= $log->getOutTime()->format('Y-m-d h:i A') ?></td>
+                    <td class="p-3 text-gray-800"><?php
+                    if ($log->getInTime()) {
+                        echo $log->getInTime()->format('Y-m-d h:i A');
+                    } else {
+                        echo '<span class="text-red-500">Not returned</span>';
+                    }
+                     ?></td>
                     <td class="p-3 text-gray-800 flex items-center">
                         <span class="mr-2 w-2.5 h-2.5 <?= $log->getVerifier()->getName() ? 'bg-green-500' : 'bg-red-500' ?> rounded-full"></span> 
                         <?= $log->getVerifier()->getName() ?>

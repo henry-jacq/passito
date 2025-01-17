@@ -1,19 +1,30 @@
 <?php
 
 ${basename(__FILE__, '.php')} = function () {
-    if ($this->paramsExists(['machine_id', 'data'])) {
-
-        $machine_id = $this->data['machine_id'];
+    if ($this->paramsExists(['data'])) {
         $headers = $this->negotiateHeaders($this->headers);
         $authToken = explode(' ', $headers['Authorization'])[1] ?? null;
 
-        if (empty($machine_id) || empty($authToken)) {
+        // Check if 'data' is a string, if so, decode it
+        $jsonData = $this->data['data'];
+
+        if (is_string($jsonData)) {
+            $jsonData = json_decode($jsonData, true); // Decode as associative array
+            // Check if the 'data' contains valid JSON
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                return $this->response([
+                    'message' => 'Invalid JSON data provided.'
+                ], 400);
+            }
+        }
+        
+        if (empty($authToken)) {
             return $this->response([
                 'message' => 'Bad Request'
             ], 400);
         }
 
-        $verifier = $this->verifierService->syncData($authToken, $machine_id);
+        $verifier = $this->verifierService->syncData($authToken, $jsonData);
 
         if ($verifier) {
             return $this->response([

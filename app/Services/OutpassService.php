@@ -243,7 +243,7 @@ class OutpassService
     /**
      * Check and expire outpasses that have passed their expiry date
      */
-    public function checkAndExpireOutpass(): void
+    public function checkAndExpireOutpass(int $batchSize = 20): void
     {
         $now = new \DateTimeImmutable();
 
@@ -258,8 +258,7 @@ class OutpassService
         ->getQuery()
         ->getResult();
 
-        $batchSize = 20;
-        $i = 0;
+        $count = 0;
 
         foreach ($outpasses as $outpass) {
             // Mark as expired
@@ -277,15 +276,16 @@ class OutpassService
             $this->em->persist($outpass);
 
             // Flush and clear the EntityManager in batches
-            if (($i % $batchSize) === 0) {
+            if (($count % $batchSize) === 0) {
                 $this->em->flush();
-                $this->em->clear(); // Detaches all objects to reduce memory usage
+
+                // Detach only the current entity
+                $this->em->detach($outpass);
             }
-            $i++;
+            $count++;
         }
 
-        // Final flush for remaining entities
+        // Final flush
         $this->em->flush();
-        $this->em->clear();
     }
 }

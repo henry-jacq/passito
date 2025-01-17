@@ -258,6 +258,9 @@ class OutpassService
         ->getQuery()
         ->getResult();
 
+        $batchSize = 20;
+        $i = 0;
+
         foreach ($outpasses as $outpass) {
             // Mark as expired
             $outpass->setStatus(OutpassStatus::EXPIRED);
@@ -270,11 +273,19 @@ class OutpassService
             $outpass->setQrCode(null);
             $outpass->setDocument(null);
 
-            // Persist changes (batching handled later)
+            // Persist changes
             $this->em->persist($outpass);
+
+            // Flush and clear the EntityManager in batches
+            if (($i % $batchSize) === 0) {
+                $this->em->flush();
+                $this->em->clear(); // Detaches all objects to reduce memory usage
+            }
+            $i++;
         }
 
-        // Persist all changes in one operation
+        // Final flush for remaining entities
         $this->em->flush();
+        $this->em->clear();
     }
 }

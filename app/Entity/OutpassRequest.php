@@ -11,7 +11,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'outpass_requests', indexes: [
-    new ORM\Index(name: "pass_type_idx", columns: ["passType"])
+    new ORM\Index(name: "pass_type_idx", columns: ["passType"]),
+    new ORM\Index(name: "status_idx", columns: ["status"]),
+    new ORM\Index(name: "created_at_idx", columns: ["created_at"])
 ])]
 class OutpassRequest
 {

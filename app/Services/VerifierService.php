@@ -16,7 +16,8 @@ class VerifierService
 {
     public function __construct(
         private readonly Session $session,
-        private readonly EntityManagerInterface $em
+        private readonly EntityManagerInterface $em,
+        private readonly OutpassService $outpassService
     )
     {
     }
@@ -159,26 +160,58 @@ class VerifierService
     /**
      * Sync data
      */
-    public function syncData(string $authToken, string $machineId, $data): bool
+    public function syncData(string $authToken, array $data): bool
     {
-        $verifier = $this->em->getRepository(Verifier::class)->findOneBy(['authToken' => $authToken, 'machineId' => $machineId]);
+        $verifier = $this->em->getRepository(Verifier::class)->findOneBy(['authToken' => $authToken]);
         if ($verifier) {
+            foreach($data as $outpass) {
+                if (!$this->logExistsByOutpassId($outpass['id'])) {
+                    if (!$this->createLog($verifier, $outpass)) {
+                        // Log creation failed because outpass does not exist
+                        return false;
+                    }
+                } else {
+                    $log = $this->em->getRepository(VerifierLog::class)->findOneBy(['outpass' => $outpass['id']]);
+                    $this->updateLog($log, $outpass);
+                }
+            }
 
-            $logs = new VerifierLog();
-            $logs->setVerifier($verifier);
-            $logs->setOutpass($data);
-            $logs->setInTime($data);
-            $logs->setOutTime($data);
-            $logs->setTimestamp(new DateTime());
-            
-            $verifier->setLastSync(new DateTime());
-            
-            $this->em->persist($verifier);
-            $this->em->persist($logs);
-            $this->em->flush();
             return true;
         }
+
         return false;
+    }
+
+    // create a log entry
+    public function createLog(Verifier $verifier, array $data): bool
+    {
+        $logs = new VerifierLog();
+        $outpass = $this->outpassService->getOutpassById($data['id']);
+
+        if (!$outpass) {
+            return false;
+        }
+        
+        $logs->setVerifier($verifier);
+        $logs->setOutpass($outpass);
+        $logs->setOutTime(new DateTime());
+        $this->em->persist($logs);
+        $this->em->flush();
+        return true;
+    }
+
+    public function logExistsByOutpassId(int $outpass_id): bool
+    {
+        return $this->em->getRepository(VerifierLog::class)->findOneBy(['outpass' => $outpass_id]) !== null;
+    }
+
+    // update the log entry
+    public function updateLog(VerifierLog $log, array $data): VerifierLog
+    {
+        $log->setInTime(new DateTime());
+        $this->em->persist($log);
+        $this->em->flush();
+        return $log;
     }
 
     /**

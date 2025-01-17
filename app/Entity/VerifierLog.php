@@ -24,14 +24,11 @@ class VerifierLog
     #[ORM\JoinColumn(name: 'outpass_id', referencedColumnName: 'id', nullable: false)]
     private OutpassRequest $outpass;
 
-    #[ORM\Column(type: 'datetime')]
-    private DateTime $inTime;
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?DateTime $inTime;
 
-    #[ORM\Column(type: 'datetime')]
-    private DateTime $outTime;
-
-    #[ORM\Column(type: 'datetime')]
-    private DateTime $timestamp;
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?DateTime $outTime;
 
     public function getLogId(): int
     {
@@ -58,34 +55,23 @@ class VerifierLog
         $this->outpass = $outpass;
     }
 
-    public function getInTime(): DateTime
+    public function getInTime(): ?DateTime
     {
         return $this->inTime;
     }
 
-    public function setInTime(DateTime $inTime): void
+    public function setInTime(?DateTime $inTime): void
     {
         $this->inTime = $inTime;
     }
 
-    public function getOutTime(): DateTime
+    public function getOutTime(): ?DateTime
     {
         return $this->outTime;
     }
 
-    public function setOutTime(DateTime $outTime): void
+    public function setOutTime(?DateTime $outTime): void
     {
         $this->outTime = $outTime;
     }
-
-    public function getTimestamp(): DateTime
-    {
-        return $this->timestamp;
-    }
-
-    public function setTimestamp(DateTime $timestamp): void
-    {
-        $this->timestamp = $timestamp;
-    }
 }
-

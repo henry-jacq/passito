@@ -117,6 +117,23 @@ class OutpassService
         return $outpass;
     }
 
+    private function generateUniqueFileName(string $directory, string $extension): string
+    {
+        $retry = 0;
+        $maxRetries = 5;
+        do {
+            $fileName = substr(md5(microtime(true) . random_int(1000, 9999)), 0, 16) . ".{$extension}";
+            $filePath = getStoragePath("{$directory}/{$fileName}", true);
+            $retry++;
+        } while (file_exists($filePath) && $retry < $maxRetries);
+
+        if (file_exists($filePath)) {
+            throw new \Exception("Failed to generate unique file name after {$maxRetries} retries.");
+        }
+
+        return $filePath;
+    }
+
     /**
      * Generate a QR code for the given data
      */
@@ -134,32 +151,12 @@ class OutpassService
                 new Color(255, 255, 255) // Background color (white)
             );
 
-            // Create a writer instance
+            // Generate the QR code image data
             $writer = new PngWriter();
+            $imageData = $writer->write($qrCode)->getString();
 
-            // Write the QR code to a result
-            $result = $writer->write($qrCode);
-            $mime = $result->getMimeType(); // Get the MIME type of the image
-            
-            // Output the image data
-            $imageData = $result->getString();
-
-            // Retry logic for generating a unique name for the QR code image
-            $retry = 0;
-            $maxRetries = 5;
-            $qrCodeName = substr(md5(microtime(true) . random_int(1000, 9999)), 0, 16) . '.png';
-            $qrCodePath = getStoragePath("qr_codes/{$qrCodeName}", true);
-
-            while (file_exists($qrCodePath) && $retry < $maxRetries) {
-                $retry++;
-                error_log("Retrying file creation for QR code. Attempt {$retry}.");
-                $qrCodeName = substr(md5(microtime(true) . random_int(1000, 9999)), 0, 16) . '.png';
-                $qrCodePath = getStoragePath("qr_codes/{$qrCodeName}", true);
-            }
-
-            if (file_exists($qrCodePath)) {
-                throw new \Exception('Failed to generate unique file name for QR code after retries.');
-            }
+            // Generate unique file name with path
+            $qrCodePath = $this->generateUniqueFileName('qr_codes', 'png');
 
             file_put_contents($qrCodePath, $imageData);
 
@@ -177,22 +174,15 @@ class OutpassService
      */
     public function generateOutpassDocument(OutpassRequest $outpass): string
     {
-        if (!$outpass instanceof OutpassRequest) {
-            throw new \Exception('Invalid outpass request provided.');
-        }
-
-        // Student and outpass details
+        // Render Outpass document HTML
         $html = $this->view->renderEmail('outpass/document', [
             'outpass' => $outpass,
             'student' => $outpass->getStudent(),
         ]);
 
-        // Set up Dompdf options
+        // Change the working directory to storage path
         $options = new Options();
-        $options->set('isPhpEnabled', true); // Enable PHP (Optional)
-        $options->set('isRemoteEnabled', true); // Enable remote assets like images
-        $options->set('isHtml5ParserEnabled', true); // Enable HTML5 parser
-        $options->set('chroot', realpath(STORAGE_PATH)); // Restrict file access to the storage path
+        $options->set('chroot', realpath(STORAGE_PATH));
 
         // Initialize Dompdf
         $dompdf = new Dompdf($options);
@@ -207,23 +197,8 @@ class OutpassService
         // Output the generated PDF
         $output = $dompdf->output();
 
-        // Generate unique file name
-        $retry = 0;
-        $maxRetries = 5;
-        $outpassName = substr(md5(microtime(true) . $outpass->getId() . random_int(1000, 9999)), 0, 16) . '.pdf';
-        $pdfPath = getStoragePath("outpasses/{$outpassName}", true);
-
-        // Retry logic if file already exists
-        while (file_exists($pdfPath) && $retry < $maxRetries) {
-            $retry++;
-            error_log("Retrying file creation for outpass ID {$outpass->getId()}. Attempt {$retry}.");
-            $outpassName = substr(md5(microtime(true) . $outpass->getId() . random_int(1000, 9999)), 0, 16) . '.pdf';
-            $pdfPath = getStoragePath("outpasses/{$outpassName}", true);
-        }
-
-        if (file_exists($pdfPath)) {
-            throw new \Exception('Failed to generate unique file name for outpass document after retries.');
-        }
+        // Generate unique file name with path
+        $pdfPath = $this->generateUniqueFileName('outpasses', 'pdf');
 
         // Save the PDF to a file
         file_put_contents($pdfPath, $output);

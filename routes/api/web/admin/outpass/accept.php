@@ -31,7 +31,7 @@ ${basename(__FILE__, '.php')} = function () {
                 ];
 
                 // Generate QR code and outpass document
-                $qrCodePath = $this->outpassService->generateQRCode(json_encode($qrData));
+                $qrCodePath = $this->outpassService->generateQRCode($qrData);
                 $outpass->setQrCode(basename($qrCodePath));
                 
                 $documentPath = $this->outpassService->generateOutpassDocument($outpass);

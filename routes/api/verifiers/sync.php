@@ -1,9 +1,16 @@
 <?php
 
 ${basename(__FILE__, '.php')} = function () {
+    $headers = $this->negotiateHeaders($this->headers);
+    $authToken = explode(' ', $headers['Authorization'])[1] ?? null;
+
+    if (empty($authToken)) {
+        return $this->response([
+            'message' => 'Bad Request'
+        ], 400);
+    }
+    
     if ($this->paramsExists(['data'])) {
-        $headers = $this->negotiateHeaders($this->headers);
-        $authToken = explode(' ', $headers['Authorization'])[1] ?? null;
 
         // Check if 'data' is a string, if so, decode it
         $jsonData = $this->data['data'];
@@ -16,12 +23,6 @@ ${basename(__FILE__, '.php')} = function () {
                     'message' => 'Invalid JSON data provided.'
                 ], 400);
             }
-        }
-        
-        if (empty($authToken)) {
-            return $this->response([
-                'message' => 'Bad Request'
-            ], 400);
         }
 
         $verifier = $this->verifierService->syncData($authToken, $jsonData);
@@ -38,7 +39,8 @@ ${basename(__FILE__, '.php')} = function () {
             'status' => false
         ], 400);
     }
+
     return $this->response([
-        'message' => 'Bad Request'
-    ], 400);
+        'message' => 'Not Acceptable'
+    ], 406);
 };

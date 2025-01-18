@@ -137,9 +137,16 @@ class OutpassService
     /**
      * Generate a QR code for the given data
      */
-    public function generateQRCode(string $data, int $size = 300, int $margin = 10): string
+    public function generateQRCode(mixed $data, int $size = 300, int $margin = 10): string
     {
         try {
+            if (is_array($data)) {
+                $data = json_encode($data);
+            }
+
+            // Encrypt the data
+            $data = $this->encryptQrData($data, $_ENV['QR_SECRET']);
+            
             $qrCode = new QrCode(
                 $data, // Data to encode in the QR code
                 new Encoding('UTF-8'), // Encoding
@@ -289,5 +296,26 @@ class OutpassService
 
         // Final flush
         $this->em->flush();
+    }
+
+    /**
+     * Encrypt the QR data using AES-256-GCM
+     */
+    public function encryptQrData(string $data, string $sharedSecret): string
+    {
+        // Generate a key from the shared secret
+        $key = hash('sha256', $sharedSecret, true);
+        
+        // Generate a random initialization vector (IV)
+        $iv = random_bytes(12);
+
+        // Generate a random tag
+        $tag = null;
+        
+        // Encrypt the data using AES-256-GCM
+        $cipherText = openssl_encrypt($data, 'aes-256-gcm', $key, OPENSSL_RAW_DATA, $iv, $tag);
+
+        // Return the encrypted data as a base64-encoded string
+        return base64_encode($iv . $tag . $cipherText);
     }
 }

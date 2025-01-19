@@ -17,7 +17,7 @@ use App\Enum\UserRole; ?>
         </div>
 
         <!-- Scrollable Menu (Middle) -->
-        <div class="flex-1 overflow-y-auto px-2">
+        <div class="flex-1 overflow-y-auto scroll-smooth scrollbar scrollbar-hide px-2">
             <!-- Main Menu Category -->
             <!-- <h4 class="text-gray-600 px-2 mt-4 font-semibold uppercase text-xs">Admin Panel</h4> -->
             <ul class="mt-2">

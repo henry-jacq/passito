@@ -118,6 +118,7 @@ Follow these steps to set up Passito on your local machine:
    - Add the following line to the crontab file:
       ```bash
       * * * * * /usr/bin/php /path/to/passito/passito.php app:process-email-queue
+      * * * * * /usr/bin/php /path/to/passito/passito.php app:remove-expired-outpass
       ```
 
 8. **Start the Development Server**:

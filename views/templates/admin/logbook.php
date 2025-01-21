@@ -29,6 +29,7 @@
                     <th class="p-3 text-left">Student Name</th>
                     <th class="p-3 text-left">Digital ID</th>
                     <th class="p-3 text-left">Department</th>
+                    <th class="p-3 text-left">Status</th>
                     <th class="p-3 text-left">Check-Out</th>
                     <th class="p-3 text-left">Check-In</th>
                     <th class="p-3 text-left">Verifier</th>
@@ -41,6 +42,7 @@
                     <td class="p-3 text-gray-800"><?= $log->getOutpass()->getStudent()->getUser()->getName() ?></td>
                     <td class="p-3 text-gray-800"><?= $log->getOutpass()->getStudent()->getDigitalId() ?></td>
                     <td class="p-3 text-gray-800"><?= $log->getOutpass()->getStudent()->getDepartment() ?></td>
+                    <td class="p-3 text-gray-800"><?= ucfirst($log->getOutpass()->getStatus()->value) ?></td>
                     <td class="p-3 text-gray-800"><?= $log->getOutTime()->format('Y-m-d h:i A') ?></td>
                     <td class="p-3 text-gray-800"><?php
                     if ($log->getInTime()) {
@@ -48,7 +50,7 @@
                     } else {
                         echo '<span class="text-red-500">Not returned</span>';
                     }
-                     ?></td>
+                    ?></td>
                     <td class="p-3 text-gray-800 flex items-center">
                         <span class="mr-2 w-2.5 h-2.5 <?= $log->getVerifier()->getName() ? 'bg-green-500' : 'bg-red-500' ?> rounded-full"></span> 
                         <?= $log->getVerifier()->getName() ?>

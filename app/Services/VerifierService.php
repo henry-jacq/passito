@@ -6,6 +6,7 @@ use DateTime;
 use App\Core\Session;
 use App\Entity\Verifier;
 use App\Entity\VerifierLog;
+use App\Enum\OutpassStatus;
 use App\Enum\VerifierStatus;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -164,16 +165,14 @@ class VerifierService
     {
         $verifier = $this->em->getRepository(Verifier::class)->findOneBy(['authToken' => $authToken]);
         if ($verifier) {
-            foreach($data as $outpass) {
-                if (!$this->logExistsByOutpassId($outpass['id'])) {
-                    if (!$this->createLog($verifier, $outpass)) {
-                        // Log creation failed because outpass does not exist
-                        return false;
-                    }
-                } else {
-                    $log = $this->em->getRepository(VerifierLog::class)->findOneBy(['outpass' => $outpass['id']]);
-                    $this->updateLog($log, $outpass);
+            if (!$this->logExistsByOutpassId($data['id'])) {
+                if (!$this->createLog($verifier, $data)) {
+                    // Log creation failed because outpass does not exist
+                    return false;
                 }
+            } else {
+                $log = $this->em->getRepository(VerifierLog::class)->findOneBy(['outpass' => $data['id']]);
+                $this->updateLog($log);
             }
 
             return true;
@@ -205,12 +204,19 @@ class VerifierService
         return $this->em->getRepository(VerifierLog::class)->findOneBy(['outpass' => $outpass_id]) !== null;
     }
 
-    // update the log entry
-    public function updateLog(VerifierLog $log, array $data): VerifierLog
+    /**
+     * Update log
+     */
+    public function updateLog(VerifierLog $log): VerifierLog
     {
+        $outpass = $log->getOutpass();
+
         $log->setInTime(new DateTime());
+        $outpass->setStatus(OutpassStatus::EXPIRED);
         $this->em->persist($log);
+        $this->em->persist($outpass);
         $this->em->flush();
+
         return $log;
     }
 

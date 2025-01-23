@@ -258,11 +258,13 @@ class OutpassService
 
         // Fetch all approved outpasses in one query
         // NOTE: Ensure the CONCAT function is supported by the database
+        // Periodically Remove the outpass set as expired after check in
+        // Also do the same as before periodical check expired outpasses and remove
         $outpasses = $this->em->getRepository(OutpassRequest::class)
         ->createQueryBuilder('o')
-        ->where('o.status = :status')
+        ->where('o.status IN (:status)')
         ->andWhere("CONCAT(o.toDate, ' ', o.toTime) <= :now")
-        ->setParameter('status', OutpassStatus::APPROVED->value)
+        ->setParameter('status', [OutpassStatus::APPROVED->value, OutpassStatus::EXPIRED->value])
         ->setParameter('now', $now->format('Y-m-d H:i:s'))
         ->getQuery()
         ->getResult();
@@ -271,15 +273,20 @@ class OutpassService
 
         foreach ($outpasses as $outpass) {
             // Mark as expired
-            $outpass->setStatus(OutpassStatus::EXPIRED);
+            if ($outpass->getStatus() === OutpassStatus::APPROVED) {
+                $outpass->setStatus(OutpassStatus::EXPIRED);
+            }
 
             // Remove the document and update the outpass record
-            $this->removeQrCode($outpass);
-            $this->removeOutpassDocument($outpass);
+            if (!empty($outpass->getDocument())) {
+                $this->removeOutpassDocument($outpass);
+                $outpass->setDocument(null);
+            }
 
-            // Clear the document and QR code
-            $outpass->setQrCode(null);
-            $outpass->setDocument(null);
+            if (!empty($outpass->getQrCode())) {
+                $this->removeQrCode($outpass);
+                $outpass->setQrCode(null);
+            }
 
             // Persist changes
             $this->em->persist($outpass);

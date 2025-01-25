@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Enum\Gender;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
@@ -20,6 +21,9 @@ class OutpassSettings
 
     #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $weeklyLimit = null;
+
+    #[ORM\Column(type: 'string', enumType: Gender::class)]
+    private Gender $type;
 
     #[ORM\Column(type: 'boolean')]
     private bool $parentApproval;
@@ -70,6 +74,17 @@ class OutpassSettings
     public function setDailyLimit(?int $dailyLimit): self
     {
         $this->dailyLimit = $dailyLimit;
+        return $this;
+    }
+
+    public function getType(): Gender
+    {
+        return $this->type;
+    }
+
+    public function setType(Gender $gender): self
+    {
+        $this->type = $gender;
         return $this;
     }
 

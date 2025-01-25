@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Core\View;
+use App\Enum\Gender;
 use App\Services\UserService;
-use App\Services\FacilityService;
 use App\Services\OutpassService;
+use App\Services\FacilityService;
+use App\Services\SettingsService;
 use App\Services\VerifierService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -16,6 +18,7 @@ class AdminController extends BaseController
         protected readonly View $view,
         private readonly UserService $userService,
         private readonly OutpassService $outpassService,
+        private readonly SettingsService $settingsService,
         private readonly VerifierService $verifierService,
         private readonly FacilityService $facilityService
     )
@@ -93,9 +96,13 @@ class AdminController extends BaseController
         $this->view->clearCacheIfDev();
 
         $userData = $request->getAttribute('user');
+        // $settings = $this->settingsService->getOutpassSettings($userData->getGender());
+        // For debug purposes
+        $settings = $this->settingsService->getOutpassSettings(Gender::FEMALE);
         $args = [
             'title' => 'Outpass Settings',
             'user' => $userData,
+            'settings' => $settings,
             'routeName' => $this->getRouteName($request),
         ];
         return parent::render($request, $response, 'admin/outpass_settings', $args);

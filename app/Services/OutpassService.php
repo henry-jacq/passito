@@ -6,11 +6,14 @@ use DateTime;
 use App\Core\View;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use App\Entity\User;
+use App\Enum\Gender;
 use App\Entity\Student;
 use App\Enum\OutpassType;
 use Endroid\QrCode\QrCode;
 use App\Enum\OutpassStatus;
 use App\Entity\OutpassRequest;
+use App\Entity\OutpassSettings;
 use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Encoding\Encoding;
@@ -115,6 +118,46 @@ class OutpassService
         $this->em->flush();
 
         return $outpass;
+    }
+
+    public function getSettings(Gender $gender)
+    {
+        $settings = $this->em->getRepository(OutpassSettings::class)
+            ->findBy(['type' => $gender]);
+
+        // Return the first element if there's only one, otherwise return the array
+        return count($settings) === 1 ? $settings[0] : $settings;
+    }
+
+    public function updateSettings(User $user, array $data)
+    {
+        $settings = $this->em->getRepository(OutpassSettings::class)
+            ->findOneBy(['type' => $user->getGender()]);
+
+        // Helper function to convert time strings to DateTime or null
+        $convertToTime = function (?string $timeString): ?\DateTime {
+            return $timeString ? \DateTime::createFromFormat('H:i', $timeString) : null;
+        };
+
+        // Update settings fields with appropriate conversions
+        $settings->setDailyLimit(!empty($data['daily_limit']) ? $data['daily_limit'] : null);
+        $settings->setWeeklyLimit(!empty($data['weekly_limit']) ? $data['weekly_limit'] : null);
+        $settings->setWeekdayCollegeHoursStart($convertToTime($data['weekday_college_hours_start'] ?? null));
+        $settings->setWeekdayCollegeHoursEnd($convertToTime($data['weekday_college_hours_end'] ?? null));
+        $settings->setWeekdayOvernightStart($convertToTime($data['weekday_overnight_start'] ?? null));
+        $settings->setWeekdayOvernightEnd($convertToTime($data['weekday_overnight_end'] ?? null));
+        $settings->setWeekendStartTime($convertToTime($data['weekend_start_time'] ?? null));
+        $settings->setWeekendEndTime($convertToTime($data['weekend_end_time'] ?? null));
+        $settings->setEmergencyContactNotification(!empty($data['emergency_contact_notification']));
+        $settings->setAppNotification(!empty($data['app_notification']));
+        $settings->setEmailNotification(!empty($data['email_notification']));
+        $settings->setSmsNotification(!empty($data['sms_notification']));
+
+        // Persist and flush changes to database
+        $this->em->persist($settings);
+        $this->em->flush();
+
+        return $settings;
     }
 
     private function generateUniqueFileName(string $directory, string $extension): string

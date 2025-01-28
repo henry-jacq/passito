@@ -178,16 +178,10 @@ use App\Enum\Gender;
 
         <!-- Save and Reset Buttons -->
         <div class="flex justify-end space-x-4 mt-6">
-            <button
-                type="submit"
-                name="reset_defaults"
-                value="true"
-                class="px-6 py-2 bg-gray-200 text-gray-800 text-sm font-medium rounded-md shadow-sm hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500">
+            <button type="submit" name="reset_defaults" value="true" class="px-6 py-2 bg-gray-200 text-gray-800 text-sm font-medium rounded-md shadow-sm hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500">
                 Reset to Defaults
             </button>
-            <button
-                type="submit"
-                class="px-6 py-2 bg-indigo-600 text-white text-sm font-medium rounded-md shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <button type="submit" class="px-6 py-2 bg-indigo-600 text-white text-sm font-medium rounded-md shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 Save Settings
             </button>
         </div>

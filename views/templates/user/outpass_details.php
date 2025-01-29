@@ -94,7 +94,9 @@ use App\Enum\OutpassStatus; ?>
                         <i class="fa-solid fa-question-circle text-2xl text-gray-500"></i>
                         <div>
                             <label class="block text-base font-medium text-gray-500">Purpose</label>
-                            <p class="text-lg text-gray-800 leading-relaxed mt-1"><?= ucfirst($outpass->getPurpose()) ?></p>
+                            <p class="text-lg text-gray-800 leading-relaxed mt-1">
+                                <?php if (empty($outpass->getPurpose())): echo 'None'; else: ucfirst($outpass->getPurpose()); endif; ?>
+                            </p>
                         </div>
                     </div>
                     <div class="flex items-center align-center space-x-4">

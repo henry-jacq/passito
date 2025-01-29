@@ -6,7 +6,7 @@ use App\Entity\OutpassRequest;
 ${basename(__FILE__, '.php')} = function () {
     $expectedParams = [
         'from_date', 'to_date', 'from_time', 'to_time', 
-        'outpass_type', 'destination', 'purpose'
+        'outpass_type', 'destination'
     ];
 
     if ($this->isAuthenticated() && $this->paramsExists($expectedParams)) {
@@ -31,34 +31,31 @@ ${basename(__FILE__, '.php')} = function () {
             'to_time' => $toTime,
             'outpass_type' => $this->data['outpass_type'],
             'destination' => $this->data['destination'],
-            'purpose' => $this->data['purpose'],
             'student' => $student,
         ];
-        
+
+        $outpassData['purpose'] = empty($this->data['purpose']) ? '' : $this->data['purpose'];
+
         $outpass = $this->outpassService->createOutpass($outpassData);
 
         if ($outpass instanceof OutpassRequest) {
-            // send mail
-            // $this->mailService->sendMail(
-            //     $outpass->getStudent()->getEmail(),
-            //     'Outpass Request',
-            //     'Your outpass request has been submitted successfully'
-            // );
-
             return $this->response([
-                'message' => 'Outpass request created',
+                'message' => 'Outpass Requested Successfully',
+                'type' => 'success',
                 'status' => true
             ], 201);
-
         } else {
             return $this->response([
-                'message' => 'Outpass request failed',
+                'message' => 'Failed to Request Outpass',
+                'type' => 'error',
                 'status' => false
             ], 409);
         }
     }
 
     return $this->response([
-        'message' => 'Bad Request'
+        'message' => 'Bad Request',
+        'type' => 'error',
+        'status' => false
     ], 400);
 };

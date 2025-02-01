@@ -5,18 +5,21 @@ use App\Core\View;
 use App\Core\Config;
 use App\Core\Request;
 use App\Core\Session;
+use App\Core\Storage;
+use function DI\create;
 use Doctrine\ORM\ORMSetup;
 use Slim\Factory\AppFactory;
 use Doctrine\ORM\EntityManager;
 use Doctrine\DBAL\DriverManager;
+use League\Flysystem\Filesystem;
 use PHPMailer\PHPMailer\PHPMailer;
+use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Container\ContainerInterface;
 use Doctrine\ORM\EntityManagerInterface;
-use Nyholm\Psr7\Factory\Psr17Factory;
-use Psr\Http\Message\ResponseFactoryInterface;
-use Psr\Http\Message\StreamFactoryInterface;
 
-use function DI\create;
+use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
+use League\Flysystem\Local\LocalFilesystemAdapter;
 
 return [
     App::class => function (ContainerInterface $container) {
@@ -66,5 +69,10 @@ return [
     },
     Session::class => function (ContainerInterface $container) {
         return new Session($container->get(Config::class));
+    },
+    Storage::class => function() {
+        $localAdapter = new LocalFilesystemAdapter(STORAGE_PATH);
+        $fileSystem = new Filesystem($localAdapter);
+        return new Storage($fileSystem);
     }
 ];

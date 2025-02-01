@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Core\Storage;
 use App\Entity\Student;
 use App\Services\OutpassService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -10,6 +11,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 class StorageController extends BaseController
 {
     public function __construct(
+        private readonly Storage $storage,
         private readonly OutpassService $outpassService,
     ) {
     }
@@ -30,7 +32,7 @@ class StorageController extends BaseController
             $params = implode(DIRECTORY_SEPARATOR, array_map('basename', explode('/', $params)));
         }
 
-        $path = getStoragePath($params);
+        $path = $this->storage->getFullPath($params);
 
         // Validate file existence and accessibility
         if (!is_file($path) || !is_readable($path)) {
@@ -41,7 +43,7 @@ class StorageController extends BaseController
         $fileSize = filesize($path);
         $mimeType = mime_content_type($path);
 
-        $response->getBody()->write(file_get_contents($path));
+        $response->getBody()->write($this->storage->read($params));
 
         return $response
             ->withHeader('Content-Type', $mimeType)
@@ -72,7 +74,7 @@ class StorageController extends BaseController
             $params = implode(DIRECTORY_SEPARATOR, array_map('basename', explode('/', $params)));
         }
 
-        $path = getStoragePath($params);
+        $path = $this->storage->getFullPath($params);
 
         // Validate file existence and accessibility
         if (!is_file($path) || !is_readable($path)) {
@@ -83,7 +85,7 @@ class StorageController extends BaseController
         $fileSize = filesize($path);
         $mimeType = mime_content_type($path);
 
-        $response->getBody()->write(file_get_contents($path));
+        $response->getBody()->write($this->storage->read($params));
 
         return $response
             ->withHeader('Content-Type', $mimeType)
@@ -102,8 +104,8 @@ class StorageController extends BaseController
             $qrCode = $outpass->getQrCode();
             $document = $outpass->getDocument();
             
-            $qrCodePath = getStoragePath("qr_codes/{$qrCode}");
-            $outpassPath = getStoragePath("outpasses/{$document}");
+            $qrCodePath = $this->storage->getFullPath("qr_codes/{$qrCode}");
+            $outpassPath = $this->storage->getFullPath("outpasses/{$document}");
 
             if (strpos($outpassPath, $filePath) !== false) {
                 return true;

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Core\Storage;
 use DateTime;
 use App\Core\View;
 use Dompdf\Dompdf;
@@ -26,6 +27,7 @@ class OutpassService
 {
     public function __construct(
         private readonly View $view,
+        private readonly Storage $storage,
         private readonly EntityManagerInterface $em
     )
     {
@@ -215,23 +217,6 @@ class OutpassService
         ];
     }
 
-    private function generateUniqueFileName(string $directory, string $extension): string
-    {
-        $retry = 0;
-        $maxRetries = 5;
-        do {
-            $fileName = substr(md5(microtime(true) . random_int(1000, 9999)), 0, 16) . ".{$extension}";
-            $filePath = getStoragePath("{$directory}/{$fileName}", true);
-            $retry++;
-        } while (file_exists($filePath) && $retry < $maxRetries);
-
-        if (file_exists($filePath)) {
-            throw new \Exception("Failed to generate unique file name after {$maxRetries} retries.");
-        }
-
-        return $filePath;
-    }
-
     /**
      * Generate a QR code for the given data
      */
@@ -261,9 +246,10 @@ class OutpassService
             $imageData = $writer->write($qrCode)->getString();
 
             // Generate unique file name with path
-            $qrCodePath = $this->generateUniqueFileName('qr_codes', 'png');
+            $qrCodePath = $this->storage->generateFileName('qr_codes', 'png');
 
-            file_put_contents($qrCodePath, $imageData);
+            // Save the QR code image
+            $this->storage->write($qrCodePath, $imageData);
 
             return $qrCodePath;
     
@@ -305,10 +291,10 @@ class OutpassService
         $output = $dompdf->output();
 
         // Generate unique file name with path
-        $pdfPath = $this->generateUniqueFileName('outpasses', 'pdf');
+        $pdfPath = $this->storage->generateFileName('outpasses', 'pdf');
 
         // Save the PDF to a file
-        file_put_contents($pdfPath, $output);
+        $this->storage->write($pdfPath, $output);
 
         return $pdfPath;
     }
@@ -319,14 +305,7 @@ class OutpassService
     public function removeQrCode(OutpassRequest $outpass)
     {
         $qrCode = $outpass->getQrCode();
-        $qrCodePath = getStoragePath("qr_codes/{$qrCode}");
-        if (file_exists($qrCodePath)) {
-            try {
-                unlink($qrCodePath);
-            } catch (\Exception $e) {
-                error_log('Failed to delete QR code: ' . $qrCodePath . ' Error: ' . $e->getMessage());
-            }
-        }
+        return $this->storage->removeFile("qr_codes/{$qrCode}");
     }
 
     /**
@@ -335,16 +314,7 @@ class OutpassService
     public function removeOutpassDocument(OutpassRequest $outpass)
     {
         $document = $outpass->getDocument();
-        if (!empty($document)) {
-            $pdfPath = getStoragePath("outpasses/{$document}");
-            if (file_exists($pdfPath)) {
-                try {
-                    unlink($pdfPath);
-                } catch (\Exception $e) {
-                    error_log('Failed to delete file: ' . $pdfPath . ' Error: ' . $e->getMessage());
-                }
-            }
-        }
+        return $this->storage->removeFile("outpasses/{$document}");
     }
 
     /**

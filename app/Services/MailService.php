@@ -6,14 +6,16 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
 use App\Core\Config;
+use App\Core\Storage;
 use App\Entity\EmailQueue;
 use Doctrine\ORM\EntityManagerInterface;
 
 class MailService
 {
     public function __construct(
-        protected readonly PHPMailer $mailer,
         protected readonly Config $config,
+        protected readonly Storage $storage,
+        protected readonly PHPMailer $mailer,
         protected readonly EntityManagerInterface $entityManager
     ) {
         $this->initServer();
@@ -174,10 +176,13 @@ class MailService
             $attachments = $email->getAttachments();
             if (!empty($attachments) && is_iterable($attachments)) {
                 foreach ($attachments as $attachment) {
-                    if (is_readable($attachment)) {
-                        $this->attachFile($attachment); // Attach the file
+
+                    $file = $this->storage->getFullPath($attachment);
+                    
+                    if (is_readable($file)) {
+                        $this->attachFile($file); // Attach the file
                     } else {
-                        error_log("Attachment file not found: $attachment");
+                        error_log("Attachment file not found: $file");
                     }
                 }
             }

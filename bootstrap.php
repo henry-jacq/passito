@@ -1,6 +1,7 @@
 <?php
 
 use Dotenv\Dotenv;
+use App\Core\Config;
 use Slim\Factory\AppFactory;
 
 require 'vendor/autoload.php';
@@ -13,7 +14,6 @@ ini_set('log_errors_max_len', 0);
 ini_set('assert.exception', 1);
 ini_set('memory_limit', -1);
 
-date_default_timezone_set("Asia/Kolkata");
 
 $dotenv = Dotenv::createImmutable(ROOT_PATH);
 $dotenv->load();
@@ -26,5 +26,9 @@ AppFactory::setContainer($container);
 $app = AppFactory::create();
 
 $addMiddlewares($app);
+
+// Set Default Timezone
+$config = $app->getContainer()->get(Config::class);
+date_default_timezone_set($config->get('app.timezone'));
 
 return $app;

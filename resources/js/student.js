@@ -47,21 +47,50 @@ outpassForm.addEventListener('submit', async (event) => {
 });
 
 
-// Toggle Purpose Field
-const outpassType = document.getElementById('outpass_type');
+document.addEventListener("DOMContentLoaded", () => {
+	const outpassType = document.getElementById("outpass_type");
+	const purposeInput = document.getElementById("purpose");
+	const purposeField = document.getElementById("purposeField");
+	const attachmentsField = document.getElementById("attachmentsField");
+	const fileLabel = document.getElementById("fileLabel");
+	const filePreview = document.getElementById("filePreview");
+	const attachments = document.getElementById("attachments");
 
-outpassType.addEventListener('change', () => {
-	const selectedValue = outpassType.value;
-	const purposeInput = document.getElementById('purpose');
-	const purposeField = document.getElementById('purposeField');
-	
-	if (selectedValue == 'home') {
-		purposeField.classList.add("hidden");
-		purposeField.classList.remove("block");
-		purposeInput.removeAttribute("required");
-	} else {
-		purposeField.classList.add("block");
-		purposeField.classList.remove("hidden");
-		purposeInput.setAttribute("required", "required");
-	}
+	// Function to toggle purpose and attachments fields
+	const toggleFields = () => {
+		const selectedValue = outpassType.value;
+
+		if (selectedValue === "home") {
+			purposeField.classList.add("hidden");
+			purposeField.classList.remove("block");
+			purposeInput.removeAttribute("required");
+		} else {
+			purposeField.classList.add("block");
+			purposeField.classList.remove("hidden");
+			purposeInput.setAttribute("required", "required");
+		}
+
+		if (selectedValue !== "outing") {
+			attachmentsField.classList.remove("hidden");
+		} else {
+			attachmentsField.classList.add("hidden");
+		}
+	};
+
+	// Event listeners
+	outpassType.addEventListener("change", toggleFields);
+
+	attachments.addEventListener("change", function () {
+		const files = this.files;
+
+		if (files.length > 0) {
+			fileLabel.textContent = `${files.length} file(s) selected`;
+			filePreview.innerHTML = Array.from(files)
+				.map(file => `<div class="text-gray-700 text-sm mt-1">• ${file.name}</div>`)
+				.join("");
+		} else {
+			fileLabel.textContent = "Upload supporting documents (JPG, PNG, PDF)";
+			filePreview.innerHTML = "";
+		}
+	});
 });

@@ -10,11 +10,20 @@ ${basename(__FILE__, '.php')} = function () {
     ];
 
     if ($this->isAuthenticated() && $this->paramsExists($expectedParams)) {
-        // foreach ($this->files['attachments'] as $file) {
-        //     if ($file->getError() == UPLOAD_ERR_OK) {
-        //         // handle attachments
-        //     }
-        // }
+        $names = [];
+
+        foreach ($this->files['attachments'] as $file) {
+            if ($file->getError() == UPLOAD_ERR_OK) {
+                $name = $file->getClientFilename();
+                $fileExtension = pathinfo($name, PATHINFO_EXTENSION);
+                $filePath = $file->getStream()->getMetadata('uri');
+                
+                $name = $this->storage->generateFileName('attachments', $fileExtension);
+                $this->storage->moveUploadedFile($filePath, $name);
+
+                $names[] = $name;
+            }
+        }
 
         $user = $this->getAttribute('user');
         $student = $this->userService->getStudentByUser($user);
@@ -32,6 +41,7 @@ ${basename(__FILE__, '.php')} = function () {
             'outpass_type' => $this->data['outpass_type'],
             'destination' => $this->data['destination'],
             'student' => $student,
+            'attachments' => $names
         ];
 
         $outpassData['purpose'] = empty($this->data['purpose']) ? '' : $this->data['purpose'];

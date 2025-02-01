@@ -246,4 +246,14 @@ class Storage
 
         return $fullPath;
     }
+
+    /**
+     * Move an uploaded file to a new location.
+     */
+    public function moveUploadedFile(string $source, string $destination): void
+    {
+        if (!move_uploaded_file($source, $this->getFullPath($destination, true))) {
+            throw new \RuntimeException("Failed to move uploaded file.");
+        }
+    }
 }

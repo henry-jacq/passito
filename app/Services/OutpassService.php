@@ -36,17 +36,19 @@ class OutpassService
     public function createOutpass(array $data): OutpassRequest
     {
         $outpass = new OutpassRequest();
+        $outpassType = OutpassType::from($data['outpass_type']);
+        
         $outpass->setStudent($data['student']);
         $outpass->setFromDate($data['from_date']);
         $outpass->setToDate($data['to_date']);
         $outpass->setFromTime($data['from_time']);
         $outpass->setToTime($data['to_time']);
-        $outpass->setPassType(OutpassType::from($data['outpass_type']));
+        $outpass->setPassType($outpassType);
         $outpass->setStatus(OutpassStatus::PENDING);
         $outpass->setDestination($data['destination']);
-        $outpass->setPurpose($data['purpose']);
+        $outpass->setPurpose($outpassType === OutpassType::HOME ? 'Home' : $data['purpose']);
         $outpass->setCreatedAt(new DateTime());
-        // $outpass->setAttachments($data['attachments']);
+        $outpass->setAttachments($data['attachments']);
 
         return $this->updateOutpass($outpass);
     }

@@ -54,10 +54,24 @@
                     </select>
                 </div>
 
-                <!-- Purpose -->
+                <!-- Reason -->
                 <div id="purposeField" class="hidden">
-                    <label for="purpose" class="block text-gray-700 font-medium">Purpose</label>
-                    <textarea name="purpose" id="purpose" rows="3" required class="mt-1 w-full rounded-md border-gray-300 focus:border-purple-500 focus:ring focus:ring-purple-200 transition" placeholder="Describe the purpose of your outpass"></textarea>
+                    <label for="purpose" class="block text-gray-700 font-medium">Reason</label>
+                    <textarea name="purpose" id="purpose" rows="3" required class="mt-1 w-full rounded-md border-gray-300 focus:border-purple-500 focus:ring focus:ring-purple-200 transition" placeholder="Describe the reason of your outpass"></textarea>
+                </div>
+
+                <!-- Attachments -->
+                <div id="attachmentsField" class="hidden">
+                    <label for="attachments" class="block text-gray-700 font-medium">Attachments</label>
+                    <div class="relative mt-1 w-full rounded-md border border-gray-300 bg-white px-4 py-2 shadow-sm hover:border-purple-500 focus-within:border-purple-500">
+                        <input type="file" name="attachments[]" id="attachments" multiple accept=".jpg,.jpeg,.png,.pdf" class="absolute inset-0 opacity-0 w-full h-full cursor-pointer">
+                        <div class="flex items-center justify-between">
+                            <span id="fileLabel" class="text-gray-500 text-sm truncate">Upload supporting documents (JPG, PNG, PDF)</span>
+                            <button type="button" class="text-purple-600 text-sm font-medium hover:underline">Browse</button>
+                        </div>
+                    </div>
+                    <!-- File Preview -->
+                    <div id="filePreview" class="mt-2 text-sm text-gray-600"></div>
                 </div>
 
                 <!-- Submit Button -->

@@ -5,6 +5,7 @@ namespace App\Controller;
 use Closure;
 use App\Core\View;
 use App\Core\Session;
+use App\Core\Storage;
 use App\Services\AuthService;
 use App\Services\MailService;
 use App\Services\UserService;
@@ -47,6 +48,7 @@ class ApiController
         private readonly Session $session,
         private readonly AuthService $auth,
         private readonly MailService $mail,
+        private readonly Storage $storage,
         private readonly UserService $userService,
         private readonly OutpassService $outpassService,
         private readonly VerifierService $verifierService,

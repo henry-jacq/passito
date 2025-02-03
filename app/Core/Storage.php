@@ -152,11 +152,16 @@ class Storage
      *
      * @return void
      */
-    public function ensureDirectoryExists(string $directory): void
+    public function ensureDirectoryExists(string $directory, int $permissions = 0775): void
     {
         if (!$this->filesystem->directoryExists($directory)) {
-            // You can pass an optional config array if needed.
             $this->filesystem->createDirectory($directory);
+
+            // Get the absolute path (you may need to adjust this depending on your setup)
+            $fullPath = $this->getFullPath($directory);
+
+            // Set permissions after creation
+            chmod($fullPath, $permissions | 02000);
         }
     }
 

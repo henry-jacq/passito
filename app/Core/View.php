@@ -4,6 +4,7 @@ namespace App\Core;
 
 use App\Enum\UserRole;
 use Slim\Routing\RouteParser;
+use App\Core\Storage;
 
 class View
 {
@@ -21,6 +22,7 @@ class View
 
     public function __construct(
         private readonly Config $config,
+        private readonly Storage $storage,
         private readonly Session $session,
         RouteParser $router
     ) {

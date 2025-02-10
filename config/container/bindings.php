@@ -12,11 +12,9 @@ use Slim\Factory\AppFactory;
 use Doctrine\ORM\EntityManager;
 use Doctrine\DBAL\DriverManager;
 use League\Flysystem\Filesystem;
-use PHPMailer\PHPMailer\PHPMailer;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Container\ContainerInterface;
 use Doctrine\ORM\EntityManagerInterface;
-
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use League\Flysystem\Local\LocalFilesystemAdapter;
@@ -63,6 +61,7 @@ return [
 
         return new View(
             $container->get(Config::class),
+            $container->get(Storage::class),
             $container->get(Session::class),
             $routeParser
         );

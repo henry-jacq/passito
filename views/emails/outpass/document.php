@@ -101,7 +101,7 @@
 <body>
 
     <div class="org-header">
-        <img src="<?= getStoragePath("qr_codes/{$outpass->getQrCode()}") ?>" alt="<?= getStoragePath("qr_codes/{$outpass->getQrCode()}") ?>">
+        <img src="<?= $this->storage->getFullPath("qr_codes/{$outpass->getQrCode()}") ?>" alt="<?= $this->storage->getFullPath("qr_codes/{$outpass->getQrCode()}") ?>">
         <div class="text-container">
             <h3 class="org-name"><?= $student->getHostel()->getInstitution()->getName() ?></h3>
             <p class="address-line"><?= $student->getHostel()->getInstitution()->getAddress() ?></p>

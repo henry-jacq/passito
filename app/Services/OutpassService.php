@@ -320,6 +320,18 @@ class OutpassService
     }
 
     /**
+     * Remove the attachments from storage
+     */
+    public function removeAttachments(OutpassRequest $outpass)
+    {
+        $attachments = $outpass->getAttachments();
+
+        foreach ($attachments as $attachment) {
+            $this->storage->removeFile($attachment);
+        }
+    }
+
+    /**
      * Check and expire outpasses that have passed their expiry date
      */
     public function checkAndExpireOutpass(int $batchSize = 20): void
@@ -347,6 +359,12 @@ class OutpassService
                 $outpass->setStatus(OutpassStatus::EXPIRED);
             }
 
+            // Remove the attachments
+            if (!empty($outpass->getAttachments())) {
+                $this->removeAttachments($outpass);
+                $outpass->setAttachments([]);
+            }
+            
             // Remove the document and update the outpass record
             if (!empty($outpass->getDocument())) {
                 $this->removeOutpassDocument($outpass);

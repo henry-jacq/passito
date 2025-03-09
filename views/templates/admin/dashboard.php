@@ -17,12 +17,12 @@
             </div>
             <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition duration-200">
                 <h3 class="text-lg font-semibold text-gray-700">Rejected Requests</h3>
-                <p class="text-3xl text-red-500">20</p>
+                <p class="text-3xl text-red-600">20</p>
                 <p class="text-sm text-gray-500 mt-1">Denied by wardens</p>
             </div>
             <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition duration-200">
                 <h3 class="text-lg font-semibold text-gray-700">Checked-out Students</h3>
-                <p class="text-3xl text-blue-500">85</p>
+                <p class="text-3xl text-blue-600">85</p>
                 <p class="text-sm text-gray-500 mt-1">Currently outside</p>
             </div>
         </div>
@@ -32,7 +32,7 @@
     <section class="mt-6">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
             <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition duration-200">
-                <h3 class="text-lg font-semibold text-gray-700 mb-4">Outpass Trends (Yearly)</h3>
+                <h3 class="text-lg font-semibold text-gray-700 mb-4">Outpass Trends (Monthly)</h3>
                 <canvas id="outpassesChart"></canvas>
             </div>
             <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition duration-200">
@@ -132,13 +132,13 @@
         datasets: [{
                 label: 'Checked In',
                 data: [80, 100, 90, 110, 120, 130, 140],
-                backgroundColor: '#4f46e5',
+                backgroundColor: 'rgba(79, 70, 229, 0.8)',
                 borderRadius: 5
             },
             {
                 label: 'Checked Out',
                 data: [70, 90, 85, 95, 110, 125, 130],
-                backgroundColor: '#4c51bf',
+                backgroundColor: 'rgba(79, 70, 229, 0.6)',
                 borderRadius: 5
             }
         ]

@@ -95,7 +95,7 @@ use App\Enum\OutpassStatus; ?>
                         <div>
                             <label class="block text-base font-medium text-gray-500">Purpose</label>
                             <p class="text-lg text-gray-800 leading-relaxed mt-1">
-                                <?php if (empty($outpass->getPurpose())): echo 'None'; else: ucfirst($outpass->getPurpose()); endif; ?>
+                                <?php if (empty($outpass->getPurpose())): echo 'None'; else: echo(ucfirst($outpass->getPurpose())); endif; ?>
                             </p>
                         </div>
                     </div>

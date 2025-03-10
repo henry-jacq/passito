@@ -31,6 +31,16 @@ To run Passito, ensure you have the following installed:
 - **Apache**: Web server to host the application.
 - **PHP**: Version 8.0 or above.
 
+Install the following dependencies
+```bash
+sudo apt install php php-mysql libapache2-mod-php php-xml php-mbstring php-gd php-mysql composer npm nodejs adminer
+```
+
+Enable Adminer to manage databases
+```bash
+sudo a2enconf adminer
+```
+
 ## Installation
 
 ### Ensure Group Ownership is Correct

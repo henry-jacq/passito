@@ -3,6 +3,7 @@
 // Import the Modal module
 import Modal from './libs/modal';
 import Ajax from './libs/ajax';
+import Toast from './libs/toast';
 
 function isValidEmail(email) {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -189,13 +190,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (fetchHostels.ok) {
                 const hostels = fetchHostels.data;
-                
+
                 if (hostels.status && Array.isArray(hostels.data.hostels)) {
                     hostelOptions = hostels.data.hostels
                         .map(hostel => `<option value="${hostel.id}">${hostel.hostelName}</option>`)
                         .join('');
                 } else {
-                    alert('Failed to fetch hostels.');
+                    const toast = new Toast();                    
+                    toast.create({ message: hostels.message, position: "bottom-right", type: "warning", duration: 4000 });
+                    return;
                 }
             } else {
                 handleError(fetchHostels.status);

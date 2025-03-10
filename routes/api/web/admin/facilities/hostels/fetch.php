@@ -16,9 +16,9 @@ ${basename(__FILE__, '.php')} = function () {
         // Check if there are no hostels
         if (empty($hostels)) {
             return $this->response([
-                'message' => 'No hostels found',
+                'message' => 'Hostels have not been created!',
                 'status' => false,
-            ], 404);
+            ], 200);
         }
 
         return $this->response([

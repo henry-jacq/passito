@@ -12,7 +12,7 @@ export default defineConfig({
       input: {
         // Set the entry points for the application
         style: path.resolve(__dirname, 'resources/css/style.css'),
-        user: path.resolve(__dirname, 'resources/js/user.js'),
+        student: path.resolve(__dirname, 'resources/js/student.js'),
         admin: path.resolve(__dirname, 'resources/js/admin.js'),
         superAdmin: path.resolve(__dirname, 'resources/js/superAdmin.js'),
         auth: path.resolve(__dirname, 'resources/js/auth.js'),

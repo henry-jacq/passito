@@ -87,7 +87,7 @@ function vite_asset($path) {
         return "http://localhost:5173/" . $path;
     } else {
         // Prod mode - point to the built file in the public folder
-        $manifestFile = PUBLIC_PATH . '/build/.vite/manifest.json';
+        $manifestFile = PUBLIC_PATH . DIRECTORY_SEPARATOR . 'build/.vite/manifest.json';
 
         if (!file_exists($manifestFile)) {
             throw new Exception('The Vite manifest file does not exist. Please run `npm run build`.');

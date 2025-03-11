@@ -43,6 +43,8 @@ return [
             $config->get('doctrine.dev_mode')
         );
 
+        $ormConfig->setAutoGenerateProxyClasses(true);
+
         return new EntityManager(
             DriverManager::getConnection($config->get('doctrine.connection'), $ormConfig),
             $ormConfig

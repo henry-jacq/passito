@@ -6,6 +6,7 @@ use Closure;
 use App\Core\View;
 use App\Core\Session;
 use App\Core\Storage;
+use App\Services\AdminService;
 use App\Services\AuthService;
 use App\Services\MailService;
 use App\Services\UserService;
@@ -50,6 +51,7 @@ class ApiController
         private readonly MailService $mail,
         private readonly Storage $storage,
         private readonly UserService $userService,
+        private readonly AdminService $adminService,
         private readonly OutpassService $outpassService,
         private readonly VerifierService $verifierService,
         private readonly FacilityService $facilityService

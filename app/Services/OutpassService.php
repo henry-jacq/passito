@@ -62,6 +62,33 @@ class OutpassService
         return $outpasses;
     }
 
+    public function getApprovedOutpass()
+    {
+        $outpasses = $this->em->getRepository(OutpassRequest::class)->findBy(
+            ['status' => OutpassStatus::APPROVED]
+        );
+
+        return $outpasses;
+    }
+
+    public function getExpiredOutpass()
+    {
+        $outpasses = $this->em->getRepository(OutpassRequest::class)->findBy(
+            ['status' => OutpassStatus::EXPIRED]
+        );
+
+        return $outpasses;
+    }
+
+    public function getRejectedOutpass()
+    {
+        $outpasses = $this->em->getRepository(OutpassRequest::class)->findBy(
+            ['status' => OutpassStatus::REJECTED]
+        );
+
+        return $outpasses;
+    }
+
     public function getRecentStudentOutpass(Student $student, int $limit = 5)
     {
         $outpasses = $this->em->getRepository(OutpassRequest::class)->findBy(

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Core\View;
 use App\Enum\Gender;
+use App\Services\AdminService;
 use App\Services\UserService;
 use App\Services\OutpassService;
 use App\Services\FacilityService;
@@ -17,6 +18,7 @@ class AdminController extends BaseController
         protected readonly View $view,
         private readonly UserService $userService,
         private readonly OutpassService $outpassService,
+        private readonly AdminService $adminService,
         private readonly VerifierService $verifierService,
         private readonly FacilityService $facilityService
     )
@@ -29,9 +31,12 @@ class AdminController extends BaseController
     {
         $this->view->clearCacheIfDev();
         $userData = $request->getAttribute('user');
+        $dashboardData = $this->adminService->getDashboardDetails();
+        
         $args = [
             'title' => 'Dashboard',
             'user' => $userData,
+            'data' => $dashboardData,
             'routeName' => $this->getRouteName($request),
         ];
 

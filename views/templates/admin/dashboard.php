@@ -2,41 +2,41 @@
 <main class="flex-1 p-6 mt-20 overflow-y-auto">
     <!-- Overview Statistics -->
     <section>
-        <h2 class="text-2xl font-semibold text-gray-700 mb-4">Dashboard</h2>
-        <!-- <p class="text-gray-600 text-md mb-8">Monitor outpass statistics, trends, and manage requests with quick actions.</p> -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition duration-200">
+        <h2 class="mb-4 text-2xl font-semibold text-gray-700">Dashboard</h2>
+        <!-- <p class="mb-8 text-gray-600 text-md">Monitor outpass statistics, trends, and manage requests with quick actions.</p> -->
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <div class="p-6 transition duration-200 bg-white rounded-lg shadow hover:shadow-lg">
                 <h3 class="text-lg font-semibold text-gray-700">Total Outpasses</h3>
-                <p class="text-3xl text-indigo-600">450</p>
-                <p class="text-sm text-gray-500 mt-1">All-time approved requests</p>
+                <p class="text-3xl text-indigo-600"><?= $data['approved'] ?></p>
+                <p class="mt-1 text-sm text-gray-500">All-time approved requests</p>
             </div>
-            <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition duration-200">
+            <div class="p-6 transition duration-200 bg-white rounded-lg shadow hover:shadow-lg">
                 <h3 class="text-lg font-semibold text-gray-700">Pending Requests</h3>
-                <p class="text-3xl text-yellow-600">30</p>
-                <p class="text-sm text-gray-500 mt-1">Awaiting approval</p>
+                <p class="text-3xl text-yellow-600"><?= $data['pending'] ?></p>
+                <p class="mt-1 text-sm text-gray-500">Awaiting approval</p>
             </div>
-            <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition duration-200">
+            <div class="p-6 transition duration-200 bg-white rounded-lg shadow hover:shadow-lg">
                 <h3 class="text-lg font-semibold text-gray-700">Rejected Requests</h3>
-                <p class="text-3xl text-red-600">20</p>
-                <p class="text-sm text-gray-500 mt-1">Denied by wardens</p>
+                <p class="text-3xl text-red-600"><?= $data['rejected'] ?></p>
+                <p class="mt-1 text-sm text-gray-500">Denied by wardens</p>
             </div>
-            <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition duration-200">
+            <div class="p-6 transition duration-200 bg-white rounded-lg shadow hover:shadow-lg">
                 <h3 class="text-lg font-semibold text-gray-700">Checked-out Students</h3>
                 <p class="text-3xl text-blue-600">85</p>
-                <p class="text-sm text-gray-500 mt-1">Currently outside</p>
+                <p class="mt-1 text-sm text-gray-500">Currently outside</p>
             </div>
         </div>
     </section>
 
     <!-- Outpass Trends & Insights -->
     <section class="mt-6">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-            <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition duration-200">
-                <h3 class="text-lg font-semibold text-gray-700 mb-4">Outpass Trends (Monthly)</h3>
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-2">
+            <div class="p-6 transition duration-200 bg-white rounded-lg shadow hover:shadow-lg">
+                <h3 class="mb-4 text-lg font-semibold text-gray-700">Outpass Trends (Monthly)</h3>
                 <canvas id="outpassesChart"></canvas>
             </div>
-            <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition duration-200">
-                <h3 class="text-lg font-semibold text-gray-700 mb-4">Verifier (Weekly)</h3>
+            <div class="p-6 transition duration-200 bg-white rounded-lg shadow hover:shadow-lg">
+                <h3 class="mb-4 text-lg font-semibold text-gray-700">Verifier (Weekly)</h3>
                 <canvas id="checkinCheckoutChart"></canvas>
             </div>
         </div>
@@ -44,37 +44,37 @@
 
     <!-- Quick Actions -->
     <section class="mt-6">
-        <h3 class="text-xl font-semibold text-gray-700 mb-3">Quick Actions</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition duration-200">
+        <h3 class="mb-3 text-xl font-semibold text-gray-700">Quick Actions</h3>
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <div class="p-4 transition duration-200 bg-white rounded-lg shadow hover:shadow-lg">
                 <h4 class="font-semibold">Approve All Pending</h4>
-                <p class="text-sm mb-3">Bulk approve all pending requests.</p>
-                <button class="bg-indigo-500 text-white text-sm px-2 py-1 rounded-lg hover:bg-indigo-600 focus:outline-none transition duration-200 flex items-center" aria-expanded="false">
-                    <i class="fas fa-play mr-2"></i>
+                <p class="mb-3 text-sm">Bulk approve all pending requests.</p>
+                <button id="approveAllPending" class="flex items-center px-2 py-1 text-sm text-white transition duration-200 bg-indigo-500 rounded-lg hover:bg-indigo-600 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed" aria-expanded="false">
+                    <i class="mr-2 fas fa-play"></i>
                     <span>Perform</span>
                 </button>
             </div>
-            <div class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition duration-200">
+            <div class="p-4 transition duration-200 bg-white rounded-lg shadow hover:shadow-lg">
                 <h4 class="font-semibold">Notify Students</h4>
-                <p class="text-sm mb-3">Alert students who haven't checked in.</p>
-                <button class="bg-indigo-500 text-white text-sm px-2 py-1 rounded-lg hover:bg-indigo-600 focus:outline-none transition duration-200 flex items-center" aria-expanded="false">
-                    <i class="fas fa-play mr-2"></i>
+                <p class="mb-3 text-sm">Alert students who haven't checked in.</p>
+                <button id="notifyStudents" class="flex items-center px-2 py-1 text-sm text-white transition duration-200 bg-indigo-500 rounded-lg hover:bg-indigo-600 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed" aria-expanded="false">
+                    <i class="mr-2 fas fa-play"></i>
                     <span>Perform</span>
                 </button>
             </div>
-            <div class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition duration-200">
+            <div class="p-4 transition duration-200 bg-white rounded-lg shadow hover:shadow-lg">
                 <h4 class="font-semibold">Bulk Approval</h4>
-                <p class="text-sm mb-3">Quickly approve multiple requests.</p>
-                <button class="bg-indigo-500 text-white text-sm px-2 py-1 rounded-lg hover:bg-indigo-600 focus:outline-none transition duration-200 flex items-center" aria-expanded="false">
-                    <i class="fas fa-play mr-2"></i>
+                <p class="mb-3 text-sm">Quickly approve multiple requests.</p>
+                <button id="bulkApproval" class="flex items-center px-2 py-1 text-sm text-white transition duration-200 bg-indigo-500 rounded-lg hover:bg-indigo-600 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed" aria-expanded="false">
+                    <i class="mr-2 fas fa-play"></i>
                     <span>Perform</span>
                 </button>
             </div>
-            <div class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition duration-200">
+            <div class="p-4 transition duration-200 bg-white rounded-lg shadow hover:shadow-lg">
                 <h4 class="font-semibold">View Flagged Requests</h4>
-                <p class="text-sm mb-3">Review requests that need attention.</p>
-                <button class="bg-indigo-500 text-white text-sm px-2 py-1 rounded-lg hover:bg-indigo-600 focus:outline-none transition duration-200 flex items-center" aria-expanded="false">
-                    <i class="fas fa-play mr-2"></i>
+                <p class="mb-3 text-sm">Review requests that need attention.</p>
+                <button class="flex items-center px-2 py-1 text-sm text-white transition duration-200 bg-indigo-500 rounded-lg hover:bg-indigo-600 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed" aria-expanded="false">
+                    <i class="mr-2 fas fa-play"></i>
                     <span>Perform</span>
                 </button>
             </div>

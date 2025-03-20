@@ -46,11 +46,11 @@ use App\Enum\OutpassStatus;
         <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div>
                 <label class="block text-sm font-medium text-gray-500">From Date & Time</label>
-                <p class="text-base text-gray-900"><?= $outpass->getFromDate()->format('Y-m-d, h:i A') ?></p>
+                <p class="text-base text-gray-900"><?= $outpass->getFromDate()->format('Y-m-d, ') . $outpass->getFromTime()->format('h:i A') ?></p>
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-500">To Date & Time</label>
-                <p class="text-base text-gray-900"><?= $outpass->getToDate()->format('Y-m-d, h:i A') ?></p>
+                <p class="text-base text-gray-900"><?= $outpass->getToDate()->format('Y-m-d, ') . $outpass->getToTime()->format('h:i A') ?></p>
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-500">Pass Type</label>

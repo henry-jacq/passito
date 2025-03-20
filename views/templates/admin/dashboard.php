@@ -47,9 +47,9 @@
         <h3 class="mb-3 text-xl font-semibold text-gray-700">Quick Actions</h3>
         <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
             <div class="p-4 transition duration-200 bg-white rounded-lg shadow hover:shadow-lg">
-                <h4 class="font-semibold">Approve All Pending</h4>
-                <p class="mb-3 text-sm">Bulk approve all pending requests.</p>
-                <button id="approveAllPending" class="flex items-center px-2 py-1 text-sm text-white transition duration-200 bg-indigo-500 rounded-lg hover:bg-indigo-600 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed" aria-expanded="false">
+                <h4 class="font-semibold">Bulk Approval</h4>
+                <p class="mb-3 text-sm">Quickly approve all pending requests.</p>
+                <button id="bulkApproval" class="flex items-center px-2 py-1 text-sm text-white transition duration-200 bg-indigo-500 rounded-lg hover:bg-indigo-600 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed" aria-expanded="false">
                     <i class="mr-2 fas fa-play"></i>
                     <span>Perform</span>
                 </button>
@@ -63,17 +63,17 @@
                 </button>
             </div>
             <div class="p-4 transition duration-200 bg-white rounded-lg shadow hover:shadow-lg">
-                <h4 class="font-semibold">Bulk Approval</h4>
-                <p class="mb-3 text-sm">Quickly approve multiple requests.</p>
-                <button id="bulkApproval" class="flex items-center px-2 py-1 text-sm text-white transition duration-200 bg-indigo-500 rounded-lg hover:bg-indigo-600 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed" aria-expanded="false">
+                <h4 class="font-semibold">Lock Requests</h4>
+                <p class="mb-3 text-sm">Temporarily disables new requests.</p>
+                <button id="lockRequests" class="flex items-center px-2 py-1 text-sm text-white transition duration-200 bg-indigo-500 rounded-lg hover:bg-indigo-600 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed" aria-expanded="false">
                     <i class="mr-2 fas fa-play"></i>
                     <span>Perform</span>
                 </button>
             </div>
             <div class="p-4 transition duration-200 bg-white rounded-lg shadow hover:shadow-lg">
-                <h4 class="font-semibold">View Flagged Requests</h4>
-                <p class="mb-3 text-sm">Review requests that need attention.</p>
-                <button class="flex items-center px-2 py-1 text-sm text-white transition duration-200 bg-indigo-500 rounded-lg hover:bg-indigo-600 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed" aria-expanded="false">
+                <h4 class="font-semibold">Sync Verifiers</h4>
+                <p class="mb-3 text-sm">Refresh verifier devices' data.</p>
+                <button id="syncVerifiers" class="flex items-center px-2 py-1 text-sm text-white transition duration-200 bg-indigo-500 rounded-lg hover:bg-indigo-600 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed" aria-expanded="false">
                     <i class="mr-2 fas fa-play"></i>
                     <span>Perform</span>
                 </button>

@@ -94,6 +94,25 @@ class AdminController extends BaseController
         return parent::render($request, $response, 'admin/outpass_records', $args);
     }
 
+    public function outpassDetails(Request $request, Response $response): Response
+    {
+        $this->view->clearCacheIfDev();
+
+        $userData = $request->getAttribute('user');
+        $outpassId = $request->getAttribute('outpass_id');
+        $outpass = $this->outpassService->getOutpassById($outpassId);
+        
+        $args = [
+            'title' => 'Outpass Details',
+            'user' => $userData,
+            'outpass' => $outpass,
+            'outpass_id' => $outpassId,
+            'routeName' => $this->getRouteName($request),
+        ];
+        
+        return parent::render($request, $response, 'admin/outpass_details', $args);
+    }
+
     public function outpassSettings(Request $request, Response $response): Response
     {
         $this->view->clearCacheIfDev();

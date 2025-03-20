@@ -3,11 +3,11 @@
 use App\Enum\OutpassStatus;
 ?>
 <main class="flex-1 p-6 mt-20 overflow-y-auto">
-    <h2 class="text-2xl font-semibold text-gray-700 mb-4">Outpass Records</h2>
-    <p class="text-gray-700 text-base mb-8">View and manage the records of issued outpasses.</p>
+    <h2 class="mb-4 text-2xl font-semibold text-gray-700">Outpass Records</h2>
+    <p class="mb-8 text-base text-gray-700">View and manage the records of issued outpasses.</p>
 
     <?php if (empty($outpasses)): ?>
-        <div class="bg-indigo-50 border-l-4 space-y-2 rounded-lg border-indigo-400 text-indigo-800 p-6 shadow-md leading-relaxed" role="alert" aria-live="polite">
+        <div class="p-6 space-y-2 leading-relaxed text-indigo-800 border-l-4 border-indigo-400 rounded-lg shadow-md bg-indigo-50" role="alert" aria-live="polite">
             <h3 class="text-lg font-semibold">No Outpass Records Found</h3>
             <p class="text-sm">
                 There are currently no outpass records available to display.
@@ -15,16 +15,16 @@ use App\Enum\OutpassStatus;
         </div>
     <?php else: ?>
         <!-- Search and Filter Section -->
-        <div class="bg-white rounded-lg shadow p-6 mb-8">
+        <div class="p-6 mb-8 bg-white rounded-lg shadow">
             <!-- Row 1: Search Bar with Filter Button -->
             <div class="flex flex-wrap items-center justify-between gap-4">
                 <div class="relative flex-grow">
                     <input
                         type="text"
                         placeholder="Search by name or digital ID"
-                        class="border border-gray-300 rounded-lg p-2 pl-10 w-full text-gray-600 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 transition duration-200"
+                        class="w-full p-2 pl-10 text-gray-600 transition duration-200 border border-gray-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500"
                         aria-label="Search by name or digital ID">
-                    <span class="absolute left-3 top-2 text-gray-500">
+                    <span class="absolute text-gray-500 left-3 top-2">
                         <i class="fas fa-search"></i>
                     </span>
                 </div>
@@ -32,24 +32,24 @@ use App\Enum\OutpassStatus;
                 <!-- Filter Button -->
                 <button
                     id="filter-button"
-                    class="bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-600 focus:outline-none transition duration-200 flex items-center"
+                    class="flex items-center px-4 py-2 text-white transition duration-200 bg-indigo-500 rounded-lg hover:bg-indigo-600 focus:outline-none"
                     aria-expanded="false"
                     aria-controls="filter-area">
-                    <i class="fas fa-filter mr-1"></i>
+                    <i class="mr-1 fas fa-filter"></i>
                     <span>Filter</span>
                 </button>
             </div>
 
             <!-- Collapsible Filter Area -->
-            <div id="filter-area" class="hidden mt-4 transition-all duration-300 ease-in-out">
+            <div id="filter-area" class="hidden mt-4 transition-all duration-300 ease-in-out" data-expanded="">
                 <!-- Filter Section -->
-                <div class="p-4 bg-gray-50 rounded-lg shadow-inner mb-4 border border-gray-200">
+                <div class="p-4 mb-4 border border-gray-200 rounded-lg shadow-inner bg-gray-50">
                     <!-- Outpass Filters Section -->
-                    <h3 class="uppercase font-semibold text-sm text-gray-600 mb-2">Outpass Filters</h3>
-                    <div class="flex flex-wrap gap-6 items-center mb-4">
+                    <h3 class="mb-2 text-sm font-semibold text-gray-600 uppercase">Outpass Filters</h3>
+                    <div class="flex flex-wrap items-center gap-6 mb-4">
                         <!-- Outpass Type Filter -->
                         <select
-                            class="flex-grow border border-gray-300 rounded-lg p-2 text-gray-600 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 transition duration-200"
+                            class="flex-grow p-2 text-gray-600 transition duration-200 border border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500"
                             aria-label="Outpass Type">
                             <option value="">Outpass Type</option>
                             <option value="weekend">Weekend</option>
@@ -60,13 +60,13 @@ use App\Enum\OutpassStatus;
                         <!-- Approval Date Filter -->
                         <input
                             type="date"
-                            class="flex-grow border border-gray-300 rounded-lg p-2 text-gray-600 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 transition duration-200"
+                            class="flex-grow p-2 text-gray-600 transition duration-200 border border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500"
                             placeholder="Approval Date"
                             aria-label="Approval Date">
 
                         <!-- Status Filter -->
                         <select
-                            class="flex-grow border border-gray-300 rounded-lg p-2 text-gray-600 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 transition duration-200"
+                            class="flex-grow p-2 text-gray-600 transition duration-200 border border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500"
                             aria-label="Status">
                             <option value="">Status</option>
                             <option value="approved">Approved</option>
@@ -76,11 +76,11 @@ use App\Enum\OutpassStatus;
                     </div>
 
                     <!-- Additional Filters -->
-                    <h3 class="uppercase font-semibold text-sm text-gray-600 mb-2">Student Filters</h3>
-                    <div class="flex flex-wrap gap-6 items-center mb-4">
+                    <h3 class="mb-2 text-sm font-semibold text-gray-600 uppercase">Student Filters</h3>
+                    <div class="flex flex-wrap items-center gap-6 mb-4">
                         <!-- Year Filter -->
                         <select
-                            class="flex-grow border border-gray-300 rounded-lg p-2 text-gray-600 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 transition duration-200"
+                            class="flex-grow p-2 text-gray-600 transition duration-200 border border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500"
                             aria-label="Year">
                             <option value="">Year</option>
                             <option value="1">1st Year</option>
@@ -91,7 +91,7 @@ use App\Enum\OutpassStatus;
 
                         <!-- Branch Filter -->
                         <select
-                            class="flex-grow border border-gray-300 rounded-lg p-2 text-gray-600 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 transition duration-200"
+                            class="flex-grow p-2 text-gray-600 transition duration-200 border border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500"
                             aria-label="Branch">
                             <option value="">Branch</option>
                             <option value="CSE">CSE</option>
@@ -101,7 +101,7 @@ use App\Enum\OutpassStatus;
 
                         <!-- Institution Filter -->
                         <select
-                            class="flex-grow border border-gray-300 rounded-lg p-2 text-gray-600 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 transition duration-200"
+                            class="flex-grow p-2 text-gray-600 transition duration-200 border border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500"
                             aria-label="Institution">
                             <option value="">Institution</option>
                             <option value="institution1">Institution 1</option>
@@ -110,7 +110,7 @@ use App\Enum\OutpassStatus;
 
                         <!-- Hostel Filter -->
                         <select
-                            class="flex-grow border border-gray-300 rounded-lg p-2 text-gray-600 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 transition duration-200"
+                            class="flex-grow p-2 text-gray-600 transition duration-200 border border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500"
                             aria-label="Hostel No">
                             <option value="">Hostel No.</option>
                             <option value="1">Hostel 1</option>
@@ -120,18 +120,18 @@ use App\Enum\OutpassStatus;
                 </div>
             </div>
         </div>
-        <section class="bg-white shadow-md rounded-lg overflow-hidden">
+        <section class="overflow-hidden bg-white rounded-lg shadow-md">
             <table class="min-w-full table-auto">
                 <thead class="bg-gray-100">
                     <tr>
-                        <th class="px-6 py-3 text-left text-sm font-medium text-gray-700">Student Name</th>
-                        <th class="px-6 py-3 text-left text-sm font-medium text-gray-700">Course</th>
-                        <th class="px-6 py-3 text-left text-sm font-medium text-gray-700">Year</th>
-                        <th class="px-6 py-3 text-left text-sm font-medium text-gray-700">Type</th>
-                        <th class="px-6 py-3 text-left text-sm font-medium text-gray-700">Destination</th>
-                        <th class="px-6 py-3 text-left text-sm font-medium text-gray-700">Status</th>
-                        <th class="px-6 py-3 text-left text-sm font-medium text-gray-700">Date & Duration</th>
-                        <th class="px-6 py-3 text-center text-sm font-medium text-gray-700">Actions</th>
+                        <th class="px-6 py-3 text-sm font-medium text-left text-gray-700">Student Name</th>
+                        <th class="px-6 py-3 text-sm font-medium text-left text-gray-700">Course</th>
+                        <th class="px-6 py-3 text-sm font-medium text-left text-gray-700">Year</th>
+                        <th class="px-6 py-3 text-sm font-medium text-left text-gray-700">Type</th>
+                        <th class="px-6 py-3 text-sm font-medium text-left text-gray-700">Destination</th>
+                        <th class="px-6 py-3 text-sm font-medium text-left text-gray-700">Status</th>
+                        <th class="px-6 py-3 text-sm font-medium text-left text-gray-700">Date & Duration</th>
+                        <th class="px-6 py-3 text-sm font-medium text-center text-gray-700">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
@@ -155,9 +155,13 @@ use App\Enum\OutpassStatus;
                                     <?= $outpass->getFromTime()->format('h:i A') ?> - <?= $outpass->getToTime()->format('h:i A') ?>
                                 </span>
                             </td>
-                            <td class="px-6 py-4 whitespace-normal text-sm text-center font-medium space-x-2">
-                                <button class="text-indigo-600 hover:text-indigo-900 transition duration-200" data-id="<?= $outpass->getId() ?>"><i class="fas fa-eye mr-1"></i>View</button>
-                                <button class="text-red-600 hover:text-red-900 transition duration-200" data-id="<?= $outpass->getId() ?>"><i class="fas fa-trash-alt mr-1"></i>Delete</button>
+                            <td class="px-6 py-4 space-x-2 text-sm font-medium text-center whitespace-normal">
+                                <?php if (!empty($outpass->getId())): ?>
+                                <a class="inline-flex items-center text-indigo-600 transition duration-200 hover:text-indigo-900" href="<?= $this->urlFor('admin.outpass.records.details', ['outpass_id' => $outpass->getId()]) ?>">
+                                    <i class="mr-1 fas fa-eye"></i> View
+                                </a>
+                                <?php endif; ?>
+                                <button class="text-red-600 transition duration-200 hover:text-red-900" data-id="<?= $outpass->getId() ?>"><i class="mr-1 fas fa-trash-alt"></i>Delete</button>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -166,7 +170,7 @@ use App\Enum\OutpassStatus;
 
             <?php if ($records['totalPages'] > 1): ?>
                 <!-- Pagination Section -->
-                <div class="flex items-center justify-between border-t border-gray-200 bg-gray-50 px-4 py-3 sm:px-6">
+                <div class="flex items-center justify-between px-4 py-3 border-t border-gray-200 bg-gray-50 sm:px-6">
                     <div class="flex justify-between sm:hidden">
                         <?php if ($records['currentPage'] > 1): ?>
                             <button
@@ -190,12 +194,12 @@ use App\Enum\OutpassStatus;
                         <div class="flex items-center space-x-2">
                             <?php if ($records['currentPage'] > 1): ?>
                                 <button
-                                    class="px-3 py-1 border rounded-md bg-gray-200 text-sm text-gray-600 hover:bg-gray-300 focus:ring focus:ring-blue-300 focus:outline-none"
+                                    class="px-3 py-1 text-sm text-gray-600 bg-gray-200 border rounded-md hover:bg-gray-300 focus:ring focus:ring-blue-300 focus:outline-none"
                                     onclick="location.href='?page=<?= $records['currentPage'] - 1 ?>'">Previous</button>
                             <?php endif; ?>
                             <?php if ($records['currentPage'] < $records['totalPages']): ?>
                                 <button
-                                    class="px-3 py-1 border rounded-md bg-blue-600 text-sm text-white hover:bg-blue-700 focus:ring focus:ring-blue-300 focus:outline-none"
+                                    class="px-3 py-1 text-sm text-white bg-blue-600 border rounded-md hover:bg-blue-700 focus:ring focus:ring-blue-300 focus:outline-none"
                                     onclick="location.href='?page=<?= $records['currentPage'] + 1 ?>'">Next</button>
                             <?php endif; ?>
                         </div>

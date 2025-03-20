@@ -16,6 +16,7 @@ class AdminService
         private readonly Storage $storage,
         private readonly MailService $mail,
         private readonly OutpassService $outpass,
+        private readonly VerifierService $verifierService,
         private readonly EntityManagerInterface $em
     )
     {
@@ -27,11 +28,13 @@ class AdminService
         $approvedCount = count($this->outpass->getApprovedOutpass());
         $expiredCount = count($this->outpass->getExpiredOutpass());
         $rejectedCount = count($this->outpass->getRejectedOutpass());
+        $checkedOutCount = count($this->verifierService->fetchCheckedOutLogs());
 
         return [
             'pending' => $pendingCount,
             'approved' => $approvedCount + $expiredCount,
-            'rejected' => $rejectedCount
+            'rejected' => $rejectedCount,
+            'checkedOut' => $checkedOutCount
         ];
     }
 

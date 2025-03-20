@@ -22,7 +22,7 @@
             </div>
             <div class="p-6 transition duration-200 bg-white rounded-lg shadow hover:shadow-lg">
                 <h3 class="text-lg font-semibold text-gray-700">Checked-out Students</h3>
-                <p class="text-3xl text-blue-600">85</p>
+                <p class="text-3xl text-blue-600"><?= $data['checkedOut'] ?></p>
                 <p class="mt-1 text-sm text-gray-500">Currently outside</p>
             </div>
         </div>

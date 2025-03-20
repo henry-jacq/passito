@@ -239,4 +239,12 @@ class VerifierService
     {
         return $this->em->getRepository(VerifierLog::class)->findAll();
     }
+
+    /**
+     * Fetch checked-out logs
+     */
+    public function fetchCheckedOutLogs(): array
+    {
+        return $this->em->getRepository(VerifierLog::class)->findBy(['inTime' => NULL]);
+    }
 }

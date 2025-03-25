@@ -4,15 +4,21 @@
 
 ## Table of Contents
 
-- [Features](#features)
-- [Dependencies](#dependencies)
-- [Installation](#installation)
-- [Docker Setup](#docker-setup)
-- [Configuration](#configuration)
-- [Usage](#usage)
-- [Development](#development)
-- [Contributing](#contributing)
-- [License](#license)
+- [Passito](#passito)
+  - [Table of Contents](#table-of-contents)
+  - [Features](#features)
+  - [Dependencies](#dependencies)
+  - [Installation](#installation)
+    - [Ensure Group Ownership is Correct](#ensure-group-ownership-is-correct)
+    - [Set Group-Writable Permissions](#set-group-writable-permissions)
+    - [Set the SGID Bit on the Directory](#set-the-sgid-bit-on-the-directory)
+    - [Verify Permissions](#verify-permissions)
+    - [Setup Passito](#setup-passito)
+  - [Docker Setup](#docker-setup)
+  - [Usage](#usage)
+  - [Development](#development)
+  - [Contributing](#contributing)
+  - [License](#license)
 
 ## Features
 
@@ -114,12 +120,17 @@ Follow these steps to set up Passito on your local machine:
    - Create a new MySQL database for Passito.
    - Update your `.env` file with the database connection details.
 
-6. **Run Migrations** (if applicable):
+6. **Run Migrations**:
    ```bash
    php passito.php migrations:migrate
    ```
 
-7. **Setup Crontab for Sending Email**:
+7. **Run Seeders**:
+   ```bash
+   php passito.php app:seed
+   ```
+   
+8. **Setup Crontab for Sending Email**:
    - Open crontab and add the following line to send emails:
    - To open crontab, run:
      ```bash
@@ -131,7 +142,7 @@ Follow these steps to set up Passito on your local machine:
       * * * * * /usr/bin/php /path/to/passito/passito.php app:remove-expired-outpass
       ```
 
-8. **Start the Development Server**:
+9. **Start the Development Server**:
    - Make sure Apache is running and configured to serve from the `public` directory.
    - Alternatively, you can use Vite for the front-end development:
      ```bash

@@ -39,9 +39,9 @@ use App\Enum\UserRole; ?>
                                 <i class="fas fa-clock"></i>
                                 <span>Pending Requests</span>
                             </div>
-                            <?php if (count($pendingOutpasses) > 0): ?>
+                            <?php if ($pendingCount > 0): ?>
                                 <div class="flex items-center justify-center w-5 h-5 text-xs font-medium text-indigo-600 bg-indigo-200 rounded-md">
-                                    <?php echo (count($pendingOutpasses) > 9) ? '9+' : count($pendingOutpasses); ?>
+                                    <?php echo ($pendingCount > 9) ? '9+' : $pendingCount; ?>
                                 </div>
                             <?php endif; ?>
                         </div>

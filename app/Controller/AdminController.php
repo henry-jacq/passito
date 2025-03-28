@@ -23,8 +23,8 @@ class AdminController extends BaseController
         private readonly FacilityService $facilityService
     )
     {
-        $pendingOutpasses = $this->outpassService->getPendingOutpass();
-        $this->view->addGlobals('pendingOutpasses', $pendingOutpasses);
+        $pendingCount = $this->outpassService->getPendingOutpass(paginate: false);
+        $this->view->addGlobals('pendingCount', $pendingCount);
     }
     
     public function dashboard(Request $request, Response $response): Response
@@ -49,12 +49,26 @@ class AdminController extends BaseController
         $this->view->clearCacheIfDev();
 
         $userData = $request->getAttribute('user');
-        $outpasses = $this->view->getGlobals()['pendingOutpasses'];
+        $page = max(1, (int) ($request->getQueryParams()['page'] ?? 1));
+        $limit = 10;
+
+        // Fetch the pagination data
+        $paginationData = $this->outpassService->getPendingOutpass($page, $limit);
+
+        // Redirect to the last page if the requested page exceeds available pages
+        if ($paginationData['totalPages'] > 1 && $page > $paginationData['totalPages']) {
+            return $response->withHeader('Location', '?page=' . $paginationData['totalPages'])->withStatus(302);
+        }
 
         $args = [
             'title' => 'Pending Requests',
             'user' => $userData,
-            'outpasses' => $outpasses,
+            'outpasses' => $paginationData['data'],
+            'records' => [
+                'currentPage' => $paginationData['currentPage'],
+                'totalPages' => $paginationData['totalPages'],
+                'totalRecords' => $paginationData['total'],
+            ],
             'routeName' => $this->getRouteName($request),
         ];
 

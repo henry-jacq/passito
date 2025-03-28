@@ -24,11 +24,11 @@ class AdminService
 
     public function getDashboardDetails(): array
     {
-        $pendingCount = count($this->outpass->getPendingOutpass());
-        $approvedCount = count($this->outpass->getApprovedOutpass());
         $expiredCount = count($this->outpass->getExpiredOutpass());
+        $approvedCount = count($this->outpass->getApprovedOutpass());
         $rejectedCount = count($this->outpass->getRejectedOutpass());
         $checkedOutCount = count($this->verifierService->fetchCheckedOutLogs());
+        $pendingCount = count($this->outpass->getPendingOutpass(paginate: false));
 
         return [
             'pending' => $pendingCount,

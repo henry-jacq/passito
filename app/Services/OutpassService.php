@@ -53,13 +53,38 @@ class OutpassService
         return $this->updateOutpass($outpass);
     }
 
-    public function getPendingOutpass()
+    public function getPendingOutpass(int $page = 1, int $limit = 10, bool $paginate = true)
     {
-        $outpasses = $this->em->getRepository(OutpassRequest::class)->findBy(
-            ['status' => OutpassStatus::PENDING]
-        );
+        if (!$paginate) {
+            return $this->em->getRepository(OutpassRequest::class)->findBy(
+                ['status' => OutpassStatus::PENDING]
+            );
+        }
 
-        return $outpasses;
+        $offset = ($page - 1) * $limit;
+
+        // Convert OutpassStatus enum to scalar values (e.g., string or integer)
+        $statuses = [
+            OutpassStatus::PENDING->value
+        ];
+
+        $queryBuilder = $this->em->createQueryBuilder();
+        $queryBuilder->select('o')
+            ->from(OutpassRequest::class, 'o')
+            ->where($queryBuilder->expr()->in('o.status', $statuses))
+            ->orderBy('o.createdAt', 'DESC')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit);
+
+        $query = $queryBuilder->getQuery();
+        $paginator = new Paginator($query, true);
+
+        return [
+            'data' => iterator_to_array($paginator),
+            'total' => count($paginator),
+            'currentPage' => $page,
+            'totalPages' => ceil(count($paginator) / $limit),
+        ];
     }
 
     public function getApprovedOutpass()

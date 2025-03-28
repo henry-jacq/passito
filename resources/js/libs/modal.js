@@ -96,11 +96,8 @@ const Modal = (function () {
             }
         });
 
-        // Focus on the first focusable element
-        const firstFocusable = modalPanel.querySelector(
-            'a[href], button, textarea, input, select, [tabindex]:not([tabindex="-1"])'
-        );
-        if (firstFocusable) firstFocusable.focus();
+        modalPanel.setAttribute('tabindex', '-1'); // Make it focusable
+        modalPanel.focus();
     }
 
     return { open, close };

@@ -1,8 +1,9 @@
 // superAdmin.js
 
 // Import the Modal module
-import Modal from './libs/modal';
 import Ajax from './libs/ajax';
+import Modal from './libs/modal';
+import Toast from './libs/toast';
 
 function isValidEmail(email) {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -572,6 +573,73 @@ document.addEventListener('DOMContentLoaded', () => {
                 classes: 'custom-modal-class',
                 closeOnBackdropClick: false,
             });
+        });
+    });
+
+    // Perform bulk approval
+    const performBulkApproval = document.getElementById('bulkApproval');
+    performBulkApproval.addEventListener('click', (event) => {
+        Modal.open({
+            content: `
+        <div class="space-y-4">
+            <h3 class="text-xl font-bold text-gray-800 border-b border-gray-200 pb-3">
+                <i class="fas fa-check-circle mr-2 text-green-500"></i> Bulk Approval
+            </h3>
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    You are about to approve multiple pending outpass requests. Once approved, students will be able to check out as per the outpass details.
+                </p>
+                <p class="text-gray-700">
+                    This action cannot be undone. Ensure you have verified the requests before proceeding.
+                </p>
+            </div>
+        </div>
+        `,
+            actions: [
+                {
+                    label: 'Approve Requests',
+                    class: `inline-flex justify-center rounded-lg bg-indigo-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-indigo-500 transition duration-200`,
+                    onClick: async (btn) => {
+                        // Disable button and change text
+                        btn.disabled = true;
+                        btn.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i> Performing...`;
+
+                        // Close modal before initiating request
+                        Modal.close();
+
+                        try {
+                            const response = await Ajax.post(`/api/web/admin/actions/bulk`, {});
+
+                            if (response.ok) {
+                                const data = response.data;
+                                if (data.status) {
+                                    const toast = new Toast();
+                                    toast.create({ message: data.message, position: "bottom-right", type: "success", duration: 4000 });
+                                    return;
+                                } else {
+                                    alert(data.message);
+                                }
+                            } else {
+                                handleError(response.status);
+                            }
+                        } catch (error) {
+                            console.error(error);
+                        } finally {
+                            // Re-enable the button if needed (in case of error)
+                            btn.disabled = false;
+                            btn.innerHTML = 'Approve Requests';
+                        }
+                    },
+                },
+                {
+                    label: 'Cancel',
+                    class: `inline-flex justify-center rounded-lg bg-gray-100 px-6 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200`,
+                    onClick: Modal.close,
+                },
+            ],
+            size: 'sm:max-w-xl',
+            classes: 'custom-modal-class',
+            closeOnBackdropClick: false,
         });
     });
 });

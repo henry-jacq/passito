@@ -8,6 +8,7 @@ use App\Enum\OutpassStatus;
 use App\Entity\OutpassRequest;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 
 class AdminService
 {
@@ -40,9 +41,15 @@ class AdminService
 
     public function approveAllPending(User $approvedBy)
     {
-        $pendingPass = $this->outpass->getPendingOutpass();
-        foreach ($pendingPass as $pending) {
-            $this->approvePending($pending, $approvedBy);
+        $pendingPass = $this->outpass->getPendingOutpass(paginate: false);
+        
+        try {
+            foreach ($pendingPass as $pending) {
+                $this->approvePending($pending, $approvedBy);
+            }
+            return true;
+        } catch(Exception $e) {
+            return false;
         }
     }
 

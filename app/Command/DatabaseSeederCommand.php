@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Seeders\AppSettingsSeeder;
+use App\Seeders\OutpassDataSeeder;
 use App\Seeders\OutpassRulesSeeder;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -19,6 +20,7 @@ class DatabaseSeederCommand extends Command
     private array $seeders = [
         'app_settings' => AppSettingsSeeder::class,
         'outpass_rules' => OutpassRulesSeeder::class,
+        'outpass_data' => OutpassDataSeeder::class,
     ];
 
     public function __construct(

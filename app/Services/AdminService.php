@@ -98,4 +98,41 @@ class AdminService
 
         return $outpass;
     }
+
+    public function rejectPending(OutpassRequest $outpass, $approvedBy, $reason=null): OutpassRequest|bool
+    {
+        $outpass->setStatus(OutpassStatus::REJECTED);
+        $outpass->setApprovedTime($time = new \DateTime());
+        $outpass->setApprovedBy($approvedBy);
+        $outpass->setAttachments(null);
+
+        if (empty($reason)) {
+            $outpass->setRemarks(null);
+        } else {
+            $reason = htmlspecialchars($reason, ENT_QUOTES, 'UTF-8');
+            $outpass->setRemarks($reason);
+        }
+
+        $rejected = $this->view->renderEmail('outpass/rejected', [
+            'studentName' => $outpass->getStudent()->getUser()->getName(),
+            'outpass' => $outpass,
+        ]);
+
+        $userEmail = $outpass->getStudent()->getUser()->getEmail();
+        $subject = "Your Outpass Request #{$outpass->getId()} Has Been Rejected";
+
+        // Update outpass status
+        $outpass = $this->outpass->updateOutpass($outpass);
+        $queue = $this->mail->queueEmail(
+            $subject,
+            $rejected,
+            $userEmail
+        );
+
+        if (!$queue) {
+            return false;
+        }
+
+        return $outpass;
+    }
 }

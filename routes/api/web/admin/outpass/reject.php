@@ -8,34 +8,14 @@ ${basename(__FILE__, '.php')} = function () {
     if ($this->isAuthenticated() && $this->paramsExists(['id'])) {
 
         if (UserRole::isAdministrator($this->getRole())) {
-            $reason = $this->data['reason'] ?? null;
-            $outpass = $this->outpassService->getOutpass($this->data['id']);
+            $outpass = $this->outpassService->getOutpassById($this->data['id']);
 
             if ($outpass instanceof OutpassRequest) {
-                $outpass->setStatus(OutpassStatus::REJECTED);
-                $outpass->setApprovedBy($this->getAttribute('user'));
-                $outpass->setApprovedTime(new DateTime());
-                $outpass->setAttachments(null);
-                if (empty($reason)) {
-                    $outpass->setRemarks(null);
-                } else {
-                    $reason = htmlspecialchars($reason, ENT_QUOTES, 'UTF-8');
-                    $outpass->setRemarks($reason);
-                }
+                $reason = $this->data['reason'] ?? null;
+                $approvedBy = $this->getAttribute('user');
+                $result = $this->adminService->rejectPending($outpass, $approvedBy, $reason);
 
-                $rejected = $this->view->renderEmail('outpass/rejected', [
-                    'studentName' => $outpass->getStudent()->getUser()->getName(),
-                    'outpass' => $outpass,
-                ]);
-
-                $userEmail = $outpass->getStudent()->getUser()->getEmail();
-                $subject = "Your Outpass Request #{$outpass->getId()} Has Been Rejected";
-
-                // Update outpass status
-                $result = $this->outpassService->updateOutpass($outpass);
-                $queue = $this->mail->queueEmail($subject, $rejected, $userEmail, null);
-
-                if ($result instanceof OutpassRequest && $queue) {
+                if ($result instanceof OutpassRequest) {
                     return $this->response([
                         'message' => 'Outpass Rejected',
                         'status' => true

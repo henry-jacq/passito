@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Core\View;
+use App\Core\Config;
 use App\Services\AuthService;
 use App\Controller\BaseController;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -12,6 +13,7 @@ class AuthController extends BaseController
 {
     public function __construct(
         protected readonly AuthService $auth,
+        protected readonly Config $config,
         protected readonly View $view
     )
     {
@@ -20,7 +22,8 @@ class AuthController extends BaseController
     public function login(Request $request, Response $response): Response
     {
         $args = [
-            'title' => 'Login'
+            'title' => 'Login',
+            'brandLogo' => $this->config->get('app.logo')
         ];
         return parent::render($request, $response, 'auth/login', $args);
     }

@@ -3,9 +3,9 @@
 namespace App\Controller;
 
 use App\Core\View;
-use App\Enum\Gender;
-use App\Services\AdminService;
+use App\Core\Config;
 use App\Services\UserService;
+use App\Services\AdminService;
 use App\Services\OutpassService;
 use App\Services\FacilityService;
 use App\Services\VerifierService;
@@ -16,6 +16,7 @@ class AdminController extends BaseController
 {
     public function __construct(
         protected readonly View $view,
+        protected readonly Config $config,
         private readonly UserService $userService,
         private readonly OutpassService $outpassService,
         private readonly AdminService $adminService,
@@ -25,6 +26,7 @@ class AdminController extends BaseController
     {
         $pendingCount = $this->outpassService->getPendingOutpass(paginate: false);
         $this->view->addGlobals('pendingCount', $pendingCount);
+        $this->view->addGlobals('brandLogo', $this->config->get('app.logo'));
     }
     
     public function dashboard(Request $request, Response $response): Response

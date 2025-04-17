@@ -18,6 +18,7 @@ $appEnv = $_ENV['APP_ENV'] ?? AppEnvironment::Production->value;
 return [
     'app' => [
         'name' => $_ENV['APP_NAME'] ?? 'Passito',
+        'logo' => $_ENV['BRAND_LOGO'],
         'desc' => $_ENV['APP_DESC'] ?? '',
         'host' => $_ENV['APP_URL'] ?? 'http://passito.local',
         'env' => $appEnv,

@@ -20,30 +20,30 @@
             <div class="mb-4">
                 <label for="email_address" class="block text-sm font-medium text-gray-700">Email Address</label>
                 <input type="email" id="email_address" name="email_address" required
-                    class="w-full px-4 py-2 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 ease-in-out"
+                    class="w-full px-4 py-2 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 transition-all duration-200 ease-in-out"
                     placeholder="Enter your email">
             </div>
 
             <div class="mb-6">
                 <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
                 <input type="password" id="password" name="password" required
-                    class="w-full px-4 py-2 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 ease-in-out"
+                    class="w-full px-4 py-2 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 transition-all duration-200 ease-in-out"
                     placeholder="Enter your password">
             </div>
 
             <button id="login_button" type="submit"
-                class="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                class="w-full bg-blue-800 text-white py-2 rounded-md hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 ease-in-out">
                 <span id="login_text">Login</span>
             </button>
         </form>
 
         <!-- Additional Links -->
         <div class="mt-4 text-center">
-            <a href="/forgot-password" class="text-sm text-indigo-600 hover:text-indigo-800 underline">Forgot password?</a>
+            <a href="/forgot-password" class="text-sm text-blue-600 hover:text-blue-800 underline">Forgot password?</a>
         </div>
         <div class="mt-6 text-center">
             <p class="text-sm text-gray-600">Don't have an account? <a href="/signup"
-                    class="text-indigo-600 hover:text-indigo-800 underline">Sign up</a></p>
+                    class="text-blue-600 hover:text-blue-800 underline">Sign up</a></p>
         </div>
     </div>
 </div>

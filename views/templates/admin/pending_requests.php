@@ -4,7 +4,7 @@
     <p class="text-gray-600 text-md mb-8">Manage pending requests by approving, rejecting, or wiping them out.</p>
 
     <?php if (empty($outpasses)): ?>
-        <div class="bg-indigo-50 border-l-4 space-y-2 rounded-lg border-indigo-400 text-indigo-800 p-6 shadow-md leading-relaxed" role="alert" aria-live="polite">
+        <div class="bg-blue-200/60 border-l-4 space-y-2 rounded-lg border-blue-800/80 text-blue-800 p-6 shadow-md leading-relaxed" role="alert" aria-live="polite">
             <h3 class="text-lg font-semibold">No Pending Outpasses Found</h3>
             <p class="text-sm">
                 There are currently no pending outpass requests awaiting approval.

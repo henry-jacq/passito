@@ -6,14 +6,14 @@
 
     <!-- If no wardens showcase a info -->
     <?php if (empty($wardens)): ?>
-    <div class="flex items-center justify-between gap-4 bg-indigo-50 border-l-4 rounded-lg border-indigo-400 text-indigo-800 p-6 shadow-md leading-relaxed" role="alert">
+    <div class="flex items-center justify-between gap-4 bg-blue-200/60 border-l-4 rounded-lg border-blue-800/80 text-blue-800 p-6 shadow-md leading-relaxed" role="alert">
         <div>
             <h3 class="text-lg font-semibold">No Wardens Found</h3>
             <p class="text-sm mt-1">
                 It seems there are no wardens assigned to any hostel. Please add wardens to manage hostels effectively.
             </p>
         </div>
-        <button id="add-warden-modal" class="inline-flex items-center justify-center rounded-lg bg-indigo-400 px-2 py-2 text-sm font-medium text-white shadow hover:bg-indigo-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+        <button id="add-warden-modal" class="inline-flex items-center justify-center rounded-lg bg-blue-500 px-2 py-2 text-sm font-medium text-white shadow hover:bg-blue-600 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
             </svg>

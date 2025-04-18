@@ -32,7 +32,7 @@ use App\Enum\OutpassStatus;
                 <!-- Filter Button -->
                 <button
                     id="filter-button"
-                    class="flex items-center px-4 py-2 text-white transition duration-200 bg-indigo-500 rounded-lg hover:bg-indigo-600 focus:outline-none"
+                    class="flex items-center px-4 py-2 text-white transition duration-200 bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none"
                     aria-expanded="false"
                     aria-controls="filter-area">
                     <i class="mr-1 fas fa-filter"></i>

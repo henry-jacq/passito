@@ -9,7 +9,7 @@
                 <h3 class="text-lg font-bold text-gray-800">Institutions</h3>
                 <p class="text-sm text-gray-600">All available institutions are listed below.</p>
             </div>
-            <button class="inline-flex items-center justify-center px-5 py-2 text-sm font-medium text-white transition duration-200 bg-indigo-600 rounded-lg shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 add-institution-modal">
+            <button class="inline-flex items-center justify-center px-5 py-2 text-sm font-medium text-white transition duration-200 bg-blue-600 rounded-lg shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 add-institution-modal">
                 <i class="mr-2 fas fa-plus"></i> Create Institution
             </button>
         </div>
@@ -60,7 +60,7 @@
                 <h3 class="text-lg font-bold text-gray-800">Hostels</h3>
                 <p class="text-sm text-gray-600">Manage all hostels effectively.</p>
             </div>
-            <button class="inline-flex items-center justify-center px-5 py-2 text-sm font-medium text-white transition duration-200 bg-indigo-600 rounded-lg shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed add-hostel-modal" <?php if(empty($institutions)): echo("disabled"); endif;?> >
+            <button class="inline-flex items-center justify-center px-5 py-2 text-sm font-medium text-white transition duration-200 bg-blue-600 rounded-lg shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed add-hostel-modal" <?php if(empty($institutions)): echo("disabled"); endif;?> >
                 <i class="mr-2 fas fa-plus"></i> Create Hostel
             </button>
         </div>

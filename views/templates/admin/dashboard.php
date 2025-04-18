@@ -7,22 +7,22 @@
         <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
             <div class="p-6 transition duration-200 bg-white rounded-lg shadow hover:shadow-lg">
                 <h3 class="text-lg font-semibold text-gray-700">Total Outpasses</h3>
-                <p class="text-3xl text-indigo-600"><?= $data['approved'] ?></p>
+                <p class="text-3xl text-blue-800"><?= $data['approved'] ?></p>
                 <p class="mt-1 text-sm text-gray-500">All-time approved requests</p>
             </div>
             <div class="p-6 transition duration-200 bg-white rounded-lg shadow hover:shadow-lg">
                 <h3 class="text-lg font-semibold text-gray-700">Pending Requests</h3>
-                <p class="text-3xl text-yellow-600"><?= $data['pending'] ?></p>
+                <p class="text-3xl text-yellow-800"><?= $data['pending'] ?></p>
                 <p class="mt-1 text-sm text-gray-500">Awaiting approval</p>
             </div>
             <div class="p-6 transition duration-200 bg-white rounded-lg shadow hover:shadow-lg">
                 <h3 class="text-lg font-semibold text-gray-700">Rejected Requests</h3>
-                <p class="text-3xl text-red-600"><?= $data['rejected'] ?></p>
+                <p class="text-3xl text-red-800"><?= $data['rejected'] ?></p>
                 <p class="mt-1 text-sm text-gray-500">Denied by wardens</p>
             </div>
             <div class="p-6 transition duration-200 bg-white rounded-lg shadow hover:shadow-lg">
                 <h3 class="text-lg font-semibold text-gray-700">Checked-out Students</h3>
-                <p class="text-3xl text-blue-600"><?= $data['checkedOut'] ?></p>
+                <p class="text-3xl text-green-800"><?= $data['checkedOut'] ?></p>
                 <p class="mt-1 text-sm text-gray-500">Currently outside</p>
             </div>
         </div>
@@ -49,7 +49,7 @@
             <div class="p-4 transition duration-200 bg-white rounded-lg shadow hover:shadow-lg">
                 <h4 class="font-semibold">Bulk Approval</h4>
                 <p class="mb-3 text-sm">Quickly approve all pending requests.</p>
-                <button id="bulkApproval" class="flex items-center px-2 py-1 text-sm text-white transition duration-200 bg-indigo-500 rounded-lg hover:bg-indigo-600 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed" aria-expanded="false">
+                <button id="bulkApproval" class="flex items-center px-2 py-1 text-sm text-white transition duration-200 bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed" aria-expanded="false">
                     <i class="mr-2 fas fa-play"></i>
                     <span>Perform</span>
                 </button>
@@ -57,7 +57,7 @@
             <div class="p-4 transition duration-200 bg-white rounded-lg shadow hover:shadow-lg">
                 <h4 class="font-semibold">Notify Students</h4>
                 <p class="mb-3 text-sm">Alert students who haven't checked in.</p>
-                <button id="notifyStudents" class="flex items-center px-2 py-1 text-sm text-white transition duration-200 bg-indigo-500 rounded-lg hover:bg-indigo-600 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed" aria-expanded="false">
+                <button id="notifyStudents" class="flex items-center px-2 py-1 text-sm text-white transition duration-200 bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed" aria-expanded="false">
                     <i class="mr-2 fas fa-play"></i>
                     <span>Perform</span>
                 </button>
@@ -65,7 +65,7 @@
             <div class="p-4 transition duration-200 bg-white rounded-lg shadow hover:shadow-lg">
                 <h4 class="font-semibold">Lock Requests</h4>
                 <p class="mb-3 text-sm">Temporarily disables new requests.</p>
-                <button id="lockRequests" class="flex items-center px-2 py-1 text-sm text-white transition duration-200 bg-indigo-500 rounded-lg hover:bg-indigo-600 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed" aria-expanded="false">
+                <button id="lockRequests" class="flex items-center px-2 py-1 text-sm text-white transition duration-200 bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed" aria-expanded="false">
                     <i class="mr-2 fas fa-play"></i>
                     <span>Perform</span>
                 </button>
@@ -73,7 +73,7 @@
             <div class="p-4 transition duration-200 bg-white rounded-lg shadow hover:shadow-lg">
                 <h4 class="font-semibold">Sync Verifiers</h4>
                 <p class="mb-3 text-sm">Refresh verifier devices' data.</p>
-                <button id="syncVerifiers" class="flex items-center px-2 py-1 text-sm text-white transition duration-200 bg-indigo-500 rounded-lg hover:bg-indigo-600 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed" aria-expanded="false">
+                <button id="syncVerifiers" class="flex items-center px-2 py-1 text-sm text-white transition duration-200 bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed" aria-expanded="false">
                     <i class="mr-2 fas fa-play"></i>
                     <span>Perform</span>
                 </button>
@@ -99,8 +99,8 @@
         datasets: [{
             label: 'Outpasses Issued',
             data: [30, 50, 80, 60, 90, 120, 100, 130, 110, 140, 150, 160],
-            borderColor: '#4f46e5',
-            backgroundColor: 'rgba(79, 70, 229, 0.2)',
+            borderColor: 'rgb(39, 91, 175)', // Tailwind blue-500
+            backgroundColor: 'rgba(65, 126, 225, 0.3)', // Tailwind blue-500 @ 20%
             fill: true,
             tension: 0.3
         }]
@@ -132,13 +132,13 @@
         datasets: [{
                 label: 'Checked In',
                 data: [80, 100, 90, 110, 120, 130, 140],
-                backgroundColor: 'rgba(79, 70, 229, 0.8)',
+                backgroundColor: 'rgba(37, 99, 235, 0.7)', // Tailwind blue-500 @ 80%
                 borderRadius: 5
             },
             {
                 label: 'Checked Out',
                 data: [70, 90, 85, 95, 110, 125, 130],
-                backgroundColor: 'rgba(79, 70, 229, 0.6)',
+                backgroundColor: 'rgba(29, 78, 216, 0.7)', // Tailwind blue-500 @ 60%
                 borderRadius: 5
             }
         ]

@@ -46,12 +46,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="space-y-5">
                         <div class="space-y-2">
                             <label for="verifier-name" class="block text-md font-semibold text-gray-700">Verifier Name</label>
-                            <input type="text" id="verifier-name" name="verifier-name" class="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 text-md transition duration-200" placeholder="Enter Name" required>
+                            <input type="text" id="verifier-name" name="verifier-name" class="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md transition duration-200" placeholder="Enter Name" required>
                         </div>
                         <div class="space-y-2">
 
                             <label for="device-location" class="block text-md font-semibold text-gray-700">Device Location</label>
-                            <input type="text" id="device-location" name="device-location" class="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 text-md transition duration-200" placeholder="Enter Location" required>
+                            <input type="text" id="device-location" name="device-location" class="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md transition duration-200" placeholder="Enter Location" required>
                         </div>
 
                         <p class="text-sm text-gray-500">Provide accurate details for the new verifier device to ensure proper setup.</p>
@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 actions: [
                     {
                         label: 'Add Device',
-                        class: `inline-flex justify-center rounded-lg bg-indigo-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-indigo-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50`,
+                        class: `inline-flex justify-center rounded-lg bg-blue-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-blue-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50`,
                         onClick: async () => {
                             const verifierName = document.getElementById('verifier-name').value;
                             const deviceLocation = document.getElementById('device-location').value;
@@ -117,17 +117,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="space-y-5">
                         <div class="space-y-2">
                             <label for="warden-name" class="block text-md font-semibold text-gray-700">Warden Name</label>
-                            <input type="text" id="warden-name" name="warden-name" class="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 text-md transition duration-200" placeholder="Enter Name" required>
+                            <input type="text" id="warden-name" name="warden-name" class="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md transition duration-200" placeholder="Enter Name" required>
                         </div>
 
                         <div class="space-y-2">
                             <label for="warden-email" class="block text-md font-semibold text-gray-700">Warden Email</label>
-                            <input type="email" id="warden-email" name="warden-email" class="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 text-md transition duration-200" placeholder="Enter Email" required>
+                            <input type="email" id="warden-email" name="warden-email" class="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md transition duration-200" placeholder="Enter Email" required>
                         </div>
 
                         <div class="space-y-2">
                             <label for="warden-contact" class="block text-md font-semibold text-gray-700">Contact Number</label>
-                            <input type="text" id="warden-contact" name="warden-contact" class="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 text-md transition duration-200" placeholder="Enter Contact No" required>
+                            <input type="text" id="warden-contact" name="warden-contact" class="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md transition duration-200" placeholder="Enter Contact No" required>
                         </div>
                     </div>
                 </div>
@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 actions: [
                     {
                         label: 'Add Warden',
-                        class: `inline-flex justify-center rounded-lg bg-indigo-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-indigo-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50`,
+                        class: `inline-flex justify-center rounded-lg bg-blue-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-blue-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50`,
                         onClick: async (event) => {
                             const wardenName = document.getElementById('warden-name').value;
                             const wardenEmail = document.getElementById('warden-email').value;
@@ -261,15 +261,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="space-y-5">
                         <div class="space-y-2">
                             <label for="institution-name" class="block text-md font-semibold text-gray-700">Institution Name</label>
-                            <input type="text" id="institution-name" name="institution-name" class="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 text-md transition duration-200" placeholder="Enter Name" required>
+                            <input type="text" id="institution-name" name="institution-name" class="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md transition duration-200" placeholder="Enter Name" required>
                         </div>
                         <div class="space-y-2">
                             <label for="institution-address" class="block text-md font-semibold text-gray-700">Institution Address</label>
-                            <input type="text" id="institution-address" name="institution-address" class="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 text-md transition duration-200" placeholder="Enter Address" required>
+                            <input type="text" id="institution-address" name="institution-address" class="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md transition duration-200" placeholder="Enter Address" required>
                         </div>
                         <div class="space-y-2">
                             <label for="institution-type" class="block text-md font-semibold text-gray-700">Institution Type</label>
-                            <select id="institution-type" name="institution-type" class="mt-1 w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 text-md transition duration-200" required>
+                            <select id="institution-type" name="institution-type" class="mt-1 w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md transition duration-200" required>
                                 <option value="college">College</option>
                                 <option value="university">University</option>
                             </select>
@@ -280,7 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 actions: [
                     {
                         label: 'Add Institution',
-                        class: `inline-flex justify-center rounded-lg bg-indigo-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-indigo-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50`,
+                        class: `inline-flex justify-center rounded-lg bg-blue-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-blue-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50`,
                         onClick: async (event) => {
                             const institutionName = document.getElementById('institution-name').value;
                             const institutionAddress = document.getElementById('institution-address').value;
@@ -369,17 +369,17 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <div class="space-y-5">
                                     <div class="space-y-2">
                                         <label for="hostel-name" class="block text-md font-semibold text-gray-700">Hostel Name</label>
-                                        <input type="text" id="hostel-name" name="hostel-name" class="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 text-md transition duration-200" placeholder="Enter Name" required>
+                                        <input type="text" id="hostel-name" name="hostel-name" class="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md transition duration-200" placeholder="Enter Name" required>
                                     </div>
                                     <div class="space-y-2">
                                         <label for="select-warden" class="block text-md font-semibold text-gray-700">Assign Warden</label>
-                                        <select id="select-warden" name="select-warden" class="mt-1 w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 text-md transition duration-200" required>
+                                        <select id="select-warden" name="select-warden" class="mt-1 w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md transition duration-200" required>
                                             ${wardenOptions}
                                         </select>
                                     </div>
                                     <div class="space-y-2">
                                         <label for="select-institution" class="block text-md font-semibold text-gray-700">Select Institution</label>
-                                        <select id="select-institution" name="select-institution" class="mt-1 w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 text-md transition duration-200" required>
+                                        <select id="select-institution" name="select-institution" class="mt-1 w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md transition duration-200" required>
                                             ${institutionOptions}
                                         </select>
                                     </div>
@@ -389,7 +389,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             actions: [
                                 {
                                     label: 'Add Hostel',
-                                    class: `inline-flex justify-center rounded-lg bg-indigo-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-indigo-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50`,
+                                    class: `inline-flex justify-center rounded-lg bg-blue-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-blue-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50`,
                                     onClick: async (event) => {
                                         const hostelName = document.getElementById('hostel-name').value;
                                         const wardenId = document.getElementById('select-warden').value;
@@ -598,7 +598,7 @@ document.addEventListener('DOMContentLoaded', () => {
             actions: [
                 {
                     label: 'Approve Requests',
-                    class: `inline-flex justify-center rounded-lg bg-indigo-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-indigo-500 transition duration-200`,
+                    class: `inline-flex justify-center rounded-lg bg-blue-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-blue-500 transition duration-200`,
                     onClick: async (btn) => {
                         // Disable button and change text
                         btn.disabled = true;
@@ -634,6 +634,64 @@ document.addEventListener('DOMContentLoaded', () => {
                 {
                     label: 'Cancel',
                     class: `inline-flex justify-center rounded-lg bg-gray-100 px-6 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200`,
+                    onClick: Modal.close,
+                },
+            ],
+            size: 'sm:max-w-xl',
+            classes: 'custom-modal-class',
+            closeOnBackdropClick: false,
+        });
+    });
+
+    // Notify students approval
+    const performNotifyStudents = document.getElementById('notifyStudents');
+    performNotifyStudents.addEventListener('click', (event) => {
+        Modal.open({
+            content: `
+            <div class="space-y-4">
+                <h3 class="text-xl font-bold text-gray-800 border-b border-gray-200 pb-3">
+                    <i class="fas fa-bell mr-2 text-red-500"></i> Notify Students
+                </h3>
+                <div class="space-y-4">
+                    <p class="text-gray-700">
+                        Some students have not checked in after their outpass duration expired.
+                        You can send an alert to remind them to check in immediately.
+                    </p>
+                    <p class="text-gray-700">
+                        This notification will be sent to all students who haven't checked in.
+                    </p>
+                </div>
+            </div>
+            `,
+            actions: [
+                {
+                    label: 'Notify Students',
+                    class: `inline-flex justify-center rounded-lg bg-blue-600 px-5 py-2 text-sm font-medium text-white shadow-md hover:bg-blue-500 transition duration-200`,
+                    onClick: async () => {
+                        try {
+                            const response = await Ajax.post(`/api/web/admin/actions/notify`, {});
+
+                            if (response.ok) {
+                                const data = response.data;
+                                if (data.status) {
+                                    alert("Notification sent successfully!");
+                                    // location.reload();
+                                } else {
+                                    alert(data.message);
+                                }
+                            } else {
+                                handleError(response.status);
+                            }
+                        } catch (error) {
+                            console.error(error);
+                        } finally {
+                            Modal.close();
+                        }
+                    },
+                },
+                {
+                    label: `Cancel`,
+                    class: `inline-flex items-center justify-center rounded-lg bg-gray-100 px-5 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200`,
                     onClick: Modal.close,
                 },
             ],

@@ -52,7 +52,7 @@ class Hostel
         return $this->warden;
     }
 
-    public function setWarden(User $warden): void
+    public function setWarden(?User $warden): void
     {
         $this->warden = $warden;
     }

@@ -45,8 +45,8 @@ class Student
     #[ORM\Column(type: 'string', length: 15)]
     private string $parentNo;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private string $status;
+    #[ORM\Column(type: 'boolean')]
+    private bool $status;
 
     #[ORM\Column(type: 'datetime')]
     private DateTime $updatedAt;
@@ -136,12 +136,12 @@ class Student
         $this->parentNo = $parentNo;
     }
 
-    public function getStatus(): string
+    public function getStatus(): bool
     {
         return $this->status;
     }
 
-    public function setStatus(string $status): void
+    public function setStatus(bool $status): void
     {
         $this->status = $status;
     }

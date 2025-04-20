@@ -7,7 +7,7 @@ use App\Enum\OutpassStatus;
     <p class="mb-8 text-base text-gray-700">View and manage the records of issued outpasses.</p>
 
     <?php if (empty($outpasses)): ?>
-        <div class="p-6 space-y-2 leading-relaxed text-indigo-800 border-l-4 border-indigo-400 rounded-lg shadow-md bg-indigo-50" role="alert" aria-live="polite">
+        <div class="bg-blue-200/60 border-l-4 space-y-2 rounded-lg border-blue-800/80 text-blue-800 p-6 shadow-md leading-relaxed" role="alert" aria-live="polite">
             <h3 class="text-lg font-semibold">No Outpass Records Found</h3>
             <p class="text-sm">
                 There are currently no outpass records available to display.
@@ -157,9 +157,9 @@ use App\Enum\OutpassStatus;
                             </td>
                             <td class="px-6 py-4 space-x-2 text-sm font-medium text-center whitespace-normal">
                                 <?php if (!empty($outpass->getId())): ?>
-                                <a class="inline-flex items-center text-indigo-600 transition duration-200 hover:text-indigo-900" href="<?= $this->urlFor('admin.outpass.records.details', ['outpass_id' => $outpass->getId()]) ?>">
-                                    <i class="mr-1 fas fa-eye"></i> View
-                                </a>
+                                    <a class="inline-flex items-center text-indigo-600 transition duration-200 hover:text-indigo-900" href="<?= $this->urlFor('admin.outpass.records.details', ['outpass_id' => $outpass->getId()]) ?>">
+                                        <i class="mr-1 fas fa-eye"></i> View
+                                    </a>
                                 <?php endif; ?>
                                 <button class="text-red-600 transition duration-200 hover:text-red-900" data-id="<?= $outpass->getId() ?>"><i class="mr-1 fas fa-trash-alt"></i>Delete</button>
                             </td>

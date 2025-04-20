@@ -78,13 +78,13 @@
                     <tr>
                         <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">Student Name</th>
                         <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">Hostel</th>
-                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">Year</th>
-                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">Branch</th>
-                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">Department</th>
-                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">Room No.</th>
-                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">Parent Contact</th>
-                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">Status</th>
-                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">Actions</th>
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600 text-center">Year</th>
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600 text-center">Branch</th>
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600 text-center">Department</th>
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600 text-center">Room No.</th>
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600 text-center">Parent Contact</th>
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600 text-center">Status</th>
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600 text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -92,15 +92,24 @@
                         <tr class="border-t hover:bg-gray-50">
                             <td class="px-4 py-3 text-sm text-gray-700"><?= $student->getUser()->getName() ?></td>
                             <td class="px-4 py-3 text-sm text-gray-700"><?= $student->getHostel()->getName() ?></td>
-                            <td class="px-4 py-3 text-sm text-gray-700"><?= $student->getYear() ?></td>
-                            <td class="px-4 py-3 text-sm text-gray-700"><?= $student->getBranch() ?></td>
-                            <td class="px-4 py-3 text-sm text-gray-700"><?= $student->getDepartment() ?></td>
-                            <td class="px-4 py-3 text-sm text-gray-700"><?= $student->getRoomNo() ?></td>
-                            <td class="px-4 py-3 text-sm text-gray-700"><?= $student->getParentNo() ?></td>
-                            <td class="px-4 py-3 text-sm">
-                                <span class="text-green-600 font-medium"><?= $student->getStatus() ?></span>
+                            <td class="px-4 py-3 text-sm text-gray-700 text-center"><?= $student->getYear() ?></td>
+                            <td class="px-4 py-3 text-sm text-gray-700 text-center"><?= $student->getBranch() ?></td>
+                            <td class="px-4 py-3 text-sm text-gray-700 text-center"><?= $student->getDepartment() ?></td>
+                            <td class="px-4 py-3 text-sm text-gray-700 text-center"><?= $student->getRoomNo() ?></td>
+                            <td class="px-4 py-3 text-sm text-gray-700 text-center"><?= $student->getParentNo() ?></td>
+                            <td class="px-4 py-3 text-sm text-center">
+                                <?php if ($student->getStatus()): ?>
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                        Active
+                                    </span>
+                                <?php else: ?>
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                        Inactive
+                                    </span>
+                                <?php endif; ?>
                             </td>
-                            <td class="px-4 py-3 text-sm">
+
+                            <td class="px-4 py-3 text-sm text-center">
                                 <button class="text-gray-600 hover:text-gray-800 transition duration-200 mr-4" data-id="<?= $student->getId() ?>"><i class="fas fa-edit"></i></button>
                                 <button class="text-red-600 hover:text-red-800 transition duration-200" data-id="<?= $student->getId() ?>"><i class="fas fa-trash-alt"></i></button>
                             </td>

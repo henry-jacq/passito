@@ -235,6 +235,8 @@ class OutpassService
             $settings->setWeekdayOvernightEnd($defaultValues['weekdayOvernightEnd']);
             $settings->setWeekendStartTime($defaultValues['weekendStartTime']);
             $settings->setWeekendEndTime($defaultValues['weekendEndTime']);
+            $settings->setParentApproval($defaultValues['parentApproval'] ?? false);
+            $settings->setCompanionVerification($defaultValues['companionVerification'] ?? false);
             $settings->setEmergencyContactNotification($defaultValues['emergencyContactNotification']);
             $settings->setAppNotification($defaultValues['appNotification']);
             $settings->setEmailNotification($defaultValues['emailNotification']);
@@ -254,6 +256,8 @@ class OutpassService
             $settings->setWeekdayOvernightEnd($convertToTime($data['weekday_overnight_end'] ?? null));
             $settings->setWeekendStartTime($convertToTime($data['weekend_start_time'] ?? null));
             $settings->setWeekendEndTime($convertToTime($data['weekend_end_time'] ?? null));
+            $settings->setParentApproval(!empty($data['parent_approval']));
+            $settings->setCompanionVerification(!empty($data['companion_verification']));
             $settings->setEmergencyContactNotification(!empty($data['emergency_contact_notification']));
             $settings->setAppNotification(!empty($data['app_notification']));
             $settings->setEmailNotification(!empty($data['email_notification']));
@@ -296,7 +300,9 @@ class OutpassService
             'weekdayOvernightEnd' => new \DateTime('06:00'),
             'weekendStartTime' => new \DateTime('09:00'),
             'weekendEndTime' => new \DateTime('22:00'),
-            'emergencyContactNotification' => true,
+            'parentApproval' => true,
+            'companionVerification' => false,
+            'emergencyContactNotification' => false,
             'appNotification' => true,
             'emailNotification' => true,
             'smsNotification' => true,

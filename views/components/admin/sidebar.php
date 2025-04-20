@@ -33,11 +33,6 @@ use App\Enum\UserRole; ?>
                                 <i class="fas fa-clock"></i>
                                 <span>Pending</span>
                             </div>
-                            <?php if (count($pendingCount) > 0): ?>
-                                <div class="flex items-center justify-center w-5 h-5 text-xs font-medium text-blue-600 bg-blue-200 rounded-md">
-                                    <?php echo (count($pendingCount) > 9) ? '9+' : count($pendingCount); ?>
-                                </div>
-                            <?php endif; ?>
                         </div>
                     </a>
                 </li>
@@ -104,16 +99,14 @@ use App\Enum\UserRole; ?>
                     </li>
                 <?php endif; ?>
 
-                <?php if (UserRole::isSuperAdmin($user->getRole()->value)): ?>
-                    <!-- Outpass Settings -->
-                    <li class="my-1">
-                        <a href="<?= $this->urlFor('admin.outpass.settings') ?>"
-                            class="flex items-center px-4 py-2.5 <?= ($routeName == 'admin.outpass.settings') ? 'bg-blue-500/20 text-blue-800 hover:bg-blue-600/20 border-blue-800/80' : 'text-gray-600 hover:bg-gray-50 border-transparent'; ?> transition duration-200 rounded-md border-l-4">
-                            <i class="pr-4 fas fa-list-check"></i>
-                            <span>Outpass Rules</span>
-                        </a>
-                    </li>
-                <?php endif; ?>
+                <!-- Outpass Settings -->
+                <li class="my-1">
+                    <a href="<?= $this->urlFor('admin.outpass.settings') ?>"
+                        class="flex items-center px-4 py-2.5 <?= ($routeName == 'admin.outpass.settings') ? 'bg-blue-500/20 text-blue-800 hover:bg-blue-600/20 border-blue-800/80' : 'text-gray-600 hover:bg-gray-50 border-transparent'; ?> transition duration-200 rounded-md border-l-4">
+                        <i class="pr-4 fas fa-list-check"></i>
+                        <span>Outpass Rules</span>
+                    </a>
+                </li>
             </ul>
         </div>
 

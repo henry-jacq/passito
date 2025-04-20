@@ -24,8 +24,6 @@ class AdminController extends BaseController
         private readonly FacilityService $facilityService
     )
     {
-        $pendingCount = $this->outpassService->getPendingOutpass(paginate: false);
-        $this->view->addGlobals('pendingCount', $pendingCount);
         $this->view->addGlobals('brandLogo', $this->config->get('app.logo'));
     }
     
@@ -34,7 +32,7 @@ class AdminController extends BaseController
         $this->view->clearCacheIfDev();
         $userData = $request->getAttribute('user');
         $dashboardData = $this->adminService->getDashboardDetails();
-        
+
         $args = [
             'title' => 'Dashboard',
             'user' => $userData,

@@ -32,6 +32,27 @@ class OutpassService
     )
     {
     }
+
+    // Student methods
+    public function getRecentStudentOutpass(Student $student, int $limit = 5)
+    {
+        $outpasses = $this->em->getRepository(OutpassRequest::class)->findBy(
+            ['student' => $student],
+            ['createdAt' => 'DESC'],
+            $limit
+        );
+
+        return $outpasses;
+    }
+
+    public function getOutpassByStudent(Student $student)
+    {
+        $outpasses = $this->em->getRepository(OutpassRequest::class)->findBy(
+            ['student' => $student]
+        );
+
+        return $outpasses;
+    }
     
     public function createOutpass(array $data): OutpassRequest
     {
@@ -51,6 +72,19 @@ class OutpassService
         $outpass->setAttachments($data['attachments']);
 
         return $this->updateOutpass($outpass);
+    }
+
+    public function getOutpassById(int $id): ?OutpassRequest
+    {
+        return $this->em->getRepository(OutpassRequest::class)->find($id);
+    }
+
+    public function updateOutpass(OutpassRequest $outpass)
+    {
+        $this->em->persist($outpass);
+        $this->em->flush();
+
+        return $outpass;
     }
 
     public function getPendingOutpass(int $page = 1, int $limit = 10, bool $paginate = true)
@@ -87,51 +121,46 @@ class OutpassService
         ];
     }
 
-    public function getApprovedOutpass()
-    {
-        $outpasses = $this->em->getRepository(OutpassRequest::class)->findBy(
-            ['status' => OutpassStatus::APPROVED]
-        );
-
-        return $outpasses;
-    }
-
-    public function getExpiredOutpass()
-    {
-        $outpasses = $this->em->getRepository(OutpassRequest::class)->findBy(
-            ['status' => OutpassStatus::EXPIRED]
-        );
-
-        return $outpasses;
-    }
-
-    public function getRejectedOutpass()
-    {
-        $outpasses = $this->em->getRepository(OutpassRequest::class)->findBy(
-            ['status' => OutpassStatus::REJECTED]
-        );
-
-        return $outpasses;
-    }
-
-    public function getRecentStudentOutpass(Student $student, int $limit = 5)
-    {
-        $outpasses = $this->em->getRepository(OutpassRequest::class)->findBy(
-            ['student' => $student],
-            ['createdAt' => 'DESC'],
-            $limit
-        );
-
-        return $outpasses;
-    }
+    // Admin methods
     
-    public function getOutpassByStudent(Student $student)
+    /**
+     * Get outpass statistics for the admin dashboard
+     * @param User $adminUser
+     */
+    public function getOutpassStats(User $adminUser): array
     {
-        $outpasses = $this->em->getRepository(OutpassRequest::class)->findBy(
-            ['student' => $student]
-        );
+        $qb = $this->em->createQueryBuilder();
 
-        return $outpasses;
+        $qb->select('o.status AS status', 'COUNT(o.id) AS count')
+            ->from(OutpassRequest::class, 'o')
+            ->join('o.student', 's')
+            ->join('s.user', 'u')
+            ->where('u.gender = :gender')
+            ->setParameter('gender', $adminUser->getGender()->value)
+            ->groupBy('o.status');
+
+        $results = $qb->getQuery()->getArrayResult();
+
+        $counts = [
+            'pending' => 0,
+            'approved' => 0,
+            'rejected' => 0,
+        ];
+
+        foreach ($results as $row) {
+            $status = $row['status']->value;
+            $count = (int) $row['count'];
+
+            if ($status === 'approved' || $status === 'expired') {
+                $counts['approved'] += $count;
+            } elseif ($status === 'pending') {
+                $counts['pending'] += $count;
+            } elseif ($status === 'rejected') {
+                $counts['rejected'] += $count;
+            }
+        }
+
+        return $counts;
     }
 
     public function getOutpassRecords(int $page = 1, int $limit = 10)
@@ -161,19 +190,6 @@ class OutpassService
             'currentPage' => $page,
             'totalPages' => ceil(count($paginator) / $limit),
         ];
-    }
-
-    public function getOutpassById(int $id): ?OutpassRequest
-    {
-        return $this->em->getRepository(OutpassRequest::class)->find($id);
-    }
-
-    public function updateOutpass(OutpassRequest $outpass)
-    {
-        $this->em->persist($outpass);
-        $this->em->flush();
-
-        return $outpass;
     }
 
     public function getSettings(Gender $gender)

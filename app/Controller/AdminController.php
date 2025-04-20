@@ -214,7 +214,7 @@ class AdminController extends BaseController
         $this->view->clearCacheIfDev();
 
         $userData = $request->getAttribute('user');
-        $logbook = $this->verifierService->fetchAllLogs();
+        $logbook = $this->verifierService->fetchLogsByGender($userData);
 
         $args = [
             'title' => 'Manage Logbook',

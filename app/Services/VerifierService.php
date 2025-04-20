@@ -236,9 +236,18 @@ class VerifierService
     /**
      * Fetch all logs
      */
-    public function fetchAllLogs(): array
+    public function fetchLogsByGender(User $user): array
     {
-        return $this->em->getRepository(VerifierLog::class)->findAll();
+        $qb = $this->em->createQueryBuilder();
+        $qb->select('log')
+            ->from(VerifierLog::class, 'log')
+            ->join('log.outpass', 'outpass')
+            ->join('outpass.student', 'student')
+            ->join('student.user', 'user')
+            ->where('user.gender = :gender')
+            ->setParameter('gender', $user->getGender()->value);
+
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -246,7 +255,7 @@ class VerifierService
      */
     public function fetchCheckedOutLogs(User $user): array
     {
-        $allLogs = $this->fetchAllLogs();
+        $allLogs = $this->fetchLogsByGender($user);
         $userGender = $user->getGender()?->value;
 
         return array_filter($allLogs, function ($log) use ($userGender) {

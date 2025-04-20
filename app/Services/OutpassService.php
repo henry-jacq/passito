@@ -87,11 +87,13 @@ class OutpassService
         return $outpass;
     }
 
-    public function getPendingOutpass(int $page = 1, int $limit = 10, bool $paginate = true)
+    public function getPendingOutpass(int $page = 1, int $limit = 10, bool $paginate = true, ?User $warden = null)
     {
         if (!$paginate) {
             return $this->em->getRepository(OutpassRequest::class)->findBy(
-                ['status' => OutpassStatus::PENDING]
+                [
+                    'status' => OutpassStatus::PENDING
+                ]
             );
         }
 
@@ -102,11 +104,18 @@ class OutpassService
             OutpassStatus::PENDING->value
         ];
 
+        $wardenGender = $warden->getGender()->value;
+
         $queryBuilder = $this->em->createQueryBuilder();
         $queryBuilder->select('o')
             ->from(OutpassRequest::class, 'o')
-            ->where($queryBuilder->expr()->in('o.status', $statuses))
+            ->join('o.student', 's')
+            ->join('s.user', 'u')
+            ->where($queryBuilder->expr()->in('o.status', ':statuses'))
+            ->andWhere('u.gender = :gender')
             ->orderBy('o.createdAt', 'DESC')
+            ->setParameter('statuses', $statuses)
+            ->setParameter('gender', $wardenGender)
             ->setFirstResult($offset)
             ->setMaxResults($limit);
 
@@ -163,7 +172,7 @@ class OutpassService
         return $counts;
     }
 
-    public function getOutpassRecords(int $page = 1, int $limit = 10)
+    public function getOutpassRecords(int $page = 1, int $limit = 10, ?User $warden = null)
     {
         $offset = ($page - 1) * $limit;
 
@@ -173,11 +182,18 @@ class OutpassService
             OutpassStatus::EXPIRED->value,
         ];
 
+        $wardenGender = $warden->getGender()->value;
+
         $queryBuilder = $this->em->createQueryBuilder();
         $queryBuilder->select('o')
             ->from(OutpassRequest::class, 'o')
-            ->where($queryBuilder->expr()->in('o.status', $statuses))
+            ->join('o.student', 's')
+            ->join('s.user', 'u')
+            ->where($queryBuilder->expr()->in('o.status', ':statuses'))
+            ->andWhere('u.gender = :gender')
             ->orderBy('o.createdAt', 'DESC')
+            ->setParameter('statuses', $statuses)
+            ->setParameter('gender', $wardenGender)
             ->setFirstResult($offset)
             ->setMaxResults($limit);
 

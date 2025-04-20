@@ -31,7 +31,7 @@ class AdminController extends BaseController
     {
         $this->view->clearCacheIfDev();
         $userData = $request->getAttribute('user');
-        $dashboardData = $this->adminService->getDashboardDetails();
+        $dashboardData = $this->adminService->getDashboardDetails($userData);
 
         $args = [
             'title' => 'Dashboard',
@@ -53,7 +53,12 @@ class AdminController extends BaseController
         $limit = 10;
 
         // Fetch the pagination data
-        $paginationData = $this->outpassService->getPendingOutpass($page, $limit);
+        $paginationData = $this->outpassService->getPendingOutpass(
+            page: $page,
+            limit: $limit,
+            paginate: true,
+            warden: $userData,
+        );
 
         // Redirect to the last page if the requested page exceeds available pages
         if ($paginationData['totalPages'] > 1 && $page > $paginationData['totalPages']) {
@@ -85,7 +90,7 @@ class AdminController extends BaseController
         $limit = 10;
 
         // Fetch the pagination data
-        $paginationData = $this->outpassService->getOutpassRecords($page, $limit);
+        $paginationData = $this->outpassService->getOutpassRecords($page, $limit, $userData);
 
         // Redirect to the last page if the requested page exceeds available pages
         if ($paginationData['totalPages'] > 1 && $page > $paginationData['totalPages']) {

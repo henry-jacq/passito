@@ -23,19 +23,16 @@ class AdminService
     {
     }
 
-    public function getDashboardDetails(): array
+    public function getDashboardDetails(User $adminUser): array
     {
-        $expiredCount = count($this->outpass->getExpiredOutpass());
-        $approvedCount = count($this->outpass->getApprovedOutpass());
-        $rejectedCount = count($this->outpass->getRejectedOutpass());
-        $checkedOutCount = count($this->verifierService->fetchCheckedOutLogs());
-        $pendingCount = count($this->outpass->getPendingOutpass(paginate: false));
-
+        $counts = $this->outpass->getOutpassStats($adminUser);
+        $checkedOut = $this->verifierService->fetchCheckedOutLogs($adminUser);
+        
         return [
-            'pending' => $pendingCount,
-            'approved' => $approvedCount + $expiredCount,
-            'rejected' => $rejectedCount,
-            'checkedOut' => $checkedOutCount
+            'pending' => $counts['pending'] ?? 0,
+            'approved' => $counts['approved'] ?? 0,
+            'rejected' => $counts['rejected'] ?? 0,
+            'checkedOut' => $checkedOut['checkedOut'] ?? 0,
         ];
     }
 

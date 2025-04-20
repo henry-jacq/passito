@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use DateTime;
+use App\Entity\User;
 use App\Core\Session;
 use App\Entity\Verifier;
 use App\Entity\VerifierLog;
@@ -243,8 +244,19 @@ class VerifierService
     /**
      * Fetch checked-out logs
      */
-    public function fetchCheckedOutLogs(): array
+    public function fetchCheckedOutLogs(User $user): array
     {
-        return $this->em->getRepository(VerifierLog::class)->findBy(['inTime' => NULL]);
+        $allLogs = $this->fetchAllLogs();
+        $userGender = $user->getGender()?->value;
+
+        return array_filter($allLogs, function ($log) use ($userGender) {
+            if ($log->getInTime() !== null) {
+                return false;
+            }
+
+            $logGender = $log->getOutpass()?->getStudent()?->getUser()?->getGender()?->value;
+
+            return $logGender === $userGender;
+        });
     }
 }

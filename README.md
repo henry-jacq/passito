@@ -127,7 +127,8 @@ Follow these steps to set up Passito on your local machine:
 
 7. **Run Seeders**:
    ```bash
-   php passito.php app:seed
+   php passito.php app:seed app_settings
+   php passito.php app:seed outpass_rules
    ```
    
 8. **Setup Crontab for Sending Email**:

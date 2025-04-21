@@ -8,12 +8,12 @@ use App\Enum\OutpassStatus; ?>
     ]) ?>
 
     <!-- Main Content -->
-    <main class="container mx-auto py-8 px-6 lg:px-12">
+    <main class="container px-6 py-8 mx-auto lg:px-12">
         <!-- Page Title -->
-        <header class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-4 border-b space-y-2 sm:space-y-0 mb-6">
+        <header class="flex flex-col py-4 mb-6 space-y-2 border-b sm:flex-row sm:justify-between sm:items-center sm:space-y-0">
             <div>
                 <h1 class="text-3xl font-bold text-gray-800">Outpass <?= '#' . $outpass->getId() ?> Details</h1>
-                <p class="text-base text-gray-500 mt-1">View your outpass request details.</p>
+                <p class="mt-1 text-base text-gray-500">View your outpass request details.</p>
             </div>
             <!-- Apply outpass button -->
             <div class="mt-4 md:mt-0">
@@ -28,82 +28,85 @@ use App\Enum\OutpassStatus; ?>
                     href="javascript:void(0)" aria-disabled="true" tabindex="-1"
                     <?php endif; ?>
                     class="px-4 py-2 text-white bg-blue-600 rounded-md shadow-md transition focus:outline-none inline-flex items-center <?= $document ? 'hover:bg-blue-700 focus:ring focus:ring-blue-300' : 'opacity-50 cursor-not-allowed' ?>">
-                    <i class="fa-solid fa-arrow-down mr-1"></i>
+                    <i class="mr-1 fa-solid fa-arrow-down"></i>
                     <span>Download Outpass</span>
                 </a>
             </div>
         </header>
 
         <!-- Outpass Details Section -->
-        <section class="bg-white rounded-xl shadow-md p-6 md:p-8 mb-8">
+        <section class="p-6 mb-8 bg-white shadow-md rounded-xl md:p-8">
             <!-- Row 1: Dates and Times -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-9">
-                <div class="flex items-center align-center space-x-4">
-                    <i class="fa-regular fa-clock text-2xl text-gray-500"></i>
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2 mb-9">
+                <div class="flex items-center space-x-4 align-center">
+                    <i class="text-2xl text-gray-500 fa-regular fa-clock"></i>
                     <div>
                         <label class="block text-base font-medium text-gray-500">From Date & Time</label>
-                        <p class="text-base md:text-lg text-gray-800 font-medium mt-1"><?= $outpass->getFromDate()->format('Y-m-d, ') . $outpass->getFromTime()->format('h:i A') ?></p>
+                        <p class="mt-1 text-base font-medium text-gray-800 md:text-lg"><?= $outpass->getFromDate()->format('Y-m-d, ') . $outpass->getFromTime()->format('h:i A') ?></p>
                     </div>
                 </div>
-                <div class="flex items-center align-center space-x-4">
-                    <i class="fa-regular fa-clock text-2xl text-gray-500"></i>
+                <div class="flex items-center space-x-4 align-center">
+                    <i class="text-2xl text-gray-500 fa-regular fa-clock"></i>
                     <div>
                         <label class="block text-base font-medium text-gray-500">To Date & Time</label>
-                        <p class="text-base md:text-lg text-gray-800 font-medium mt-1"><?= $outpass->getToDate()->format('Y-m-d, ') . $outpass->getToTime()->format('h:i A') ?></p>
+                        <p class="mt-1 text-base font-medium text-gray-800 md:text-lg"><?= $outpass->getToDate()->format('Y-m-d, ') . $outpass->getToTime()->format('h:i A') ?></p>
                     </div>
                 </div>
             </div>
 
             <!-- Row 2: Pass Type and Destination -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-9">
-                <div class="flex items-center align-center space-x-4">
-                    <i class="fa-regular fa-id-card text-2xl text-gray-500"></i>
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2 mb-9">
+                <div class="flex items-center space-x-4 align-center">
+                    <i class="text-2xl text-gray-500 fa-regular fa-id-card"></i>
                     <div>
                         <label class="block text-base font-medium text-gray-500">Pass Type</label>
-                        <p class="text-base md:text-lg text-gray-800 font-medium mt-1"><?= ucfirst($outpass->getPassType()->value) ?></p>
+                        <p class="mt-1 text-base font-medium text-gray-800 md:text-lg"><?= ucfirst($outpass->getPassType()->value) ?></p>
                     </div>
                 </div>
-                <div class="flex items-center align-center space-x-4">
-                    <i class="fa-solid fa-location-dot text-2xl text-gray-500"></i>
+                <div class="flex items-center space-x-4 align-center">
+                    <i class="text-2xl text-gray-500 fa-solid fa-location-dot"></i>
                     <div>
                         <label class="block text-base font-medium text-gray-500">Destination</label>
-                        <p class="text-base md:text-lg text-gray-800 font-medium mt-1"><?= ucwords($outpass->getDestination()) ?></p>
+                        <p class="mt-1 text-base font-medium text-gray-800 md:text-lg"><?= ucwords($outpass->getDestination()) ?></p>
                     </div>
                 </div>
             </div>
 
             <!-- Split Columns: Status, Purpose, and QR Code -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <!-- Column 1: Status, Purpose, Approval Time, and Remarks -->
                 <div class="space-y-9">
-                    <div class="flex items-center align-center space-x-4">
-                        <i class="fa-solid fa-info-circle text-2xl text-gray-500"></i>
+                    <div class="flex items-center space-x-4 align-center">
+                        <i class="text-2xl text-gray-500 fa-solid fa-info-circle"></i>
                         <div>
                             <label class="block text-base font-medium text-gray-500">Status</label>
                             <?php $color = match ($outpass->getStatus()->value) {
                                 OutpassStatus::APPROVED->value => 'green',
+                                OutpassStatus::PARENT_APPROVED->value => 'green',
                                 OutpassStatus::PENDING->value => 'yellow',
+                                OutpassStatus::PARENT_PENDING->value => 'yellow',
                                 OutpassStatus::REJECTED->value => 'red',
+                                OutpassStatus::PARENT_DENIED->value => 'red',
                                 OutpassStatus::EXPIRED->value => 'gray',
                                 default => 'gray',
                             }; ?>
-                            <p class="text-base md:text-lg text-<?= $color ?>-800 font-medium mt-1"><?= ucfirst($outpass->getStatus()->value) ?></p>
+                            <p class="text-base md:text-lg text-<?= $color ?>-800 font-medium mt-1"><?= ucwords(str_replace('_', ' ', $outpass->getStatus()->value)) ?></p>
                         </div>
                     </div>
-                    <div class="flex items-center align-center space-x-4">
-                        <i class="fa-solid fa-question-circle text-2xl text-gray-500"></i>
+                    <div class="flex items-center space-x-4 align-center">
+                        <i class="text-2xl text-gray-500 fa-solid fa-question-circle"></i>
                         <div>
                             <label class="block text-base font-medium text-gray-500">Purpose</label>
-                            <p class="text-lg text-gray-800 leading-relaxed mt-1">
+                            <p class="mt-1 text-lg leading-relaxed text-gray-800">
                                 <?php if (empty($outpass->getPurpose())): echo 'None'; else: echo(ucfirst($outpass->getPurpose())); endif; ?>
                             </p>
                         </div>
                     </div>
-                    <div class="flex items-center align-center space-x-4">
-                        <i class="fas fa-calendar-check text-2xl text-gray-500"></i>
+                    <div class="flex items-center space-x-4 align-center">
+                        <i class="text-2xl text-gray-500 fas fa-calendar-check"></i>
                         <div>
                             <label class="block text-base font-medium text-gray-500">Approval Time</label>
-                            <p class="text-base md:text-lg text-gray-800 mt-1">
+                            <p class="mt-1 text-base text-gray-800 md:text-lg">
                                 <?php 
                                 if (!empty($outpass->getApprovedTime())):
                                     echo $outpass->getApprovedTime()->format('Y-m-d, h:i A');
@@ -114,45 +117,45 @@ use App\Enum\OutpassStatus; ?>
                             </p>
                         </div>
                     </div>
-                    <div class="flex items-center align-center space-x-4">
-                        <i class="fas fa-pencil-alt text-2xl text-gray-500"></i>
+                    <div class="flex items-center space-x-4 align-center">
+                        <i class="text-2xl text-gray-500 fas fa-pencil-alt"></i>
                         <div>
                             <label class="block text-base font-medium text-gray-500">Warden Remarks</label>
-                            <p class="text-base md:text-lg text-gray-800 mt-1"><?= empty($outpass->getRemarks()) ? 'None' : $outpass->getRemarks() ?></p>
+                            <p class="mt-1 text-base text-gray-800 md:text-lg"><?= empty($outpass->getRemarks()) ? 'None' : $outpass->getRemarks() ?></p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Column 2: QR Code and Download Button -->
                 <div class="space-y-4">
-                    <div class="bg-inherit select-none mb-7">
-                        <div class="flex flex-col items-center rounded-lg border p-6">
+                    <div class="select-none bg-inherit mb-7">
+                        <div class="flex flex-col items-center p-6 border rounded-lg">
                             <?php if ($outpass->getStatus() !== OutpassStatus::APPROVED): ?>
-                                <div class="flex flex-col justify-center items-center gap-4 w-48 h-48">
-                                    <i class="fa-solid fa-qrcode text-gray-600 text-7xl"></i>
-                                    <p class="text-gray-600 text-sm">QR Not Available</p>
+                                <div class="flex flex-col items-center justify-center w-48 h-48 gap-4">
+                                    <i class="text-gray-600 fa-solid fa-qrcode text-7xl"></i>
+                                    <p class="text-sm text-gray-600">QR Not Available</p>
                                 </div>
                             <?php else: ?>
-                                <img class="w-48 h-48 object-contain select-none" src="<?= $this->urlFor('storage.student', [
+                                <img class="object-contain w-48 h-48 select-none" src="<?= $this->urlFor('storage.student', [
                                     'id' => $outpass->getStudent()->getUser()->getId(),
                                     'params' => 'qr_codes/' . $outpass->getQrCode()
                                 ]) ?>" alt="Outpass QR Code" oncontextmenu="return false;" draggable="false">
                             <?php endif; ?>
                         </div>
-                        <p class="font-medium text-gray-600 select-text my-1">QR codes are only valid within the approved outpass time frame.</p>
+                        <p class="my-1 font-medium text-gray-600 select-text">QR codes are only valid within the approved outpass time frame.</p>
                     </div>
 
                     <!-- QR Status and Download Button -->
-                    <div class="flex justify-between items-center space-x-1">
+                    <div class="flex items-center justify-between space-x-1">
                         <div class="flex items-center space-x-2">
-                            <i class="fa-solid fa-check-circle text-gray-500 text-xl"></i>
+                            <i class="text-xl text-gray-500 fa-solid fa-check-circle"></i>
                             <?php if ($outpass->getStatus() === OutpassStatus::APPROVED): ?>
-                                <p class="text-sm md:text-base text-gray-600">
-                                    QR Health: <span class="px-3 py-1 rounded-full text-md font-medium bg-green-100 text-green-800">Active</span>
+                                <p class="text-sm text-gray-600 md:text-base">
+                                    QR Health: <span class="px-3 py-1 font-medium text-green-800 bg-green-100 rounded-full text-md">Active</span>
                                 </p>
                             <?php else: ?>
-                                <p class="text-sm md:text-base text-gray-600">
-                                    QR Health: <span class="px-3 py-1 rounded-full text-md font-medium bg-red-100 text-red-800">Inactive</span>
+                                <p class="text-sm text-gray-600 md:text-base">
+                                    QR Health: <span class="px-3 py-1 font-medium text-red-800 bg-red-100 rounded-full text-md">Inactive</span>
                                 </p>
                             <?php endif; ?>
                         </div>
@@ -168,7 +171,7 @@ use App\Enum\OutpassStatus; ?>
                             href="javascript:void(0)" aria-disabled="true" tabindex="-1"
                             <?php endif; ?>
                             class="text-blue-600 hover:text-blue-700 text-base disabled:opacity-50 <?= $qrCode ? 'hover:underline' : 'opacity-50 cursor-not-allowed' ?>">
-                            <i class="fa-solid fa-download mr-1"></i>
+                            <i class="mr-1 fa-solid fa-download"></i>
                             <span>Download QR</span>
                         </a>
                     </div>

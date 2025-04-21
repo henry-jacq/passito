@@ -2,18 +2,18 @@
 
 use Slim\App;
 use App\Controller\ApiController;
+use App\Middleware\ApiMiddleware;
 use App\Controller\AuthController;
 use App\Middleware\AuthMiddleware;
 use App\Controller\AdminController;
 use App\Controller\SetupController;
-use App\Controller\StorageController;
 use App\Middleware\AdminMiddleware;
+use App\Controller\ParentController;
+use App\Controller\StorageController;
 use App\Controller\StudentController;
-use App\Middleware\ApiMiddleware;
-use App\Middleware\SetupMiddleware;
 use App\Middleware\StudentMiddleware;
-use App\Middleware\SuperAdminMiddleware;
 use Slim\Routing\RouteCollectorProxy;
+use App\Middleware\SuperAdminMiddleware;
 
 return function (App $app) {
     $app->get('/', [AuthController::class, 'landing'])->setName('landing');
@@ -43,6 +43,11 @@ return function (App $app) {
     // Storage Routes
     $app->any('/storage/admin/{id}[/{params:.*}]', [StorageController::class, 'admin'])->setName('storage.admin')->add(AdminMiddleware::class);
     $app->any('/storage/student/{id}[/{params:.*}]', [StorageController::class, 'student'])->setName('storage.student')->add(StudentMiddleware::class);
+
+    // Parent Verification Routes
+    $app->group('/parent', function (RouteCollectorProxy $group) {
+        $group->any('/verify', [ParentController::class, 'verify'])->setName('parent.verify');
+    });
     
     // Admin Routes
     $app->group('/admin', function (RouteCollectorProxy $group) {

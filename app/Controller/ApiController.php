@@ -6,14 +6,16 @@ use Closure;
 use App\Core\View;
 use App\Core\Session;
 use App\Core\Storage;
-use App\Services\AdminService;
+use App\Services\SMSService;
 use App\Services\AuthService;
 use App\Services\MailService;
 use App\Services\UserService;
 use InvalidArgumentException;
+use App\Services\AdminService;
 use App\Services\OutpassService;
 use App\Services\FacilityService;
 use App\Services\VerifierService;
+use App\Services\ParentVerificationService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -49,12 +51,14 @@ class ApiController
         private readonly Session $session,
         private readonly AuthService $auth,
         private readonly MailService $mail,
+        private readonly SMSService $sms,
         private readonly Storage $storage,
         private readonly UserService $userService,
         private readonly AdminService $adminService,
         private readonly OutpassService $outpassService,
         private readonly VerifierService $verifierService,
-        private readonly FacilityService $facilityService
+        private readonly FacilityService $facilityService,
+        private readonly ParentVerificationService $verificationService
     )
     {
     }

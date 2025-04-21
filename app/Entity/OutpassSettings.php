@@ -99,7 +99,7 @@ class OutpassSettings
         return $this;
     }
 
-    public function isParentApproval(): bool
+    public function getParentApproval(): bool
     {
         return $this->parentApproval;
     }
@@ -110,7 +110,7 @@ class OutpassSettings
         return $this;
     }
 
-    public function isCompanionVerification(): bool
+    public function getCompanionVerification(): bool
     {
         return $this->companionVerification;
     }
@@ -121,7 +121,7 @@ class OutpassSettings
         return $this;
     }
 
-    public function isEmergencyContactNotification(): bool
+    public function getEmergencyContactNotification(): bool
     {
         return $this->emergencyContactNotification;
     }
@@ -198,7 +198,7 @@ class OutpassSettings
         return $this;
     }
 
-    public function isEmailNotification(): bool
+    public function getEmailNotification(): bool
     {
         return $this->emailNotification;
     }
@@ -209,7 +209,7 @@ class OutpassSettings
         return $this;
     }
 
-    public function isSmsNotification(): bool
+    public function getSmsNotification(): bool
     {
         return $this->smsNotification;
     }
@@ -220,7 +220,7 @@ class OutpassSettings
         return $this;
     }
 
-    public function isAppNotification(): bool
+    public function getAppNotification(): bool
     {
         return $this->appNotification;
     }

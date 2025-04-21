@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use DateTime;
-use App\Enum\OutpassStatus;
 use App\Enum\OutpassType;
+use App\Enum\OutpassStatus;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'outpass_requests', indexes: [
@@ -72,6 +74,15 @@ class OutpassRequest
     #[ORM\Column(type: 'datetime')]
     private DateTime $createdAt;
 
+    #[ORM\OneToMany(mappedBy: 'outpassRequest', targetEntity: ParentVerification::class, cascade: ['remove'], orphanRemoval: true)]
+    private Collection $parentVerifications;
+
+    public function __construct()
+    {
+        $this->createdAt = new DateTime();
+        $this->parentVerifications = new ArrayCollection();
+    }
+    
     public function getId(): int
     {
         return $this->id;
@@ -235,5 +246,27 @@ class OutpassRequest
     public function setCreatedAt(DateTime $createdAt): void
     {
         $this->createdAt = $createdAt;
+    }
+
+    public function getParentVerifications(): Collection
+    {
+        return $this->parentVerifications;
+    }
+
+    public function addParentVerification(ParentVerification $verification): void
+    {
+        if (!$this->parentVerifications->contains($verification)) {
+            $this->parentVerifications[] = $verification;
+            $verification->setOutpassRequest($this);
+        }
+    }
+
+    public function removeParentVerification(ParentVerification $verification): void
+    {
+        if ($this->parentVerifications->removeElement($verification)) {
+            if ($verification->getOutpassRequest() === $this) {
+                $verification->setOutpassRequest(null);
+            }
+        }
     }
 }

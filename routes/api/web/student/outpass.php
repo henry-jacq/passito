@@ -47,6 +47,15 @@ ${basename(__FILE__, '.php')} = function () {
         $outpassData['purpose'] = empty($this->data['purpose']) ? '' : $this->data['purpose'];
 
         $outpass = $this->outpassService->createOutpass($outpassData);
+        
+        $settings = $this->outpassService->getSettings($user->getGender());
+
+        // Check if parent approval is required
+        if ($settings->getParentApproval()) {
+            $entry = $this->verificationService->createEntry($outpass);
+            $message = $this->verificationService->getMessage($user, $outpass, $entry);
+            $this->sms->send($student->getParentNo(), $message);
+        }
 
         if ($outpass instanceof OutpassRequest) {
             return $this->response([

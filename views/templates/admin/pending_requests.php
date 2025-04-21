@@ -1,29 +1,29 @@
 <!-- Pending Requests Page -->
 <main class="flex-1 p-6 mt-20 overflow-y-auto">
-    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Pending Requests</h2>
-    <p class="text-gray-600 text-md mb-8">Manage pending requests by approving, rejecting, or wiping them out.</p>
+    <h2 class="mb-4 text-2xl font-semibold text-gray-800">Pending Requests</h2>
+    <p class="mb-8 text-gray-600 text-md">Manage pending requests by approving, rejecting, or wiping them out.</p>
 
     <?php if (empty($outpasses)): ?>
-        <div class="bg-blue-200/60 border-l-4 space-y-2 rounded-lg border-blue-800/80 text-blue-800 p-6 shadow-md leading-relaxed" role="alert" aria-live="polite">
+        <div class="p-6 space-y-2 leading-relaxed text-blue-800 border-l-4 rounded-lg shadow-md bg-blue-200/60 border-blue-800/80" role="alert" aria-live="polite">
             <h3 class="text-lg font-semibold">No Pending Outpasses Found</h3>
             <p class="text-sm">
                 There are currently no pending outpass requests awaiting approval.
             </p>
         </div>
     <?php else: ?>
-        <section class="bg-white shadow-md rounded-lg overflow-hidden">
+        <section class="overflow-hidden bg-white rounded-lg shadow-md">
             <table class="min-w-full table-auto">
                 <thead class="bg-gray-100">
                     <tr>
-                        <th class="px-6 py-3 text-left text-sm font-medium text-gray-700">Student Name</th>
-                        <th class="px-6 py-3 text-left text-sm font-medium text-gray-700">Course</th>
-                        <th class="px-6 py-3 text-left text-sm font-medium text-gray-700">Year</th>
-                        <th class="px-6 py-3 text-left text-sm font-medium text-gray-700">Type</th>
-                        <th class="px-6 py-3 text-left text-sm font-medium text-gray-700">Destination</th>
-                        <th class="px-6 py-3 text-left text-sm font-medium text-gray-700">Purpose</th>
-                        <th class="px-6 py-3 text-left text-sm font-medium text-gray-700">Date & Duration</th>
-                        <th class="px-6 py-3 text-center text-sm font-medium text-gray-700">Files</th>
-                        <th class="px-6 py-3 text-center text-sm font-medium text-gray-700">Actions</th>
+                        <th class="px-6 py-3 text-sm font-medium text-left text-gray-700">Student Name</th>
+                        <th class="px-6 py-3 text-sm font-medium text-left text-gray-700">Course</th>
+                        <th class="px-6 py-3 text-sm font-medium text-left text-gray-700">Year</th>
+                        <th class="px-6 py-3 text-sm font-medium text-left text-gray-700">Type</th>
+                        <th class="px-6 py-3 text-sm font-medium text-left text-gray-700">Destination</th>
+                        <th class="px-6 py-3 text-sm font-medium text-left text-gray-700">Purpose</th>
+                        <th class="px-6 py-3 text-sm font-medium text-left text-gray-700">Date & Duration</th>
+                        <th class="px-6 py-3 text-sm font-medium text-center text-gray-700">Files</th>
+                        <th class="px-6 py-3 text-sm font-medium text-center text-gray-700">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
@@ -34,7 +34,7 @@
                             <td class="px-6 py-4 text-sm text-gray-900"><?= formatStudentYear($outpass->getStudent()->getYear()) ?></td>
                             <td class="px-6 py-4 text-sm text-gray-900"><?= ucwords($outpass->getPassType()->value) ?></td>
                             <td class="px-6 py-4 text-sm text-gray-900"><?= $outpass->getDestination() ?></td>
-                            <td class="px-6 py-4 text-sm text-gray-900 truncate"><?= $outpass->getPurpose() ?></td>
+                            <td class="px-6 py-4 text-sm text-gray-900 truncate max-w-24"><?= $outpass->getPurpose() ?></td>
                             <td class="px-6 py-4">
                                 <span class="block text-sm text-gray-900">
                                     <?= $outpass->getFromDate()->format('d M, Y') ?> - <?= $outpass->getToDate()->format('d M, Y') ?>
@@ -44,7 +44,7 @@
                                 </span>
                             </td>
 
-                            <td class="px-6 py-4 text-sm text-center relative overflow-visible">
+                            <td class="relative px-6 py-4 overflow-visible text-sm text-center">
                                 <?php if (!empty($outpass->getAttachments())): ?>
                                     <div class="relative inline-block text-center">
                                         <!-- Dropdown trigger -->
@@ -53,15 +53,15 @@
                                             <i class="fa-solid fa-link"></i>
                                             <span>View (<?= count($outpass->getAttachments()) ?>)</span>
                                         </button>
-                                        <div class="dropdown-menu hidden absolute z-50 mt-2 left-1/2 transform -translate-x-1/2">
-                                            <div class="relative bg-white border border-gray-300 rounded-md shadow-lg px-2 pb-2">
+                                        <div class="absolute z-50 hidden mt-2 transform -translate-x-1/2 dropdown-menu left-1/2">
+                                            <div class="relative px-2 pb-2 bg-white border border-gray-300 rounded-md shadow-lg">
                                                 <!-- Dropdown content -->
                                                 <div class="mt-2">
                                                     <?php foreach ($outpass->getAttachments() as $index => $attachment): ?>
                                                         <a href="<?= htmlspecialchars($this->urlFor('storage.admin', ['id' => $user->getId(), 'params' => $attachment])) ?>"
                                                             target="_blank"
                                                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                                            <i class="fa-solid fa-file mr-2"></i>
+                                                            <i class="mr-2 fa-solid fa-file"></i>
                                                             <span>File <?= $index + 1 ?></span>
                                                         </a>
                                                     <?php endforeach; ?>
@@ -74,9 +74,9 @@
                                 <?php endif; ?>
                             </td>
 
-                            <td class="px-6 py-4 whitespace-normal text-sm text-center font-medium space-x-2">
-                                <button class="text-green-600 hover:text-green-900 transition duration-200 accept-outpass" data-id="<?= $outpass->getId() ?>"><i class="fas fa-circle-check mr-1"></i>Accept</button>
-                                <button class="text-red-600 hover:text-red-900 transition duration-200 reject-outpass" data-id="<?= $outpass->getId() ?>"><i class="fas fa-trash-alt mr-1"></i>Reject</button>
+                            <td class="px-6 py-4 space-x-2 text-sm font-medium text-center whitespace-normal">
+                                <button class="text-green-600 transition duration-200 hover:text-green-900 accept-outpass" data-id="<?= $outpass->getId() ?>"><i class="mr-1 fas fa-circle-check"></i>Accept</button>
+                                <button class="text-red-600 transition duration-200 hover:text-red-900 reject-outpass" data-id="<?= $outpass->getId() ?>"><i class="mr-1 fas fa-trash-alt"></i>Reject</button>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -85,7 +85,7 @@
 
             <?php if ($records['totalPages'] > 1): ?>
                 <!-- Pagination Section -->
-                <div class="flex items-center justify-between border-t border-gray-200 bg-gray-50 px-4 py-3 sm:px-6">
+                <div class="flex items-center justify-between px-4 py-3 border-t border-gray-200 bg-gray-50 sm:px-6">
                     <div class="flex justify-between sm:hidden">
                         <button class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">Previous</button>
                         <button class="relative inline-flex items-center px-4 py-2 ml-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">Next</button>

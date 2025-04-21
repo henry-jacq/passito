@@ -7,7 +7,7 @@ use App\Enum\OutpassStatus;
     <p class="mb-8 text-base text-gray-700">View and manage the records of issued outpasses.</p>
 
     <?php if (empty($outpasses)): ?>
-        <div class="bg-blue-200/60 border-l-4 space-y-2 rounded-lg border-blue-800/80 text-blue-800 p-6 shadow-md leading-relaxed" role="alert" aria-live="polite">
+        <div class="p-6 space-y-2 leading-relaxed text-blue-800 border-l-4 rounded-lg shadow-md bg-blue-200/60 border-blue-800/80" role="alert" aria-live="polite">
             <h3 class="text-lg font-semibold">No Outpass Records Found</h3>
             <p class="text-sm">
                 There are currently no outpass records available to display.
@@ -129,7 +129,7 @@ use App\Enum\OutpassStatus;
                         <th class="px-6 py-3 text-sm font-medium text-left text-gray-700">Year</th>
                         <th class="px-6 py-3 text-sm font-medium text-left text-gray-700">Type</th>
                         <th class="px-6 py-3 text-sm font-medium text-left text-gray-700">Destination</th>
-                        <th class="px-6 py-3 text-sm font-medium text-left text-gray-700">Status</th>
+                        <th class="px-6 py-3 text-sm font-medium text-left text-center text-gray-700">Status</th>
                         <th class="px-6 py-3 text-sm font-medium text-left text-gray-700">Date & Duration</th>
                         <th class="px-6 py-3 text-sm font-medium text-center text-gray-700">Actions</th>
                     </tr>
@@ -142,9 +142,9 @@ use App\Enum\OutpassStatus;
                             <td class="px-6 py-4 text-sm text-gray-900"><?= formatStudentYear($outpass->getStudent()->getYear()) ?></td>
                             <td class="px-6 py-4 text-sm text-gray-900"><?= ucwords($outpass->getPassType()->value) ?></td>
                             <td class="px-6 py-4 text-sm text-gray-900"><?= $outpass->getDestination() ?></td>
-                            <td class="px-6 py-4 text-sm text-gray-900">
+                            <td class="px-6 py-4 text-sm text-center text-gray-900">
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-<?= $outpass->getStatus() === OutpassStatus::APPROVED ? 'green' : 'yellow' ?>-100 text-<?= $outpass->getStatus() === OutpassStatus::APPROVED ? 'green' : 'yellow' ?>-800">
-                                    <?= ucwords($outpass->getStatus()->value) ?>
+                                    <?= ucwords(str_replace('_', ' ', $outpass->getStatus()->value)) ?>
                                 </span>
                             </td>
                             <td class="px-6 py-4">

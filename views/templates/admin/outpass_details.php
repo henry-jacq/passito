@@ -71,14 +71,17 @@ use App\Enum\OutpassStatus;
                 $status = $outpass->getStatus()->value;
                 $color = match ($status) {
                     'approved' => 'green',
+                    'parent_approved' => 'green',
                     'rejected' => 'red',
+                    'parent_denied' => 'red',
                     'pending' => 'yellow',
+                    'parent_pending' => 'yellow',
                     'expired' => 'yellow',
                     default => 'gray'
                 };
                 ?>
                 <span class="px-3 py-1 text-sm font-medium text-white bg-<?= $color ?>-600 rounded-full">
-                    <?= ucfirst($status) ?>
+                    <?= ucwords(str_replace('_', ' ', $status)) ?>
                 </span>
             </div>
             <div>

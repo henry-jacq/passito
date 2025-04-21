@@ -166,14 +166,14 @@ class VerifierService
     {
         $verifier = $this->em->getRepository(Verifier::class)->findOneBy(['authToken' => $authToken]);
         if ($verifier) {
-            if (!$this->logExistsByOutpassId($data['id'])) {
+            if ($this->logExistsByOutpassId($data['id'])) {
+                $log = $this->em->getRepository(VerifierLog::class)->findOneBy(['outpass' => $data['id']]);
+                $this->updateLog($log);
+            } else {
                 if (!$this->createLog($verifier, $data)) {
                     // Log creation failed because outpass does not exist
                     return false;
                 }
-            } else {
-                $log = $this->em->getRepository(VerifierLog::class)->findOneBy(['outpass' => $data['id']]);
-                $this->updateLog($log);
             }
 
             return true;
@@ -214,8 +214,26 @@ class VerifierService
 
         $log->setInTime(new DateTime());
         $outpass->setStatus(OutpassStatus::EXPIRED);
+
+        // Remove the attachments
+        if (!empty($outpass->getAttachments())) {
+            $this->outpassService->removeAttachments($outpass);
+            $outpass->setAttachments([]);
+        }
+
+        // Remove the document and update the outpass record
+        if (!empty($outpass->getDocument())) {
+            $this->outpassService->removeOutpassDocument($outpass);
+            $outpass->setDocument(null);
+        }
+
+        if (!empty($outpass->getQrCode())) {
+            $this->outpassService->removeQrCode($outpass);
+            $outpass->setQrCode(null);
+        }
+        
+        $this->em->persist($outpass);        
         $this->em->persist($log);
-        $this->em->persist($outpass);
         $this->em->flush();
 
         return $log;

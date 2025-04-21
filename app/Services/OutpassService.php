@@ -105,6 +105,11 @@ class OutpassService
         ];
 
         $wardenGender = $warden->getGender()->value;
+        $settings = $this->getSettings($warden->getGender());
+
+        if (Gender::isFemale($wardenGender) && $settings->getParentApproval()) {
+            $statuses[] = OutpassStatus::PARENT_APPROVED->value;
+        }
 
         $queryBuilder = $this->em->createQueryBuilder();
         $queryBuilder->select('o')
@@ -162,7 +167,7 @@ class OutpassService
 
             if ($status === 'approved' || $status === 'expired') {
                 $counts['approved'] += $count;
-            } elseif ($status === 'pending') {
+            } elseif ($status === 'pending' || $status === 'parent_approved') {
                 $counts['pending'] += $count;
             } elseif ($status === 'rejected') {
                 $counts['rejected'] += $count;

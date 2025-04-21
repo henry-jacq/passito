@@ -27,23 +27,24 @@ class MailService
     private function initServer(): void
     {
         // Enable verbose debug output if configured
-        if ($this->config->get('mail.debug') === true) {
-            $this->mailer->SMTPDebug = SMTP::DEBUG_SERVER;
+        if ($this->config->get('notification.mail.debug') === true) {
+            // $this->mailer->SMTPDebug = SMTP::DEBUG_SERVER;
+            $this->mailer->SMTPDebug = 3;
         }
 
         // Set the mailer to use SMTP
         $this->mailer->isSMTP();
 
         // Set the SMTP host, port, and security settings
-        $this->mailer->Host = $this->config->get('mail.host');
-        $this->mailer->Port = $this->config->get('mail.port');
+        $this->mailer->Host = $this->config->get('notification.mail.host');
+        $this->mailer->Port = $this->config->get('notification.mail.port');
         $this->mailer->SMTPAuth = true;
-        $this->mailer->Username = $this->config->get('mail.user');
-        $this->mailer->Password = $this->config->get('mail.pass');
-        $this->mailer->setFrom($this->config->get('mail.from'), $this->config->get('app.name'));
+        $this->mailer->Username = $this->config->get('notification.mail.user');
+        $this->mailer->Password = $this->config->get('notification.mail.pass');
+        $this->mailer->setFrom($this->config->get('notification.mail.from'), $this->config->get('app.name'));
 
         // Set encryption type
-        if ($this->config->get('mail.port') == 587) {
+        if ($this->config->get('notification.mail.port') == 587) {
             $this->mailer->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         } else {
             $this->mailer->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
@@ -105,18 +106,15 @@ class MailService
     /**
      * Send a notification email (simple usage)
      */
-    public function sendNotification(string $recipientEmail, string $subject, string $message): bool
+    public function notify(string $recipientEmail, string $subject, string $message, bool $isHTML=true): bool
     {
+        $this->mailer->clearAllRecipients();
+        $this->mailer->clearAttachments();
+
         try {
             // Set up the email content
-            $this->setContent($subject, $message, true);
+            $this->setContent($subject, $message, $isHTML);
             $this->addRecipient($recipientEmail);
-
-            // Dynamically attach the file if it exists
-            $outpassFile = STORAGE_PATH . '/outpass.pdf';
-            if (is_readable($outpassFile)) {
-                $this->attachFile($outpassFile);
-            }
 
             // Attempt to send the email
             return $this->send();
@@ -189,6 +187,7 @@ class MailService
 
             // Send the email
             if ($this->send()) {
+                echo "Email sent to {$email->getRecipient()} with subject: {$email->getSubject()}\n";
                 // Delete the email from the queue after successful sending
                 $this->entityManager->remove($email);
                 $this->entityManager->flush();

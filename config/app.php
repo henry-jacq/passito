@@ -41,13 +41,24 @@ return [
             'password' => $_ENV['DB_PASS'],
         ]
     ],
-    'mail' => [
-        'host' => $_ENV['SMTP_HOST'],
-        'user' => $_ENV['SMTP_USER'],
-        'pass' => $_ENV['SMTP_PASS'],
-        'from' => $_ENV['MAILER_FROM'],
-        'port' => (int) $_ENV['SMTP_PORT'],
-        'debug' => $boolean($_ENV['SMTP_DEBUG'])
+    'notification' => [
+        'mail' => [
+            'host' => $_ENV['SMTP_HOST'],
+            'user' => $_ENV['SMTP_USER'],
+            'pass' => $_ENV['SMTP_PASS'],
+            'from' => $_ENV['MAILER_FROM'],
+            'port' => (int) $_ENV['SMTP_PORT'],
+            'debug' => $boolean($_ENV['SMTP_DEBUG'])
+        ],
+        'sms' => [
+            'twilio' => [
+                'sid' => $_ENV['TWILIO_SID'],
+                'from' => $_ENV['TWILIO_FROM'],
+                'token' => $_ENV['TWILIO_AUTH_TOKEN'],
+                'country_code' => $_ENV['TWILIO_COUNTRY_CODE'] ?? '+91',
+                'verification_message' => $_ENV['TWILIO_VERIFICATION_MESSAGE'],
+            ]
+        ]
     ],
     'session' => [
         'name'       => $appSnakeName . '_session',

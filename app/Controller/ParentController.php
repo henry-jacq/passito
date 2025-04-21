@@ -25,12 +25,12 @@ class ParentController extends BaseController
         $token = $args['token'] ?? null;
         $parentResponse = $args['response'] ?? null;
 
-        $verification = $this->verificationService->getVerificationByToken($token);
-        $outpass = $verification->getOutpassRequest();
-
         if(!$token) {
             return parent::renderErrorPage($response, ['code' => 400,]);
         }
+
+        $verification = $this->verificationService->getVerificationByToken($token);
+        $outpass = $verification->getOutpassRequest();
 
         if (!$verification || $verification->isUsed()) {
             return parent::renderErrorPage($response, ['code' => 403,]);

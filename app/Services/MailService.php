@@ -28,8 +28,7 @@ class MailService
     {
         // Enable verbose debug output if configured
         if ($this->config->get('notification.mail.debug') === true) {
-            // $this->mailer->SMTPDebug = SMTP::DEBUG_SERVER;
-            $this->mailer->SMTPDebug = 3;
+            $this->mailer->SMTPDebug = SMTP::DEBUG_SERVER;
         }
 
         // Set the mailer to use SMTP

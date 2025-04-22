@@ -87,8 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const acceptOutpassButtons = document.querySelectorAll('.accept-outpass');
     acceptOutpassButtons.forEach((button) => {
         button.addEventListener('click', async (event) => {
-            const tr = event.target.closest('tr');
-            const table = tr.closest('table');
+            event.stopPropagation();
             const outpassId = event.target.dataset.id;
             
             try {
@@ -99,9 +98,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (response.ok) {
                     const data = response.data;
                     if (data.status) {
-                        tr.remove();
-                        const countEntries = table.querySelectorAll('tr');
-                        if (countEntries.length < 2) {
+                        const tr = event.target.closest('tr');
+                        if (tr) {
+                            const table = tr.closest('table');
+                            tr.remove();
+
+                            if (table && table.querySelectorAll('tr').length < 2) {
+                                location.reload();
+                            }
+                        } else {
                             location.reload();
                         }
                     } else {
@@ -122,6 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const rejectOutpassButtons = document.querySelectorAll('.reject-outpass');
     rejectOutpassButtons.forEach((button) => {
         button.addEventListener('click', (event) => {
+            event.stopPropagation();
             const outpassId = event.target.dataset.id;
 
             Modal.open({

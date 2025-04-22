@@ -124,22 +124,24 @@ use App\Enum\OutpassStatus;
             <table class="min-w-full table-auto">
                 <thead class="bg-gray-100">
                     <tr>
-                        <th class="px-6 py-3 text-sm font-medium text-left text-gray-700">Student Name</th>
-                        <th class="px-6 py-3 text-sm font-medium text-left text-gray-700">Course</th>
-                        <th class="px-6 py-3 text-sm font-medium text-left text-gray-700">Year</th>
-                        <th class="px-6 py-3 text-sm font-medium text-left text-gray-700">Type</th>
-                        <th class="px-6 py-3 text-sm font-medium text-left text-gray-700">Destination</th>
-                        <th class="px-6 py-3 text-sm font-medium text-left text-center text-gray-700">Status</th>
-                        <th class="px-6 py-3 text-sm font-medium text-left text-gray-700">Date & Duration</th>
-                        <th class="px-6 py-3 text-sm font-medium text-center text-gray-700">Actions</th>
+                        <th class="px-6 py-3 text-sm font-semibold text-left text-gray-700"># ID</th>
+                        <th class="px-6 py-3 text-sm font-semibold text-left text-gray-700">Student Name</th>
+                        <th class="px-6 py-3 text-sm font-semibold text-left text-gray-700">Year</th>
+                        <th class="px-6 py-3 text-sm font-semibold text-left text-gray-700">Course</th>
+                        <th class="px-6 py-3 text-sm font-semibold text-left text-gray-700">Type</th>
+                        <th class="px-6 py-3 text-sm font-semibold text-left text-gray-700">Destination</th>
+                        <th class="px-6 py-3 text-sm font-semibold text-left text-center text-gray-700">Status</th>
+                        <th class="px-6 py-3 text-sm font-semibold text-left text-gray-700">Depart Time</th>
+                        <th class="px-6 py-3 text-sm font-semibold text-left text-gray-700">Return Time</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
                     <?php foreach ($outpasses as $outpass): ?>
-                        <tr>
+                        <tr onclick="location.href='<?= $this->urlFor('admin.outpass.records.details', ['outpass_id' => $outpass->getId()]) ?>'" class="cursor-pointer hover:bg-gray-50">
+                            <td class="px-6 py-4 text-sm text-gray-900"># <?= $outpass->getID() ?></td>
                             <td class="px-6 py-4 text-sm text-gray-900"><?= $outpass->getStudent()->getUser()->getName() ?></td>
-                            <td class="px-6 py-4 text-sm text-gray-900"><?= $outpass->getStudent()->getDepartment() . ' ' . $outpass->getStudent()->getBranch() ?></td>
                             <td class="px-6 py-4 text-sm text-gray-900"><?= formatStudentYear($outpass->getStudent()->getYear()) ?></td>
+                            <td class="px-6 py-4 text-sm text-gray-900"><?= $outpass->getStudent()->getDepartment() . ' ' . $outpass->getStudent()->getBranch() ?></td>
                             <td class="px-6 py-4 text-sm text-gray-900"><?= ucwords($outpass->getPassType()->value) ?></td>
                             <td class="px-6 py-4 text-sm text-gray-900"><?= $outpass->getDestination() ?></td>
                             <td class="px-6 py-4 text-sm text-center text-gray-900">
@@ -149,19 +151,19 @@ use App\Enum\OutpassStatus;
                             </td>
                             <td class="px-6 py-4">
                                 <span class="block text-sm text-gray-900">
-                                    <?= $outpass->getFromDate()->format('d M, Y') ?> - <?= $outpass->getToDate()->format('d M, Y') ?>
+                                    <?= $outpass->getFromDate()->format('d M, Y') ?>
                                 </span>
                                 <span class="block text-xs text-gray-600">
-                                    <?= $outpass->getFromTime()->format('h:i A') ?> - <?= $outpass->getToTime()->format('h:i A') ?>
+                                    <?= $outpass->getFromTime()->format('h:i A') ?>
                                 </span>
                             </td>
-                            <td class="px-6 py-4 space-x-2 text-sm font-medium text-center whitespace-normal">
-                                <?php if (!empty($outpass->getId())): ?>
-                                    <a class="inline-flex items-center text-indigo-600 transition duration-200 hover:text-indigo-900" href="<?= $this->urlFor('admin.outpass.records.details', ['outpass_id' => $outpass->getId()]) ?>">
-                                        <i class="mr-1 fas fa-eye"></i> View
-                                    </a>
-                                <?php endif; ?>
-                                <button class="text-red-600 transition duration-200 hover:text-red-900" data-id="<?= $outpass->getId() ?>"><i class="mr-1 fas fa-trash-alt"></i>Delete</button>
+                            <td class="px-6 py-4">
+                                <span class="block text-sm text-gray-900">
+                                    <?= $outpass->getToDate()->format('d M, Y') ?>
+                                </span>
+                                <span class="block text-xs text-gray-600">
+                                    <?= $outpass->getToTime()->format('h:i A') ?>
+                                </span>
                             </td>
                         </tr>
                     <?php endforeach; ?>

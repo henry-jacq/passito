@@ -22,25 +22,25 @@
             </div>
         </section>
     <?php else: ?>
-        <section class="overflow-auto bg-white rounded-lg shadow-md select-none">
-            <table class="w-full border-collapse table-auto">
+        <section class="overflow-hidden bg-white rounded-lg shadow-md select-none">
+            <table class="min-w-full border-collapse table-auto">
                 <thead class="bg-gray-100">
                     <tr>
-                        <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Outpass ID</th>
+                        <th class="px-1 py-3 text-sm font-semibold text-center text-gray-600">Outpass ID</th>
                         <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Student Name</th>
                         <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Digital ID</th>
                         <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Department</th>
                         <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Status</th>
                         <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Check-Out</th>
                         <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Check-In</th>
-                        <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Device</th>
+                        <th class="px-2 py-3 text-sm font-semibold text-center text-gray-600">Verified Device</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
+                <tbody class="divide-y divide-gray-200">
                     <?php foreach ($logbook as $log): ?>
                         <tr class="hover:bg-gray-50">
-                            <td class="px-4 py-3 text-sm text-gray-700">
-                                <a href="<?= $this->urlFor('admin.outpass.records.details', ['outpass_id' => $log->getOutpass()->getId()]) ?>" class="text-gray-600 hover:text-gray-800">#<?= htmlspecialchars($log->getOutpass()->getId()) ?></a>
+                            <td class="px-1 py-3 text-sm text-center text-gray-700">
+                                <a href="<?= $this->urlFor('admin.outpass.records.details', ['outpass_id' => $log->getOutpass()->getId()]) ?>" class="text-gray-600 hover:text-gray-800"># <?= htmlspecialchars($log->getOutpass()->getId()) ?></a>
                             </td>
                             <td class="px-4 py-3 text-sm text-gray-700"><?= htmlspecialchars($log->getOutpass()->getStudent()->getUser()->getName()) ?></td>
                             <td class="px-4 py-3 text-sm text-gray-700"><?= htmlspecialchars($log->getOutpass()->getStudent()->getDigitalId()) ?></td>
@@ -79,7 +79,12 @@
                                     <span class="text-sm text-gray-400">N/A</span>
                                 <?php endif; ?>
                             </td>
-                            <td class="px-4 py-3 text-sm text-gray-700"><?= htmlspecialchars($log->getVerifier()->getName()) ?></td>
+                            <td class="px-2 py-3 text-sm text-center text-gray-700">
+                                <a href="<?= $this->urlFor('admin.manage.verifiers') ?>" class="text-gray-600 hover:text-gray-800 hover:underline">
+                                    <span class="inline-block mr-1 w-2.5 h-2.5 <?= $log->getVerifier()->getName() ? 'bg-green-500' : 'bg-red-500' ?> rounded-full"></span>
+                                    <?= htmlspecialchars($log->getVerifier()->getName()) ?>
+                                </a>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

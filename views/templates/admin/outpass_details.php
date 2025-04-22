@@ -8,13 +8,15 @@ use App\Enum\OutpassStatus;
     <div class="flex items-center justify-between pb-3 mb-5 space-x-4 border-b border-gray-300">
         <h2 class="text-2xl font-semibold text-gray-700">#<?= $outpass_id ?> Outpass Details</h2>
         <div class="flex space-x-4">
-            <?php if ($outpass->getStatus() === OutpassStatus::PENDING): ?>
+            <?php if (in_array($outpass->getStatus(), [OutpassStatus::PENDING, OutpassStatus::PARENT_APPROVED])): ?>
                 <div>
-                    <button class="px-4 py-2 text-sm font-medium text-white transition-all transition bg-green-600 rounded-lg hover:bg-green-700">Approve</button>
-                    <button class="px-4 py-2 text-sm font-medium text-white transition-all transition bg-red-600 rounded-lg hover:bg-red-700">Reject</button>
+                    <button class="px-4 py-2 text-sm font-medium text-white transition-all transition bg-green-600 rounded-lg hover:bg-green-700 accept-outpass" data-id="<?= $outpass->getId() ?>">Approve</button>
+                    <button class="px-4 py-2 text-sm font-medium text-white transition-all transition bg-red-600 rounded-lg hover:bg-red-700 reject-outpass" data-id="<?= $outpass->getId() ?>">Reject</button>
                 </div>
+                <a href="<?= $this->urlFor('admin.outpass.pending') ?>" class="px-4 py-2 text-sm font-medium text-gray-700 transition-all transition bg-gray-200 rounded-lg hover:bg-gray-300">Back to Pending</a>
+            <?php else: ?>
+                <a href="<?= $this->urlFor('admin.outpass.records') ?>" class="px-4 py-2 text-sm font-medium text-gray-700 transition-all transition bg-gray-200 rounded-lg hover:bg-gray-300">Back to Records</a>
             <?php endif; ?>
-            <a href="<?= $this->urlFor('admin.outpass.records') ?>" class="px-4 py-2 text-sm font-medium text-gray-700 transition-all transition bg-gray-200 rounded-lg hover:bg-gray-300">Back to Records</a>
         </div>
     </div>
 

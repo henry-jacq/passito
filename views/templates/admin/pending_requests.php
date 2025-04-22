@@ -11,30 +11,30 @@
             </p>
         </div>
     <?php else: ?>
-        <section class="overflow-hidden bg-white rounded-lg shadow-md">
+        <section class="overflow-hidden bg-white rounded-lg shadow-md select-none">
             <table class="min-w-full table-auto">
                 <thead class="bg-gray-100">
                     <tr>
-                        <th class="px-6 py-3 text-sm font-medium text-left text-gray-700">Student Name</th>
-                        <th class="px-6 py-3 text-sm font-medium text-left text-gray-700">Course</th>
-                        <th class="px-6 py-3 text-sm font-medium text-left text-gray-700">Year</th>
-                        <th class="px-6 py-3 text-sm font-medium text-left text-gray-700">Type</th>
-                        <th class="px-6 py-3 text-sm font-medium text-left text-gray-700">Destination</th>
-                        <th class="px-6 py-3 text-sm font-medium text-left text-gray-700">Purpose</th>
-                        <th class="px-6 py-3 text-sm font-medium text-left text-gray-700">Date & Duration</th>
-                        <th class="px-6 py-3 text-sm font-medium text-center text-gray-700">Files</th>
-                        <th class="px-6 py-3 text-sm font-medium text-center text-gray-700">Actions</th>
+                        <th class="px-6 py-3 text-sm font-semibold text-center text-gray-700"># ID</th>
+                        <th class="px-6 py-3 text-sm font-semibold text-left text-gray-700">Student Name</th>
+                        <th class="px-6 py-3 text-sm font-semibold text-center text-gray-700">Year</th>
+                        <th class="px-6 py-3 text-sm font-semibold text-left text-gray-700">Branch</th>
+                        <th class="px-6 py-3 text-sm font-semibold text-left text-gray-700">Type</th>
+                        <th class="px-6 py-3 text-sm font-semibold text-left text-gray-700">Destination</th>
+                        <th class="px-6 py-3 text-sm font-semibold text-left text-gray-700">Date & Duration</th>
+                        <th class="px-6 py-3 text-sm font-semibold text-center text-gray-700">Files</th>
+                        <th class="px-6 py-3 text-sm font-semibold text-center text-gray-700">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
                     <?php foreach ($outpasses as $outpass): ?>
-                        <tr>
+                        <tr onclick="location.href='<?= $this->urlFor('admin.outpass.records.details', ['outpass_id' => $outpass->getId()]) ?>'" class="cursor-pointer hover:bg-gray-50">
+                            <td class="px-4 py-3 text-sm text-center"># <?= htmlspecialchars($outpass->getId()) ?></td>
                             <td class="px-6 py-4 text-sm text-gray-900"><?= $outpass->getStudent()->getUser()->getName() ?></td>
+                            <td class="px-6 py-4 text-sm text-center text-gray-900"><?= formatStudentYear($outpass->getStudent()->getYear()) ?></td>
                             <td class="px-6 py-4 text-sm text-gray-900"><?= $outpass->getStudent()->getDepartment() . ' ' . $outpass->getStudent()->getBranch() ?></td>
-                            <td class="px-6 py-4 text-sm text-gray-900"><?= formatStudentYear($outpass->getStudent()->getYear()) ?></td>
                             <td class="px-6 py-4 text-sm text-gray-900"><?= ucwords($outpass->getPassType()->value) ?></td>
                             <td class="px-6 py-4 text-sm text-gray-900"><?= $outpass->getDestination() ?></td>
-                            <td class="px-6 py-4 text-sm text-gray-900 truncate max-w-24"><?= $outpass->getPurpose() ?></td>
                             <td class="px-6 py-4">
                                 <span class="block text-sm text-gray-900">
                                     <?= $outpass->getFromDate()->format('d M, Y') ?> - <?= $outpass->getToDate()->format('d M, Y') ?>

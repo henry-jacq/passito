@@ -51,7 +51,7 @@ use App\Enum\UserRole; ?>
                     <a href="<?= $this->urlFor('admin.manage.logbook') ?>"
                         class="flex items-center px-4 py-2.5 <?= ($routeName == 'admin.manage.logbook') ? 'bg-blue-500/20 text-blue-800 hover:bg-blue-600/20 border-blue-800/80' : 'text-gray-600 hover:bg-gray-50 border-transparent'; ?> transition duration-200 rounded-md border-l-4">
                         <div class="flex items-center space-x-5">
-                            <i class="fas fas fa-book"></i>
+                            <i class="fas fa-book"></i>
                             <span>Logbook</span>
                         </div>
                     </a>
@@ -94,7 +94,7 @@ use App\Enum\UserRole; ?>
                         <a href="<?= $this->urlFor('admin.manage.verifiers') ?>"
                             class="flex items-center px-4 py-2.5 <?= ($routeName == 'admin.manage.verifiers') ? 'bg-blue-500/20 text-blue-800 hover:bg-blue-600/20 border-blue-800/80' : 'text-gray-600 hover:bg-gray-50 border-transparent'; ?> transition duration-200 rounded-md border-l-4">
                             <i class="pr-4 fas fa-server"></i>
-                            <span>Verifier Hub</span>
+                            <span>Verifier Panel</span>
                         </a>
                     </li>
                 <?php endif; ?>

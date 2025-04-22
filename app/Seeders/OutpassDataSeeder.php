@@ -11,7 +11,10 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class OutpassDataSeeder
 {
-    public function __construct(private readonly EntityManagerInterface $em)
+    public function __construct(
+        private readonly EntityManagerInterface $em,
+        private readonly int $studentId
+    )
     {
     }
 
@@ -30,7 +33,7 @@ class OutpassDataSeeder
             $fromTime = new DateTime(sprintf('%02d:%02d:00', rand(6, 18), rand(0, 59)));
             $toTime = new DateTime(sprintf('%02d:%02d:00', rand(19, 23), rand(0, 59)));
 
-            $student = $this->em->getRepository(Student::class)->find(1);
+            $student = $this->em->getRepository(Student::class)->find($this->studentId);
 
             $outpass = new OutpassRequest();
             $outpass->setStudent($student);

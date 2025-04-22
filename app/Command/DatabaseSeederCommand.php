@@ -34,28 +34,28 @@ class DatabaseSeederCommand extends Command
         $this
             ->setDescription('Runs all seeders or a specific one if provided.')
             ->setHelp('Run this command to seed the database with initial data. Use an argument to seed a specific table.')
-            ->addArgument('seeder', InputArgument::OPTIONAL, 'The name of the specific seeder to run (e.g., settings, users, institutions, hostels).');
+            ->addArgument('seeder', InputArgument::OPTIONAL, 'The name of the specific seeder to run (e.g., settings, users, institutions, hostels).')
+            ->addArgument('studentId', InputArgument::OPTIONAL, 'Student ID for seeding outpass data).');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $seederKey = $input->getArgument('seeder');
+        $studentId = $input->getArgument('studentId') !== null ? (int)$input->getArgument('studentId') : null;
 
         if ($seederKey) {
-            // Run a specific seeder
             if (!array_key_exists($seederKey, $this->seeders)) {
                 $output->writeln("<error>Seeder '$seederKey' not found. Available seeders: " . implode(', ', array_keys($this->seeders)) . "</error>");
                 return Command::FAILURE;
             }
 
-            return $this->runSeeder($this->seeders[$seederKey], $output);
+            return $this->runSeeder($this->seeders[$seederKey], $output, $studentId);
         }
 
-        // Run all seeders
         $output->writeln('<info>Running all seeders...</info>');
         foreach ($this->seeders as $key => $seederClass) {
             $output->writeln("<comment>Seeding: $key</comment>");
-            $result = $this->runSeeder($seederClass, $output);
+            $result = $this->runSeeder($seederClass, $output, $studentId);
             if ($result === Command::FAILURE) {
                 return Command::FAILURE;
             }
@@ -65,10 +65,18 @@ class DatabaseSeederCommand extends Command
         return Command::SUCCESS;
     }
 
-    private function runSeeder(string $seederClass, OutputInterface $output): int
+    private function runSeeder(string $seederClass, OutputInterface $output, ?int $studentId = null): int
     {
         try {
-            $seeder = new $seederClass($this->entityManager);
+            if ($seederClass === OutpassDataSeeder::class) {
+                if ($studentId === null) {
+                    throw new \InvalidArgumentException("Student ID must be provided for outpass_data seeder.");
+                }
+                $seeder = new OutpassDataSeeder($this->entityManager, $studentId);
+            } else {
+                $seeder = new $seederClass($this->entityManager);
+            }
+
             $seeder->run();
             $output->writeln("<info>{$seederClass} completed successfully.</info>");
             return Command::SUCCESS;

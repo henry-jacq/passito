@@ -86,7 +86,7 @@ class UserService
         $student->setDigitalId($data['digital_id']);
         $student->setYear($data['year']);
         $student->setBranch($data['branch']);
-        $student->setDepartment($data['department']);
+        $student->setCourse($data['course']);
         $student->setRoomNo($data['room_no']);
         $student->setParentNo($data['parent_no']);
         $student->setStatus(true);

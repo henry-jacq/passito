@@ -37,7 +37,7 @@ class Student
     private string $branch;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private string $department;
+    private string $course;
 
     #[ORM\Column(type: 'string', length: 255)]
     private string $roomNo;
@@ -106,14 +106,14 @@ class Student
         $this->branch = $branch;
     }
 
-    public function getDepartment(): string
+    public function getCourse(): string
     {
-        return $this->department;
+        return $this->course;
     }
 
-    public function setDepartment(string $department): void
+    public function setCourse(string $course): void
     {
-        $this->department = $department;
+        $this->course = $course;
     }
 
     public function getRoomNo(): string
@@ -165,7 +165,7 @@ class Student
             'digital_id' => $this->getDigitalId(),
             'year' => $this->getYear(),
             'branch' => $this->getBranch(),
-            'department' => $this->getDepartment(),
+            'course' => $this->getCourse(),
             'room_no' => $this->getRoomNo(),
             'parent_no' => $this->getParentNo(),
             'status' => $this->getStatus(),

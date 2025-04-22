@@ -215,11 +215,11 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="px-3 space-y-4">
                 <h3 class="text-xl font-bold text-gray-800 border-b border-gray-200 pb-3">Add New Student</h3>
 
-                <div class="space-y-5">
+                <div class="space-y-6">
                     <!-- Student Name and Email -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label for="student-name" class="block text-md font-semibold text-gray-700">Student Name</label>
+                            <label for="student-name" class="block text-md font-semibold text-gray-700">Full Name</label>
                             <input type="text" id="student-name" name="student-name" class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md transition duration-200" placeholder="Enter Name" required>
                         </div>
                         <div>
@@ -235,16 +235,16 @@ document.addEventListener('DOMContentLoaded', () => {
                             <input type="text" id="digital-id" name="digital-id" class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md  transition duration-200" placeholder="Enter Digital ID" required>
                         </div>
                         <div>
-                            <label for="student-no" class="block text-md font-semibold text-gray-700">Student Number</label>
-                            <input type="text" id="student-no" name="student-no" class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md  transition duration-200" placeholder="Enter Student Number" required>
+                            <label for="year" class="block text-md font-semibold text-gray-700">Year</label>
+                            <input type="number" id="year" name="year" class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md  transition duration-200" placeholder="Enter Year" required>
                         </div>
                     </div>
 
-                    <!-- Department and Branch -->
+                    <!-- Course and Branch -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label for="department" class="block text-md font-semibold text-gray-700">Department</label>
-                            <input type="text" id="department" name="department" class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md  transition duration-200" placeholder="Enter Department" required>
+                            <label for="course" class="block text-md font-semibold text-gray-700">Course</label>
+                            <input type="text" id="course" name="course" class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md  transition duration-200" placeholder="Enter Course" required>
                         </div>
                         <div>
                             <label for="branch" class="block text-md font-semibold text-gray-700">Branch</label>
@@ -252,11 +252,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
 
-                    <!-- Year and Room Number -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label for="year" class="block text-md font-semibold text-gray-700">Year</label>
-                            <input type="number" id="year" name="year" class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md  transition duration-200" placeholder="Enter Year" required>
+                            <label for="hostel-no" class="block text-md font-semibold text-gray-700">Select Hostel</label>
+                            <select id="hostel-no" name="hostel-no" class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md  transition duration-200">
+                                <option value="" disabled selected>Select Hostel</option>
+                                ${hostelOptions}
+                            </select>
                         </div>
                         <div>
                             <label for="room-no" class="block text-md font-semibold text-gray-700">Room Number</label>
@@ -264,20 +266,17 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
 
-                    <!-- Hostel Number Dropdown -->
-                    <div>
-                        <label for="hostel-no" class="block text-md font-semibold text-gray-700">Hostel Number</label>
-                        <select id="hostel-no" name="hostel-no" class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md  transition duration-200">
-                            <option value="" disabled selected>Select Hostel</option>
-                            ${hostelOptions}
-                        </select>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label for="student-no" class="block text-md font-semibold text-gray-700">Student Number</label>
+                            <input type="text" id="student-no" name="student-no" class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md  transition duration-200" placeholder="Enter Student Number" required>
+                        </div>
+                        <div>
+                            <label for="parent-no" class="block text-md font-semibold text-gray-700">Parent Number</label>
+                            <input type="text" id="parent-no" name="parent-no" class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md  transition duration-200" placeholder="Enter Parent Number" required>
+                        </div>
                     </div>
 
-                    <!-- Parent Number -->
-                    <div>
-                        <label for="parent-no" class="block text-md font-semibold text-gray-700">Parent Number</label>
-                        <input type="text" id="parent-no" name="parent-no" class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md  transition duration-200" placeholder="Enter Parent Number" required>
-                    </div>
                 </div>
             </div>
             `,
@@ -289,7 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             const studentName = document.getElementById('student-name').value;
                             const email = document.getElementById('email').value;
                             const digitalId = document.getElementById('digital-id').value;
-                            const department = document.getElementById('department').value;
+                            const course = document.getElementById('course').value;
                             const branch = document.getElementById('branch').value;
                             const year = document.getElementById('year').value;
                             const roomNo = document.getElementById('room-no').value;
@@ -301,13 +300,22 @@ document.addEventListener('DOMContentLoaded', () => {
                             event.target.disabled = true;
                             event.target.textContent = 'Adding Student...';
 
-                            if (studentName && email && digitalId && department && branch && year && roomNo && hostelNo && studentNo && parentNo) {
+                            if (studentName && email && digitalId && course && branch && year && roomNo && hostelNo && studentNo && parentNo) {
+
+                                // Student number and parent number must not be the same
+                                if (studentNo === parentNo) {
+                                    alert("Student number and Parent number must not be the same.");
+                                    event.target.textContent = 'Add Student';
+                                    event.target.disabled = false;
+                                    return;
+                                }
+
                                 try {
                                     const response = await Ajax.post('/api/web/admin/students/create', {
                                         name: studentName,
                                         email,
                                         digital_id: digitalId,
-                                        department,
+                                        course,
                                         branch,
                                         year,
                                         room_no: roomNo,

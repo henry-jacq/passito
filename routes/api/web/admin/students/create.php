@@ -4,7 +4,7 @@ use App\Enum\UserRole;
 use App\Entity\Student;
 
 ${basename(__FILE__, '.php')} = function () {
-    $required = ['name', 'email', 'digital_id', 'department', 'branch', 'year', 'room_no', 'hostel_no', 'contact', 'parent_no'];
+    $required = ['name', 'email', 'digital_id', 'course', 'branch', 'year', 'room_no', 'hostel_no', 'contact', 'parent_no'];
     if ($this->isAuthenticated() && $this->paramsExists($required) && UserRole::isAdministrator($this->getRole())) {
 
         $gender = $this->getAttribute('user')->getGender();
@@ -18,7 +18,7 @@ ${basename(__FILE__, '.php')} = function () {
             'contact' => $this->data['contact'],
             'hostel_no' => $this->data['hostel_no'],
             'digital_id' => $this->data['digital_id'],
-            'department' => $this->data['department'],
+            'course' => $this->data['course'],
             'branch' => $this->data['branch'],
             'year' => $this->data['year'],
             'room_no' => $this->data['room_no'],

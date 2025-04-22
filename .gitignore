@@ -10,6 +10,7 @@ storage/temp/
 storage/qr_codes/
 storage/attachments/
 storage/outpasses/
+storage/exports/
 resources/.sass-cache/
 
 # Logs

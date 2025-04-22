@@ -82,6 +82,40 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+    // Export student data
+    const exportStudentsButton = document.getElementById('export-students');
+
+    exportStudentsButton.addEventListener('click', async (event) => {
+        event.stopPropagation();
+
+        try {
+            // Directly request the CSV export and download as blob
+            const response = await Ajax.download(`/api/web/admin/students/export`, 'POST', {
+                'Content-Type': 'application/json'
+            });
+
+            if (response.ok) {
+                // Check if the response is OK and contains the file
+                const url = window.URL.createObjectURL(response.data);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = response.filename || 'students_export.csv'; // fallback filename
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+            } else if (response.status === 404) {
+                alert(response.message || 'No students found to export.');
+            } else {
+                alert('Failed to export student data.');
+            }
+        } catch (error) {
+            console.error('Export failed:', error);
+            alert('An error occurred during export.');
+        } finally {
+            Modal.close();
+        }
+    });
 
     // Accept Outpass
     const acceptOutpassButtons = document.querySelectorAll('.accept-outpass');

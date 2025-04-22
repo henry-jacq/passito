@@ -209,9 +209,17 @@ class ApiController
                 return packJson($data);
             case 'application/zip':
                 $zipFile = $data['zipFile'];
-
                 if (file_exists($zipFile)) {
                     return file_get_contents($zipFile);
+                } else {
+                    return packJson(['error' => 'File not found'], 'application/json');
+                }
+            case 'text/csv':
+                $csvFile = $data['csvFile'];
+                if (file_exists($csvFile)) {
+                    $fileContents = file_get_contents($csvFile);
+                    unlink($csvFile);
+                    return $fileContents;
                 } else {
                     return packJson(['error' => 'File not found'], 'application/json');
                 }

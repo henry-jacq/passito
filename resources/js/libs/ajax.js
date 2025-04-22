@@ -82,6 +82,38 @@ const Ajax = (function () {
         });
     };
 
+    // Download (handles blob response and filename)
+    const download = async (url, method = 'GET', headers = {}) => {
+        const response = await fetch(url, {
+            method,
+            headers: {
+                'Accept': 'application/octet-stream',
+                ...headers,
+            },
+        });
+
+        if (!response.ok) {
+            return {
+                ok: false,
+                status: response.status,
+                statusText: response.statusText,
+                data: null,
+            };
+        }
+
+        const blob = await response.blob();
+        const contentDisposition = response.headers.get('Content-Disposition');
+        const filenameMatch = contentDisposition?.match(/filename="?([^"]+)"?/);
+        const filename = filenameMatch?.[1] || 'download';
+
+        return {
+            ok: true,
+            status: response.status,
+            data: blob,
+            filename,
+        };
+    };
+
     // Return the public API of the module
     return {
         get,
@@ -89,6 +121,7 @@ const Ajax = (function () {
         put,
         delete: del,
         request, // For custom HTTP methods and advanced options
+        download,
     };
 })();
 

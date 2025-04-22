@@ -42,7 +42,7 @@
                 </button>
 
                 <!-- Export Button -->
-                <button id="export-student-modal" class="px-3 py-2 text-white transition duration-200 bg-indigo-600 rounded-md hover:bg-indigo-700 focus:ring focus:ring-indigo-400">
+                <button id="export-students" class="px-3 py-2 text-white transition duration-200 bg-indigo-600 rounded-md hover:bg-indigo-700 focus:ring focus:ring-indigo-400">
                     <i class="mr-2 fa-solid fa-arrow-up-from-bracket fa-sm"></i>
                     Export
                 </button>

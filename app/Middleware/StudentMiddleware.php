@@ -40,12 +40,14 @@ class StudentMiddleware implements MiddlewareInterface
         } else { 
             // User is authenticated
             // Get the student entity
-            $student = $this->em->getRepository(Student::class)->findBy(
+            $student = $this->em->getRepository(Student::class)->findOneBy(
                 ['user' => $this->session->get('user')]
-            )[0];
-            
-            if (is_array($student)) {
-                $student = $student[0];
+            );
+
+            if(is_null($student)) {
+                return $this->responseFactory
+                    ->createResponse(302)
+                    ->withHeader('Location', $this->view->urlFor('auth.login'));              
             }
 
             $userRole = $student->getUser()->getRole()->value;

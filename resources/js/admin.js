@@ -88,14 +88,15 @@ document.addEventListener('DOMContentLoaded', () => {
     exportStudentsButton.addEventListener('click', async (event) => {
         event.stopPropagation();
 
+        const toast = new Toast();
+        toast.create({message: "Exporting, please wait...", position: "bottom-right", type: "queue", duration: 4000 });
+        
         try {
-            // Directly request the CSV export and download as blob
             const response = await Ajax.download(`/api/web/admin/students/export`, 'POST', {
                 'Content-Type': 'application/json'
             });
 
             if (response.ok) {
-                // Check if the response is OK and contains the file
                 const url = window.URL.createObjectURL(response.data);
                 const a = document.createElement('a');
                 a.href = url;
@@ -104,14 +105,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 a.click();
                 a.remove();
                 window.URL.revokeObjectURL(url);
-            } else if (response.status === 404) {
-                alert(response.message || 'No students found to export.');
+                toast.create({ message: "Export completed successfully", position: "bottom-right", type: "success", duration: 4000 });
             } else {
-                alert('Failed to export student data.');
+                toast.create({ message: response.message || "Failed to export student data", position: "bottom-right", type: "error", duration: 4000 });
             }
         } catch (error) {
             console.error('Export failed:', error);
             alert('An error occurred during export.');
+            toast.create({ message: "An error occurred during export", position: "bottom-right", type: "error", duration: 4000 });
         } finally {
             Modal.close();
         }

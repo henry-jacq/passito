@@ -8,7 +8,7 @@ class Toast {
     init() {
         if (!document.querySelector(".toast-container")) {
             this.container = document.createElement("div");
-            this.container.className = "toast-container fixed flex flex-col gap-4 z-50 top-5 right-5";
+            this.container.className = "fixed z-50 flex flex-col gap-4 toast-container top-5 right-5";
             document.body.appendChild(this.container);
         }
         this.container = document.querySelector(".toast-container");
@@ -28,13 +28,13 @@ class Toast {
         toast.appendChild(icon);
 
         const messageEl = document.createElement("span");
-        messageEl.className = "text-md text-gray-700";
+        messageEl.className = "text-gray-700 text-md";
         messageEl.textContent = message;
         toast.appendChild(messageEl);
 
         if (dismissible) {
             const dismissBtn = document.createElement("button");
-            dismissBtn.className = "ml-auto text-lg hover:bg-gray-50 px-2 py-1 rounded-lg text-gray-600 hover:text-gray-900";
+            dismissBtn.className = "px-2 py-1 ml-auto text-lg text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900";
             dismissBtn.innerHTML = "&times;";
             dismissBtn.onclick = () => this.remove(id);
             toast.appendChild(dismissBtn);
@@ -74,6 +74,9 @@ class Toast {
             case "warning":
                 return "fa-exclamation-circle";
             case "info":
+                return "fa-info-circle";
+            case "queue":
+                return "fa-clock";
             default:
                 return "fa-info-circle";
         }

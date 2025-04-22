@@ -84,6 +84,44 @@
                     <?php endforeach; ?>
                 </tbody>
             </table>
+            <?php if ($records['totalPages'] > 1): ?>
+                <!-- Pagination Section -->
+                <div class="flex items-center justify-between px-4 py-3 border-t border-gray-200 bg-gray-50 sm:px-6">
+                    <div class="flex justify-between sm:hidden">
+                        <?php if ($records['currentPage'] > 1): ?>
+                            <button
+                                class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+                                onclick="location.href='?page=<?= $records['currentPage'] - 1 ?>'">Previous</button>
+                        <?php endif; ?>
+                        <?php if ($records['currentPage'] < $records['totalPages']): ?>
+                            <button
+                                class="relative inline-flex items-center px-4 py-2 ml-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+                                onclick="location.href='?page=<?= $records['currentPage'] + 1 ?>'">Next</button>
+                        <?php endif; ?>
+                    </div>
+                    <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+                        <div>
+                            <p class="text-sm text-gray-700">
+                                Showing <span class="font-medium"><?= ($records['currentPage'] - 1) * 10 + 1 ?></span>
+                                to <span class="font-medium"><?= min($records['currentPage'] * 10, $records['totalRecords']) ?></span>
+                                of <span class="font-medium"><?= $records['totalRecords'] ?></span> results
+                            </p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <?php if ($records['currentPage'] > 1): ?>
+                                <button
+                                    class="px-3 py-1 text-sm text-gray-600 bg-gray-200 border rounded-md hover:bg-gray-300 focus:ring focus:ring-blue-300 focus:outline-none"
+                                    onclick="location.href='?page=<?= $records['currentPage'] - 1 ?>'">Previous</button>
+                            <?php endif; ?>
+                            <?php if ($records['currentPage'] < $records['totalPages']): ?>
+                                <button
+                                    class="px-3 py-1 text-sm text-white bg-blue-600 border rounded-md hover:bg-blue-700 focus:ring focus:ring-blue-300 focus:outline-none"
+                                    onclick="location.href='?page=<?= $records['currentPage'] + 1 ?>'">Next</button>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
         </section>
     <?php endif; ?>
 </main>

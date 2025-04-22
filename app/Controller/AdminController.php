@@ -214,12 +214,31 @@ class AdminController extends BaseController
         $this->view->clearCacheIfDev();
 
         $userData = $request->getAttribute('user');
-        $logbook = $this->verifierService->fetchLogsByGender($userData);
+        $page = max(1, (int) ($request->getQueryParams()['page'] ?? 1));
+        $limit = 10;
+
+        // Fetch the pagination data
+        $paginationData = $this->verifierService->fetchLogsByGender(
+            user: $userData,
+            page: $page,
+            limit: $limit,
+            paginate: true
+        );
+
+        // Redirect to the last page if the requested page exceeds available pages
+        if ($paginationData['totalPages'] > 1 && $page > $paginationData['totalPages']) {
+            return $response->withHeader('Location', '?page=' . $paginationData['totalPages'])->withStatus(302);
+        }
 
         $args = [
             'title' => 'Manage Logbook',
             'user' => $userData,
-            'logbook' => $logbook,
+            'logbook' => $paginationData['data'],
+            'records' => [
+                'currentPage' => $paginationData['currentPage'],
+                'totalPages' => $paginationData['totalPages'],
+                'totalRecords' => $paginationData['total'],
+            ],
             'routeName' => $this->getRouteName($request),
         ];
 

@@ -10,6 +10,7 @@ use App\Entity\VerifierLog;
 use App\Enum\OutpassStatus;
 use App\Enum\VerifierStatus;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 // TODO: Generate outpass report
 // TODO: Generate detailed analytics report
@@ -252,20 +253,38 @@ class VerifierService
     }
 
     /**
-     * Fetch all logs
+     * Fetch Gender-wise logs with or without pagination
      */
-    public function fetchLogsByGender(User $user): array
+    public function fetchLogsByGender(User $user, int $page = 1, int $limit = 10, bool $paginate = true): array
     {
-        $qb = $this->em->createQueryBuilder();
-        $qb->select('log')
+        $queryBuilder = $this->em->createQueryBuilder();
+        $queryBuilder->select('log')
             ->from(VerifierLog::class, 'log')
             ->join('log.outpass', 'outpass')
             ->join('outpass.student', 'student')
             ->join('student.user', 'user')
             ->where('user.gender = :gender')
+            ->orderBy('log.outTime', 'DESC')
             ->setParameter('gender', $user->getGender()->value);
 
-        return $qb->getQuery()->getResult();
+        if (!$paginate) {
+            return $queryBuilder->getQuery()->getResult();
+        }
+
+        $offset = ($page - 1) * $limit;
+
+        $queryBuilder->setFirstResult($offset)
+            ->setMaxResults($limit);
+
+        $query = $queryBuilder->getQuery();
+        $paginator = new Paginator($query, true);
+
+        return [
+            'data' => iterator_to_array($paginator),
+            'total' => count($paginator),
+            'currentPage' => $page,
+            'totalPages' => ceil(count($paginator) / $limit),
+        ];
     }
 
     /**
@@ -273,7 +292,7 @@ class VerifierService
      */
     public function fetchCheckedOutLogs(User $user): array
     {
-        $allLogs = $this->fetchLogsByGender($user);
+        $allLogs = $this->fetchLogsByGender(user: $user, paginate: false);
         $userGender = $user->getGender()?->value;
 
         return array_filter($allLogs, function ($log) use ($userGender) {

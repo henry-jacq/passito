@@ -29,7 +29,7 @@
                         <th class="px-1 py-3 text-sm font-semibold text-center text-gray-600">Outpass ID</th>
                         <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Student Name</th>
                         <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Digital ID</th>
-                        <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Department</th>
+                        <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Course</th>
                         <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Status</th>
                         <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Check-Out</th>
                         <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Check-In</th>
@@ -44,7 +44,7 @@
                             </td>
                             <td class="px-4 py-3 text-sm text-gray-700"><?= htmlspecialchars($log->getOutpass()->getStudent()->getUser()->getName()) ?></td>
                             <td class="px-4 py-3 text-sm text-gray-700"><?= htmlspecialchars($log->getOutpass()->getStudent()->getDigitalId()) ?></td>
-                            <td class="px-4 py-3 text-sm text-gray-700"><?= htmlspecialchars($log->getOutpass()->getStudent()->getDepartment()) ?></td>
+                            <td class="px-4 py-3 text-sm text-gray-700"><?= htmlspecialchars($log->getOutpass()->getStudent()->getCourse()) ?></td>
                             <td class="px-4 py-3 text-sm text-gray-700">
                                 <?php
                                 $status = ucfirst($log->getOutpass()->getStatus()->value);

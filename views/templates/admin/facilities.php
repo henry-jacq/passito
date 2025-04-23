@@ -75,7 +75,6 @@
                     <tr>
                         <th class="px-6 py-3 text-sm font-semibold text-left text-gray-600">#</th>
                         <th class="px-6 py-3 text-sm font-semibold text-left text-gray-600">Hostel Name</th>
-                        <th class="px-6 py-3 text-sm font-semibold text-left text-gray-600">Institution Name</th>
                         <th class="px-6 py-3 text-sm font-semibold text-center text-gray-600">Warden Incharge</th>
                         <th class="px-6 py-3 text-sm font-semibold text-right text-gray-600">Actions</th>
                     </tr>
@@ -85,7 +84,6 @@
                     <tr class="hover:bg-gray-50">
                         <td class="px-6 py-3 text-sm text-gray-800"><?= $key + 1 ?></td>
                         <td class="px-6 py-3 text-sm text-gray-800"><?= $hostel->getName() ?></td>
-                        <td class="px-6 py-3 text-sm text-gray-600"><?= $hostel->getInstitution()->getName() ?></td>
                         <td class="px-6 py-3 text-sm text-center text-gray-600">
                             <div class="flex items-center justify-center space-x-2">
                                 <div class="w-6 h-6 bg-gray-300 rounded-full">

@@ -103,8 +103,8 @@
     <div class="org-header">
         <img src="<?= $this->storage->getFullPath("qr_codes/{$outpass->getQrCode()}") ?>" alt="<?= $this->storage->getFullPath("qr_codes/{$outpass->getQrCode()}") ?>">
         <div class="text-container">
-            <h3 class="org-name"><?= $student->getHostel()->getInstitution()->getName() ?></h3>
-            <p class="address-line"><?= $student->getHostel()->getInstitution()->getAddress() ?></p>
+            <h3 class="org-name"><?= $student->getInstitution()->getName() ?></h3>
+            <p class="address-line"><?= $student->getInstitution()->getAddress() ?></p>
             <p class="form-title">Hostel - Permission Form</p>
         </div>
     </div>

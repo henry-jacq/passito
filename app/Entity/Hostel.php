@@ -18,10 +18,6 @@ class Hostel
     #[ORM\Column(type: 'integer')]
     private int $id;
 
-    #[ORM\ManyToOne(targetEntity: Institution::class)]
-    #[ORM\JoinColumn(name: 'institution_id', referencedColumnName: 'id', nullable: false)]
-    private Institution $institution;
-
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(name: 'warden_id', referencedColumnName: 'id', nullable: false)]
     private User $warden;
@@ -35,16 +31,6 @@ class Hostel
     public function getId(): int
     {
         return $this->id;
-    }
-
-    public function getInstitution(): Institution
-    {
-        return $this->institution;
-    }
-
-    public function setInstitution(Institution $institution): void
-    {
-        $this->institution = $institution;
     }
 
     public function getWarden(): User
@@ -81,7 +67,6 @@ class Hostel
     {
         return [
             'id' => $this->getId(),
-            'institution' => $this->getInstitution()->toArray(),
             'warden' => $this->getWarden()->toArray(),
             'hostelName' => $this->getName(),
             'hostelType' => $this->getHostelType()->value

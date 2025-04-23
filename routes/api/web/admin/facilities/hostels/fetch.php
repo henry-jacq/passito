@@ -9,7 +9,7 @@ ${basename(__FILE__, '.php')} = function () {
 
         foreach ($this->facilityService->getHostelsByType($admin) as $hostel) {
             $hostel = $hostel->toArray();
-            unset($hostel['institution'], $hostel['warden']);
+            unset($hostel['warden']);
             $hostels[] = $hostel;
         }
 

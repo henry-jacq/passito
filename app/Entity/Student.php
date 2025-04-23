@@ -23,6 +23,10 @@ class Student
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false)]
     private User $user;
 
+    #[ORM\ManyToOne(targetEntity: Institution::class)]
+    #[ORM\JoinColumn(name: 'institution_id', referencedColumnName: 'id', nullable: false)]
+    private Institution $institution;
+
     #[ORM\ManyToOne(targetEntity: Hostel::class)]
     #[ORM\JoinColumn(name: 'hostel_id', referencedColumnName: 'id', nullable: false)]
     private Hostel $hostel;
@@ -64,6 +68,16 @@ class Student
     public function setUser(User $user): void
     {
         $this->user = $user;
+    }
+
+    public function getInstitution(): Institution
+    {
+        return $this->institution;
+    }
+
+    public function setInstitution(Institution $institution): void
+    {
+        $this->institution = $institution;
     }
 
     public function getHostel(): Hostel

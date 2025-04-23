@@ -18,7 +18,6 @@ ${basename(__FILE__, '.php')} = function () {
                 'hostel_name' => $this->data['hostel_name'],
                 'hostel_type' => $hostel_type,
                 'warden_id' => $this->data['warden_id'],
-                'institution_id' => $this->data['institution_id']
             ];
 
             $hostel = $this->facilityService->createHostel($data);

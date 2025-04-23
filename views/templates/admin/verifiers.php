@@ -4,20 +4,20 @@ use App\Enum\VerifierStatus; ?>
 <main class="flex-1 p-6 mt-20 overflow-y-auto">
     <!-- Page Header -->
     <div class="flex flex-wrap items-center justify-between mb-4">
-        <div class="space-y-2 mb-6">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Manage Verifiers</h2>
-            <p class="text-gray-600 text-md mb-10">
+        <div class="mb-6 space-y-2">
+            <h2 class="mb-4 text-2xl font-semibold text-gray-800">Manage Verifiers</h2>
+            <p class="mb-10 text-gray-600 text-md">
                 Manage verifier devices efficiently, including location, IP address, and operational status.
             </p>
         </div>
-        <button id="open-add-device-modal" class="px-5 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 focus:ring focus:ring-blue-400 transition-all duration-200 ease-in-out">
-            <i class="fa-solid fa-plus mr-2"></i> Add New Device
+        <button id="open-add-device-modal" class="px-5 py-2 text-sm font-medium text-white transition-all duration-200 ease-in-out bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 focus:ring focus:ring-blue-400">
+            <i class="mr-2 fa-solid fa-plus"></i> Add New Device
         </button>
     </div>
 
     <!-- Info Card -->
-    <div class="mb-8 p-4 bg-blue-500/20 border-l-4 border-blue-800/80 rounded-lg">
-        <ul class="list-disc pl-4 text-blue-800 text-sm space-y-1">
+    <div class="p-4 mb-8 border-l-4 rounded-lg bg-blue-500/20 border-blue-800/80">
+        <ul class="pl-4 space-y-1 text-sm text-blue-800 list-disc">
             <li>Ensure tokens are securely handled as they <strong>cannot be regenerated</strong>.</li>
             <li>Verify QR scanning functionality before deploying devices.</li>
             <li>Devices must have stable internet access and server connectivity before activation.</li>
@@ -25,17 +25,17 @@ use App\Enum\VerifierStatus; ?>
     </div>
 
     <?php if (!empty($verifiers)): ?>
-        <section class="bg-white shadow-md rounded-lg overflow-auto select-none">
-            <table class="w-full table-auto border-collapse">
+        <section class="overflow-auto bg-white rounded-lg shadow-md select-none">
+            <table class="w-full border-collapse table-auto">
                 <thead class="bg-gray-100">
                     <tr>
-                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">Device Name</th>
-                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">Location</th>
-                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">IP Address</th>
-                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">Status</th>
-                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">Last Sync</th>
-                        <th class="px-4 py-3 text-center text-sm font-semibold text-gray-600">Auth Token</th>
-                        <th class="px-4 py-3 text-center text-sm font-semibold text-gray-600">Actions</th>
+                        <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Device Name</th>
+                        <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Location</th>
+                        <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">IP Address</th>
+                        <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Status</th>
+                        <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Last Sync</th>
+                        <th class="px-4 py-3 text-sm font-semibold text-center text-gray-600">Auth Token</th>
+                        <th class="px-4 py-3 text-sm font-semibold text-center text-gray-600">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -79,15 +79,15 @@ use App\Enum\VerifierStatus; ?>
                             <td class="px-4 py-3 text-sm text-gray-700">
                                 <div class="flex items-center justify-center space-x-2">
                                     <?php if (VerifierStatus::isActive($verifier->getStatus()->value)): ?>
-                                        <button class="px-3 py-1 text-sm text-white bg-yellow-600 rounded-lg hover:bg-yellow-700 focus:ring focus:ring-yellow-400 deactivate-verifier-modal transition duration-200" data-id="<?= $verifier->getId() ?>">
+                                        <button class="px-3 py-1 text-sm text-white transition duration-200 bg-yellow-600 rounded-lg hover:bg-yellow-700 focus:ring focus:ring-yellow-400 deactivate-verifier-modal" data-id="<?= $verifier->getId() ?>">
                                             Deactivate
                                         </button>
                                     <?php elseif (VerifierStatus::isInactive($verifier->getStatus()->value)): ?>
-                                        <button class="px-3 py-1 text-sm text-white bg-green-600 rounded-lg hover:bg-green-700 focus:ring focus:ring-green-400 activate-verifier-modal transition duration-200" data-id="<?= $verifier->getId() ?>">
+                                        <button class="px-3 py-1 text-sm text-white transition duration-200 bg-green-600 rounded-lg hover:bg-green-700 focus:ring focus:ring-green-400 activate-verifier-modal" data-id="<?= $verifier->getId() ?>">
                                             Activate
                                         </button>
                                     <?php endif; ?>
-                                    <button class="px-3 py-1 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring focus:ring-red-400 delete-verifier-modal transition duration-200" data-id="<?= $verifier->getId() ?>" data-name="<?= $verifier->getName() ?>">
+                                    <button class="px-3 py-1 text-sm text-white transition duration-200 bg-red-600 rounded-lg hover:bg-red-700 focus:ring focus:ring-red-400 delete-verifier-modal" data-id="<?= $verifier->getId() ?>" data-name="<?= $verifier->getName() ?>">
                                         Delete
                                     </button>
                                 </div>

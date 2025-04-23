@@ -5,7 +5,6 @@ namespace App\Services;
 use DateTime;
 use App\Entity\User;
 use App\Core\Session;
-use App\Entity\Hostel;
 use App\Enum\UserRole;
 use App\Entity\Student;
 use Doctrine\ORM\EntityManagerInterface;
@@ -14,6 +13,7 @@ class UserService
 {
     public function __construct(
         private readonly Session $session,
+        private readonly FacilityService $facility,
         private readonly EntityManagerInterface $em
     )
     {
@@ -78,10 +78,12 @@ class UserService
             return false;
         }
 
-        $hostel = $this->em->getRepository(Hostel::class)->find($data['hostel_no']);
+        $hostel = $this->facility->getHostelById($data['hostel_no']);
+        $institution = $this->facility->getInstitutionById($data['institution']);
         
         $student = new Student();
         $student->setUser($user);
+        $student->setInstitution($institution);
         $student->setHostel($hostel);
         $student->setDigitalId($data['digital_id']);
         $student->setYear($data['year']);

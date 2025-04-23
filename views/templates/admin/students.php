@@ -13,7 +13,7 @@
                         It seems there are no student records available. Please add student records to manage them effectively.
                     </p>
                 </div>
-                <button id="add-student-modal" class="inline-flex items-center justify-center px-2 py-2 text-sm font-medium text-white transition duration-200 bg-blue-500 rounded-lg shadow hover:bg-blue-600">
+                <button class="inline-flex items-center justify-center px-2 py-2 text-sm font-medium text-white transition duration-200 bg-blue-500 rounded-lg shadow hover:bg-blue-600 add-student-modal">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
                     </svg>
@@ -36,13 +36,13 @@
 
             <div class="flex space-x-2">
                 <!-- Add Student Button -->
-                <button id="add-student-modal" class="px-3 py-2 text-white transition duration-200 bg-blue-600 rounded-md hover:bg-blue-700 focus:ring focus:ring-blue-400">
+                <button class="px-3 py-2 text-white transition duration-200 bg-blue-600 rounded-md hover:bg-blue-700 focus:ring focus:ring-blue-400 add-student-modal">
                     <i class="mr-2 fa-solid fa-user-plus fa-sm"></i>
                     Add Student
                 </button>
 
                 <!-- Export Button -->
-                <button id="export-students" class="px-3 py-2 text-white transition duration-200 bg-indigo-600 rounded-md hover:bg-indigo-700 focus:ring focus:ring-indigo-400">
+                <button class="px-3 py-2 text-white transition duration-200 bg-indigo-600 rounded-md hover:bg-indigo-700 focus:ring focus:ring-indigo-400 export-students">
                     <i class="mr-2 fa-solid fa-arrow-up-from-bracket fa-sm"></i>
                     Export
                 </button>

@@ -82,41 +82,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-    // Export student data
-    const exportStudentsButton = document.getElementById('export-students');
-
-    exportStudentsButton.addEventListener('click', async (event) => {
-        event.stopPropagation();
-
-        const toast = new Toast();
-        toast.create({message: "Exporting, please wait...", position: "bottom-right", type: "queue", duration: 4000 });
-        
-        try {
-            const response = await Ajax.download(`/api/web/admin/students/export`, 'POST', {
-                'Content-Type': 'application/json'
-            });
-
-            if (response.ok) {
-                const url = window.URL.createObjectURL(response.data);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = response.filename || 'students_export.csv'; // fallback filename
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
-                window.URL.revokeObjectURL(url);
-                toast.create({ message: "Export completed successfully", position: "bottom-right", type: "success", duration: 4000 });
-            } else {
-                toast.create({ message: response.message || "Failed to export student data", position: "bottom-right", type: "error", duration: 4000 });
-            }
-        } catch (error) {
-            console.error('Export failed:', error);
-            alert('An error occurred during export.');
-            toast.create({ message: "An error occurred during export", position: "bottom-right", type: "error", duration: 4000 });
-        } finally {
-            Modal.close();
-        }
-    });
 
     // Accept Outpass
     const acceptOutpassButtons = document.querySelectorAll('.accept-outpass');
@@ -223,18 +188,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // Add Student modal
-    const addStudentButton = document.getElementById('add-student-modal');
+    const addStudentButton = document.querySelector('.add-student-modal');
     if (addStudentButton) {
         addStudentButton.addEventListener('click', async () => {
             const fetchHostels = await Ajax.post('/api/web/admin/facilities/hostels/fetch');
+            const fetchInstitutions = await Ajax.post('/api/web/admin/facilities/institutions/fetch');
             let hostelOptions = '';
+            let institutionOptions = '';
 
-            if (fetchHostels.ok) {
+            if (fetchHostels.ok && fetchInstitutions.ok) {
                 const hostels = fetchHostels.data;
+                const institutions = fetchInstitutions.data;
 
-                if (hostels.status && Array.isArray(hostels.data.hostels)) {
+                if (hostels.status && Array.isArray(hostels.data.hostels) && institutions.status && Array.isArray(institutions.data.institutions)) {
                     hostelOptions = hostels.data.hostels
                         .map(hostel => `<option value="${hostel.id}">${hostel.hostelName}</option>`)
+                        .join('');
+                    institutionOptions = institutions.data.institutions
+                        .map(institution => `<option value="${institution.id}">${institution.name}</option>`)
                         .join('');
                 } else {
                     const toast = new Toast();                    
@@ -251,67 +222,92 @@ document.addEventListener('DOMContentLoaded', () => {
                 <h3 class="text-xl font-bold text-gray-800 border-b border-gray-200 pb-3">Add New Student</h3>
 
                 <div class="space-y-6">
-                    <!-- Student Name and Email -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label for="student-name" class="block text-md font-semibold text-gray-700">Full Name</label>
-                            <input type="text" id="student-name" name="student-name" class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md transition duration-200" placeholder="Enter Name" required>
+                    <div class="space-y-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+                            <div>
+                                <label for="student-name" class="block text-md font-semibold text-gray-700">Full Name</label>
+                                <input type="text" id="student-name" name="student-name" placeholder="e.g., John Doe" required
+                                    class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800
+                                    focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md transition duration-200">
+                            </div>
+                            <div>
+                                <label for="email" class="block text-md font-semibold text-gray-700">Email</label>
+                                <input type="email" id="email" name="email" placeholder="e.g., student@email.com" required
+                                    class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800
+                                    focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md transition duration-200">
+                            </div>
                         </div>
-                        <div>
-                            <label for="email" class="block text-md font-semibold text-gray-700">Email</label>
-                            <input type="email" id="email" name="email" class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md  transition duration-200" placeholder="Enter Email" required>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div>
+                                <label for="digital-id" class="block text-md font-semibold text-gray-700">Digital ID</label>
+                                <input type="text" id="digital-id" name="digital-id" placeholder="e.g., 2212025" required
+                                    class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800
+                                    focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md transition duration-200">
+                            </div>
+                            <div>
+                                <label for="student-no" class="block text-md font-semibold text-gray-700">Student Number</label>
+                                <input type="text" id="student-no" name="student-no" placeholder="e.g., 9876543210" required
+                                    class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800
+                                    focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md transition duration-200">
+                            </div>
+                            <div>
+                                <label for="parent-no" class="block text-md font-semibold text-gray-700">Parent Number</label>
+                                <input type="text" id="parent-no" name="parent-no" placeholder="e.g., 9876543210" required
+                                    class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800
+                                    focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md transition duration-200">
+                            </div>
                         </div>
                     </div>
-
-                    <!-- Digital ID and Student Number -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label for="digital-id" class="block text-md font-semibold text-gray-700">Digital ID</label>
-                            <input type="text" id="digital-id" name="digital-id" class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md  transition duration-200" placeholder="Enter Digital ID" required>
-                        </div>
-                        <div>
-                            <label for="year" class="block text-md font-semibold text-gray-700">Year</label>
-                            <input type="number" id="year" name="year" class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md  transition duration-200" placeholder="Enter Year" required>
-                        </div>
-                    </div>
-
-                    <!-- Course and Branch -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label for="course" class="block text-md font-semibold text-gray-700">Course</label>
-                            <input type="text" id="course" name="course" class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md  transition duration-200" placeholder="Enter Course" required>
-                        </div>
-                        <div>
-                            <label for="branch" class="block text-md font-semibold text-gray-700">Branch</label>
-                            <input type="text" id="branch" name="branch" class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md  transition duration-200" placeholder="Enter Branch" required>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label for="hostel-no" class="block text-md font-semibold text-gray-700">Select Hostel</label>
-                            <select id="hostel-no" name="hostel-no" class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md  transition duration-200">
-                                <option value="" disabled selected>Select Hostel</option>
-                                ${hostelOptions}
-                            </select>
+                    <div class="space-y-5">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label for="institution-id" class="block text-md font-semibold text-gray-700">Institution</label>
+                                <select id="institution-id" name="institution-id" required
+                                    class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800
+                                    focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md transition duration-200">
+                                    <option value="" disabled selected>Select Institution</option>
+                                    ${institutionOptions}
+                                </select>
+                            </div>
+                            <div>
+                                <label for="hostel-no" class="block text-md font-semibold text-gray-700">Hostel</label>
+                                <select id="hostel-no" name="hostel-no"
+                                    class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 
+                                    focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md transition duration-200">
+                                    <option value="" disabled selected>Select Hostel</option>
+                                    ${hostelOptions}
+                                </select>
+                            </div>
                         </div>
                         <div>
                             <label for="room-no" class="block text-md font-semibold text-gray-700">Room Number</label>
-                            <input type="text" id="room-no" name="room-no" class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md  transition duration-200" placeholder="Enter Room Number" required>
+                            <input type="text" id="room-no" name="room-no" placeholder="e.g., A-102" required
+                                class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 
+                                focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md transition duration-200">
                         </div>
                     </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label for="student-no" class="block text-md font-semibold text-gray-700">Student Number</label>
-                            <input type="text" id="student-no" name="student-no" class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md  transition duration-200" placeholder="Enter Student Number" required>
-                        </div>
-                        <div>
-                            <label for="parent-no" class="block text-md font-semibold text-gray-700">Parent Number</label>
-                            <input type="text" id="parent-no" name="parent-no" class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md  transition duration-200" placeholder="Enter Parent Number" required>
+                    <div class="space-y-2">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div>
+                                <label for="course" class="block text-md font-semibold text-gray-700">Course</label>
+                                <input type="text" id="course" name="course" placeholder="e.g., B.Tech, MBA" required
+                                    class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800
+                                    focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md transition duration-200">
+                            </div>
+                            <div>
+                                <label for="branch" class="block text-md font-semibold text-gray-700">Branch</label>
+                                <input type="text" id="branch" name="branch" placeholder="e.g., CSE, ECE" required
+                                    class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800
+                                    focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md transition duration-200">
+                            </div>
+                            <div>
+                                <label for="year" class="block text-md font-semibold text-gray-700">Year</label>
+                                <input type="number" id="year" name="year" placeholder="e.g., 2" required
+                                    class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800
+                                    focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md transition duration-200">
+                            </div>
                         </div>
                     </div>
-
                 </div>
             </div>
             `,
@@ -330,12 +326,13 @@ document.addEventListener('DOMContentLoaded', () => {
                             const hostelNo = document.getElementById('hostel-no').value;
                             const studentNo = document.getElementById('student-no').value;
                             const parentNo = document.getElementById('parent-no').value;
+                            const institutionId = document.getElementById('institution-id').value;
 
                             // Disable button to prevent multiple clicks
                             event.target.disabled = true;
                             event.target.textContent = 'Adding Student...';
 
-                            if (studentName && email && digitalId && course && branch && year && roomNo && hostelNo && studentNo && parentNo) {
+                            if (studentName && email && digitalId && course && branch && year && roomNo && hostelNo && studentNo && parentNo && institutionId) {
 
                                 // Student number and parent number must not be the same
                                 if (studentNo === parentNo) {
@@ -357,6 +354,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                         hostel_no: hostelNo,
                                         contact: studentNo,
                                         parent_no: parentNo,
+                                        institution: institutionId
                                     });
 
                                     if (response.ok) {
@@ -393,6 +391,43 @@ document.addEventListener('DOMContentLoaded', () => {
                 classes: 'custom-modal-class',
                 closeOnBackdropClick: false,
             });
+        });
+    }
+
+    // Export student data
+    const exportStudentsButton = document.querySelector('.export-students');
+    if (exportStudentsButton) {
+        exportStudentsButton.addEventListener('click', async (event) => {
+            event.stopPropagation();
+
+            const toast = new Toast();
+            toast.create({ message: "Exporting, please wait...", position: "bottom-right", type: "queue", duration: 4000 });
+
+            try {
+                const response = await Ajax.download(`/api/web/admin/students/export`, 'POST', {
+                    'Content-Type': 'application/json'
+                });
+
+                if (response.ok) {
+                    const url = window.URL.createObjectURL(response.data);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = response.filename || 'students_export.csv'; // fallback filename
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+                    toast.create({ message: "Export completed successfully", position: "bottom-right", type: "success", duration: 4000 });
+                } else {
+                    toast.create({ message: response.message || "Failed to export student data", position: "bottom-right", type: "error", duration: 4000 });
+                }
+            } catch (error) {
+                console.error('Export failed:', error);
+                alert('An error occurred during export.');
+                toast.create({ message: "An error occurred during export", position: "bottom-right", type: "error", duration: 4000 });
+            } finally {
+                Modal.close();
+            }
         });
     }
 

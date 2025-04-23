@@ -21,32 +21,32 @@ class OutpassRulesSeeder
                 'parentApproval' => false,
                 'companionVerification' => false,
                 'emergencyContactNotification' => false,
-                'weekdayCollegeHoursStart' => '09:00:00',
-                'weekdayCollegeHoursEnd' => '17:00:00',
+                'weekdayCollegeHoursStart' => '08:00:00',
+                'weekdayCollegeHoursEnd' => '15:30:00',
                 'weekdayOvernightStart' => '22:00:00',
-                'weekdayOvernightEnd' => '06:00:00',
-                'weekendStartTime' => '09:00:00',
-                'weekendEndTime' => '23:59:59',
+                'weekdayOvernightEnd' => '04:00:00',
+                'weekendStartTime' => '05:00:00',
+                'weekendEndTime' => '22:00:00',
                 'emailNotification' => true,
                 'smsNotification' => false,
-                'appNotification' => true,
+                'appNotification' => false,
             ],
             [
                 'type' => 'female',
                 'dailyLimit' => null,
                 'weeklyLimit' => null,
-                'parentApproval' => false,
+                'parentApproval' => true,
                 'companionVerification' => false,
-                'emergencyContactNotification' => true, // Different for female
-                'weekdayCollegeHoursStart' => '09:00:00',
-                'weekdayCollegeHoursEnd' => '17:00:00',
-                'weekdayOvernightStart' => '20:00:00', // Different for female
+                'emergencyContactNotification' => false, // Different for female
+                'weekdayCollegeHoursStart' => '08:00:00',
+                'weekdayCollegeHoursEnd' => '15:30:00',
+                'weekdayOvernightStart' => '20:30:00', // Different for female
                 'weekdayOvernightEnd' => '06:00:00',
-                'weekendStartTime' => '09:00:00',
-                'weekendEndTime' => '22:00:00', // Different for female
+                'weekendStartTime' => '06:00:00',
+                'weekendEndTime' => '20:30:00', // Different for female
                 'emailNotification' => true,
                 'smsNotification' => true, // Different for female
-                'appNotification' => true,
+                'appNotification' => false,
             ],
         ];
 

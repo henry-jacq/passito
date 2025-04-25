@@ -65,11 +65,7 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Warden Assigned</label>
                     <div class="mt-1 font-medium text-gray-800">
-                    <?php
-                    use App\Enum\Gender;
-                     if ($userData->getHostel()->getWarden()->getGender() === Gender::MALE):?>
-                        Mr. <?php else: ?> Ms. <?php endif; ?>
-                     <?= $userData->getHostel()->getWarden()->getName()?>
+                        None
                     </div>
                 </div>
             </div>

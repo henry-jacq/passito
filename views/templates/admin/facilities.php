@@ -75,7 +75,7 @@
                     <tr>
                         <th class="px-6 py-3 text-sm font-semibold text-left text-gray-600">#</th>
                         <th class="px-6 py-3 text-sm font-semibold text-left text-gray-600">Hostel Name</th>
-                        <th class="px-6 py-3 text-sm font-semibold text-center text-gray-600">Warden Incharge</th>
+                        <th class="px-6 py-3 text-sm font-semibold text-left text-gray-600">Category</th>
                         <th class="px-6 py-3 text-sm font-semibold text-right text-gray-600">Actions</th>
                     </tr>
                 </thead>
@@ -84,14 +84,7 @@
                     <tr class="hover:bg-gray-50">
                         <td class="px-6 py-3 text-sm text-gray-800"><?= $key + 1 ?></td>
                         <td class="px-6 py-3 text-sm text-gray-800"><?= $hostel->getName() ?></td>
-                        <td class="px-6 py-3 text-sm text-center text-gray-600">
-                            <div class="flex items-center justify-center space-x-2">
-                                <div class="w-6 h-6 bg-gray-300 rounded-full">
-                                    <img class="rounded-full" src="https://ui-avatars.com/api/?name=<?= $hostel->getWarden()->getName() ?>&background=c7d2fe&color=3730a3&bold=true" alt="">
-                                </div>
-                                <span class="ml-2"><?= $hostel->getWarden()->getName() ?></span>
-                            </div>
-                        </td>
+                        <td class="px-6 py-3 text-sm text-gray-800"><?= $hostel->getCategory() ?></td>
                         <td class="px-6 py-3 text-right">
                             <div class="inline-flex items-center space-x-4 text-gray-500">
                                 <button title="Edit" class="text-gray-700 hover:text-gray-800" data-id="<?= $hostel->getId() ?>">

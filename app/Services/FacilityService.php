@@ -81,8 +81,6 @@ class FacilityService
 
     public function createHostel(array $data): Hostel|bool
     {
-        $warden = $this->em->getRepository(User::class)->find($data['warden_id']);
-
         // Check If the hostel name already exists
         $hostel = $this->em->getRepository(Hostel::class)->findOneBy(['hostelName' => $data['hostel_name']]);
         
@@ -91,8 +89,8 @@ class FacilityService
         }
         
         $hostel = new Hostel();
-        $hostel->setWarden($warden);
         $hostel->setName($data['hostel_name']);
+        $hostel->setCategory($data['category']);
         $hostel->setHostelType($data['hostel_type']);
 
         $this->em->persist($hostel);

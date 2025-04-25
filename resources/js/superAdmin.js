@@ -196,8 +196,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Iterate over each button and attach an event listener
     removeWardenButtons.forEach((button) => {
         button.addEventListener('click', (event) => {
-            const wardenId = event.target.dataset.id;
-            const wardenName = event.target.dataset.wardenname;
+            const wardenId = event.currentTarget.dataset.id;
+            const wardenName = event.currentTarget.dataset.wardenname;
 
             Modal.open({
                 content: `
@@ -339,23 +339,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const addHostelButton = document.querySelector('.add-hostel-modal');
     if (addHostelButton) {
         addHostelButton.addEventListener('click', () => {
-            // Fetch the list of wardens and institutions from the server
-            const fetchWardens = Ajax.post('/api/web/admin/wardens/fetch');
+            // Fetch the list of institutions from the server
             const fetchInstitutions = Ajax.post('/api/web/admin/facilities/institutions/fetch');
 
-            Promise.all([fetchWardens, fetchInstitutions])
-                .then((responses) => {
-                    const wardenResponse = responses[0];
-                    const institutionResponse = responses[1];
+            fetchInstitutions
+                .then((response) => {
+                    if (response.ok) {
+                        const institutions = response.data.data.institutions;
 
-                    if (wardenResponse.ok && institutionResponse.ok) {
-                        const wardens = wardenResponse.data.data.wardens;
-                        const institutions = institutionResponse.data.data.institutions;
-
-                        // Generate options for wardens and institutions
-                        const wardenOptions = wardens
-                            .map((warden) => `<option value="${warden.id}">${warden.name} (${warden.email})</option>`)
-                            .join('');
                         const institutionOptions = institutions
                             .map((institution) => `<option value="${institution.id}">${institution.name}</option>`)
                             .join('');
@@ -372,10 +363,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                         <input type="text" id="hostel-name" name="hostel-name" class="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md transition duration-200" placeholder="Enter Name" required>
                                     </div>
                                     <div class="space-y-2">
-                                        <label for="select-warden" class="block text-md font-semibold text-gray-700">Assign Warden</label>
-                                        <select id="select-warden" name="select-warden" class="mt-1 w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md transition duration-200" required>
-                                            ${wardenOptions}
-                                        </select>
+                                        <label for="hostel-category" class="block text-md font-semibold text-gray-700">Hostel Category</label>
+                                        <input type="text" id="hostel-category" name="hostel-category" class="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md transition duration-200" placeholder="Enter Name" required>
+                                        <label class="block text-sm font-normal text-gray-600">Eg., Non-AC Shared (Common Bath), AC with Attached Bath and Balcony, AC Shared Room (Common Bath)...</label>
                                     </div>
                                     <div class="space-y-2">
                                         <label for="select-institution" class="block text-md font-semibold text-gray-700">Select Institution</label>
@@ -392,17 +382,17 @@ document.addEventListener('DOMContentLoaded', () => {
                                     class: `inline-flex justify-center rounded-lg bg-blue-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-blue-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50`,
                                     onClick: async (event) => {
                                         const hostelName = document.getElementById('hostel-name').value;
-                                        const wardenId = document.getElementById('select-warden').value;
+                                        const category = document.getElementById('hostel-category').value;
                                         const institutionId = document.getElementById('select-institution').value;
 
                                         event.target.disabled = true;
                                         event.target.textContent = 'Adding Hostel...';
 
-                                        if (hostelName && wardenId && institutionId) {
+                                        if (hostelName && category && institutionId) {
                                             try {
                                                 const response = await Ajax.post('/api/web/admin/facilities/hostels/create', {
                                                     hostel_name: hostelName,
-                                                    warden_id: wardenId,
+                                                    category: category,
                                                     institution_id: institutionId
                                                 });
 

@@ -9,14 +9,14 @@
 
     <?php if (empty($logbook)): ?>
         <section class="flex flex-col items-center my-4 space-y-6 bg-white rounded-lg shadow-lg py-22">
-            <div class="flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full shadow-inner text-blue-700/80 animate-bounce">
-                <i class="text-4xl fas fa-exclamation-circle"></i>
+            <div class="flex items-center justify-center w-16 h-16 text-blue-800 bg-blue-200 rounded-full shadow-inner">
+                <i class="text-4xl fas fa-circle-info"></i>
             </div>
             <div class="text-center">
-                <h2 class="text-xl font-bold text-gray-800">
+                <h2 class="text-xl font-bold text-blue-900">
                     Logbook is Empty!
                 </h2>
-                <p class="max-w-md mt-2 text-base text-gray-600">
+                <p class="max-w-md mt-2 text-sm text-blue-800">
                     There are no logs available at the moment. Please check later.
                 </p>
             </div>

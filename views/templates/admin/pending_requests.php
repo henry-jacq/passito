@@ -1,15 +1,26 @@
 <!-- Pending Requests Page -->
 <main class="flex-1 p-6 mt-20 overflow-y-auto">
-    <h2 class="mb-4 text-2xl font-semibold text-gray-800">Pending Requests</h2>
-    <p class="mb-8 text-gray-600 text-md">Manage pending requests by approving, rejecting, or wiping them out.</p>
+    <div class="flex flex-wrap items-center justify-between mb-4">
+        <div class="mb-6 space-y-2">
+            <h2 class="mb-4 text-2xl font-semibold text-gray-800">Pending Requests</h2>
+            <p class="mb-10 text-gray-600 text-md">Manage pending requests by approving, rejecting, or wiping them out.</p>
+        </div>
+    </div>
 
     <?php if (empty($outpasses)): ?>
-        <div class="p-6 space-y-2 leading-relaxed text-blue-800 border-l-4 rounded-lg shadow-md bg-blue-200/60 border-blue-800/80" role="alert" aria-live="polite">
-            <h3 class="text-lg font-semibold">No Pending Outpasses Found</h3>
-            <p class="text-sm">
-                There are currently no pending outpass requests awaiting approval.
-            </p>
-        </div>
+        <section class="flex flex-col items-center my-4 space-y-6 bg-white rounded-lg shadow-lg py-22">
+            <div class="flex items-center justify-center w-16 h-16 text-blue-800 bg-blue-200 rounded-full shadow-inner">
+                <i class="text-4xl fas fa-circle-info"></i>
+            </div>
+            <div class="text-center">
+                <h2 class="text-xl font-bold text-blue-900">
+                    No Pending Outpasses Found
+                </h2>
+                <p class="max-w-md mt-2 text-sm text-blue-800">
+                    Currently, there are no pending outpass requests awaiting approval.
+                </p>
+            </div>
+        </section>
     <?php else: ?>
         <section class="overflow-hidden bg-white rounded-lg shadow-md select-none">
             <table class="min-w-full table-auto">

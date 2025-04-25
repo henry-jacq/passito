@@ -3,16 +3,27 @@
 use App\Enum\OutpassStatus;
 ?>
 <main class="flex-1 p-6 mt-20 overflow-y-auto">
-    <h2 class="mb-4 text-2xl font-semibold text-gray-700">Outpass Records</h2>
-    <p class="mb-8 text-base text-gray-700">View and manage the records of issued outpasses.</p>
+    <div class="flex flex-wrap items-center justify-between mb-4">
+        <div class="mb-6 space-y-2">
+            <h2 class="mb-4 text-2xl font-semibold text-gray-800">Outpass Records</h2>
+            <p class="mb-10 text-gray-600 text-md">View and manage the records of issued outpasses</p>
+        </div>
+    </div>
 
     <?php if (empty($outpasses)): ?>
-        <div class="p-6 space-y-2 leading-relaxed text-blue-800 border-l-4 rounded-lg shadow-md bg-blue-200/60 border-blue-800/80" role="alert" aria-live="polite">
-            <h3 class="text-lg font-semibold">No Outpass Records Found</h3>
-            <p class="text-sm">
-                There are currently no outpass records available to display.
-            </p>
-        </div>
+        <section class="flex flex-col items-center my-4 space-y-6 bg-white rounded-lg shadow-lg py-22">
+            <div class="flex items-center justify-center w-16 h-16 text-blue-800 bg-blue-200 rounded-full shadow-inner">
+                <i class="text-4xl fas fa-circle-info"></i>
+            </div>
+            <div class="text-center">
+                <h2 class="text-xl font-bold text-blue-900">
+                    No Outpass Records Found
+                </h2>
+                <p class="max-w-md mt-2 text-sm text-blue-800">
+                    There are currently no outpass records available to display.
+                </p>
+            </div>
+        </section>
     <?php else: ?>
         <!-- Search and Filter Section -->
         <div class="p-6 mb-8 bg-white rounded-lg shadow">

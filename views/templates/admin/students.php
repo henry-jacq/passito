@@ -36,7 +36,7 @@
 
             <div class="flex space-x-2">
                 <!-- Add Student Button -->
-                <button class="px-3 py-2 text-white transition duration-200 bg-blue-600 rounded-md hover:bg-blue-700 focus:ring focus:ring-blue-400 add-student-modal">
+                <button class="px-3 py-2 text-white transition duration-200 bg-blue-600 rounded-md hover:bg-blue-700 add-student-modal focus:outline-none focus:ring-0 focus:border-transparent">
                     <i class="mr-2 fa-solid fa-user-plus fa-sm"></i>
                     Add Student
                 </button>
@@ -53,16 +53,16 @@
     <div class="flex flex-col gap-6 px-6 py-5 mb-4 leading-relaxed text-gray-800 border-l-4 rounded-lg shadow-md bg-gray-200/60 border-gray-800/80">
         <div class="flex items-center justify-between">
             <div class="space-y-2">
-                <h3 class="text-base font-semibold">Upload Student Records</h3>
+                <h3 class="text-base font-semibold">Import Students Records</h3>
                 <p class="mt-1 text-sm">
-                    Upload a CSV file to import student records. Ensure the file meets the required format.
-                    <a href="#" class="text-blue-700 underline hover:text-blue-900">Download the sample template</a> to get started.
+                    Upload a CSV file to import student data.
+                    <a href="#" class="text-blue-700 underline hover:text-blue-900">Download the template</a> for the correct format.
                 </p>
             </div>
-            <button id="import-btn" class="inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-white transition duration-200 bg-gray-500 rounded-lg shadow hover:bg-gray-600">
+            <button id="import-btn" class="inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-white transition duration-200 bg-gray-500 rounded-lg shadow hover:bg-gray-600 focus:outline-none focus:ring-0 focus:border-transparent">
                 <div class="flex items-center space-x-3">
                     <i class="fa-solid fa-file-import"></i>
-                    <span>Choose File</span>
+                    <span>Upload File</span>
                 </div>
             </button>
         </div>

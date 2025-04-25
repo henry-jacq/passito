@@ -225,86 +225,75 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="space-y-3">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
                             <div>
-                                <label for="student-name" class="block text-md font-semibold text-gray-700">Full Name</label>
+                                <label for="student-name" class="block text-sm font-medium text-gray-700">Full Name</label>
                                 <input type="text" id="student-name" name="student-name" placeholder="e.g., John Doe" required
-                                    class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800
-                                    focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md transition duration-200">
+                                    class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition duration-200">
                             </div>
                             <div>
-                                <label for="email" class="block text-md font-semibold text-gray-700">Email</label>
+                                <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
                                 <input type="email" id="email" name="email" placeholder="e.g., student@email.com" required
-                                    class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800
-                                    focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md transition duration-200">
+                                    class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition duration-200">
                             </div>
                         </div>
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                             <div>
-                                <label for="digital-id" class="block text-md font-semibold text-gray-700">Digital ID</label>
+                                <label for="digital-id" class="block text-sm font-medium text-gray-700">Digital ID</label>
                                 <input type="text" id="digital-id" name="digital-id" placeholder="e.g., 2212025" required
-                                    class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800
-                                    focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md transition duration-200">
+                                    class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition duration-200">
                             </div>
                             <div>
-                                <label for="student-no" class="block text-md font-semibold text-gray-700">Student Number</label>
+                                <label for="student-no" class="block text-sm font-medium text-gray-700">Student Number</label>
                                 <input type="text" id="student-no" name="student-no" placeholder="e.g., 9876543210" required
-                                    class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800
-                                    focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md transition duration-200">
+                                    class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition duration-200">
                             </div>
                             <div>
-                                <label for="parent-no" class="block text-md font-semibold text-gray-700">Parent Number</label>
+                                <label for="parent-no" class="block text-sm font-medium text-gray-700">Parent Number</label>
                                 <input type="text" id="parent-no" name="parent-no" placeholder="e.g., 9876543210" required
-                                    class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800
-                                    focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md transition duration-200">
+                                    class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition duration-200">
                             </div>
                         </div>
                     </div>
                     <div class="space-y-5">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
-                                <label for="institution-id" class="block text-md font-semibold text-gray-700">Institution</label>
+                                <label for="institution-id" class="block text-sm font-medium text-gray-700">Institution</label>
                                 <select id="institution-id" name="institution-id" required
-                                    class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800
-                                    focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md transition duration-200">
+                                    class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition duration-200">
                                     <option value="" disabled selected>Select Institution</option>
                                     ${institutionOptions}
                                 </select>
                             </div>
                             <div>
-                                <label for="hostel-no" class="block text-md font-semibold text-gray-700">Hostel</label>
+                                <label for="hostel-no" class="block text-sm font-medium text-gray-700">Hostel</label>
                                 <select id="hostel-no" name="hostel-no"
-                                    class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 
-                                    focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md transition duration-200">
+                                    class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition duration-200">
                                     <option value="" disabled selected>Select Hostel</option>
                                     ${hostelOptions}
                                 </select>
                             </div>
                         </div>
                         <div>
-                            <label for="room-no" class="block text-md font-semibold text-gray-700">Room Number</label>
+                            <label for="room-no" class="block text-sm font-medium text-gray-700">Room Number</label>
                             <input type="text" id="room-no" name="room-no" placeholder="e.g., A-102" required
-                                class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 
-                                focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md transition duration-200">
+                                class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition duration-200">
                         </div>
                     </div>
                     <div class="space-y-2">
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                             <div>
-                                <label for="course" class="block text-md font-semibold text-gray-700">Course</label>
+                                <label for="course" class="block text-sm font-medium text-gray-700">Course</label>
                                 <input type="text" id="course" name="course" placeholder="e.g., B.Tech, MBA" required
-                                    class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800
-                                    focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md transition duration-200">
+                                    class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition duration-200">
                             </div>
                             <div>
-                                <label for="branch" class="block text-md font-semibold text-gray-700">Branch</label>
+                                <label for="branch" class="block text-sm font-medium text-gray-700">Branch</label>
                                 <input type="text" id="branch" name="branch" placeholder="e.g., CSE, ECE" required
-                                    class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800
-                                    focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md transition duration-200">
+                                    class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition duration-200">
                             </div>
                             <div>
-                                <label for="year" class="block text-md font-semibold text-gray-700">Year</label>
+                                <label for="year" class="block text-sm font-medium text-gray-700">Year</label>
                                 <input type="number" id="year" name="year" placeholder="e.g., 2" required
-                                    class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800
-                                    focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md transition duration-200">
+                                    class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition duration-200">
                             </div>
                         </div>
                     </div>
@@ -388,7 +377,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     },
                 ],
                 size: 'sm:max-w-3xl',
-                classes: 'custom-modal-class',
+                classes: 'focus:outline-none focus:ring-0 focus:border-transparent',
                 closeOnBackdropClick: false,
             });
         });

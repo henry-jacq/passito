@@ -7,7 +7,7 @@ use App\Enum\VerifierStatus; ?>
         <div class="mb-6 space-y-2">
             <h2 class="mb-4 text-2xl font-semibold text-gray-800">Manage Verifiers</h2>
             <p class="mb-10 text-gray-600 text-md">
-                Manage verifier devices efficiently, including location, IP address, and operational status.
+                Deploy and manage your verifier devices to ensure secure and efficient verification processes.
             </p>
         </div>
         <button id="open-add-device-modal" class="px-5 py-2 text-sm font-medium text-white transition-all duration-200 ease-in-out bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 focus:ring focus:ring-blue-400">
@@ -17,11 +17,19 @@ use App\Enum\VerifierStatus; ?>
 
     <!-- Info Card -->
     <div class="p-4 mb-8 border-l-4 rounded-lg bg-blue-500/20 border-blue-800/80">
+        <h3 class="mb-2 text-base font-semibold text-blue-900">
+            Important Notes
+        </h3>
         <ul class="pl-4 space-y-1 text-sm text-blue-800 list-disc">
-            <li>Ensure tokens are securely handled as they <strong>cannot be regenerated</strong>.</li>
-            <li>Verify QR scanning functionality before deploying devices.</li>
-            <li>Devices must have stable internet access and server connectivity before activation.</li>
+            <li>Install the <strong>Verifier Tool</strong> on a Raspberry Pi to activate the device.</li>
+            <li>
+                Download from the 
+                <a href="https://github.com/henry-jacq/passito-verifier" target="_blank" class="text-blue-600 underline hover:text-blue-800">GitHub repository</a>. Follow the README to complete setup.
+            </li>
+            <li>Ensure QR scanning and internet connectivity are tested before deployment.</li>
+            <li>Auth token is required for verifier authentication and secure communication, and cannot be regenerated.</li>
         </ul>
+
     </div>
 
     <?php if (!empty($verifiers)): ?>

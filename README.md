@@ -92,7 +92,62 @@ Follow these steps to set up Passito on your local machine:
    ```bash
    sudo a2enmod rewrite
    sudo a2enmod vhost_alias
+   sudo a2enmod actions
+   sudo a2enmod headers
+   sudo a2enmod proxy
+   sudo a2enmod proxy_wstunnel
    ```
+
+   Add Vhost configuration for Apache:
+   ```bash
+   sudo nano /etc/apache2/sites-available/passito.conf
+   ```
+   Add the following configuration (adjust paths as necessary):
+   ```apache
+   <VirtualHost *:80>
+      ServerAdmin webmaster@localhost
+      DocumentRoot /home/henry/htdocs/passito/public
+      ServerName passito.local
+
+      <Directory /home/henry/htdocs/passito/public/>
+         Options -Indexes +FollowSymLinks
+         AllowOverride All
+         Require all granted
+      </Directory>
+
+      <IfModule mod_deflate.c>
+         AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/javascript application/json application/xml image/svg+xml
+      </IfModule>
+
+      <IfModule mod_expires.c>
+         ExpiresActive On
+         ExpiresByType image/jpg "access plus 1 year"
+         ExpiresByType image/jpeg "access plus 1 year"
+         ExpiresByType image/png "access plus 1 year"
+         ExpiresByType image/gif "access plus 1 year"
+      </IfModule>
+
+      ServerSignature Off
+
+      # WebSocket Proxy
+      ProxyPass "/ws/" "ws://127.0.0.1:8080/"
+      ProxyPassReverse "/ws/" "ws://127.0.0.1:8080/"
+
+      ErrorLog ${APACHE_LOG_DIR}/error.log
+      CustomLog ${APACHE_LOG_DIR}/access.log combined
+   </VirtualHost>
+   ```
+
+   Enable the new site configuration:
+   ```bash
+   sudo a2ensite passito.conf
+   sudo systemctl restart apache2
+   ```
+   Add the following line to your `/etc/hosts` file:
+   ```bash
+   127.0.0.1   passito.local
+   ```
+
 
 1. **Clone the Repository**:
    ```bash

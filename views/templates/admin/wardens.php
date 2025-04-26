@@ -14,7 +14,7 @@
 
     <!-- Info Card -->
     <div class="p-4 mb-8 border-l-4 rounded-lg bg-blue-500/20 border-blue-800/80">
-        <h3 class="mb-2 text-base font-semibold text-blue-900">Warden Account Guidelines</h3>
+        <h3 class="mb-2 text-base font-semibold text-blue-900">Important Notes</h3>
         <ul class="pl-4 space-y-1 text-sm text-blue-800 list-disc">
             <li>Wardens may be assigned to manage multiple hostels simultaneously.</li>
             <li>Before removing a warden, reassign all managed hostels to other wardens to ensure operational continuity.</li>

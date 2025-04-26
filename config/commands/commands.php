@@ -7,4 +7,5 @@ return [
     \App\Command\ProcessEmailQueueCommand::class,
     \App\Command\RemoveExpiredOutpassCommand::class,
     \App\Command\DatabaseSeederCommand::class,
+    \App\Command\WebSocketServerCommand::class,
 ];

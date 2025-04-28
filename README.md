@@ -42,6 +42,11 @@ Install the following dependencies
 sudo apt install php php-mysql libapache2-mod-php php-xml php-mbstring php-gd php-mysql composer npm nodejs adminer
 ```
 
+Install MySQL Database & Configure
+```bash
+sudo apt install mysql-server
+```
+
 Enable Adminer to manage databases
 ```bash
 sudo a2enconf adminer
@@ -49,17 +54,23 @@ sudo a2enconf adminer
 
 ## Installation
 
+### Add www-data user to group for permissions
+
+```bash
+sudo usermod -aG {username} www-data
+```
+
 ### Ensure Group Ownership is Correct
 
 ```bash
-sudo chown -R henry:www-data /home/henry/htdocs/passito/storage
-sudo chown -R www-data:henry /home/henry/htdocs/passito/storage
+sudo chown -R {username}:www-data /home/{username}/htdocs/passito/storage
+sudo chown -R www-data:{username} /home/{username}/htdocs/passito/storage
 ```
 
 ### Set Group-Writable Permissions
 
 ```bash
-sudo chmod -R 775 /home/henry/htdocs/passito/storage
+sudo chmod -R 775 /home/{username}/htdocs/passito/storage
 ```
 
 ### Set the SGID Bit on the Directory
@@ -67,19 +78,19 @@ sudo chmod -R 775 /home/henry/htdocs/passito/storage
 This ensures new files created in the storage directory inherit the group ownership of the parent directory.
 
 ```bash
-sudo chmod g+s /home/henry/htdocs/passito/storage
+sudo chmod g+s /home/{username}/htdocs/passito/storage
 ```
 
 ### Verify Permissions
 
 ```bash
-ls -ld /home/henry/htdocs/passito/storage/
+ls -ld /home/{username}/htdocs/passito/storage/
 ```
 
 Output should be:
 
 ```bash
-drwxrwxr-x 3 www-data www-data 4096 Sep  6 14:00 /home/henry/htdocs/passito/storage/
+drwxrwxr-x 3 www-data www-data 4096 Apr  6 14:00 /home/{username}/htdocs/passito/storage/
 ```
 
 

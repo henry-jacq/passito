@@ -420,4 +420,109 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Import students data
+    const importStudentsButton = document.getElementById('import-btn');
+    importStudentsButton.addEventListener('click', (event) => {
+        event.stopPropagation();
+
+        Modal.open({
+            content: `
+        <div class="px-2 space-y-4">
+            <h3 class="text-xl font-bold text-gray-800 border-b border-gray-200 pb-3">Import Students</h3>
+
+            <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                <div class="sm:col-span-2">
+                    <label for="year" class="block text-sm font-medium text-gray-700">Academic Year</label>
+                    <select id="year" name="year" class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition duration-200">
+                        <option value="" disabled selected>Select Year</option>
+                        <option value="1">1st Year</option>
+                        <option value="2">2nd Year</option>
+                        <option value="3">3rd Year</option>
+                        <option value="4">4th Year</option>
+                    </select>
+                </div>
+                <div class="sm:col-span-2">
+                    <label for="institution" class="block text-sm font-medium text-gray-700">Institution</label>
+                    <select id="institution" name="institution" class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition duration-200">
+                        <option value="" disabled selected>Select Institution</option>
+                        <option value="1">SSN College of Engineering</option>
+                        <option value="2">Shiv Nadar University</option>
+                    </select>
+                </div>
+                <div class="sm:col-span-2">
+                    <label for="file" class="block text-sm font-medium text-gray-700">Student CSV</label>
+                    <input type="file" id="file" name="file" accept=".csv"
+                    class="block w-full cursor-pointer rounded-md border border-gray-300 bg-white text-sm text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 file:mr-4 file:pr-6 file:border-0 file:bg-gray-50 file:px-4 file:py-2 file:text-sm file:font-medium file:text-gray-700 hover:file:bg-gray-100 px-0 py-0" />
+                </div>
+            </div>
+
+            <ul class="mt-4 space-y-1 text-sm text-gray-500 list-disc list-inside">
+                <li>Ensure CSV format matches the provided template.</li>
+                <li>Selected year must align with the course duration.</li>
+                <li>Students are imported year-wise for better categorization.</li>
+            </ul>
+        </div>
+        `,
+            actions: [
+                {
+                    label: 'Perform',
+                    class: `inline-flex justify-center rounded-lg bg-gray-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-gray-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-50`,
+                    onClick: async () => {
+                        try {
+                            // Collect form data
+                            const hostelNo = document.getElementById('hostel-no').value;
+                            const year = document.getElementById('year').value;
+                            const institution = document.getElementById('institution').value;
+                            const fileInput = document.getElementById('file');
+                            const file = fileInput.files[0];
+
+                            // Ensure file is selected
+                            if (!file) {
+                                alert('Please select a CSV file.');
+                                return;
+                            }
+
+                            // Prepare the form data for submission
+                            const formData = new FormData();
+                            formData.append('hostel_no', hostelNo);
+                            formData.append('year', year);
+                            formData.append('institution', institution);
+                            formData.append('file', file);
+
+                            // Make an Ajax request to upload the data
+                            const response = await fetch('/api/web/admin/students/import', {
+                                method: 'POST',
+                                body: formData,
+                            });
+
+                            if (response.ok) {
+                                const data = await response.json();
+                                if (data.status) {
+                                    location.reload();
+                                } else {
+                                    alert(data.message);
+                                }
+                            } else {
+                                const errorData = await response.json();
+                                alert(errorData.message || 'An error occurred while importing students.');
+                            }
+                        } catch (error) {
+                            console.error(error);
+                            alert('An error occurred while processing the request.');
+                        } finally {
+                            Modal.close();
+                        }
+                    },
+                },
+                {
+                    label: 'Cancel',
+                    class: `inline-flex justify-center rounded-lg bg-gray-100 px-6 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`,
+                    onClick: Modal.close,
+                },
+            ],
+            size: 'sm:max-w-xl',
+            classes: 'focus:outline-none focus:ring-0 focus:border-transparent',
+            closeOnBackdropClick: false,
+        });
+    });
 });

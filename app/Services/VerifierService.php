@@ -6,7 +6,7 @@ use DateTime;
 use App\Entity\User;
 use App\Core\Session;
 use App\Entity\Verifier;
-use App\Entity\VerifierLog;
+use App\Entity\Logbook;
 use App\Enum\OutpassStatus;
 use App\Enum\VerifierStatus;
 use Doctrine\ORM\EntityManagerInterface;
@@ -177,7 +177,7 @@ class VerifierService
         $verifier = $this->em->getRepository(Verifier::class)->findOneBy(['authToken' => $authToken]);
         if ($verifier) {
             if ($this->logExistsByOutpassId($data['id'])) {
-                $log = $this->em->getRepository(VerifierLog::class)->findOneBy(['outpass' => $data['id']]);
+                $log = $this->em->getRepository(Logbook::class)->findOneBy(['outpass' => $data['id']]);
                 $this->updateLog($log);
             } else {
                 if (!$this->createLog($verifier, $data)) {
@@ -196,7 +196,7 @@ class VerifierService
     // create a log entry
     public function createLog(Verifier $verifier, array $data): bool
     {
-        $logs = new VerifierLog();
+        $logs = new Logbook();
         $outpass = $this->outpassService->getOutpassById($data['id']);
 
         if (!$outpass) {
@@ -213,13 +213,13 @@ class VerifierService
 
     public function logExistsByOutpassId(int $outpass_id): bool
     {
-        return $this->em->getRepository(VerifierLog::class)->findOneBy(['outpass' => $outpass_id]) !== null;
+        return $this->em->getRepository(Logbook::class)->findOneBy(['outpass' => $outpass_id]) !== null;
     }
 
     /**
      * Update log
      */
-    public function updateLog(VerifierLog $log): VerifierLog
+    public function updateLog(Logbook $log): Logbook
     {
         $outpass = $log->getOutpass();
 
@@ -257,7 +257,7 @@ class VerifierService
     {
         $verifier = $this->getVerifier($verifier_id);
         if ($verifier) {
-            return $this->em->getRepository(VerifierLog::class)->findBy(['verifier' => $verifier]);
+            return $this->em->getRepository(Logbook::class)->findBy(['verifier' => $verifier]);
         }
         return [];
     }
@@ -269,7 +269,7 @@ class VerifierService
     {
         $queryBuilder = $this->em->createQueryBuilder();
         $queryBuilder->select('log')
-            ->from(VerifierLog::class, 'log')
+            ->from(Logbook::class, 'log')
             ->join('log.outpass', 'outpass')
             ->join('outpass.student', 'student')
             ->join('student.user', 'user')

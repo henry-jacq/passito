@@ -82,6 +82,14 @@ class Session
         unset($_SESSION[$key]);
     }
 
+    public function destroy(): void
+    {
+        if ($this->isActive()) {
+            session_unset();
+            session_destroy();
+        }
+    }
+
     public function flash(string $key, array $messages): void
     {
         $_SESSION[$this->options['flash_name']][$key] = $messages;

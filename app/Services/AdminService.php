@@ -32,7 +32,7 @@ class AdminService
             'pending' => $counts['pending'] ?? 0,
             'approved' => $counts['approved'] ?? 0,
             'rejected' => $counts['rejected'] ?? 0,
-            'checkedOut' => $checkedOut['checkedOut'] ?? 0,
+            'checkedOut' => count($checkedOut),
         ];
     }
 

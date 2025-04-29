@@ -16,7 +16,7 @@ use Slim\Routing\RouteCollectorProxy;
 use App\Middleware\SuperAdminMiddleware;
 
 return function (App $app) {
-    $app->get('/', [AuthController::class, 'landing'])->setName('landing');
+    $app->get('/', [AuthController::class, 'landing'])->setName('landing')->add(AuthMiddleware::class);
     
     // Auth Routes
     $app->group('/auth', function (RouteCollectorProxy $group) {

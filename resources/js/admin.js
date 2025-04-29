@@ -101,13 +101,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         const tr = event.target.closest('tr');
                         if (tr) {
                             const table = tr.closest('table');
-                            tr.remove();
+                            const dataRows = table.querySelectorAll('tbody tr');
 
-                            if (table && table.querySelectorAll('tr').length < 2) {
+                            if (dataRows.length <= 1) {
                                 location.reload();
+                            } else {
+                                tr.remove();
                             }
-                        } else {
-                            location.reload();
                         }
                     } else {
                         alert(data.message);

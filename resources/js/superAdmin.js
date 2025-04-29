@@ -339,17 +339,32 @@ document.addEventListener('DOMContentLoaded', () => {
     const addHostelButton = document.querySelector('.add-hostel-modal');
     if (addHostelButton) {
         addHostelButton.addEventListener('click', () => {
-            // Fetch the list of institutions from the server
+            // Fetch the list of wardens and institutions from the server
+            const fetchWardens = Ajax.post('/api/web/admin/wardens/fetch');
             const fetchInstitutions = Ajax.post('/api/web/admin/facilities/institutions/fetch');
 
-            fetchInstitutions
-                .then((response) => {
-                    if (response.ok) {
-                        const institutions = response.data.data.institutions;
+            Promise.all([fetchWardens, fetchInstitutions])
+                .then((responses) => {
 
+                    const wardenResponse = responses[0];
+                    const institutionResponse = responses[1];
+
+                    if (wardenResponse.ok && institutionResponse.ok) {
+                        const wardens = wardenResponse.data.data.wardens;
+                        const institutions = institutionResponse.data.data.institutions;
+
+                        // if (hostels.status && Array.isArray(hostels.data.hostels) && institutions.status && Array.isArray(institutions.data.institutions)) {
+                        //     console.log();
+                        // }
+                        
+                        const wardenOptions = wardens
+                            .map((warden) => `<option value="${warden.id}">${warden.name} (${warden.email})</option>`)
+                            .join('');
                         const institutionOptions = institutions
                             .map((institution) => `<option value="${institution.id}">${institution.name}</option>`)
                             .join('');
+
+
 
                         // Open the modal with dynamically populated options
                         Modal.open({
@@ -365,7 +380,15 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <div class="space-y-2">
                                         <label for="hostel-category" class="block text-md font-semibold text-gray-700">Hostel Category</label>
                                         <input type="text" id="hostel-category" name="hostel-category" class="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md transition duration-200" placeholder="Enter Name" required>
-                                        <label class="block text-sm font-normal text-gray-600">Eg., Non-AC Shared (Common Bath), AC with Attached Bath and Balcony, AC Shared Room (Common Bath)...</label>
+                                        <p class="text-xs text-gray-500 italic leading-tight">
+                                            Examples: Non-AC Shared (Common Bath), AC with Attached Bath and Balcony, AC Shared Room
+                                        </p>
+                                    </div>
+                                    <div class="space-y-2">
+                                        <label for="select-warden" class="block text-md font-semibold text-gray-700">Select Warden</label>
+                                        <select id="select-warden" name="select-warden" class="mt-1 w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md transition duration-200" required>
+                                            ${wardenOptions}
+                                        </select>
                                     </div>
                                     <div class="space-y-2">
                                         <label for="select-institution" class="block text-md font-semibold text-gray-700">Select Institution</label>
@@ -383,15 +406,17 @@ document.addEventListener('DOMContentLoaded', () => {
                                     onClick: async (event) => {
                                         const hostelName = document.getElementById('hostel-name').value;
                                         const category = document.getElementById('hostel-category').value;
+                                        const wardenId = document.getElementById('select-warden').value;
                                         const institutionId = document.getElementById('select-institution').value;
 
                                         event.target.disabled = true;
                                         event.target.textContent = 'Adding Hostel...';
 
-                                        if (hostelName && category && institutionId) {
+                                        if (hostelName && wardenId && category && institutionId) {
                                             try {
                                                 const response = await Ajax.post('/api/web/admin/facilities/hostels/create', {
                                                     hostel_name: hostelName,
+                                                    warden_id: wardenId,
                                                     category: category,
                                                     institution_id: institutionId
                                                 });
@@ -431,7 +456,27 @@ document.addEventListener('DOMContentLoaded', () => {
                             closeOnBackdropClick: false,
                         });
                     } else {
-                        alert('Failed to fetch wardens or institutions.');
+                        let toast = new Toast();
+
+                        if (!wardenResponse.ok) {
+                            const message = wardenResponse?.data?.message || "Failed to fetch wardens.";
+                            toast.create({
+                                message,
+                                position: "bottom-right",
+                                type: "warning",
+                                duration: 4000,
+                            });
+                        }
+
+                        if (!institutionResponse.ok) {
+                            const message = institutionResponse?.data?.message || "Failed to fetch institutions.";
+                            toast.create({
+                                message,
+                                position: "bottom-right",
+                                type: "warning",
+                                duration: 4000,
+                            });
+                        }
                     }
                 })
                 .catch((error) => {

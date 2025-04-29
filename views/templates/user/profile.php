@@ -21,35 +21,35 @@
                 <!-- Profile Fields -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Full Name</label>
-                    <div class="mt-1 font-medium text-gray-800"><?= $userData->getUser()->getName()?></div>
+                    <div class="mt-1 font-medium text-gray-800"><?= $userData->getUser()->getName() ?></div>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Digital ID</label>
-                    <div class="mt-1 font-medium text-gray-800"><?= $userData->getDigitalId()?></div>
+                    <div class="mt-1 font-medium text-gray-800"><?= $userData->getDigitalId() ?></div>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Year</label>
-                    <div class="mt-1 font-medium text-gray-800"><?= $userData->getYear()?> Year</div>
+                    <div class="mt-1 font-medium text-gray-800"><?= $userData->getYear() ?> Year</div>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Branch</label>
-                    <div class="mt-1 font-medium text-gray-800"><?= $userData->getBranch()?></div>
+                    <div class="mt-1 font-medium text-gray-800"><?= $userData->getBranch() ?></div>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Institution</label>
-                    <div class="mt-1 font-medium text-gray-800"><?= $userData->getInstitution()->getName()?></div>
+                    <div class="mt-1 font-medium text-gray-800"><?= $userData->getInstitution()->getName() ?></div>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Hostel Number</label>
-                    <div class="mt-1 font-medium text-gray-800"><?= $userData->getHostel()->getName()?></div>
+                    <div class="mt-1 font-medium text-gray-800"><?= $userData->getHostel()->getName() ?></div>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Room Number</label>
-                    <div class="mt-1 font-medium text-gray-800"><?= $userData->getRoomNo()?></div>
+                    <div class="mt-1 font-medium text-gray-800"><?= $userData->getRoomNo() ?></div>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Contact Number</label>
-                    <div class="mt-1 font-medium text-gray-800"><?= $userData->getUser()->getContactNo()?></div>
+                    <div class="mt-1 font-medium text-gray-800"><?= $userData->getUser()->getContactNo() ?></div>
                 </div>
             </div>
         </section>
@@ -60,12 +60,18 @@
             <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Parent Contact</label>
-                    <div class="mt-1 font-medium text-gray-800"><?= $userData->getParentNo()?></div>
+                    <div class="mt-1 font-medium text-gray-800"><?= $userData->getParentNo() ?></div>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Warden Assigned</label>
                     <div class="mt-1 font-medium text-gray-800">
-                        None
+                        <?php
+
+                        use App\Enum\Gender;
+
+                        if ($userData->getHostel()->getWarden()->getGender() === Gender::MALE): ?>
+                            Mr. <?php else: ?> Ms. <?php endif; ?>
+                        <?= $userData->getHostel()->getWarden()->getName() ?>
                     </div>
                 </div>
             </div>

@@ -6,7 +6,7 @@ use App\Enum\UserRole;
 use App\Enum\HostelType;
 
 ${basename(__FILE__, '.php')} = function () {
-    if ($this->isAuthenticated() && $this->paramsExists(['hostel_name', 'category', 'institution_id'])) {
+    if ($this->isAuthenticated() && $this->paramsExists(['hostel_name', 'warden_id', 'category', 'institution_id'])) {
 
         if (UserRole::isSuperAdmin($this->getRole())) {
 
@@ -16,6 +16,7 @@ ${basename(__FILE__, '.php')} = function () {
             
             $data = [
                 'hostel_name' => $this->data['hostel_name'],
+                'warden_id' => $this->data['warden_id'],
                 'category' => $this->data['category'],
                 'hostel_type' => $hostel_type,
             ];

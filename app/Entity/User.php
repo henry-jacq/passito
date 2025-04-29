@@ -8,6 +8,8 @@ use DateTime;
 use App\Enum\Gender;
 use App\Enum\UserRole;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'users', indexes: [
@@ -42,7 +44,14 @@ class User
     #[ORM\Column(type: 'datetime')]
     private DateTime $createdAt;
 
-    
+    #[ORM\OneToMany(mappedBy: 'warden', targetEntity: Hostel::class)]
+    private Collection $hostels;
+
+    public function __construct()
+    {
+        $this->hostels = new ArrayCollection();
+    }
+
     public function getId(): int
     {
         return $this->id;
@@ -116,6 +125,28 @@ class User
     public function setCreatedAt(DateTime $createdAt): void
     {
         $this->createdAt = $createdAt;
+    }
+
+    public function getHostels(): Collection
+    {
+        return $this->hostels;
+    }
+
+    public function addHostel(Hostel $hostel): void
+    {
+        if (!$this->hostels->contains($hostel)) {
+            $this->hostels->add($hostel);
+            $hostel->setWarden($this);
+        }
+    }
+
+    public function removeHostel(Hostel $hostel): void
+    {
+        if ($this->hostels->removeElement($hostel)) {
+            if ($hostel->getWarden() === $this) {
+                $hostel->setWarden(null);
+            }
+        }
     }
 
     public function toArray(): array

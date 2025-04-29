@@ -18,6 +18,10 @@ class Hostel
     #[ORM\Column(type: 'integer')]
     private int $id;
 
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(name: 'warden_id', referencedColumnName: 'id', nullable: false)]
+    private User $warden;
+
     #[ORM\Column(type: 'string', length: 255)]
     private string $hostelName;
 
@@ -30,6 +34,16 @@ class Hostel
     public function getId(): int
     {
         return $this->id;
+    }
+
+    public function getWarden(): User
+    {
+        return $this->warden;
+    }
+
+    public function setWarden(?User $warden): void
+    {
+        $this->warden = $warden;
     }
 
     public function getName(): string
@@ -66,6 +80,7 @@ class Hostel
     {
         return [
             'id' => $this->getId(),
+            'warden' => $this->getWarden()->toArray(),
             'category' => $this->getCategory(),
             'hostelName' => $this->getName(),
             'hostelType' => $this->getHostelType()->value

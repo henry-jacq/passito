@@ -45,6 +45,8 @@ class StudentMiddleware implements MiddlewareInterface
             );
 
             if(is_null($student)) {
+                // Student not found, destroy the session and redirect to login
+                $this->session->destroy();
                 return $this->responseFactory
                     ->createResponse(302)
                     ->withHeader('Location', $this->view->urlFor('auth.login'));              

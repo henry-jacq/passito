@@ -7,7 +7,6 @@ use App\Entity\User;
 use App\Core\Request;
 use App\Core\Session;
 use App\Enum\UserRole;
-use App\Entity\Settings;
 use Psr\Http\Message\ResponseInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -40,6 +39,15 @@ class AdminMiddleware implements MiddlewareInterface
         } else { // User is authenticated
             // Get the user by id
             $user = $this->em->getRepository(User::class)->find((int) $this->session->get('user'));
+
+            if (is_null($user)) {
+                // User not found, destroy the session and redirect to login
+                $this->session->destroy();
+                return $this->responseFactory
+                    ->createResponse(302)
+                    ->withHeader('Location', $this->view->urlFor('auth.login'));
+            }
+
             $userRole = $user->getRole()->value;
 
             // Prevent unauthorized users from accessing admin routes

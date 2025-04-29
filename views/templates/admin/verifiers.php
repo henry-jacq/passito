@@ -78,8 +78,10 @@ use App\Enum\VerifierStatus; ?>
                             </td>
                             <td class="px-4 py-3 text-sm text-gray-700">
                                 <div class="flex items-center justify-center space-x-2">
-                                    <span class="truncate lg:max-w-[180px] md:max-w-[80px] block text-gray-700"><?= $verifier->getAuthToken() ?></span>
-                                    <button class="text-blue-600 hover:text-blue-800" title="Copy Token" onclick="copyToClipboard('<?= $verifier->getAuthToken() ?>')">
+                                    <span class="truncate max-w-[200px] text-gray-700 text-sm">
+                                        <?= substr($verifier->getAuthToken(), 0, 8) . '••••' . substr($verifier->getAuthToken(), -8) ?>
+                                    </span>
+                                    <button class="copy-token-btn" data-token="<?= htmlspecialchars($verifier->getAuthToken(), ENT_QUOTES) ?>">
                                         <i class="fa-regular fa-copy"></i>
                                     </button>
                                 </div>
@@ -106,75 +108,16 @@ use App\Enum\VerifierStatus; ?>
             </table>
         </section>
     <?php endif; ?>
-    <!-- Verifier / Server Logs Section -->
-    <section class="mt-8 select-none">
-        <div class="flex items-center justify-between mb-2">
-            <div>
-                <h3 class="font-medium text-gray-800 text-md">
-                    <i class="mr-2 fa-solid fa-circle-info"></i>
-                    Verifier Log
-                    <i class="ml-1 text-sm italic font-normal">(Read-only)</i>
-                </h3>
-                <!-- <p class="text-sm text-gray-500">Monitor server-side WebSocket logs, device connections, and errors in real-time.</p> -->
-            </div>
-            <!-- <button onclick="clearLogs()" class="px-3 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring focus:ring-red-400">
-                Clear Logs
-            </button> -->
-        </div>
-
-        <div id="logs-container" class="h-48 p-4 overflow-y-auto font-mono text-sm text-green-400 border border-gray-300 rounded-lg bg-gray-50">
-            <div class="text-gray-500"></div>
-        </div>
-    </section>
-
-    <script>
-        const logsContainer = document.getElementById('logs-container');
-
-        function addLog(message, type = 'info') {
-            const timestamp = new Date().toLocaleTimeString();
-            const logEntry = document.createElement('div');
-
-            logEntry.classList.add('whitespace-pre-wrap');
-
-            // Color based on type
-            if (type === 'error') {
-                logEntry.classList.add('text-red-600');
-            } else if (type === 'warning') {
-                logEntry.classList.add('text-yellow-600');
-            } else {
-                logEntry.classList.add('text-green-600');
-            }
-
-            logEntry.innerHTML = `<span class="text-gray-600">[${timestamp}]</span> ${message}`;
-
-            logsContainer.appendChild(logEntry);
-
-            // Auto-scroll to bottom
-            logsContainer.scrollTop = logsContainer.scrollHeight;
-        }
-
-        function clearLogs() {
-            logsContainer.innerHTML = '<div class="text-gray-500">Logs cleared. Awaiting new logs...</div>';
-        }
-
-        // Example: Simulate receiving logs (You can replace this with actual WebSocket integration)
-        setInterval(() => {
-            const fakeLogs = [
-                "Verifier 'Pi-Entrance-01' connected successfully.",
-                "Ping received from 'Pi-Entrance-01'.",
-                "Error: Lost connection to Verifier 'Pi-Backgate-02'.",
-                "Authentication failed for unknown device.",
-                "Reconnection attempt from 'Pi-Backgate-02' successful."
-            ];
-            const randomLog = fakeLogs[Math.floor(Math.random() * fakeLogs.length)];
-            const type = randomLog.toLowerCase().includes('error') || randomLog.toLowerCase().includes('failed') ? 'error' : 'info';
-            addLog(randomLog, type);
-        }, 2000);
-    </script>
-
 </main>
 
 <script>
+    document.querySelectorAll('.copy-token-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            copyToClipboard(btn.dataset.token);
+        });
+    });
+
+
     function copyToClipboard(text) {
         if (navigator.clipboard && navigator.clipboard.writeText) {
             // Use modern clipboard API

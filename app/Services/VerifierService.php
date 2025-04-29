@@ -59,6 +59,15 @@ class VerifierService
         }
     }
 
+    /**
+     * Update the verifier last sync time
+     */
+    public function updateLastSync(Verifier $verifier)
+    {
+        $verifier->setLastSync(new \DateTime());
+        $this->em->persist($verifier);
+        $this->em->flush();
+    }
 
     /**
      * Get all verifiers
@@ -176,7 +185,8 @@ class VerifierService
                     return false;
                 }
             }
-
+            
+            $this->updateLastSync($verifier);
             return true;
         }
 

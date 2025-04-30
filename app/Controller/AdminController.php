@@ -12,6 +12,8 @@ use App\Services\VerifierService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
+use function PHPSTORM_META\type;
+
 class AdminController extends BaseController
 {
     public function __construct(
@@ -49,6 +51,17 @@ class AdminController extends BaseController
         $this->view->clearCacheIfDev();
 
         $userData = $request->getAttribute('user');
+        $hostelFilter = $request->getQueryParams()['hostel'] ?? 'default';
+
+        $wardenHostels = $userData->getHostels(); // Doctrine Collection
+        $allHostels = iterator_to_array($this->facilityService->getHostelsByType($userData));
+        $wardenHostelsArray = $wardenHostels->toArray();
+
+        // Compute the difference (hostels not assigned to warden)
+        $unassignedHostels = array_udiff($allHostels, $wardenHostelsArray, function ($a, $b) {
+            return $a->getId() <=> $b->getId();
+        });
+
         $page = max(1, (int) ($request->getQueryParams()['page'] ?? 1));
         $limit = 10;
 
@@ -58,7 +71,10 @@ class AdminController extends BaseController
             limit: $limit,
             paginate: true,
             warden: $userData,
+            hostelFilter: $hostelFilter
         );
+
+        $pendingCount = count($this->outpassService->getPendingOutpass(paginate: false));
 
         // Redirect to the last page if the requested page exceeds available pages
         if ($paginationData['totalPages'] > 1 && $page > $paginationData['totalPages']) {
@@ -75,6 +91,9 @@ class AdminController extends BaseController
                 'totalRecords' => $paginationData['total'],
             ],
             'routeName' => $this->getRouteName($request),
+            'pendingCount' => $pendingCount,
+            'hostelFilter' => $hostelFilter,
+            'unassignedHostels' => $unassignedHostels
         ];
 
         $args = array_merge($args, $this->view->getGlobals());

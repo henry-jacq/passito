@@ -2,13 +2,14 @@
 
 namespace App\Services;
 
-use App\Core\Storage;
 use DateTime;
 use App\Core\View;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use App\Entity\User;
 use App\Enum\Gender;
+use App\Core\Storage;
+use App\Enum\UserRole;
 use App\Entity\Student;
 use App\Enum\OutpassType;
 use Endroid\QrCode\QrCode;
@@ -87,23 +88,17 @@ class OutpassService
         return $outpass;
     }
 
-    public function getPendingOutpass(int $page = 1, int $limit = 10, bool $paginate = true, ?User $warden = null)
+    public function getPendingOutpass(int $page = 1, int $limit = 10, bool $paginate = true, ?User $warden = null, ?string $hostelFilter = null)
     {
         if (!$paginate) {
-            return $this->em->getRepository(OutpassRequest::class)->findBy(
-                [
-                    'status' => OutpassStatus::PENDING
-                ]
-            );
+            return $this->em->getRepository(OutpassRequest::class)->findBy([
+                'status' => OutpassStatus::PENDING
+            ]);
         }
 
         $offset = ($page - 1) * $limit;
 
-        // Convert OutpassStatus enum to scalar values (e.g., string or integer)
-        $statuses = [
-            OutpassStatus::PENDING->value
-        ];
-
+        $statuses = [OutpassStatus::PENDING->value];
         $wardenGender = $warden->getGender()->value;
         $settings = $this->getSettings($warden->getGender());
 
@@ -116,6 +111,7 @@ class OutpassService
             ->from(OutpassRequest::class, 'o')
             ->join('o.student', 's')
             ->join('s.user', 'u')
+            ->join('s.hostel', 'h')
             ->where($queryBuilder->expr()->in('o.status', ':statuses'))
             ->andWhere('u.gender = :gender')
             ->orderBy('o.createdAt', 'DESC')
@@ -123,6 +119,24 @@ class OutpassService
             ->setParameter('gender', $wardenGender)
             ->setFirstResult($offset)
             ->setMaxResults($limit);
+
+        // Hostel filtering ONLY if user is an warden
+        if (UserRole::isAdmin($warden->getRole()->value)) {
+            $hostels = $warden->getHostels();
+            $ids = [];
+
+            foreach ($hostels as $hostel) {
+                $ids[] = $hostel->getId();
+            }
+
+            if ($hostelFilter && $hostelFilter !== 'default') {
+                $queryBuilder->andWhere('h.id = :id')
+                    ->setParameter('id', (int) $hostelFilter);
+            } else {
+                $queryBuilder->andWhere($queryBuilder->expr()->in('h.id', ':ids'))
+                    ->setParameter('ids', $ids);
+            }
+        }
 
         $query = $queryBuilder->getQuery();
         $paginator = new Paginator($query, true);
@@ -136,7 +150,7 @@ class OutpassService
     }
 
     // Admin methods
-    
+
     /**
      * Get outpass statistics for the admin dashboard
      * @param User $adminUser

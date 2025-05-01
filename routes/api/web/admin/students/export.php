@@ -19,21 +19,10 @@ ${basename(__FILE__, '.php')} = function () {
         $csvPath = $this->storage->generateFileName('exports', 'csv');
         $fullPath = $this->storage->getFullPath($csvPath, true);
 
-        // Open the CSV file for writing
-        $handle = fopen($fullPath, 'w');
-        if (!$handle) {
-            return $this->response([
-                'message' => 'Unable to create export file',
-                'status' => false
-            ], 500);
-        }
+        $headers = ['name', 'email', 'digital_id', 'course', 'branch', 'year', 'room_no', 'hostel_id', 'student_contact', 'parent_contact'];
 
-        // Write the CSV header row
-        fputcsv($handle, ['name', 'email', 'digital_id', 'course', 'branch', 'year', 'room_no', 'hostel_id', 'student_contact', 'parent_contact']);
-
-        // Write student data to the CSV
-        foreach ($students as $student) {
-            fputcsv($handle, [
+        $rows = $this->csvProcessor->mapDataToRows($students, function ($student) {
+            return [
                 $student->getUser()->getName(),
                 $student->getUser()->getEmail(),
                 $student->getDigitalId(),
@@ -44,10 +33,15 @@ ${basename(__FILE__, '.php')} = function () {
                 $student->getHostel()->getId(),
                 $student->getUser()->getContactNo(),
                 $student->getParentNo()
-            ]);
-        }
+            ];
+        });
 
-        fclose($handle);
+        if (!$this->csvProcessor->writeToFile($fullPath, $headers, $rows)) {
+            return $this->response([
+                'message' => 'Unable to create export file',
+                'status' => false
+            ], 500);
+        }
 
         $fileName = 'students_export_' . date('Ymd_His') . '.csv';
 

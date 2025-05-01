@@ -16,6 +16,7 @@ use App\Services\OutpassService;
 use App\Services\FacilityService;
 use App\Services\VerifierService;
 use App\Services\ParentVerificationService;
+use App\Utils\CsvProcessor;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -58,6 +59,7 @@ class ApiController
         private readonly OutpassService $outpassService,
         private readonly VerifierService $verifierService,
         private readonly FacilityService $facilityService,
+        private readonly CsvProcessor $csvProcessor,
         private readonly ParentVerificationService $verificationService
     )
     {

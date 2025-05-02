@@ -1,8 +1,8 @@
-<header class="bg-gradient-to-r from-purple-600 to-purple-800 text-white shadow-md">
-    <div class="container mx-auto flex items-center justify-between py-5 px-6">
+<header class="text-white shadow-md bg-gradient-to-r from-blue-600 to-blue-800">
+    <div class="container flex items-center justify-between px-6 py-5 mx-auto">
         <!-- Left: Brand Logo -->
         <div class="flex items-center">
-            <div class="px-3 flex justify-center items-center">
+            <div class="flex items-center justify-center px-3">
                 <svg class="w-8 h-8" viewBox="0 0 92.105 92.1">
                     <g transform="translate(-2.76 -2.77) scale(0.3254)" fill="currentColor">
                         <!-- Icon Content -->
@@ -17,24 +17,24 @@
                     </g>
                 </svg>
             </div>
-            <h1 class="text-2xl font-heading font-medium tracking-tight hidden md:block">Passito</h1>
+            <h1 class="hidden text-2xl font-medium tracking-tight font-heading md:block">Passito</h1>
         </div>
 
         <!-- Center: Navigation -->
-        <nav class="hidden md:flex space-x-6">
-            <a href="<?= $this->urlFor('student.dashboard') ?>" class="text-lg relative group">
+        <nav class="hidden space-x-6 md:flex">
+            <a href="<?= $this->urlFor('student.dashboard') ?>" class="relative text-lg group">
                 Dashboard
                 <span class="absolute left-0 bottom-0 w-full h-0.5 bg-white <?= $routeName == 'student.dashboard' ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100' ?> transition-transform origin-left"></span>
             </a>
-            <a href="<?= $this->urlFor('student.outpass.request') ?>" class="text-lg relative group">
+            <a href="<?= $this->urlFor('student.outpass.request') ?>" class="relative text-lg group">
                 Request Outpass
                 <span class="absolute left-0 bottom-0 w-full h-0.5 bg-white <?= $routeName == 'student.outpass.request' ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100' ?> transition-transform origin-left"></span>
             </a>
-            <a href="<?= $this->urlFor('student.outpass.status') ?>" class="text-lg relative group">
+            <a href="<?= $this->urlFor('student.outpass.status') ?>" class="relative text-lg group">
                 Status
                 <span class="absolute left-0 bottom-0 w-full h-0.5 bg-white <?= $routeName == 'student.outpass.status' ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100' ?> transition-transform origin-left"></span>
             </a>
-            <a href="<?= $this->urlFor('student.outpass.history') ?>" class="text-lg relative group">
+            <a href="<?= $this->urlFor('student.outpass.history') ?>" class="relative text-lg group">
                 History
                 <span class="absolute left-0 bottom-0 w-full h-0.5 bg-white <?= $routeName == 'student.outpass.history' ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100' ?> transition-transform origin-left"></span>
             </a>
@@ -44,8 +44,8 @@
         <div class="flex items-center space-x-8">
             <!-- Notification Icon -->
             <button aria-label="Notifications" class="relative focus:outline-none">
-                <i class="fa-solid fa-bell text-2xl text-purple-300"></i>
-                <span class="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full border-2 border-white"></span>
+                <i class="text-2xl text-blue-300 fa-solid fa-bell"></i>
+                <span class="absolute top-0 right-0 w-3 h-3 bg-red-500 border-2 border-white rounded-full"></span>
             </button>
 
             <!-- Profile Dropdown -->
@@ -55,22 +55,22 @@
                         class="w-10 h-10 rounded-full shadow-sm">
                 </button>
                 <div id="profileMenu"
-                    class="hidden absolute right-0 mt-2 w-40 bg-white text-gray-700 rounded-md shadow-lg transition-opacity">
+                    class="absolute right-0 hidden w-40 mt-2 text-gray-700 transition-opacity bg-white rounded-md shadow-lg">
                     <a href="<?= $this->urlFor('student.profile') ?>" class="block px-4 py-2 hover:bg-gray-100 hover:rounded-md">My Profile</a>
                     <a href="<?= $this->urlFor('auth.logout') ?>" class="block px-4 py-2 hover:bg-gray-100 hover:rounded-md">Logout</a>
                 </div>
             </div>
 
             <!-- Mobile Menu Toggle -->
-            <button id="mobileMenuToggle" class="block md:hidden text-white text-2xl focus:outline-none">
+            <button id="mobileMenuToggle" class="block text-2xl text-white md:hidden focus:outline-none">
                 <i class="fa-solid fa-bars"></i>
             </button>
         </div>
     </div>
 
     <!-- Mobile Navigation -->
-    <div id="mobileMenu" class="hidden bg-gradient-to-r from-purple-600 to-purple-800 md:hidden">
-        <nav class="flex flex-col space-y-3 p-4">
+    <div id="mobileMenu" class="hidden bg-gradient-to-r from-blue-600 to-blue-800 md:hidden">
+        <nav class="flex flex-col p-4 space-y-3">
             <a href="<?= $this->urlFor('student.dashboard') ?>" class="text-lg transition hover:text-blue-200">Dashboard</a>
             <a href="<?= $this->urlFor('student.outpass.request') ?>" class="text-lg transition hover:text-blue-200">Request Outpass</a>
             <a href="<?= $this->urlFor('student.outpass.status') ?>" class="text-lg transition hover:text-blue-200">Status</a>

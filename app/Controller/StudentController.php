@@ -77,8 +77,13 @@ class StudentController extends BaseController
     public function outpassHistory(Request $request, Response $response): Response
     {
         $this->view->clearCacheIfDev();
+
+        $student = $request->getAttribute('student');
+        $outpasses = $this->outpassService->getOutpassByStudent($student);
+
         $args = [
             'title' => 'Outpass History',
+            'outpasses' => $outpasses,
             'routeName' => $this->getRouteName($request),
         ];
         return parent::render($request, $response, 'user/outpass_history', $args);

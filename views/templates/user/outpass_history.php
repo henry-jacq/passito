@@ -1,101 +1,96 @@
-<div class="min-h-screen flex flex-col bg-gray-50">
+<?php
+
+use App\Enum\OutpassStatus; ?>
+
+<div class="flex flex-col min-h-screen bg-gray-50">
     <!-- Header Section -->
     <?= $this->getComponent('user/header', [
         'routeName' => $routeName
     ]) ?>
 
     <!-- Main Content -->
-    <main class="container mx-auto py-8 px-6 lg:px-12">
+    <main class="container px-6 py-8 mx-auto lg:px-12">
         <!-- Page Title -->
-        <header class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-4 border-b space-y-2 sm:space-y-0 mb-6">
+        <header class="flex flex-col py-4 mb-6 space-y-2 border-b sm:flex-row sm:justify-between sm:items-center sm:space-y-0">
             <div>
                 <h1 class="text-3xl font-bold text-gray-800">Outpass History</h1>
-                <p class="text-base text-gray-500 mt-1">Manage your outpass requests history.</p>
+                <p class="mt-1 text-base text-gray-500">Manage your outpass requests history.</p>
             </div>
             <!-- Search Bar -->
             <form action="" method="GET" class="flex items-center space-x-2">
                 <input type="text" name="search" placeholder="Search by Outpass ID or Date"
-                    class="w-full sm:w-64 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                    class="w-full px-4 py-2 border rounded-lg sm:w-64 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                     value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>">
                 <button type="submit"
-                    class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 focus:outline-none">
+                    class="px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none">
                     Search
                 </button>
             </form>
         </header>
 
         <!-- Status Table Section -->
-        <section class="bg-white rounded-lg shadow p-8">
+        <section class="p-8 bg-white rounded-lg shadow">
             <!-- Status Table -->
             <div class="overflow-x-auto">
-                <table class="min-w-full text-left text-sm">
+                <table class="min-w-full text-sm text-left">
                     <thead>
-                        <tr class="bg-purple-100 text-gray-700 uppercase text-xs font-medium">
-                            <th class="py-3 px-4">Outpass ID</th>
-                            <th class="py-3 px-4">Type</th>
-                            <th class="py-3 px-4">Purpose</th>
-                            <th class="py-3 px-4">Dates</th>
-                            <th class="py-3 px-4">Status</th>
-                            <th class="py-3 px-4">Actions</th>
+                        <tr class="text-xs font-medium text-gray-700 uppercase bg-blue-100">
+                            <th class="px-4 py-3">Outpass ID</th>
+                            <th class="px-4 py-3">Type</th>
+                            <th class="px-4 py-3">Purpose</th>
+                            <th class="px-4 py-3">Dates</th>
+                            <th class="px-4 py-3">Status</th>
+                            <th class="px-4 py-3">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200">
-                        <!-- Dummy Data Rows -->
-                        <tr class="hover:bg-purple-50">
-                            <td class="py-3 px-4">12345</td>
-                            <td class="py-3 px-4">Short Leave</td>
-                            <td class="py-3 px-4">Family Visit</td>
-                            <td class="py-3 px-4">
-                                <span class="block text-sm text-gray-800">23 Dec, 2024 - 24 Dec, 2024</span>
-                                <span class="block text-xs text-gray-500">10:00 AM to 6:00 PM</span>
-                            </td>
-                            <td class="py-3 px-4">
-                                <span class="px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">Approved</span>
-                            </td>
-                            <td class="py-3 px-4">
-                                <a href="#" class="text-purple-600 hover:underline">View Details</a>
-                            </td>
-                        </tr>
-                        <tr class="hover:bg-purple-50">
-                            <td class="py-3 px-4">12346</td>
-                            <td class="py-3 px-4">Outstation</td>
-                            <td class="py-3 px-4">Personal Work</td>
-                            <td class="py-3 px-4">
-                                <span class="block text-sm text-gray-800">25 Dec, 2024 - 27 Dec, 2024</span>
-                                <span class="block text-xs text-gray-500">8:00 AM to 8:00 PM</span>
-                            </td>
-                            <td class="py-3 px-4">
-                                <span class="px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">Pending</span>
-                            </td>
-                            <td class="py-3 px-4">
-                                <a href="#" class="text-purple-600 hover:underline">View Details</a>
-                            </td>
-                        </tr>
-                        <tr class="hover:bg-purple-50">
-                            <td class="py-3 px-4">12347</td>
-                            <td class="py-3 px-4">Short Leave</td>
-                            <td class="py-3 px-4">Doctor Appointment</td>
-                            <td class="py-3 px-4">
-                                <span class="block text-sm text-gray-800">22 Dec, 2024</span>
-                                <span class="block text-xs text-gray-500">2:00 PM to 4:00 PM</span>
-                            </td>
-                            <td class="py-3 px-4">
-                                <span class="px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">Rejected</span>
-                            </td>
-                            <td class="py-3 px-4">
-                                <a href="#" class="text-purple-600 hover:underline">View Details</a>
-                            </td>
-                        </tr>
+                        <?php foreach ($outpasses as $outpass): ?>
+                            <tr class="hover:bg-blue-50">
+                                <td class="px-4 py-3"><?= $outpass->getId() ?></td>
+                                <td class="px-4 py-3"><?= ucwords($outpass->getPassType()->value) ?></td>
+                                <td class="px-4 py-3"><?= $outpass->getPurpose() ?></td>
+                                <td class="px-4 py-3">
+                                    <span class="block text-sm text-gray-800">
+                                        <?= $outpass->getFromDate()->format('d M, Y') ?> - <?= $outpass->getToDate()->format('d M, Y') ?>
+                                    </span>
+                                    <span class="block text-xs text-gray-500"><?= $outpass->getFromTime()->format('h:i A') ?> - <?= $outpass->getToTime()->format('h:i A') ?></span>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <?php
+                                    $status = $outpass->getStatus();
+                                    switch ($status) {
+                                        case OutpassStatus::APPROVED:
+                                            $badgeClass = 'text-green-800 bg-green-100';
+                                            break;
+                                        case OutpassStatus::PENDING:
+                                            $badgeClass = 'text-yellow-800 bg-yellow-100';
+                                            break;
+                                        case OutpassStatus::REJECTED:
+                                            $badgeClass = 'text-red-800 bg-red-100';
+                                            break;
+                                        case OutpassStatus::EXPIRED:
+                                            $badgeClass = 'text-gray-800 bg-gray-100';
+                                            break;
+                                        default:
+                                            $badgeClass = 'text-gray-800 bg-gray-100';
+                                    } ?>
+                                    <span class="px-3 py-1 text-sm font-medium <?= $badgeClass ?> rounded-full"><?= ucwords($outpass->getStatus()->value) ?></span>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <a href="#" class="text-blue-600 hover:underline">View Details</a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
 
             <!-- Pagination -->
-            <div class="mt-6 flex justify-center space-x-4">
-                <button class="px-4 py-2 bg-gray-200 text-gray-600 rounded-lg hover:bg-gray-300">
+            <div class="flex justify-center mt-6 space-x-4">
+                <button class="px-4 py-2 text-gray-600 bg-gray-200 rounded-lg hover:bg-gray-300">
                     Previous
                 </button>
-                <button class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
+                <button class="px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700">
                     Next
                 </button>
             </div>

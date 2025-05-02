@@ -1,73 +1,73 @@
-<div class="min-h-screen flex flex-col bg-gray-50">
+<div class="flex flex-col min-h-screen bg-gray-50">
 	<!-- Header Section -->
 	<?= $this->getComponent('user/header', [
 		'routeName' => $routeName
 	]) ?>
 
 	<!-- Main Content -->
-	<main class="container mx-auto py-8 px-6 lg:px-12">
+	<main class="container px-6 py-8 mx-auto lg:px-12">
 		<!-- Welcome Section -->
-		<section class="bg-gradient-to-r from-purple-100 to-white shadow-lg rounded-xl p-8 flex flex-col md:flex-row justify-between mb-8">
+		<section class="flex flex-col justify-between p-8 mb-8 shadow-lg bg-gradient-to-r from-blue-100 to-white rounded-xl md:flex-row">
 			<div>
 				<h2 class="text-4xl font-bold text-gray-800">Welcome, <?= ucwords($userData->getUser()->getName())?>!</h2>
-				<p class="mt-2 text-gray-800 text-lg">It’s <?= date("l, d F Y") ?></p>
+				<p class="mt-2 text-lg text-gray-800">It’s <?= date("l, d F Y") ?></p>
 			</div>
 		</section>
 
 		<!-- Overview Cards -->
-		<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-			<div class="p-6 rounded-lg shadow-lg hover:shadow-xl transition-all transform hover:scale-105">
+		<section class="grid grid-cols-1 gap-6 mb-8 sm:grid-cols-2 lg:grid-cols-4">
+			<div class="p-6 transition-all transform rounded-lg shadow-lg hover:shadow-xl hover:scale-105">
 				<div class="flex items-center gap-4">
-					<i class="fas fa-file-alt text-purple-600 text-3xl"></i>
+					<i class="text-3xl text-blue-600 fas fa-file-alt"></i>
 					<h3 class="text-xl font-medium">Total Requests</h3>
 				</div>
-				<p class="text-4xl font-medium mt-4">25</p>
+				<p class="mt-4 text-4xl font-medium">25</p>
 			</div>
-			<div class="p-6 rounded-lg shadow-lg hover:shadow-xl transition-all transform hover:scale-105">
+			<div class="p-6 transition-all transform rounded-lg shadow-lg hover:shadow-xl hover:scale-105">
 				<div class="flex items-center gap-4">
-					<i class="fas fa-check-circle text-purple-600 text-3xl"></i>
+					<i class="text-3xl text-blue-600 fas fa-check-circle"></i>
 					<h3 class="text-xl font-medium">Accepted</h3>
 				</div>
-				<p class="text-4xl font-medium mt-4">15</p>
+				<p class="mt-4 text-4xl font-medium">15</p>
 			</div>
-			<div class=" p-6 rounded-lg shadow-lg hover:shadow-xl transition-all transform hover:scale-105">
+			<div class="p-6 transition-all transform rounded-lg shadow-lg hover:shadow-xl hover:scale-105">
 				<div class="flex items-center gap-4">
-					<i class="fas fa-clock text-purple-600 text-3xl"></i>
+					<i class="text-3xl text-blue-600 fas fa-clock"></i>
 					<h3 class="text-xl font-medium">Pending</h3>
 				</div>
-				<p class="text-4xl font-medium mt-4">5</p>
+				<p class="mt-4 text-4xl font-medium">5</p>
 			</div>
-			<div class="p-6 rounded-lg shadow-lg hover:shadow-xl transition-all transform hover:scale-105">
+			<div class="p-6 transition-all transform rounded-lg shadow-lg hover:shadow-xl hover:scale-105">
 				<div class="flex items-center gap-4">
-					<i class="fas fa-times-circle text-purple-600 text-3xl"></i>
+					<i class="text-3xl text-blue-600 fas fa-times-circle"></i>
 					<h3 class="text-xl font-medium">Rejected</h3>
 				</div>
-				<p class="text-4xl font-medium mt-4">5</p>
+				<p class="mt-4 text-4xl font-medium">5</p>
 			</div>
 		</section>
 
 		<!-- Analytics Section -->
-		<section class="bg-white shadow-lg rounded-xl p-8 mb-8">
-			<h3 class="text-2xl font-semibold text-gray-800 mb-6 flex items-center">
-				<i class="fa-solid fa-chart-line text-purple-600 mr-3"></i> Analytics Overview
+		<section class="p-8 mb-8 bg-white shadow-lg rounded-xl">
+			<h3 class="flex items-center mb-6 text-2xl font-semibold text-gray-800">
+				<i class="mr-3 text-blue-600 fa-solid fa-chart-line"></i> Analytics Overview
 			</h3>
-			<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+			<div class="grid grid-cols-1 gap-6 md:grid-cols-2">
 				<!-- Outpass Trends Chart -->
-				<div class="bg-gray-50 p-6 rounded-lg shadow-md">
-					<h4 class="text-lg font-medium text-gray-700 flex items-center">
-						<i class="fa-solid fa-chart-pie text-purple-600 mr-2"></i> Outpass Trends
+				<div class="p-6 rounded-lg shadow-md bg-gray-50">
+					<h4 class="flex items-center text-lg font-medium text-gray-700">
+						<i class="mr-2 text-blue-600 fa-solid fa-chart-pie"></i> Outpass Trends
 					</h4>
-					<div class="h-56 relative mt-4">
+					<div class="relative h-56 mt-4">
 						<canvas id="outpassTrendsChart"></canvas>
 					</div>
 				</div>
 
 				<!-- Approval Time Analysis -->
-				<div class="bg-gray-50 p-6 rounded-lg shadow-md">
-					<h4 class="text-lg font-medium text-gray-700 flex items-center">
-						<i class="fa-solid fa-clock text-purple-600 mr-2"></i> Approval Time Analysis
+				<div class="p-6 rounded-lg shadow-md bg-gray-50">
+					<h4 class="flex items-center text-lg font-medium text-gray-700">
+						<i class="mr-2 text-blue-600 fa-solid fa-clock"></i> Approval Time Analysis
 					</h4>
-					<div class="h-56 relative mt-4">
+					<div class="relative h-56 mt-4">
 						<canvas id="approvalTimeChart"></canvas>
 					</div>
 				</div>

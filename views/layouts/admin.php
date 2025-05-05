@@ -46,6 +46,10 @@
         </div>
     </div>
 
+    <div id="preloader" class="fixed inset-0 z-50 bg-white flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+    <div class="h-10 w-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+    </div>
+
     <!-- Modal Stub -->
     <?php $this->getComponent('admin/modal', get_defined_vars()) ?>
 

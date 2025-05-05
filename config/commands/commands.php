@@ -8,4 +8,5 @@ return [
     \App\Command\RemoveExpiredOutpassCommand::class,
     \App\Command\DatabaseSeederCommand::class,
     \App\Command\WebSocketServerCommand::class,
+    \App\Command\MaintenanceModeCommand::class,
 ];

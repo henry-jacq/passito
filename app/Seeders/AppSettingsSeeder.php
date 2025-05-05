@@ -15,7 +15,8 @@ class AppSettingsSeeder
     public function run()
     {
         $settings = [
-            ['keyName' => 'setup_complete', 'value' => 'false'],
+            ['keyName' => 'setup_complete', 'value' => 'true'],
+            ['keyName' => 'maintenance_mode', 'value' => 'false'],
             ['keyName' => 'admin_created', 'value' => 'false'],
             ['keyName' => 'app_name', 'value' => 'Passito'],
             ['keyName' => 'email_settings', 'value' => '{}'],

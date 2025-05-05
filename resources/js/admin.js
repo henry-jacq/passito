@@ -35,36 +35,38 @@ function handleError(status) {
 
 document.addEventListener("DOMContentLoaded", () => {
     const preloader = document.getElementById("preloader");
+    let loaderTimeout;
 
+    // Hide preloader immediately on load (prevent flicker)
+    preloader.classList.add("opacity-0", "pointer-events-none");
+    preloader.classList.remove("opacity-100");
+
+    // Add click listeners to all internal links
     document.querySelectorAll("a[href]").forEach(link => {
         link.addEventListener("click", function (e) {
-        const href = link.getAttribute("href");
+            const href = link.getAttribute("href");
 
-        if (
-            href.startsWith('#') ||
-            href.startsWith('javascript:') ||
-            link.target === '_blank' ||
-            link.hasAttribute('data-no-loader')
-        ) return;
+            if (
+                href.startsWith('#') ||
+                href.startsWith('javascript:') ||
+                link.target === '_blank' ||
+                link.hasAttribute('data-no-loader')
+            ) return;
 
-        // Activate the loader smoothly when navigating
-        requestAnimationFrame(() => {
-            preloader.classList.remove("pointer-events-none", "opacity-0");
-            preloader.classList.add("opacity-100");
-        });
+            // Small delay to avoid flicker on extremely fast navigations
+            loaderTimeout = setTimeout(() => {
+                preloader.classList.remove("pointer-events-none", "opacity-0");
+                preloader.classList.add("opacity-100", "select-none");
+            }, 100); // Adjust delay as needed
         });
     });
 
-    // Fallback: If the page has already loaded by the time this script runs, remove the preloader immediately
-    setTimeout(() => {
+    // In case of using browser's back/forward cache
+    window.addEventListener("pageshow", () => {
+        clearTimeout(loaderTimeout);
         preloader.classList.add("opacity-0", "pointer-events-none");
-    }, 100); // Delaying for a small amount to ensure smooth transitions
-});
-
-window.addEventListener("pageshow", () => {
-    const preloader = document.getElementById("preloader");
-    preloader.classList.add("opacity-0", "pointer-events-none");
-    preloader.classList.remove("opacity-100");
+        preloader.classList.remove("opacity-100");
+    });
 });
 
 document.addEventListener('DOMContentLoaded', () => {

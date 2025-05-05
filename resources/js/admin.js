@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Activate the loader smoothly when navigating
         requestAnimationFrame(() => {
             preloader.classList.remove("pointer-events-none", "opacity-0");
-            preloader.classList.add("opacity-100", "select-none");
+            preloader.classList.add("opacity-100");
         });
         });
     });

@@ -12,7 +12,6 @@ use App\Services\VerifierService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-use function PHPSTORM_META\type;
 
 class AdminController extends BaseController
 {
@@ -100,7 +99,7 @@ class AdminController extends BaseController
         ];
 
         $args = array_merge($args, $this->view->getGlobals());
-        return parent::render($request, $response, 'admin/pending_requests', $args);
+        return parent::render($request, $response, 'admin/pending', $args);
     }
 
     public function outpassRecords(Request $request, Response $response): Response
@@ -132,7 +131,7 @@ class AdminController extends BaseController
         ];
 
         $args = array_merge($args, $this->view->getGlobals());
-        return parent::render($request, $response, 'admin/outpass_records', $args);
+        return parent::render($request, $response, 'admin/records', $args);
     }
 
     public function outpassDetails(Request $request, Response $response): Response
@@ -151,7 +150,7 @@ class AdminController extends BaseController
             'routeName' => $this->getRouteName($request),
         ];
         
-        return parent::render($request, $response, 'admin/outpass_details', $args);
+        return parent::render($request, $response, 'admin/outpass', $args);
     }
 
     public function outpassSettings(Request $request, Response $response): Response
@@ -174,7 +173,7 @@ class AdminController extends BaseController
             $args['settings'] = $settings;
         }
         
-        return parent::render($request, $response, 'admin/outpass_settings', $args);
+        return parent::render($request, $response, 'admin/rules', $args);
     }
 
     public function outpassTemplates(Request $request, Response $response): Response
@@ -197,7 +196,7 @@ class AdminController extends BaseController
             $args['settings'] = $settings;
         }
 
-        return parent::render($request, $response, 'admin/outpass_templates', $args);
+        return parent::render($request, $response, 'admin/templates', $args);
     }
 
     public function manageStudents(Request $request, Response $response): Response

@@ -43,7 +43,7 @@ use App\Enum\UserRole; ?>
                         class="flex items-center px-4 py-2.5 <?= ($routeName == 'admin.outpass.records') ? 'bg-blue-500/20 text-blue-800 hover:bg-blue-600/20 border-blue-800/80' : 'text-gray-600 hover:bg-gray-50 border-transparent'; ?> transition duration-200 rounded-md border-l-4">
                         <div class="flex items-center space-x-4">
                             <i class="fas fa-folder-open"></i>
-                            <span>Outpasses</span>
+                            <span>Records</span>
                         </div>
                     </a>
                 </li>

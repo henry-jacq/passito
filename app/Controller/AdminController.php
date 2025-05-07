@@ -161,7 +161,7 @@ class AdminController extends BaseController
         $userData = $request->getAttribute('user');
         $args = [
             'user' => $userData,
-            'title' => 'Outpass Settings',
+            'title' => 'Firewall Rules',
             'routeName' => $this->getRouteName($request),
         ];
 
@@ -184,7 +184,7 @@ class AdminController extends BaseController
         $userData = $request->getAttribute('user');
         $args = [
             'user' => $userData,
-            'title' => 'Outpass Settings',
+            'title' => 'Template Builder',
             'routeName' => $this->getRouteName($request),
         ];
 
@@ -243,7 +243,7 @@ class AdminController extends BaseController
         $verifiers = $this->verifierService->getVerifiers();
 
         $args = [
-            'title' => 'Manage Verifiers',
+            'title' => 'Verifier Control',
             'user' => $userData,
             'verifiers' => $verifiers,
             'routeName' => $this->getRouteName($request),
@@ -275,7 +275,7 @@ class AdminController extends BaseController
         }
 
         $args = [
-            'title' => 'Manage Logbook',
+            'title' => 'Outpass Logbook',
             'user' => $userData,
             'logbook' => $paginationData['data'],
             'records' => [

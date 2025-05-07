@@ -74,7 +74,10 @@ class AdminController extends BaseController
             hostelFilter: $hostelFilter
         );
 
-        $pendingCount = count($this->outpassService->getPendingOutpass(paginate: false));
+        $pendingCount = count($this->outpassService->getPendingOutpass(
+            paginate: false,
+            warden: $userData
+        ));
 
         // Redirect to the last page if the requested page exceeds available pages
         if ($paginationData['totalPages'] > 1 && $page > $paginationData['totalPages']) {

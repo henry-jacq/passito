@@ -90,14 +90,6 @@ class OutpassService
 
     public function getPendingOutpass(int $page = 1, int $limit = 10, bool $paginate = true, ?User $warden = null, ?string $hostelFilter = null)
     {
-        if (!$paginate) {
-            return $this->em->getRepository(OutpassRequest::class)->findBy([
-                'status' => OutpassStatus::PENDING
-            ]);
-        }
-
-        $offset = ($page - 1) * $limit;
-
         $statuses = [OutpassStatus::PENDING->value];
         $wardenGender = $warden->getGender()->value;
         $settings = $this->getSettings($warden->getGender());
@@ -105,6 +97,39 @@ class OutpassService
         if (Gender::isFemale($wardenGender) && $settings->getParentApproval()) {
             $statuses[] = OutpassStatus::PARENT_APPROVED->value;
         }
+
+        if (!$paginate) {
+            $queryBuilder = $this->em->createQueryBuilder();
+            $queryBuilder->select('o')->from(OutpassRequest::class, 'o')
+                ->join('o.student', 's')->join('s.user', 'u')
+                ->where($queryBuilder->expr()->in('o.status', ':statuses'))
+                ->andWhere('u.gender = :gender')
+                ->orderBy('o.createdAt', 'DESC')
+                ->setParameter('statuses', $statuses)
+                ->setParameter('gender', $wardenGender);
+
+            // Optional hostel filtering for wardens
+            if (UserRole::isAdmin($warden->getRole()->value)) {
+                $hostels = $warden->getHostels();
+                $ids = [];
+
+                foreach ($hostels as $hostel) {
+                    $ids[] = $hostel->getId();
+                }
+
+                if ($hostelFilter && $hostelFilter !== 'default') {
+                    $queryBuilder->andWhere('h.id = :id')
+                        ->setParameter('id', (int) $hostelFilter);
+                } else {
+                    $queryBuilder->andWhere($queryBuilder->expr()->in('h.id', ':ids'))
+                        ->setParameter('ids', $ids);
+                }
+            }
+
+            return $queryBuilder->getQuery()->getResult();
+        }
+
+        $offset = ($page - 1) * $limit;
 
         $queryBuilder = $this->em->createQueryBuilder();
         $queryBuilder->select('o')
@@ -120,7 +145,6 @@ class OutpassService
             ->setFirstResult($offset)
             ->setMaxResults($limit);
 
-        // Hostel filtering ONLY if user is an warden
         if (UserRole::isAdmin($warden->getRole()->value)) {
             $hostels = $warden->getHostels();
             $ids = [];

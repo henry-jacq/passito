@@ -1,0 +1,85 @@
+<div class="px-3 space-y-4">
+    <h3 class="pb-3 text-xl font-bold text-gray-800 border-b border-gray-200">Add New Student</h3>
+
+    <div class="space-y-6">
+        <div class="space-y-3">
+            <div class="grid grid-cols-1 gap-4 mb-5 sm:grid-cols-2">
+                <div>
+                    <label for="student-name" class="block text-sm font-medium text-gray-700">Full Name</label>
+                    <input type="text" id="student-name" name="student-name" placeholder="e.g., John Doe" required
+                        class="w-full px-3 py-2 text-sm text-gray-800 transition duration-200 bg-white border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                    <input type="email" id="email" name="email" placeholder="e.g., student@email.com" required
+                        class="w-full px-3 py-2 text-sm text-gray-800 transition duration-200 bg-white border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500">
+                </div>
+            </div>
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                <div>
+                    <label for="digital-id" class="block text-sm font-medium text-gray-700">Digital ID</label>
+                    <input type="text" id="digital-id" name="digital-id" placeholder="e.g., 2212025" required
+                        class="w-full px-3 py-2 text-sm text-gray-800 transition duration-200 bg-white border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label for="student-no" class="block text-sm font-medium text-gray-700">Student Number</label>
+                    <input type="text" id="student-no" name="student-no" placeholder="e.g., 9876543210" required
+                        class="w-full px-3 py-2 text-sm text-gray-800 transition duration-200 bg-white border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label for="parent-no" class="block text-sm font-medium text-gray-700">Parent Number</label>
+                    <input type="text" id="parent-no" name="parent-no" placeholder="e.g., 9876543210" required
+                        class="w-full px-3 py-2 text-sm text-gray-800 transition duration-200 bg-white border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500">
+                </div>
+            </div>
+        </div>
+        <div class="space-y-5">
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div>
+                    <label for="institution-id" class="block text-sm font-medium text-gray-700">Institution</label>
+                    <select id="institution-id" name="institution-id" required
+                        class="w-full px-3 py-2 text-sm text-gray-800 transition duration-200 bg-white border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500">
+                        <option value="" disabled selected>Select Institution</option>
+                        <?php foreach ($institutions as $institution): ?>
+                            <option value="<?= $institution['id'] ?>"><?= $institution['name'] ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div>
+                    <label for="hostel-no" class="block text-sm font-medium text-gray-700">Hostel</label>
+                    <select id="hostel-no" name="hostel-no"
+                        class="w-full px-3 py-2 text-sm text-gray-800 transition duration-200 bg-white border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500">
+                        <option value="" disabled selected>Select Hostel</option>
+                        <?php foreach ($hostels as $hostel): ?>
+                            <option value="<?= $hostel['id'] ?>"><?= $hostel['hostelName'] ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <label for="room-no" class="block text-sm font-medium text-gray-700">Room Number</label>
+                <input type="text" id="room-no" name="room-no" placeholder="e.g., A-102" required
+                    class="w-full px-3 py-2 text-sm text-gray-800 transition duration-200 bg-white border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500">
+            </div>
+        </div>
+        <div class="space-y-2">
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                <div>
+                    <label for="course" class="block text-sm font-medium text-gray-700">Course</label>
+                    <input type="text" id="course" name="course" placeholder="e.g., B.Tech, MBA" required
+                        class="w-full px-3 py-2 text-sm text-gray-800 transition duration-200 bg-white border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label for="branch" class="block text-sm font-medium text-gray-700">Branch</label>
+                    <input type="text" id="branch" name="branch" placeholder="e.g., CSE, ECE" required
+                        class="w-full px-3 py-2 text-sm text-gray-800 transition duration-200 bg-white border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label for="year" class="block text-sm font-medium text-gray-700">Year</label>
+                    <input type="number" id="year" name="year" placeholder="e.g., 2" required
+                        class="w-full px-3 py-2 text-sm text-gray-800 transition duration-200 bg-white border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

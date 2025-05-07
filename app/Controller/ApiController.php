@@ -177,8 +177,12 @@ class ApiController
                 $clean_input[$k] = $this->cleanInputs($v);
             }
         } else {
-            $data = strip_tags($data);
-            $clean_input = trim($data);
+            if (!is_null($data)) {
+                $data = strip_tags((string) $data); // Cast to string, safely removes null
+                $clean_input = trim($data);
+            } else {
+                $clean_input = ''; // or null, based on how you want to handle empty inputs
+            }
         }
         return $clean_input;
     }

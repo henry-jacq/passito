@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
         button.addEventListener('click', async (event) => {
             event.stopPropagation();
             const outpassId = event.target.dataset.id;
-            
+
             try {
                 const response = await Ajax.post(`/api/web/admin/outpass/accept`, {
                     id: outpassId
@@ -162,66 +162,65 @@ document.addEventListener('DOMContentLoaded', () => {
     // Reject outpass
     const rejectOutpassButtons = document.querySelectorAll('.reject-outpass');
     rejectOutpassButtons.forEach((button) => {
-        button.addEventListener('click', (event) => {
+        button.addEventListener('click', async (event) => {
             event.stopPropagation();
             const outpassId = event.target.dataset.id;
 
-            Modal.open({
-                content: `
-                <div class="px-2 space-y-6">
-                    <h3 class="text-xl font-bold text-gray-800 border-b border-gray-200 pb-3">
-                        Add Remarks for Rejection
-                    </h3>
-                    <div class="space-y-4">
-                        <label for="rejection-reason" class="block text-sm font-medium text-gray-700">
-                            Reason for Rejection <span class="text-gray-500 text-sm">(Optional)</span>
-                        </label>
-                        <textarea id="rejection-reason" class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm transition duration-200 resize-none" rows="4" placeholder="Provide a reason for rejection..."></textarea>
-                    </div>
-                </div>
-                `,
-                actions: [
-                    {
-                        label: 'Reject',
-                        class: `inline-flex justify-center rounded-lg bg-red-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-red-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50`,
-                        onClick: async () => {
-                            try {
-                                const reason = document.getElementById('rejection-reason').value.trim();
-                                const response = await Ajax.post(`/api/web/admin/outpass/reject`, {
-                                    id: outpassId,
-                                    reason
-                                });
-                                
-                                if (response.ok) {
-                                    const data = response.data;
-                                    if (data.status) {
-                                        location.reload();
-                                    } else {
-                                        alert(data.message);
+            try {
+                const response = await Ajax.post('/api/web/admin/modal?template=reject_outpass');
+
+                if (response.ok && response.data) {
+                    Modal.open({
+                        content: response.data,
+                        actions: [
+                            {
+                                label: 'Reject',
+                                class: `inline-flex justify-center rounded-lg bg-red-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-red-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50`,
+                                onClick: async () => {
+                                    try {
+                                        const reason = document.getElementById('rejection-reason').value.trim();
+                                        const response = await Ajax.post(`/api/web/admin/outpass/reject`, {
+                                            id: outpassId,
+                                            reason
+                                        });
+
+                                        if (response.ok) {
+                                            const data = response.data;
+                                            if (data.status) {
+                                                location.reload();
+                                            } else {
+                                                alert(data.message);
+                                            }
+                                        } else {
+                                            handleError(response.status);
+                                        }
+                                    } catch (error) {
+                                        console.error(error);
+                                    } finally {
+                                        Modal.close();
                                     }
-                                } else {
-                                    handleError(response.status);
-                                }
-                            } catch (error) {
-                                console.error(error);
-                            } finally {
-                                Modal.close();
-                            }
-                        },
-                    },
-                    {
-                        label: 'Cancel',
-                        class: `inline-flex justify-center rounded-lg bg-gray-100 px-6 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`,
-                        onClick: Modal.close,
-                    },
-                ],
-                size: 'sm:max-w-lg',
-                classes: 'custom-modal-class',
-                closeOnBackdropClick: false,
-            });
+                                },
+                            },
+                            {
+                                label: 'Cancel',
+                                class: `inline-flex justify-center rounded-lg bg-gray-100 px-6 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`,
+                                onClick: Modal.close,
+                            },
+                        ],
+                        size: 'sm:max-w-lg',
+                        classes: 'custom-modal-class',
+                        closeOnBackdropClick: false,
+                    });
+                } else {
+                    console.error('Error loading modal template:', response.data.message || 'Unknown error');
+                    alert(response.data.message || 'Failed to load modal template');
+                }
+            } catch (error) {
+                console.error('Failed to load modal content:', error);
+                alert('Failed to load modal content. Please try again later.');
+            }
         });
     });
-
 
     // Add Student modal
     const addStudentButton = document.querySelector('.add-student-modal');
@@ -229,193 +228,117 @@ document.addEventListener('DOMContentLoaded', () => {
         addStudentButton.addEventListener('click', async () => {
             const fetchHostels = await Ajax.post('/api/web/admin/facilities/hostels/fetch');
             const fetchInstitutions = await Ajax.post('/api/web/admin/facilities/institutions/fetch');
-            let hostelOptions = '';
-            let institutionOptions = '';
+
+            let hostelsData = [];
+            let institutionData = [];
 
             if (fetchHostels.ok && fetchInstitutions.ok) {
                 const hostels = fetchHostels.data;
                 const institutions = fetchInstitutions.data;
 
                 if (hostels.status && Array.isArray(hostels.data.hostels) && institutions.status && Array.isArray(institutions.data.institutions)) {
-                    hostelOptions = hostels.data.hostels
-                        .map(hostel => `<option value="${hostel.id}">${hostel.hostelName}</option>`)
-                        .join('');
-                    institutionOptions = institutions.data.institutions
-                        .map(institution => `<option value="${institution.id}">${institution.name}</option>`)
-                        .join('');
+                    hostelsData = hostels.data.hostels;
+                    institutionData = institutions.data.institutions;
                 } else {
-                    const toast = new Toast();                    
-                    toast.create({ message: hostels.message, position: "bottom-right", type: "warning", duration: 4000 });
+                    const toast = new Toast();
+                    toast.create({ message: hostels.message || 'Invalid hostel or institution data.', position: "bottom-right", type: "warning", duration: 4000 });
                     return;
+                }
+
+                try {
+                    const response = await Ajax.post('/api/web/admin/modal', {
+                        template: "add_student",
+                        hostels: hostelsData,
+                        institutions: institutionData
+                    });
+
+                    if (response.ok && response.data) {
+                        Modal.open({
+                            content: response.data,
+                            actions: [
+                                {
+                                    label: 'Add Student',
+                                    class: `inline-flex justify-center rounded-lg bg-blue-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-blue-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50`,
+                                    onClick: async (event) => {
+                                        const studentName = document.getElementById('student-name').value;
+                                        const email = document.getElementById('email').value;
+                                        const digitalId = document.getElementById('digital-id').value;
+                                        const course = document.getElementById('course').value;
+                                        const branch = document.getElementById('branch').value;
+                                        const year = document.getElementById('year').value;
+                                        const roomNo = document.getElementById('room-no').value;
+                                        const hostelNo = document.getElementById('hostel-no').value;
+                                        const studentNo = document.getElementById('student-no').value;
+                                        const parentNo = document.getElementById('parent-no').value;
+                                        const institutionId = document.getElementById('institution-id').value;
+
+                                        event.target.disabled = true;
+                                        event.target.textContent = 'Adding Student...';
+
+                                        if (studentName && email && digitalId && course && branch && year && roomNo && hostelNo && studentNo && parentNo && institutionId) {
+                                            if (studentNo === parentNo) {
+                                                alert("Student number and Parent number must not be the same.");
+                                                event.target.textContent = 'Add Student';
+                                                event.target.disabled = false;
+                                                return;
+                                            }
+
+                                            try {
+                                                const response = await Ajax.post('/api/web/admin/students/create', {
+                                                    name: studentName, email,
+                                                    digital_id: digitalId, course, branch,
+                                                    year, room_no: roomNo,
+                                                    hostel_no: hostelNo,
+                                                    contact: studentNo,
+                                                    parent_no: parentNo,
+                                                    institution: institutionId
+                                                });
+
+                                                if (response.ok) {
+                                                    const data = response.data;
+                                                    if (data.status) {
+                                                        location.reload();
+                                                    } else {
+                                                        alert(data.message);
+                                                    }
+                                                } else {
+                                                    handleError(response.status);
+                                                    event.target.textContent = 'Add Student';
+                                                    event.target.disabled = false;
+                                                }
+                                            } catch (error) {
+                                                console.error(error);
+                                            } finally {
+                                                Modal.close();
+                                            }
+                                        } else {
+                                            alert('Please fill in all the required fields correctly.');
+                                            event.target.textContent = 'Add Student';
+                                            event.target.disabled = false;
+                                        }
+                                    },
+                                },
+                                {
+                                    label: 'Cancel',
+                                    class: `inline-flex justify-center rounded-lg bg-gray-100 px-6 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`,
+                                    onClick: Modal.close,
+                                },
+                            ],
+                            size: 'sm:max-w-3xl',
+                            classes: 'focus:outline-none focus:ring-0 focus:border-transparent',
+                            closeOnBackdropClick: false,
+                        });
+                    } else {
+                        console.error('Error loading modal template:', response.data.message || 'Unknown error');
+                        alert(response.data.message || 'Failed to load modal template');
+                    }
+                } catch (error) {
+                    console.error('Failed to load modal content:', error);
+                    alert('Failed to load modal content. Please try again later.');
                 }
             } else {
                 handleError(fetchHostels.status);
             }
-
-            Modal.open({
-                content: `
-            <div class="px-3 space-y-4">
-                <h3 class="text-xl font-bold text-gray-800 border-b border-gray-200 pb-3">Add New Student</h3>
-
-                <div class="space-y-6">
-                    <div class="space-y-3">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
-                            <div>
-                                <label for="student-name" class="block text-sm font-medium text-gray-700">Full Name</label>
-                                <input type="text" id="student-name" name="student-name" placeholder="e.g., John Doe" required
-                                    class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition duration-200">
-                            </div>
-                            <div>
-                                <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                                <input type="email" id="email" name="email" placeholder="e.g., student@email.com" required
-                                    class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition duration-200">
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            <div>
-                                <label for="digital-id" class="block text-sm font-medium text-gray-700">Digital ID</label>
-                                <input type="text" id="digital-id" name="digital-id" placeholder="e.g., 2212025" required
-                                    class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition duration-200">
-                            </div>
-                            <div>
-                                <label for="student-no" class="block text-sm font-medium text-gray-700">Student Number</label>
-                                <input type="text" id="student-no" name="student-no" placeholder="e.g., 9876543210" required
-                                    class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition duration-200">
-                            </div>
-                            <div>
-                                <label for="parent-no" class="block text-sm font-medium text-gray-700">Parent Number</label>
-                                <input type="text" id="parent-no" name="parent-no" placeholder="e.g., 9876543210" required
-                                    class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition duration-200">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="space-y-5">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <label for="institution-id" class="block text-sm font-medium text-gray-700">Institution</label>
-                                <select id="institution-id" name="institution-id" required
-                                    class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition duration-200">
-                                    <option value="" disabled selected>Select Institution</option>
-                                    ${institutionOptions}
-                                </select>
-                            </div>
-                            <div>
-                                <label for="hostel-no" class="block text-sm font-medium text-gray-700">Hostel</label>
-                                <select id="hostel-no" name="hostel-no"
-                                    class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition duration-200">
-                                    <option value="" disabled selected>Select Hostel</option>
-                                    ${hostelOptions}
-                                </select>
-                            </div>
-                        </div>
-                        <div>
-                            <label for="room-no" class="block text-sm font-medium text-gray-700">Room Number</label>
-                            <input type="text" id="room-no" name="room-no" placeholder="e.g., A-102" required
-                                class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition duration-200">
-                        </div>
-                    </div>
-                    <div class="space-y-2">
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            <div>
-                                <label for="course" class="block text-sm font-medium text-gray-700">Course</label>
-                                <input type="text" id="course" name="course" placeholder="e.g., B.Tech, MBA" required
-                                    class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition duration-200">
-                            </div>
-                            <div>
-                                <label for="branch" class="block text-sm font-medium text-gray-700">Branch</label>
-                                <input type="text" id="branch" name="branch" placeholder="e.g., CSE, ECE" required
-                                    class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition duration-200">
-                            </div>
-                            <div>
-                                <label for="year" class="block text-sm font-medium text-gray-700">Year</label>
-                                <input type="number" id="year" name="year" placeholder="e.g., 2" required
-                                    class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition duration-200">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            `,
-                actions: [
-                    {
-                        label: 'Add Student',
-                        class: `inline-flex justify-center rounded-lg bg-blue-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-blue-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50`,
-                        onClick: async (event) => {
-                            const studentName = document.getElementById('student-name').value;
-                            const email = document.getElementById('email').value;
-                            const digitalId = document.getElementById('digital-id').value;
-                            const course = document.getElementById('course').value;
-                            const branch = document.getElementById('branch').value;
-                            const year = document.getElementById('year').value;
-                            const roomNo = document.getElementById('room-no').value;
-                            const hostelNo = document.getElementById('hostel-no').value;
-                            const studentNo = document.getElementById('student-no').value;
-                            const parentNo = document.getElementById('parent-no').value;
-                            const institutionId = document.getElementById('institution-id').value;
-
-                            // Disable button to prevent multiple clicks
-                            event.target.disabled = true;
-                            event.target.textContent = 'Adding Student...';
-
-                            if (studentName && email && digitalId && course && branch && year && roomNo && hostelNo && studentNo && parentNo && institutionId) {
-
-                                // Student number and parent number must not be the same
-                                if (studentNo === parentNo) {
-                                    alert("Student number and Parent number must not be the same.");
-                                    event.target.textContent = 'Add Student';
-                                    event.target.disabled = false;
-                                    return;
-                                }
-
-                                try {
-                                    const response = await Ajax.post('/api/web/admin/students/create', {
-                                        name: studentName,
-                                        email,
-                                        digital_id: digitalId,
-                                        course,
-                                        branch,
-                                        year,
-                                        room_no: roomNo,
-                                        hostel_no: hostelNo,
-                                        contact: studentNo,
-                                        parent_no: parentNo,
-                                        institution: institutionId
-                                    });
-
-                                    if (response.ok) {
-                                        const data = response.data;
-                                        if (data.status) {
-                                            location.reload();
-                                        } else {
-                                            alert(data.message);
-                                        }
-                                    } else {
-                                        handleError(response.status);
-                                        event.target.textContent = 'Add Student';
-                                        event.target.disabled = false;
-                                    }
-                                } catch (error) {
-                                    console.error(error);
-                                } finally {
-                                    Modal.close();
-                                }
-                            } else {
-                                alert('Please fill in all the required fields correctly.');
-                                event.target.textContent = 'Add Student';
-                                event.target.disabled = false;
-                            }
-                        },
-                    },
-                    {
-                        label: 'Cancel',
-                        class: `inline-flex justify-center rounded-lg bg-gray-100 px-6 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`,
-                        onClick: Modal.close,
-                    },
-                ],
-                size: 'sm:max-w-3xl',
-                classes: 'focus:outline-none focus:ring-0 focus:border-transparent',
-                closeOnBackdropClick: false,
-            });
         });
     }
 
@@ -458,107 +381,95 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Import students data
     const importStudentsButton = document.getElementById('import-btn');
-    importStudentsButton.addEventListener('click', (event) => {
+    importStudentsButton.addEventListener('click', async (event) => {
         event.stopPropagation();
 
-        Modal.open({
-            content: `
-        <div class="px-2 space-y-4">
-            <h3 class="text-xl font-bold text-gray-800 border-b border-gray-200 pb-3">Import Students</h3>
+        const fetchInstitutions = await Ajax.post('/api/web/admin/facilities/institutions/fetch');
 
-            <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                <div class="sm:col-span-2">
-                    <label for="year" class="block text-sm font-medium text-gray-700">Academic Year</label>
-                    <select id="year" name="year" class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition duration-200">
-                        <option value="" disabled selected>Select Year</option>
-                        <option value="1">1st Year</option>
-                        <option value="2">2nd Year</option>
-                        <option value="3">3rd Year</option>
-                        <option value="4">4th Year</option>
-                    </select>
-                </div>
-                <div class="sm:col-span-2">
-                    <label for="institution" class="block text-sm font-medium text-gray-700">Institution</label>
-                    <select id="institution" name="institution" class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition duration-200">
-                        <option value="" disabled selected>Select Institution</option>
-                        <option value="1">SSN College of Engineering</option>
-                        <option value="2">Shiv Nadar University</option>
-                    </select>
-                </div>
-                <div class="sm:col-span-2">
-                    <label for="file" class="block text-sm font-medium text-gray-700">Student CSV</label>
-                    <input type="file" id="file" name="file" accept=".csv"
-                    class="block w-full cursor-pointer rounded-md border border-gray-300 bg-white text-sm text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 file:mr-4 file:pr-6 file:border-0 file:bg-gray-50 file:px-4 file:py-2 file:text-sm file:font-medium file:text-gray-700 hover:file:bg-gray-100 px-0 py-0" />
-                </div>
-            </div>
+        if (!fetchInstitutions.ok) {
+            const toast = new Toast();
+            toast.create({ message: fetchInstitutions.message || 'Failed to fetch institutions.', position: "bottom-right", type: "warning", duration: 4000 });
+            return;
+        }
 
-            <ul class="mt-4 space-y-1 text-sm text-gray-500 list-disc list-inside">
-                <li>Ensure CSV format matches the provided template.</li>
-                <li>Selected year must align with the course duration.</li>
-                <li>Students are imported year-wise for better categorization.</li>
-            </ul>
-        </div>
-        `,
-            actions: [
-                {
-                    label: 'Perform',
-                    class: `inline-flex justify-center rounded-lg bg-gray-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-gray-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-50`,
-                    onClick: async () => {
-                        try {
-                            // Collect form data
-                            const hostelNo = document.getElementById('hostel-no').value;
-                            const year = document.getElementById('year').value;
-                            const institution = document.getElementById('institution').value;
-                            const fileInput = document.getElementById('file');
-                            const file = fileInput.files[0];
+        try {
+            const institutions = fetchInstitutions.data.data.institutions;
+            
+            const response = await Ajax.post('/api/web/admin/modal', {
+                template: "import_students", institutions
+            });
 
-                            // Ensure file is selected
-                            if (!file) {
-                                alert('Please select a CSV file.');
-                                return;
-                            }
+            if (response.ok && response.data) {
+                Modal.open({
+                    content: response.data,
+                    actions: [
+                        {
+                            label: 'Perform',
+                            class: `inline-flex justify-center rounded-lg bg-gray-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-gray-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-50`,
+                            onClick: async () => {
+                                try {
+                                    // Collect form data
+                                    const hostelNo = document.getElementById('hostel-no').value;
+                                    const year = document.getElementById('year').value;
+                                    const institution = document.getElementById('institution').value;
+                                    const fileInput = document.getElementById('file');
+                                    const file = fileInput.files[0];
 
-                            // Prepare the form data for submission
-                            const formData = new FormData();
-                            formData.append('hostel_no', hostelNo);
-                            formData.append('year', year);
-                            formData.append('institution', institution);
-                            formData.append('file', file);
+                                    // Ensure file is selected
+                                    if (!file) {
+                                        alert('Please select a CSV file.');
+                                        return;
+                                    }
 
-                            // Make an Ajax request to upload the data
-                            const response = await fetch('/api/web/admin/students/import', {
-                                method: 'POST',
-                                body: formData,
-                            });
+                                    // Prepare the form data for submission
+                                    const formData = new FormData();
+                                    formData.append('hostel_no', hostelNo);
+                                    formData.append('year', year);
+                                    formData.append('institution', institution);
+                                    formData.append('file', file);
 
-                            if (response.ok) {
-                                const data = await response.json();
-                                if (data.status) {
-                                    location.reload();
-                                } else {
-                                    alert(data.message);
+                                    // Make an Ajax request to upload the data
+                                    const response = await fetch('/api/web/admin/students/import', {
+                                        method: 'POST',
+                                        body: formData,
+                                    });
+
+                                    if (response.ok) {
+                                        const data = await response.json();
+                                        if (data.status) {
+                                            location.reload();
+                                        } else {
+                                            alert(data.message);
+                                        }
+                                    } else {
+                                        const errorData = await response.json();
+                                        alert(errorData.message || 'An error occurred while importing students.');
+                                    }
+                                } catch (error) {
+                                    console.error(error);
+                                    alert('An error occurred while processing the request.');
+                                } finally {
+                                    Modal.close();
                                 }
-                            } else {
-                                const errorData = await response.json();
-                                alert(errorData.message || 'An error occurred while importing students.');
-                            }
-                        } catch (error) {
-                            console.error(error);
-                            alert('An error occurred while processing the request.');
-                        } finally {
-                            Modal.close();
-                        }
-                    },
-                },
-                {
-                    label: 'Cancel',
-                    class: `inline-flex justify-center rounded-lg bg-gray-100 px-6 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`,
-                    onClick: Modal.close,
-                },
-            ],
-            size: 'sm:max-w-xl',
-            classes: 'focus:outline-none focus:ring-0 focus:border-transparent',
-            closeOnBackdropClick: false,
-        });
+                            },
+                        },
+                        {
+                            label: 'Cancel',
+                            class: `inline-flex justify-center rounded-lg bg-gray-100 px-6 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`,
+                            onClick: Modal.close,
+                        },
+                    ],
+                    size: 'sm:max-w-xl',
+                    classes: 'focus:outline-none focus:ring-0 focus:border-transparent',
+                    closeOnBackdropClick: false,
+                });
+            } else {
+                console.error('Error loading modal template:', response.data.message || 'Unknown error');
+                alert(response.data.message || 'Failed to load modal template');
+            }
+        } catch (error) {
+            console.error('Failed to load modal content:', error);
+            alert('Failed to load modal content. Please try again later.');
+        }
     });
 });

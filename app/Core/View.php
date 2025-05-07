@@ -143,7 +143,7 @@ class View
             $this->viewCache[$path] = $contents;
             return $contents;
         } else {
-            throw new \Exception("Template not found: " . $template);
+            return false;
         }
     }
 

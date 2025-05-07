@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?= $title ?? $this->title ?></title>
+    <title><?= $this->title ?></title>
     
     <link rel="icon" type="image/x-icon" href="/assets/brand/passito-icon.png">
     <meta name="author" content="<?= $this->config->get('app.name') ?>">
@@ -30,14 +30,14 @@
 </head>
 
 
-<body class="bg-lightGray font-sans leading-relaxed">
+<body class="font-sans leading-relaxed bg-lightGray">
 
     <div class="flex h-screen">
         <!-- Sidebar -->
         <?php $this->getComponent('admin/sidebar', get_defined_vars()) ?>
         
         <!-- Contents Area -->
-        <div class="flex-1 flex flex-col lg:ml-64">
+        <div class="flex flex-col flex-1 lg:ml-64">
             <!-- Admin header -->
             <?php $this->getComponent('admin/header', get_defined_vars()) ?>
             
@@ -46,8 +46,8 @@
         </div>
     </div>
 
-    <div id="preloader" class="fixed inset-0 z-50 bg-white flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
-    <div class="h-10 w-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+    <div id="preloader" class="fixed inset-0 z-50 flex items-center justify-center transition-opacity duration-300 bg-white opacity-0 pointer-events-none">
+    <div class="w-10 h-10 border-4 border-blue-600 rounded-full border-t-transparent animate-spin"></div>
     </div>
 
     <!-- Modal Stub -->

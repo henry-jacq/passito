@@ -61,6 +61,7 @@ return function (App $app) {
         $group->any('/manage/facilities', [AdminController::class, 'manageFacilities'])->setName('admin.manage.facilities')->add(SuperAdminMiddleware::class);
         $group->any('/manage/verifiers', [AdminController::class, 'manageVerifiers'])->setName('admin.manage.verifiers')->add(SuperAdminMiddleware::class);
         $group->any('/manage/logbook', [AdminController::class, 'manageLogbook'])->setName('admin.manage.logbook');
+        $group->any('/outpass/templates', [AdminController::class, 'outpassTemplates'])->setName('admin.outpass.templates')->add(SuperAdminMiddleware::class);
         $group->any('/settings', [AdminController::class, 'settings'])->setName('admin.settings');
     })->add(AdminMiddleware::class);
 

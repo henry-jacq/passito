@@ -11,7 +11,7 @@ use App\Enum\UserRole; ?>
         </div>
 
         <!-- Scrollable Menu (Middle) -->
-        <div class="flex-1 px-2 overflow-y-auto scroll-smooth scrollbar scrollbar-hide">
+        <div class="flex-1 px-2 overflow-y-auto scroll-smooth">
             <!-- Main Menu Category -->
             <h4 class="px-2 mt-4 text-xs font-semibold text-gray-600 uppercase">Main Navigation</h4>
             <ul class="mt-2">
@@ -94,7 +94,7 @@ use App\Enum\UserRole; ?>
                     <li class="my-1">
                         <a href="<?= $this->urlFor('admin.manage.verifiers') ?>"
                             class="flex items-center px-4 py-2.5 <?= ($routeName == 'admin.manage.verifiers') ? 'bg-blue-500/20 text-blue-800 hover:bg-blue-600/20 border-blue-800/80' : 'text-gray-600 hover:bg-gray-50 border-transparent'; ?> transition duration-200 rounded-md border-l-4">
-                            <i class="pr-4 fas fa-server"></i>
+                            <i class="pr-4 fas fa-qrcode"></i>
                             <span>Verifier Panel</span>
                         </a>
                     </li>
@@ -104,8 +104,17 @@ use App\Enum\UserRole; ?>
                 <li class="my-1">
                     <a href="<?= $this->urlFor('admin.outpass.settings') ?>"
                         class="flex items-center px-4 py-2.5 <?= ($routeName == 'admin.outpass.settings') ? 'bg-blue-500/20 text-blue-800 hover:bg-blue-600/20 border-blue-800/80' : 'text-gray-600 hover:bg-gray-50 border-transparent'; ?> transition duration-200 rounded-md border-l-4">
-                        <i class="pr-4 fas fa-list-check"></i>
-                        <span>Outpass Rules</span>
+                        <i class="pr-4 fas fa-shield"></i>
+                        <span>Firewall Rules</span>
+                    </a>
+                </li>
+
+                <!-- Form Presets -->
+                <li class="my-1">
+                    <a href="<?= $this->urlFor('admin.outpass.templates') ?>"
+                        class="flex items-center px-4 py-2.5 <?= ($routeName == 'admin.outpass.templates') ? 'bg-blue-500/20 text-blue-800 hover:bg-blue-600/20 border-blue-800/80' : 'text-gray-600 hover:bg-gray-50 border-transparent'; ?> transition duration-200 rounded-md border-l-4">
+                        <i class="pr-4 fas fa-layer-group"></i>
+                        <span>Template Builder</span>
                     </a>
                 </li>
             </ul>

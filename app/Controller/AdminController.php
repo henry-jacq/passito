@@ -174,6 +174,29 @@ class AdminController extends BaseController
         return parent::render($request, $response, 'admin/outpass_settings', $args);
     }
 
+    public function outpassTemplates(Request $request, Response $response): Response
+    {
+        $this->view->clearCacheIfDev();
+
+        $data = $request->getParsedBody();
+        $userData = $request->getAttribute('user');
+        $args = [
+            'user' => $userData,
+            'title' => 'Outpass Settings',
+            'routeName' => $this->getRouteName($request),
+        ];
+
+        if ($data != null) {
+            $settings = $this->outpassService->updateSettings($userData, $data);
+            $args['settings'] = $settings;
+        } else {
+            $settings = $this->outpassService->getSettings($userData->getGender());
+            $args['settings'] = $settings;
+        }
+
+        return parent::render($request, $response, 'admin/outpass_templates', $args);
+    }
+
     public function manageStudents(Request $request, Response $response): Response
     {
         $this->view->clearCacheIfDev();

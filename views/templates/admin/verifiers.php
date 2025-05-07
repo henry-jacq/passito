@@ -2,20 +2,18 @@
 
 use App\Enum\VerifierStatus; ?>
 <main class="flex-1 p-6 mt-20 overflow-y-auto">
-    <!-- Page Header -->
-    <div class="flex flex-wrap items-center justify-between mb-4">
-        <div class="mb-6 space-y-2">
+    <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+        <div class="space-y-1">
             <h2 class="mb-4 text-2xl font-semibold text-gray-800">Manage Verifiers</h2>
-            <p class="mb-10 text-gray-600 text-md">
+            <p class="max-w-3xl mb-10 text-gray-600 text-md">
                 Deploy and manage your verifier devices to ensure secure and efficient verification processes.
             </p>
         </div>
-        <button id="open-add-device-modal" class="px-5 py-2 text-sm font-medium text-white transition-all duration-200 ease-in-out bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 focus:ring focus:ring-blue-400">
+        <button id="open-add-device-modal" class="inline-flex items-center px-5 py-2 text-sm font-medium text-white transition-all duration-200 ease-in-out bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 focus:ring focus:ring-blue-400">
             <i class="mr-2 fa-solid fa-plus"></i> Add New Device
         </button>
     </div>
 
-    <!-- Info Card -->
     <div class="p-4 mb-8 border-l-4 rounded-lg bg-blue-500/20 border-blue-800/80">
         <h3 class="mb-2 text-base font-semibold text-blue-900">
             Important Notes
@@ -29,7 +27,6 @@ use App\Enum\VerifierStatus; ?>
             <li>Ensure QR scanning and internet connectivity are tested before deployment.</li>
             <li>Auth token is required for verifier authentication and secure communication, and cannot be regenerated.</li>
         </ul>
-
     </div>
 
     <?php if (!empty($verifiers)): ?>

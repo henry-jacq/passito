@@ -168,8 +168,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             Modal.open({
                 content: `
-                <div class="px-3 space-y-4">
-                    <h3 class="text-xl font-semibold text-gray-900 border-b border-gray-300 pb-4">
+                <div class="px-2 space-y-6">
+                    <h3 class="text-xl font-bold text-gray-800 border-b border-gray-200 pb-3">
                         Add Remarks for Rejection
                     </h3>
                     <div class="space-y-4">

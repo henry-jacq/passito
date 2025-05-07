@@ -7,7 +7,11 @@
         </div>
     </div>
 
-    <?php if (empty($logbook)): ?>
+    <?php
+
+    use App\Enum\UserRole;
+
+    if (empty($logbook)): ?>
         <section class="flex flex-col items-center my-4 space-y-6 bg-white rounded-lg shadow-lg py-22">
             <div class="flex items-center justify-center w-16 h-16 text-blue-800 bg-blue-200 rounded-full shadow-inner">
                 <i class="text-4xl fas fa-circle-info"></i>
@@ -80,10 +84,22 @@
                                 <?php endif; ?>
                             </td>
                             <td class="px-2 py-3 text-sm text-center text-gray-700">
-                                <a href="<?= $this->urlFor('admin.manage.verifiers') ?>" class="text-gray-600 hover:text-gray-800 hover:underline">
-                                    <span class="inline-block mr-1 w-2.5 h-2.5 <?= $log->getVerifier()->getName() ? 'bg-green-500' : 'bg-red-500' ?> rounded-full"></span>
-                                    <?= htmlspecialchars($log->getVerifier()->getName()) ?>
-                                </a>
+                                <?php
+                                $verifier = $log->getVerifier();
+                                $verifierName = htmlspecialchars($verifier->getName());
+                                $statusClass = $verifierName ? 'bg-green-500' : 'bg-red-500'; ?>
+
+                                <?php if (UserRole::isSuperAdmin($user->getRole()->value)): ?>
+                                    <a href="<?= $this->urlFor('admin.manage.verifiers') ?>" class="text-gray-600 hover:text-gray-800 hover:underline">
+                                        <span class="inline-block mr-1 w-2.5 h-2.5 <?= $statusClass ?> rounded-full"></span>
+                                        <?= $verifierName ?>
+                                    </a>
+                                <?php else: ?>
+                                    <span class="text-gray-600">
+                                        <span class="inline-block mr-1 w-2.5 h-2.5 <?= $statusClass ?> rounded-full"></span>
+                                        <?= $verifierName ?>
+                                    </span>
+                                <?php endif; ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>

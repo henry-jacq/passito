@@ -1,18 +1,16 @@
 <main class="flex-1 p-6 mt-20 overflow-y-auto">
-    <!-- Page Header -->
-    <div class="flex flex-wrap items-center justify-between mb-4">
-        <div class="mb-6 space-y-2">
+    <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+        <div class="space-y-1">
             <h2 class="mb-4 text-2xl font-semibold text-gray-800">Manage Wardens</h2>
-            <p class="mb-10 text-gray-600 text-md">
+            <p class="max-w-3xl mb-10 text-gray-600 text-md">
                 View, update, and assign wardens to ensure efficient hostel management.
             </p>
         </div>
-        <button id="add-warden-modal" class="px-5 py-2 text-sm font-medium text-white transition-all duration-200 ease-in-out bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 focus:ring focus:ring-blue-400">
+        <button id="add-warden-modal" class="inline-flex items-center px-5 py-2 text-sm font-medium text-white transition-all duration-200 ease-in-out bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 focus:ring focus:ring-blue-400">
             <i class="mr-2 fa-solid fa-plus"></i> Add Warden
         </button>
     </div>
 
-    <!-- Info Card -->
     <div class="p-4 mb-8 border-l-4 rounded-lg bg-blue-500/20 border-blue-800/80">
         <h3 class="mb-2 text-base font-semibold text-blue-900">Important Notes</h3>
         <ul class="pl-4 space-y-1 text-sm text-blue-800 list-disc">
@@ -45,12 +43,12 @@
                             <td class="px-4 py-3 text-sm text-gray-700"><?= $warden->getEmail() ?></td>
                             <td class="px-4 py-3 text-sm text-gray-700"><?= $warden->getContactNo() ?></td>
                             <td class="px-4 py-3 text-sm text-center text-gray-700">
-                                <?= 
+                                <?=
                                 empty($warden->getHostels()->toArray()) ? 'N/A' :
-                                implode(', ', array_map(
-                                    fn($hostel) => htmlspecialchars($hostel->getName()),
-                                    $warden->getHostels()->toArray()
-                                )) ?>
+                                    implode(', ', array_map(
+                                        fn($hostel) => htmlspecialchars($hostel->getName()),
+                                        $warden->getHostels()->toArray()
+                                    )) ?>
                             </td>
                             <td class="px-4 py-3 text-sm text-center">
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">

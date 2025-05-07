@@ -38,7 +38,7 @@ class AdminService
 
     public function approveAllPending(User $approvedBy)
     {
-        $pendingPass = $this->outpass->getPendingOutpass(paginate: false);
+        $pendingPass = $this->outpass->getPendingOutpass(paginate: false, warden: $approvedBy);
         
         try {
             foreach ($pendingPass as $pending) {

@@ -438,6 +438,144 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Outpass Template Modal
+    const addTemplate = document.getElementById('add-outpass-template');
+    if (addTemplate) {
+        addTemplate.addEventListener('click', async () => {
+            try {
+                const response = await Ajax.get('/api/web/admin/modal?template=outpass_template');
+
+                if (response.ok && response.data) {
+                    Modal.open({
+                        content: response.data,
+                        actions: [
+                            {
+                                label: 'Create Template',
+                                class: `inline-flex justify-center rounded-lg bg-blue-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-blue-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50`,
+                                onClick: async (event) => {
+                                    const templateName = document.getElementById('template-name').value;
+                                    const templateDescription = document.getElementById('template-description').value;
+                                    const visibility = document.querySelector('select').value;
+                                    const allowAttachments = document.getElementById('allow-attachments').checked;
+
+                                    // disable the button to prevent multiple clicks
+                                    event.target.disabled = true;
+                                    event.target.textContent = 'Creating Template...';
+
+                                    if (templateName && templateDescription) {
+                                        try {
+                                            const response = await Ajax.post('/api/web/admin/templates/create', {
+                                                name: templateName,
+                                                description: templateDescription,
+                                                visibility: visibility,
+                                                allow_attachments: allowAttachments,
+                                                fields: [
+                                                    // User-defined fields
+                                                    ...Array.from(document.querySelectorAll('#template-fields .group:not(.hidden)')).map(group => {
+                                                        return {
+                                                            name: group.querySelector('.field-name').value.trim(),
+                                                            type: group.querySelector('.field-type').value,
+                                                            required: group.querySelector('.field-required').checked
+                                                        };
+                                                    }).filter(f => f.name) // remove empty ones
+                                                ]
+                                            });
+
+                                            if (response.ok) {
+                                                const data = response.data;
+                                                if (data.status) {
+                                                    location.reload();
+                                                } else {
+                                                    alert(data.message);
+                                                }
+                                            } else {
+                                                handleError(response.status);
+                                                event.target.textContent = 'Create Template';
+                                                event.target.disabled = false;
+                                            }
+                                        } catch (error) {
+                                            console.error(error);
+                                        } finally {
+                                            Modal.close();
+                                        }
+                                    } else {
+                                        alert('Please fill in all the required fields correctly.');
+                                        event.target.textContent = 'Create Template';
+                                        event.target.disabled = false;
+                                    }
+                                },
+                            },
+                            {
+                                label: 'Cancel',
+                                class: `inline-flex justify-center rounded-lg bg-gray-100 px-6 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`,
+                                onClick: Modal.close,
+                            },
+                        ],
+                        size: 'sm:max-w-2xl',
+                        classes: 'custom-modal-class',
+                        closeOnBackdropClick: false,
+                    });
+                    
+                    // Attach event listeners after modal is rendered
+                    setTimeout(() => {
+                        const addFieldBtn = document.getElementById("add-field");
+                        const fieldContainer = document.getElementById("template-fields");
+                        const maxFields = 4;  // Set the max fields limit
+
+                        if (addFieldBtn && fieldContainer) {
+                            addFieldBtn.addEventListener("click", () => {
+                                // Count the current visible fields
+                                const currentFields = fieldContainer.querySelectorAll(".group:not(.hidden)").length;
+
+                                if (currentFields < maxFields) {
+                                    const template = fieldContainer.querySelector(".group.hidden");
+                                    if (template) {
+                                        const clone = template.cloneNode(true);
+                                        clone.classList.remove("hidden");
+
+                                        // Reset input values in the cloned field
+                                        clone.querySelectorAll("input, select, textarea").forEach((el) => {
+                                            if (el.type === "checkbox") {
+                                                el.checked = false;
+                                            } else {
+                                                el.value = "";
+                                            }
+                                        });
+
+                                        // Reattach remove button logic
+                                        const removeBtn = clone.querySelector(".remove-field");
+                                        if (removeBtn) {
+                                            removeBtn.addEventListener("click", () => {
+                                                clone.remove();
+                                            });
+                                        }
+
+                                        fieldContainer.appendChild(clone);
+                                    }
+                                } else {
+                                    alert(`You can only add up to ${maxFields} fields.`);
+                                }
+                            });
+                        }
+
+                        // Also attach remove logic to any existing visible fields
+                        fieldContainer.querySelectorAll(".group:not(.hidden) .remove-field").forEach(btn => {
+                            btn.addEventListener("click", (e) => {
+                                e.currentTarget.closest(".group")?.remove();
+                            });
+                        });
+                    }, 0);
+                } else {
+                    console.error('Error loading modal template:', response.data.message || 'Unknown error');
+                    alert(response.data.message || 'Failed to load modal template');
+                }
+            } catch (error) {
+                console.error('Failed to load modal content:', error);
+                alert('Failed to load modal content. Please try again later.');
+            }
+        });
+    }
+
     // Activate verifer buttons
     const activateVerifierButtons = document.querySelectorAll('.activate-verifier-modal');
 

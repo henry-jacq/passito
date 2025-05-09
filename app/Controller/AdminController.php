@@ -182,19 +182,13 @@ class AdminController extends BaseController
 
         $data = $request->getParsedBody();
         $userData = $request->getAttribute('user');
+        $templates = $this->outpassService->getTemplates($userData);
         $args = [
             'user' => $userData,
             'title' => 'Template Builder',
             'routeName' => $this->getRouteName($request),
+            'templates' => $templates,
         ];
-
-        if ($data != null) {
-            $settings = $this->outpassService->updateSettings($userData, $data);
-            $args['settings'] = $settings;
-        } else {
-            $settings = $this->outpassService->getSettings($userData->getGender());
-            $args['settings'] = $settings;
-        }
 
         return parent::render($request, $response, 'admin/templates', $args);
     }

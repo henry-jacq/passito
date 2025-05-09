@@ -16,7 +16,9 @@ use Endroid\QrCode\QrCode;
 use App\Enum\OutpassStatus;
 use App\Entity\OutpassRequest;
 use App\Entity\OutpassSettings;
+use App\Entity\OutpassTemplate;
 use Endroid\QrCode\Color\Color;
+use App\Entity\OutpassTemplateField;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\RoundBlockSizeMode;
@@ -101,7 +103,9 @@ class OutpassService
         if (!$paginate) {
             $queryBuilder = $this->em->createQueryBuilder();
             $queryBuilder->select('o')->from(OutpassRequest::class, 'o')
-                ->join('o.student', 's')->join('s.user', 'u')
+                ->join('o.student', 's')
+                ->join('s.user', 'u')
+                ->join('s.hostel', 'h')
                 ->where($queryBuilder->expr()->in('o.status', ':statuses'))
                 ->andWhere('u.gender = :gender')
                 ->orderBy('o.createdAt', 'DESC')
@@ -545,5 +549,49 @@ class OutpassService
 
         // Return the encrypted data as a base64-encoded string
         return base64_encode($iv . $tag . $cipherText);
+    }
+
+    public function createTemplate(Gender $gender, array $templateData, array $fields, bool $isSystemTemplate = false): void
+    {
+        $template = new OutpassTemplate();
+        $template->setName($templateData['name']);
+        $template->setDescription($templateData['description']);
+        $template->setGender($gender);
+        $template->setSystemTemplate($isSystemTemplate);
+        $template->setAllowAttachments($templateData['allowAttachments']);
+        $template->setActive(true);
+
+        // Set fields collection if bidirectional relation is set up
+        $fieldCollection = [];
+
+        foreach ($fields as $fieldData) {
+            $field = new OutpassTemplateField();
+            $field->setTemplate($template);
+            $field->setFieldName($fieldData['name']);
+            $field->setFieldType($fieldData['type']);
+            $field->setIsSystemField($fieldData['system'] ?? false);
+            $field->setIsRequired($fieldData['required'] ?? false);
+
+            $this->em->persist($field);
+            $fieldCollection[] = $field;
+        }
+
+        $this->em->persist($template);
+        $this->em->flush();
+    }
+
+    public function getTemplates(User $warden): array
+    {
+        $qb = $this->em->createQueryBuilder();
+        $qb->select('t', 'f')
+            ->from(OutpassTemplate::class, 't')
+            ->leftJoin('t.fields', 'f') // assumes OneToMany relation set in entity
+            ->where('t.isActive = :active')
+            ->andWhere('t.gender = :gender')
+            ->setParameter('active', true)
+            ->setParameter('gender', $warden->getGender()->value);
+
+
+        return $qb->getQuery()->getResult();
     }
 }

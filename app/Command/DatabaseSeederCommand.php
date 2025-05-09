@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Services\OutpassService;
 use App\Seeders\AppSettingsSeeder;
 use App\Seeders\OutpassDataSeeder;
 use App\Seeders\OutpassRulesSeeder;
+use App\Seeders\OutpassTemplateSeeder;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 class DatabaseSeederCommand extends Command
 {
@@ -21,10 +24,12 @@ class DatabaseSeederCommand extends Command
         'app_settings' => AppSettingsSeeder::class,
         'outpass_rules' => OutpassRulesSeeder::class,
         'outpass_data' => OutpassDataSeeder::class,
+        'outpass_templates' => OutpassTemplateSeeder::class,
     ];
 
     public function __construct(
-        private readonly EntityManagerInterface $entityManager
+        private readonly EntityManagerInterface $entityManager,
+        private readonly OutpassService $outpassService
     ) {
         parent::__construct(self::$defaultName);
     }
@@ -33,55 +38,81 @@ class DatabaseSeederCommand extends Command
     {
         $this
             ->setDescription('Runs all seeders or a specific one if provided.')
-            ->setHelp('Run this command to seed the database with initial data. Use an argument to seed a specific table.')
-            ->addArgument('seeder', InputArgument::OPTIONAL, 'The name of the specific seeder to run (e.g., settings, users, institutions, hostels).')
-            ->addArgument('studentId', InputArgument::OPTIONAL, 'Student ID for seeding outpass data).');
+            ->setHelp('Use: app:seed [seeder_name] [extra_param: studentId for outpass_data]')
+            ->addArgument('seeder', InputArgument::OPTIONAL, 'The specific seeder to run.')
+            ->addArgument('extra', InputArgument::OPTIONAL, 'Extra param: studentId for outpass_data');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $io = new SymfonyStyle($input, $output);
+
         $seederKey = $input->getArgument('seeder');
-        $studentId = $input->getArgument('studentId') !== null ? (int)$input->getArgument('studentId') : null;
+        $extra = $input->getArgument('extra');
 
         if ($seederKey) {
             if (!array_key_exists($seederKey, $this->seeders)) {
-                $output->writeln("<error>Seeder '$seederKey' not found. Available seeders: " . implode(', ', array_keys($this->seeders)) . "</error>");
+                $io->error("Seeder '$seederKey' not found. Available: " . implode(', ', array_keys($this->seeders)));
                 return Command::FAILURE;
             }
 
-            return $this->runSeeder($this->seeders[$seederKey], $output, $studentId);
+            $values = $this->resolveExtraParam($seederKey, $extra, $io);
+            if ($values === null) {
+                return Command::FAILURE;
+            }
+
+            return $this->runSeeder($input, $output, $this->seeders[$seederKey], $values);
         }
 
-        $output->writeln('<info>Running all seeders...</info>');
+        $io->title('Running all seeders...');
         foreach ($this->seeders as $key => $seederClass) {
-            $output->writeln("<comment>Seeding: $key</comment>");
-            $result = $this->runSeeder($seederClass, $output, $studentId);
+            $io->section("Seeding: $key");
+
+            $values = $this->resolveExtraParam($key, $extra, $io);
+            if ($values === null && $key === 'outpass_data') {
+                return Command::FAILURE;
+            }
+
+            $result = $this->runSeeder($input, $output, $seederClass, $values ?? []);
             if ($result === Command::FAILURE) {
                 return Command::FAILURE;
             }
         }
 
-        $output->writeln('<info>All seeders executed successfully!</info>');
+        $io->success('All seeders executed successfully!');
         return Command::SUCCESS;
     }
 
-    private function runSeeder(string $seederClass, OutputInterface $output, ?int $studentId = null): int
+    private function resolveExtraParam(string $seederKey, ?string $extra, SymfonyStyle $io): ?array
     {
-        try {
-            if ($seederClass === OutpassDataSeeder::class) {
-                if ($studentId === null) {
-                    throw new \InvalidArgumentException("Student ID must be provided for outpass_data seeder.");
-                }
-                $seeder = new OutpassDataSeeder($this->entityManager, $studentId);
-            } else {
-                $seeder = new $seederClass($this->entityManager);
+        if ($seederKey === 'outpass_data') {
+            if ($extra === null || !ctype_digit($extra)) {
+                $io->error("A valid numeric student ID is required for 'outpass_data' seeder.");
+                return null;
             }
+            return ['studentId' => (int)$extra];
+        }
+
+        return [];
+    }
+
+    private function runSeeder(InputInterface $input, OutputInterface $output, string $seederClass, array $values = []): int
+    {
+        $io = new SymfonyStyle($input, $output);
+
+        try {
+            $seeder = match ($seederClass) {
+                OutpassDataSeeder::class => new OutpassDataSeeder($this->entityManager, $values['studentId']),
+                OutpassTemplateSeeder::class => new OutpassTemplateSeeder($this->entityManager, $this->outpassService),
+                default => new $seederClass($this->entityManager),
+            };
 
             $seeder->run();
-            $output->writeln("<info>{$seederClass} completed successfully.</info>");
+            
+            $io->success("$seederClass completed successfully.");
             return Command::SUCCESS;
-        } catch (\Exception $e) {
-            $output->writeln("<error>Error in {$seederClass}: {$e->getMessage()}</error>");
+        } catch (\Throwable $e) {
+            $io->error("Error in $seederClass: {$e->getMessage()}");
             return Command::FAILURE;
         }
     }

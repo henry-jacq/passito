@@ -48,11 +48,11 @@ return function (App $app) {
         ->withHeader('Content-Type', 'application/json');
     };
 
-    $app->add(SessionStartMiddleware::class);
     $app->add(SetupMiddleware::class);
     $app->add(MaintenanceMiddleware::class);
-    $app->addBodyParsingMiddleware();
+    $app->add(SessionStartMiddleware::class);
     $app->addRoutingMiddleware();
+    $app->addBodyParsingMiddleware();
     $errorMiddleware = $app->addErrorMiddleware(
         (bool) $config->get('app.display_error_details'),
         (bool) $config->get('app.log_errors'),

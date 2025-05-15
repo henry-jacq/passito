@@ -37,7 +37,7 @@ outpassForm.addEventListener('submit', async (event) => {
 		
 		if (response.status) {
 			toast.create({ message: response.data.message, position: "bottom-right", type: response.data.type, duration: 4000 });
-			// outpassForm.reset();
+			outpassForm.reset();
 		} else {
 			toast.create({ message: response.data.message, position: "bottom-right", type: response.data.type, duration: 4000 });
 		}

@@ -82,12 +82,12 @@
             margin-bottom: 60px;
         }
 
-        .signature-section {
-            display: flex;
-            justify-content: center;
-            float: right;
-            margin-top: 20px;
-            margin-right: 30px;
+        .footer-section {
+            text-align: center;
+            color: #6b7280;
+            font-size: 0.85rem;
+            margin-top: 120px;
+            line-height: 1.5;
         }
 
         hr {
@@ -135,17 +135,19 @@
     <div class="instructions-section">
         <p class="instruction-header">Instructions:</p>
         <ul>
-            <li>Ensure that you carry your college ID card during the outpass period.</li>
+            <li>Ensure that you carry your ID card during the outpass period.</li>
             <li>Return to the hostel before the end time specified in the outpass.</li>
+            <li>Any changes to the outpass schedule must be done advance.</li>
             <li>Keep this outpass document with you as it is required for verification.</li>
-            <li>Any changes to the outpass schedule must be approved in advance.</li>
             <li>Follow all hostel rules and regulations during the outpass period.</li>
+            <li>For any queries, contact the hostel warden.</li>
         </ul>
     </div>
-    <div class="signature-section">
-        <img src="http://localhost/sign.png" alt="sign">
-        <p>Signature of Warden</p>
+    <div class="footer-section">
+        <p>Issued on <?= date('d-m-Y h:iA') ?></p>
+        <p>This is a system-generated document and does not require a signature.</p>
     </div>
+
 </body>
 
 </html>

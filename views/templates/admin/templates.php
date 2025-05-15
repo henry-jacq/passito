@@ -32,7 +32,7 @@
                     <tr>
                         <th class="px-5 py-3 text-left">Template</th>
                         <th class="px-5 py-3 text-left">Visibility</th>
-                        <th class="px-5 py-3 text-left">Required Fields</th>
+                        <th class="px-5 py-3 text-left">Custom Fields</th>
                         <th class="px-5 py-3 text-left">Status</th>
                         <th class="px-5 py-3 text-center">Actions</th>
                     </tr>

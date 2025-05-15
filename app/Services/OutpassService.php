@@ -580,18 +580,26 @@ class OutpassService
         $this->em->flush();
     }
 
-    public function getTemplates(User $warden): array
+    public function getTemplates(User $warden, ?string $passType): array|OutpassTemplate
     {
         $qb = $this->em->createQueryBuilder();
         $qb->select('t', 'f')
             ->from(OutpassTemplate::class, 't')
-            ->leftJoin('t.fields', 'f') // assumes OneToMany relation set in entity
+            ->leftJoin('t.fields', 'f') // Assumes a OneToMany relation
             ->where('t.isActive = :active')
             ->andWhere('t.gender = :gender')
             ->setParameter('active', true)
             ->setParameter('gender', $warden->getGender()->value);
 
+        // If $passType is set, filter by template name
+        if ($passType !== null) {
+            $normalized = ucwords(str_replace('_', ' ', $passType));
+            $qb->andWhere('t.name = :name')
+                ->setParameter('name', $normalized);
+        }
 
-        return $qb->getQuery()->getResult();
+        $results = $qb->getQuery()->getResult();
+
+        return count($results) > 1 ? $results : $results[0];
     }
 }

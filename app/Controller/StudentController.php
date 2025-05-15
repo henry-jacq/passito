@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Core\View;
+use App\Entity\OutpassTemplate;
 use App\Services\OutpassService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -31,9 +32,17 @@ class StudentController extends BaseController
     public function requestOutpass(Request $request, Response $response): Response
     {
         $this->view->clearCacheIfDev();
+        $userData = $request->getAttribute('student');
+        $passType = $request->getQueryParams()['type'] ?? null;
+
+        // It may return one template or all templates as array based on the $passType
+        $templates = $this->outpassService->getTemplates($userData->getUser(), $passType);
+        
         $args = [
-            'title' => 'Outpass Requisition',
+            'title' => 'Outpass Request',
+            'passType' => $passType,
             'routeName' => $this->getRouteName($request),
+            'templates' => $templates,
         ];
         return parent::render($request, $response, 'user/request_outpass', $args);
     }

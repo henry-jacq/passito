@@ -43,8 +43,7 @@ use App\Enum\OutpassStatus; ?>
             <!-- Current Outpass Section -->
             <section class="p-6 mb-8 bg-white rounded-lg shadow-lg">
                 <h2 class="mb-4 text-2xl font-bold text-gray-700">Latest Outpass</h2>
-                <div class="flex items-center p-6 text-gray-800 transition border-l-4 border-gray-200 rounded-lg shadow-sm cursor-pointer bg-gray-50 hover:shadow-md"
-                    onclick="window.location.href='<?= $this->urlFor('student.outpass.status') . '/' . $outpasses[0]->getId() ?>';">
+                <div class="flex items-center p-6 text-gray-800 transition border-l-4 border-blue-200 rounded-lg shadow-sm cursor-pointer bg-blue-50 hover:shadow-md" onclick="window.location.href='<?= $this->urlFor('student.outpass.status') . '/' . $outpasses[0]->getId() ?>';">
                     <div class="flex-1">
                         <h3 class="text-xl font-bold"><?= ucfirst($outpasses[0]->getPassType()->value) . ' Pass' ?></h3>
                         <p class="mt-2 text-gray-600">Outpass from <strong><?= $outpasses[0]->getFromDate()->format('Y-m-d') ?></strong> to <strong><?= $outpasses[0]->getToDate()->format('Y-m-d') ?></strong></p>
@@ -59,7 +58,7 @@ use App\Enum\OutpassStatus; ?>
                             OutpassStatus::PARENT_APPROVED->value => ['text' => 'Pending', 'color' => 'yellow', 'icon' => 'fa-clock'],
                             OutpassStatus::REJECTED->value => ['text' => 'Rejected', 'color' => 'red', 'icon' => 'fa-xmark'],
                             OutpassStatus::PARENT_DENIED->value => ['text' => 'Rejected', 'color' => 'red', 'icon' => 'fa-xmark'],
-                            OutpassStatus::EXPIRED->value => ['text' => 'Expired', 'color' => 'gray', 'icon' => 'fa-hourglass-end'],
+                            OutpassStatus::EXPIRED->value => ['text' => 'Expired', 'color' => 'blue', 'icon' => 'fa-hourglass-end'],
                         ];
                         $status = $statusMapping[$outpasses[0]->getStatus()->value];
                         ?>
@@ -73,7 +72,7 @@ use App\Enum\OutpassStatus; ?>
             <?php if (count($outpasses) > 1): ?>
                 <section class="p-6 bg-white rounded-lg shadow-lg">
                     <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-2xl font-semibold text-gray-700">Past Outpasses</h2>
+                        <h2 class="text-xl font-semibold text-gray-700">Recent Outpass</h2>
                         <a href="<?= $this->urlFor('student.outpass.history') ?>" class="text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline">
                             View All History &rarr;
                         </a>
@@ -81,7 +80,7 @@ use App\Enum\OutpassStatus; ?>
                     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                         <?php foreach ($outpasses as $i => $pass): if ($i === 0) continue; ?>
                             <?php $status = $statusMapping[$pass->getStatus()->value]; ?>
-                            <div class="p-5 transition border-l-4 border-gray-200 rounded-lg shadow-md bg-gray-50 hover:shadow-lg">
+                            <div class="p-5 transition border-l-4 border-blue-200 rounded-lg shadow-md bg-blue-50 hover:shadow-lg">
                                 <h3 class="text-lg font-semibold text-gray-700"><?= ucfirst($pass->getPassType()->value) . ' Pass' ?></h3>
                                 <p class="mt-2 text-gray-600">Outpass from <strong><?= $pass->getFromDate()->format('Y-m-d') ?></strong> to <strong><?= $pass->getToDate()->format('Y-m-d') ?></strong></p>
                                 <p class="text-gray-500">Destination: <?= $pass->getDestination() ?></p>

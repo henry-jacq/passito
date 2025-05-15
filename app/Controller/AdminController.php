@@ -182,7 +182,7 @@ class AdminController extends BaseController
 
         $data = $request->getParsedBody();
         $userData = $request->getAttribute('user');
-        $templates = $this->outpassService->getTemplates($userData);
+        $templates = $this->outpassService->getTemplates($userData, null);
         $args = [
             'user' => $userData,
             'title' => 'Template Builder',

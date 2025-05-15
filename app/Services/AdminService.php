@@ -67,7 +67,7 @@ class AdminService
 
         $qrData = [
             'id' => $outpass->getId(),
-            'type' => $outpass->getPassType()->value,
+            'type' => $outpass->getTemplate()->getName(),
             'student' => $userEmail,
         ];
 

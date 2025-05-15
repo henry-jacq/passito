@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use DateTime;
-use App\Enum\OutpassType;
 use App\Enum\OutpassStatus;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
@@ -24,6 +23,10 @@ class OutpassRequest
     #[ORM\Column(type: 'bigint')]
     private int $id;
 
+    #[ORM\ManyToOne(targetEntity: OutpassTemplate::class)]
+    #[ORM\JoinColumn(name: 'template_id', referencedColumnName: 'id', nullable: false)]
+    private OutpassTemplate $template;
+    
     #[ORM\ManyToOne(targetEntity: Student::class)]
     #[ORM\JoinColumn(name: 'student_id', referencedColumnName: 'id', nullable: false)]
     private Student $student;
@@ -40,17 +43,17 @@ class OutpassRequest
     #[ORM\Column(type: 'time')]
     private DateTime $toTime;
 
-    #[ORM\Column(type: 'string', enumType: OutpassType::class)]
-    private OutpassType $passType;
-
     #[ORM\Column(type: 'string', length: 255)]
     private string $destination;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private string $purpose;
+    private string $reason;
 
     #[ORM\Column(type: 'string', enumType: OutpassStatus::class)]
     private OutpassStatus $status;
+
+    #[ORM\Column(type: 'json', nullable: true)]
+    private ?array $customValues = null;
 
     #[ORM\Column(type: 'json', nullable: true)]
     private ?array $attachments = null;
@@ -113,9 +116,9 @@ class OutpassRequest
         return $this->toTime;
     }
 
-    public function getPassType(): OutpassType
+    public function getTemplate(): OutpassTemplate
     {
-        return $this->passType;
+        return $this->template;
     }
 
     public function getDestination(): string
@@ -123,9 +126,14 @@ class OutpassRequest
         return $this->destination;
     }
 
-    public function getPurpose(): string
+    public function getReason(): string
     {
-        return $this->purpose;
+        return $this->reason;
+    }
+
+    public function getCustomValues(): ?array
+    {
+        return $this->customValues;
     }
 
     public function getAttachments(): ?array
@@ -193,9 +201,9 @@ class OutpassRequest
         $this->toTime = $toTime;
     }
 
-    public function setPassType(OutpassType $passType): void
+    public function setTemplate(OutpassTemplate $template): void
     {
-        $this->passType = $passType;
+        $this->template = $template;
     }
 
     public function setDestination(string $destination): void
@@ -203,9 +211,14 @@ class OutpassRequest
         $this->destination = $destination;
     }
 
-    public function setPurpose(string $purpose): void
+    public function setReason(string $reason): void
     {
-        $this->purpose = $purpose;
+        $this->reason = $reason;
+    }
+
+    public function setCustomValues(?array $customValues): void
+    {
+        $this->customValues = $customValues;
     }
 
     public function setAttachments(?array $attachments): void

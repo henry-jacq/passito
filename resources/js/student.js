@@ -25,14 +25,19 @@ outpassForm.addEventListener('submit', async (event) => {
 	outpassSubmitButton.disabled = true
 	outpassSubmitButton.innerHTML = 'Submitting...'
     const formData = new FormData(outpassForm);
-	const toast = new Toast();	
+	const toast = new Toast();
 
     try {
-		const response = await Ajax.post('/api/web/student/outpass', formData);
+		// Capture the query params
+		const queryParams = window.location.search;
+		const endpoint = `/api/web/student/outpass${queryParams}`;
+
+		// Send the form data to the server
+		const response = await Ajax.post(endpoint, formData);
 		
 		if (response.status) {
 			toast.create({ message: response.data.message, position: "bottom-right", type: response.data.type, duration: 4000 });
-			outpassForm.reset();
+			// outpassForm.reset();
 		} else {
 			toast.create({ message: response.data.message, position: "bottom-right", type: response.data.type, duration: 4000 });
 		}

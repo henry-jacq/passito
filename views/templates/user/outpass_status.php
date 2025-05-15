@@ -45,7 +45,7 @@ use App\Enum\OutpassStatus; ?>
                 <h2 class="mb-4 text-2xl font-bold text-gray-700">Latest Outpass</h2>
                 <div class="flex items-center p-6 text-gray-800 transition border-l-4 border-blue-200 rounded-lg shadow-sm cursor-pointer bg-blue-50 hover:shadow-md" onclick="window.location.href='<?= $this->urlFor('student.outpass.status') . '/' . $outpasses[0]->getId() ?>';">
                     <div class="flex-1">
-                        <h3 class="text-xl font-bold"><?= ucfirst($outpasses[0]->getPassType()->value) . ' Pass' ?></h3>
+                        <h3 class="text-xl font-bold"><?= ucfirst($outpasses[0]->getTemplate()->getName()) ?></h3>
                         <p class="mt-2 text-gray-600">Outpass from <strong><?= $outpasses[0]->getFromDate()->format('Y-m-d') ?></strong> to <strong><?= $outpasses[0]->getToDate()->format('Y-m-d') ?></strong></p>
                         <p class="mt-1 text-gray-500">Destination: <?= $outpasses[0]->getDestination() ?></p>
                     </div>
@@ -81,7 +81,7 @@ use App\Enum\OutpassStatus; ?>
                         <?php foreach ($outpasses as $i => $pass): if ($i === 0) continue; ?>
                             <?php $status = $statusMapping[$pass->getStatus()->value]; ?>
                             <div class="p-5 transition border-l-4 border-blue-200 rounded-lg shadow-md bg-blue-50 hover:shadow-lg">
-                                <h3 class="text-lg font-semibold text-gray-700"><?= ucfirst($pass->getPassType()->value) . ' Pass' ?></h3>
+                                <h3 class="text-lg font-semibold text-gray-700"><?= ucfirst($pass->getTemplate()->getName()) ?></h3>
                                 <p class="mt-2 text-gray-600">Outpass from <strong><?= $pass->getFromDate()->format('Y-m-d') ?></strong> to <strong><?= $pass->getToDate()->format('Y-m-d') ?></strong></p>
                                 <p class="text-gray-500">Destination: <?= $pass->getDestination() ?></p>
                                 <div class="flex items-center justify-between mt-4">

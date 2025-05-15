@@ -153,7 +153,7 @@ use App\Enum\OutpassStatus;
                             <td class="px-6 py-4 text-sm text-gray-900"><?= $outpass->getStudent()->getUser()->getName() ?></td>
                             <td class="px-6 py-4 text-sm text-gray-900"><?= formatStudentYear($outpass->getStudent()->getYear()) ?></td>
                             <td class="px-6 py-4 text-sm text-gray-900"><?= $outpass->getStudent()->getCourse() . ' ' . $outpass->getStudent()->getBranch() ?></td>
-                            <td class="px-6 py-4 text-sm text-gray-900"><?= ucwords($outpass->getPassType()->value) ?></td>
+                            <td class="px-6 py-4 text-sm text-gray-900"><?= ucwords($outpass->getTemplate()->getName()) ?></td>
                             <td class="px-6 py-4 text-sm text-gray-900"><?= $outpass->getDestination() ?></td>
                             <td class="px-6 py-4 text-sm text-center text-gray-900">
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-<?= $outpass->getStatus() === OutpassStatus::APPROVED ? 'green' : 'yellow' ?>-100 text-<?= $outpass->getStatus() === OutpassStatus::APPROVED ? 'green' : 'yellow' ?>-800">

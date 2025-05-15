@@ -60,7 +60,7 @@ use App\Enum\OutpassStatus; ?>
                     <i class="text-2xl text-gray-500 fa-regular fa-id-card"></i>
                     <div>
                         <label class="block text-base font-medium text-gray-500">Pass Type</label>
-                        <p class="mt-1 text-base font-medium text-gray-800 md:text-lg"><?= ucfirst($outpass->getPassType()->value) ?></p>
+                        <p class="mt-1 text-base font-medium text-gray-800 md:text-lg"><?= ucfirst($outpass->getTemplate()->getName()) ?></p>
                     </div>
                 </div>
                 <div class="flex items-center space-x-4 align-center">
@@ -96,9 +96,9 @@ use App\Enum\OutpassStatus; ?>
                     <div class="flex items-center space-x-4 align-center">
                         <i class="text-2xl text-gray-500 fa-solid fa-question-circle"></i>
                         <div>
-                            <label class="block text-base font-medium text-gray-500">Purpose</label>
+                            <label class="block text-base font-medium text-gray-500">Reason</label>
                             <p class="mt-1 text-lg leading-relaxed text-gray-800">
-                                <?php if (empty($outpass->getPurpose())): echo 'None'; else: echo(ucfirst($outpass->getPurpose())); endif; ?>
+                                <?php if (empty($outpass->getReason())): echo 'None'; else: echo(ucfirst($outpass->getReason())); endif; ?>
                             </p>
                         </div>
                     </div>

@@ -117,7 +117,7 @@
             <p><strong>Name:</strong> <?= $student->getUser()->getName() ?></p>
             <p><strong>Branch:</strong> <?= $student->getBranch() ?></p>
             <p><strong>Hostel:</strong> <?= $student->getHostel()->getName() ?></p>
-            <p><strong>Purpose:</strong> <?= $outpass->getPurpose() ?></p>
+            <p><strong>Reason:</strong> <?= $outpass->getReason() ?></p>
             <p><strong>Student No:</strong> <?= $student->getUser()->getContactNo() ?></p>
             <p><strong>Approved On:</strong> <?= $outpass->getApprovedTime()->format('d-m-Y h:iA') ?></p>
         </div>

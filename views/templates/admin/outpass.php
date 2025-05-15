@@ -56,12 +56,25 @@ use App\Enum\OutpassStatus;
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-500">Pass Type</label>
-                <p class="text-base text-gray-900"><?= ucfirst($outpass->getPassType()->value) ?></p>
+                <p class="text-base text-gray-900"><?= ucfirst($outpass->getTemplate()->getName()) ?></p>
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-500">Destination</label>
                 <p class="text-base text-gray-900"><?= ucwords($outpass->getDestination()) ?></p>
             </div>
+
+            <?php $customValues = $outpass->getCustomValues(); ?>
+            <?php if (!empty($customValues)): ?>
+                <?php foreach ($customValues as $key => $value): ?>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500"><?= ucwords(str_replace('_', ' ', $key)) ?></label>
+                        <p class="text-base text-gray-900"><?= htmlspecialchars($value) ?></p>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p class="text-sm italic text-gray-500">No custom values</p>
+            <?php endif; ?>
+
         </div>
 
         <!-- Status & Approval -->

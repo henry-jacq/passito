@@ -22,8 +22,7 @@
                         $template_name = strtolower(str_replace(' ', '_', $template->getName())); ?>
 
                         <label for="<?= $template_name ?>_pass" class="flex items-start p-4 border border-gray-200 rounded-md hover:bg-gray-50 transition-all duration-200 cursor-pointer bg-white gap-4 <?= $passType == $template->getId() ? 'ring-2 ring-blue-500' : '' ?>">
-                            <input
-                                type="radio"
+                            <input type="radio"
                                 name="outpass_type"
                                 id="<?= $template_name ?>_pass"
                                 value="<?= $template->getId() ?>"
@@ -56,7 +55,7 @@
                         });
                     });
                 </script>
-            <?php else: ?>
+            <?php elseif (!empty($templates)): ?>
                 <div class="flex flex-col mb-4 md:flex-row md:items-center md:justify-between">
                     <div class="text-lg">
                         <h2 class="text-lg font-bold text-gray-800"><?= $templates->getName() ?></h2>
@@ -69,9 +68,18 @@
                     </div>
                 </div>
                 <hr class="mt-2 mb-6 border-gray-300">
+            <?php else: ?>
+                <div class="flex items-center justify-center w-full h-64 bg-gray-100 rounded-lg">
+                    <p class="text-gray-500 text-md">
+                        Invalid Outpass Type selected.
+                        <a href="<?= $this->urlFor('student.outpass.request') ?>" class="text-blue-600 hover:underline">
+                            Change Outpass Type Here.
+                        </a>
+                    </p>
+                </div>
             <?php endif; ?>
 
-            <?php if (!empty($passType)): ?>
+            <?php if (!empty($templates) && !empty($passType)): ?>
                 <form id="outpassRequestForm" action="#" method="POST" enctype="multipart/form-data" class="space-y-6">
                     <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                         <?php
@@ -113,21 +121,11 @@
                                     <span class="text-red-500">*</span>
                                 <?php endif; ?>
                             </label>
-                            <?php if ($field->getFieldType() === 'textarea'): ?>
-                                <textarea
-                                    name="<?= $inputName ?>"
-                                    id="<?= $inputName ?>"
-                                    <?= $field->isRequired() ? 'required' : '' ?>
-                                    class="w-full mt-1 transition border-gray-300 rounded-md resize-none focus:border-blue-500 focus:ring focus:ring-blue-200"
-                                    rows="4"></textarea>
-                            <?php else: ?>
-                                <input
-                                    type="<?= $field->getFieldType() ?>"
-                                    name="<?= $inputName ?>"
-                                    id="<?= $inputName ?>"
-                                    <?= $field->isRequired() ? 'required' : '' ?>
-                                    class="w-full mt-1 transition border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200">
-                            <?php endif; ?>
+                            <input type="<?= $field->getFieldType() ?>"
+                                name="<?= strtolower($field->getFieldName()) ?>"
+                                id="<?= $inputName ?>"
+                                <?= $field->isRequired() ? 'required' : '' ?>
+                                class="w-full mt-1 transition border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200">
                         </div>
                     <?php endforeach; ?>
 

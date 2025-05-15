@@ -43,8 +43,6 @@
                         <option value="number">Number</option>
                         <option value="date">Date</option>
                         <option value="time">Time</option>
-                        <option value="textarea">Textarea</option>
-                        <option value="select">Select</option>
                     </select>
                 </div>
 

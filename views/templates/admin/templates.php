@@ -23,9 +23,6 @@
 
     <?php
     if (!empty($templates)): ?>
-
-
-
         <div class="overflow-x-auto bg-white rounded-lg shadow-md ring-1 ring-gray-100">
             <table class="w-full text-sm table-auto">
                 <thead class="text-xs tracking-wide text-gray-600 uppercase bg-gray-100">
@@ -65,16 +62,25 @@
                             </td>
                             <td class="px-5 py-4">
                                 <div class="flex flex-wrap gap-2">
-                                    <?php
+                                    <?php $hasCustomFields = false;
+
                                     // display non-system fields
                                     foreach ($template->getFields() as $field) {
                                         if (!$field->isSystemField()) {
+                                            $hasCustomFields = true;
                                             echo '<span class="px-2 py-0.5 text-xs bg-gray-100 text-gray-800 rounded">' . ucwords($field->getFieldName()) . '</span>';
                                         }
                                     }
+
                                     if ($template->isAllowAttachments()) {
                                         echo '<span class="px-2 py-0.5 text-xs bg-gray-100 text-gray-800 rounded">Attachment</span>';
-                                    } ?>
+                                        $hasCustomFields = true;
+                                    }
+
+                                    if (!$hasCustomFields) {
+                                        echo '<span class="px-2 py-0.5 text-xs bg-gray-100 text-gray-800 italic rounded">N/A</span>';
+                                    }
+                                    ?>
                                 </div>
                             </td>
                             <td class="px-5 py-4">

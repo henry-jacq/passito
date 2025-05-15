@@ -29,8 +29,8 @@ class OutpassTemplateSeeder
                     ['name' => 'From Time', 'type' => 'time', 'required' => true, 'system' => true],
                     ['name' => 'To Date', 'type' => 'date', 'required' => true, 'system' => true],
                     ['name' => 'To Time', 'type' => 'time', 'required' => true, 'system' => true],
-                    ['name' => 'Reason', 'type' => 'text', 'required' => true, 'system' => true],
                     ['name' => 'Destination', 'type' => 'text', 'required' => true, 'system' => true],
+                    ['name' => 'Reason', 'type' => 'text', 'required' => true, 'system' => true],
                 ],
             ],
             [
@@ -44,8 +44,8 @@ class OutpassTemplateSeeder
                     ['name' => 'From Time', 'type' => 'time', 'required' => true, 'system' => true],
                     ['name' => 'To Date', 'type' => 'date', 'required' => true, 'system' => true],
                     ['name' => 'To Time', 'type' => 'time', 'required' => true, 'system' => true],
-                    ['name' => 'Reason', 'type' => 'text', 'required' => true, 'system' => true],
                     ['name' => 'Destination', 'type' => 'text', 'required' => true, 'system' => true],
+                    ['name' => 'Reason', 'type' => 'text', 'required' => true, 'system' => true],
                 ],
             ],
         ];

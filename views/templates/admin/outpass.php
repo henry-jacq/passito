@@ -71,8 +71,6 @@ use App\Enum\OutpassStatus;
                         <p class="text-base text-gray-900"><?= htmlspecialchars($value) ?></p>
                     </div>
                 <?php endforeach; ?>
-            <?php else: ?>
-                <p class="text-sm italic text-gray-500">No custom values</p>
             <?php endif; ?>
 
         </div>

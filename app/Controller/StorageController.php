@@ -103,6 +103,7 @@ class StorageController extends BaseController
         foreach ($outpasses as $outpass) {
             $qrCode = $outpass->getQrCode();
             $document = $outpass->getDocument();
+            $attachment = $outpass->getAttachments();
             
             $qrCodePath = $this->storage->getFullPath("qr_codes/{$qrCode}");
             $outpassPath = $this->storage->getFullPath("outpasses/{$document}");
@@ -113,6 +114,14 @@ class StorageController extends BaseController
 
             if (strpos($qrCodePath, $filePath) !== false) {
                 return true;
+            }
+
+            foreach ($attachment as $file) {
+                $attachmentPath = $this->storage->getFullPath("attachments/{$file}");
+
+                if (strpos($attachmentPath, $filePath) !== false) {
+                    return true;
+                }
             }
         }
 

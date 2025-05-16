@@ -98,7 +98,9 @@ use App\Enum\OutpassStatus; ?>
                         <div>
                             <label class="block text-base font-medium text-gray-500">Reason</label>
                             <p class="mt-1 text-lg leading-relaxed text-gray-800">
-                                <?php if (empty($outpass->getReason())): echo 'None'; else: echo(ucfirst($outpass->getReason())); endif; ?>
+                                <?php if (empty($outpass->getReason())): echo 'None';
+                                else: echo (ucfirst($outpass->getReason()));
+                                endif; ?>
                             </p>
                         </div>
                     </div>
@@ -107,7 +109,7 @@ use App\Enum\OutpassStatus; ?>
                         <div>
                             <label class="block text-base font-medium text-gray-500">Approval Time</label>
                             <p class="mt-1 text-base text-gray-800 md:text-lg">
-                                <?php 
+                                <?php
                                 if (!empty($outpass->getApprovedTime())):
                                     echo $outpass->getApprovedTime()->format('Y-m-d, h:i A');
                                 else:
@@ -137,9 +139,9 @@ use App\Enum\OutpassStatus; ?>
                                 </div>
                             <?php else: ?>
                                 <img class="object-contain w-48 h-48 select-none" src="<?= $this->urlFor('storage.student', [
-                                    'id' => $outpass->getStudent()->getUser()->getId(),
-                                    'params' => 'qr_codes/' . $outpass->getQrCode()
-                                ]) ?>" alt="Outpass QR Code" oncontextmenu="return false;" draggable="false">
+                                                                                            'id' => $outpass->getStudent()->getUser()->getId(),
+                                                                                            'params' => 'qr_codes/' . $outpass->getQrCode()
+                                                                                        ]) ?>" alt="Outpass QR Code" oncontextmenu="return false;" draggable="false">
                             <?php endif; ?>
                         </div>
                         <p class="my-1 font-medium text-gray-600 select-text">QR codes are only valid within the approved outpass time frame.</p>
@@ -176,6 +178,30 @@ use App\Enum\OutpassStatus; ?>
                         </a>
                     </div>
                 </div>
+                <?php if (count($outpass->getAttachments()) > 0): ?>
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-4 align-center">
+                            <i class="text-2xl text-gray-500 fa-solid fa-file-alt"></i>
+                            <div>
+                                <label class="block text-base font-medium text-gray-500">Attachments</label>
+                                <p class="mt-1 space-x-2 text-base text-gray-800 md:text-lg">
+                                    <?php if (count($outpass->getAttachments()) > 0): ?>
+                                        <?php foreach ($outpass->getAttachments() as $attachment):
+                                            $url = htmlspecialchars($this->urlFor('storage.student', [
+                                                'id' => $outpass->getStudent()->getUser()->getId(),
+                                                'params' => $attachment
+                                            ])); ?>
+                                            <a href="<?= $url ?>" download class="text-blue-600 hover:text-blue-700 hover:underline">
+                                                <i class="fa fa-link"></i>
+                                                <?= basename($url) ?> 
+                                            </a>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
             </div>
         </section>
     </main>

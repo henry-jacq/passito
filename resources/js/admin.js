@@ -119,11 +119,66 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Stop event bubbling
+    document.querySelectorAll('.stop-bubbling').forEach((el) => {
+        el.addEventListener('click', (event) => {
+            event.stopPropagation();
+        });
+    });
+
+    // Open attachments modal
+    const attachmentButtons = document.querySelectorAll('.view-attachments');
+    attachmentButtons.forEach((button) => {
+        button.addEventListener('click', async (event) => {
+            event.stopPropagation();
+            const outpassId = button.dataset.id;
+
+            const attachmentLinks = await Ajax.post('/api/web/admin/outpass/files', {
+                id: outpassId
+            });
+
+            if (!attachmentLinks.ok) {
+                const toast = new Toast();
+                toast.create({ message: attachmentLinks.message || 'Failed to fetch attachments.', position: "bottom-right", type: "warning", duration: 4000 });
+                return;
+            }
+
+            try {
+                const response = await Ajax.post('/api/web/admin/modal', {
+                    template: "attachments",
+                    outpass_id: outpassId,
+                    attachments: attachmentLinks.data.data
+                });
+
+                if (response.ok && response.data) {
+                    Modal.open({
+                        content: response.data,
+                        actions: [
+                            {
+                                label: 'Close',
+                                class: `inline-flex justify-center rounded-lg bg-gray-100 px-6 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`,
+                                onClick: Modal.close,
+                            },
+                        ],
+                        size: 'sm:max-w-lg',
+                        classes: 'custom-modal-class',
+                        closeOnBackdropClick: true,
+                    });
+                } else {
+                    console.error('Error loading modal template:', response.data.message || 'Unknown error');
+                    alert(response.data.message || 'Failed to load modal template');
+                }
+            } catch (error) {
+                console.error('Failed to load modal content:', error);
+                alert('Failed to load modal content. Please try again later.');
+            }
+        });
+    });
+
     // Accept Outpass
     const acceptOutpassButtons = document.querySelectorAll('.accept-outpass');
     acceptOutpassButtons.forEach((button) => {
         button.addEventListener('click', async (event) => {
-            event.stopPropagation();
             const outpassId = event.target.dataset.id;
 
             try {
@@ -163,7 +218,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const rejectOutpassButtons = document.querySelectorAll('.reject-outpass');
     rejectOutpassButtons.forEach((button) => {
         button.addEventListener('click', async (event) => {
-            event.stopPropagation();
             const outpassId = event.target.dataset.id;
 
             try {

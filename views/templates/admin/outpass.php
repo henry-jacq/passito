@@ -2,9 +2,7 @@
 
 use App\Enum\OutpassStatus;
 ?>
-<!-- Main Content -->
 <main class="flex-1 p-6 mt-20 overflow-y-auto">
-    <!-- Page Header -->
     <div class="flex items-center justify-between pb-3 mb-5 space-x-4 border-b border-gray-300">
         <h2 class="text-2xl font-semibold text-gray-700">#<?= $outpass_id ?> Outpass Details</h2>
         <div class="flex space-x-4">
@@ -20,9 +18,7 @@ use App\Enum\OutpassStatus;
         </div>
     </div>
 
-    <!-- Student & Outpass Details -->
     <section class="p-6 bg-white rounded-lg shadow-md md:p-8">
-        <!-- Student Information -->
         <h2 class="pb-2 mb-4 text-lg font-semibold text-gray-700 border-b">Student Information</h2>
         <div class="grid grid-cols-1 gap-6 mb-6 md:grid-cols-2">
             <div>
@@ -43,7 +39,6 @@ use App\Enum\OutpassStatus;
             </div>
         </div>
 
-        <!-- Outpass Details -->
         <h2 class="pb-2 mb-4 text-lg font-semibold text-gray-700 border-b">Outpass Details</h2>
         <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div>
@@ -75,7 +70,6 @@ use App\Enum\OutpassStatus;
 
         </div>
 
-        <!-- Status & Approval -->
         <h2 class="pb-2 mt-6 mb-4 text-lg font-semibold text-gray-700 border-b">Status & Approval</h2>
         <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div>
@@ -104,5 +98,26 @@ use App\Enum\OutpassStatus;
                 </p>
             </div>
         </div>
+
+        <?php if (count($outpass->getAttachments()) > 0): ?>
+            <h2 class="pb-2 mt-6 mb-4 text-lg font-semibold text-gray-700 border-b">Attachments</h2>
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <ul class="space-y-4 list-disc list-inside">
+                    <?php foreach ($outpass->getAttachments() as $attachment): ?>
+                        <?php
+                        $url = htmlspecialchars($this->urlFor('storage.admin', [
+                            'id' => $user->getId(),
+                            'params' => $attachment
+                        ])); ?>
+                        <li>
+                            <a href="<?= $url ?>" class="inline-flex items-center gap-1 text-blue-600 hover:underline">
+                                <i class="fa-solid fa-link"></i>
+                                <?= basename($url) ?>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
     </section>
 </main>

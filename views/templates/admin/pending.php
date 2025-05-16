@@ -98,36 +98,36 @@ use App\Enum\UserRole; ?>
                                 <td class="relative px-6 py-4 overflow-visible text-sm text-center">
                                     <?php if (!empty($outpass->getAttachments())): ?>
                                         <div class="relative inline-block text-center">
-                                            <!-- Dropdown trigger -->
-                                            <button onclick="toggleDropdown(this)"
-                                                class="flex items-center space-x-1 text-indigo-500 hover:underline focus:outline-none">
-                                                <i class="fa-solid fa-link"></i>
-                                                <span>View (<?= count($outpass->getAttachments()) ?>)</span>
-                                            </button>
-                                            <div class="absolute z-50 hidden mt-2 transform -translate-x-1/2 dropdown-menu left-1/2">
-                                                <div class="relative px-2 pb-2 bg-white border border-gray-300 rounded-md shadow-lg">
-                                                    <!-- Dropdown content -->
-                                                    <div class="mt-2">
-                                                        <?php foreach ($outpass->getAttachments() as $index => $attachment): ?>
-                                                            <a href="<?= htmlspecialchars($this->urlFor('storage.admin', ['id' => $user->getId(), 'params' => $attachment])) ?>"
-                                                                target="_blank"
-                                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                                                <i class="mr-2 fa-solid fa-file"></i>
-                                                                <span>File <?= $index + 1 ?></span>
-                                                            </a>
-                                                        <?php endforeach; ?>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            <?php $attachments = $outpass->getAttachments();
+                                            $attachmentCount = count($attachments); ?>
+
+                                            <?php if ($attachmentCount === 0): ?>
+                                                <span class="text-gray-500">N/A</span>
+                                            <?php elseif ($attachmentCount === 1): ?>
+                                                <?php $attachment = $attachments[0];
+                                                $url = htmlspecialchars($this->urlFor('storage.admin', [
+                                                    'id' => $user->getId(),
+                                                    'params' => $attachment
+                                                ])); ?>
+                                                <a href="<?= $url ?>" target="_blank" class="flex items-center space-x-1 text-indigo-500 stop-bubbling hover:underline">
+                                                    <i class="fa-solid fa-link"></i>
+                                                    <span>View</span>
+                                                </a>
+                                            <?php else: ?>
+                                                <button class="flex items-center space-x-1 text-indigo-500 view-attachments stop-bubbling hover:underline focus:outline-none" data-id="<?= $outpass->getId() ?>">
+                                                    <i class="fa-solid fa-link"></i>
+                                                    <span>View (<?= $attachmentCount ?>)</span>
+                                                </button>
+                                            <?php endif; ?>
                                         </div>
                                     <?php else: ?>
-                                        <span class="text-gray-400">No Files</span>
+                                        <span class="text-gray-400">N/A</span>
                                     <?php endif; ?>
                                 </td>
 
                                 <td class="px-6 py-4 space-x-2 text-sm font-medium text-center whitespace-normal">
-                                    <button class="text-green-600 transition duration-200 hover:text-green-900 accept-outpass" data-id="<?= $outpass->getId() ?>"><i class="mr-1 fas fa-circle-check"></i>Accept</button>
-                                    <button class="text-red-600 transition duration-200 hover:text-red-900 reject-outpass" data-id="<?= $outpass->getId() ?>"><i class="mr-1 fas fa-trash-alt"></i>Reject</button>
+                                    <button class="text-green-600 transition duration-200 stop-bubbling hover:text-green-900 accept-outpass" data-id="<?= $outpass->getId() ?>"><i class="mr-1 fas fa-circle-check"></i>Accept</button>
+                                    <button class="text-red-600 transition duration-200 stop-bubbling hover:text-red-900 reject-outpass" data-id="<?= $outpass->getId() ?>"><i class="mr-1 fas fa-trash-alt"></i>Reject</button>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

@@ -219,11 +219,8 @@ class OutpassService
         return $counts;
     }
 
-    public function getOutpassRecords(int $page = 1, int $limit = 10, ?User $warden = null)
+    private function buildBaseOutpassQuery(?User $warden = null)
     {
-        $offset = ($page - 1) * $limit;
-
-        // Convert OutpassStatus enum to scalar values (e.g., string or integer)
         $statuses = [
             OutpassStatus::APPROVED->value,
             OutpassStatus::EXPIRED->value,
@@ -240,7 +237,16 @@ class OutpassService
             ->andWhere('u.gender = :gender')
             ->orderBy('o.createdAt', 'DESC')
             ->setParameter('statuses', $statuses)
-            ->setParameter('gender', $wardenGender)
+            ->setParameter('gender', $wardenGender);
+
+        return $queryBuilder;
+    }
+
+    public function getOutpassRecords(int $page = 1, int $limit = 10, ?User $warden = null)
+    {
+        $offset = ($page - 1) * $limit;
+
+        $queryBuilder = $this->buildBaseOutpassQuery($warden)
             ->setFirstResult($offset)
             ->setMaxResults($limit);
 
@@ -254,6 +260,47 @@ class OutpassService
             'totalPages' => ceil(count($paginator) / $limit),
         ];
     }
+
+    public function searchOutpassRecords(string $query, ?User $warden = null, int $limit = 10)
+    {
+        $qb = $this->buildBaseOutpassQuery($warden);
+
+        // Apply custom search filters on joined tables (e.g., student name, course, etc.)
+        $qb->andWhere(
+            $qb->expr()->orX(
+                $qb->expr()->like('u.name', ':search'),
+                $qb->expr()->like('s.digitalId', ':search'),
+                $qb->expr()->like('s.branch', ':search'),
+                $qb->expr()->like('s.course', ':search'),
+                $qb->expr()->like('o.destination', ':search')
+            )
+        )
+            ->setParameter('search', '%' . $query . '%')
+            ->setMaxResults($limit);
+
+        $results = $qb->getQuery()->getResult();
+
+        return [
+            'data' => array_map(function (OutpassRequest $o) {
+                return [
+                    'id' => $o->getId(),
+                    'student_name' => $o->getStudent()->getUser()->getName(),
+                    'year' => $o->getStudent()->getYear(),
+                    'course' => $o->getStudent()->getCourse(),
+                    'branch' => $o->getStudent()->getBranch(),
+                    'type' => $o->getTemplate()->getName(),
+                    'destination' => $o->getDestination(),
+                    'status' => $o->getStatus()->value,
+                    'depart_date' => $o->getFromDate()?->format('d M, Y'),
+                    'depart_time' => $o->getFromTime()?->format('h:i A'),
+                    'return_date' => $o->getToDate()?->format('d M, Y'),
+                    'return_time' => $o->getToTime()?->format('h:i A'),
+                ];
+            }, $results),
+            'total' => count($results),
+        ];
+    }
+
 
     public function getSettings(Gender $gender)
     {

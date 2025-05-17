@@ -25,109 +25,31 @@ use App\Enum\OutpassStatus;
             </div>
         </section>
     <?php else: ?>
-        <!-- Search and Filter Section -->
-        <div class="p-6 mb-8 bg-white rounded-lg shadow">
-            <!-- Row 1: Search Bar with Filter Button -->
+        <div class="mb-8 rounded-lg ">
             <div class="flex flex-wrap items-center justify-between gap-4">
                 <div class="relative flex-grow">
                     <input
+                        id="search-records"
                         type="text"
-                        placeholder="Search by name or digital ID"
-                        class="w-full p-2 pl-10 text-gray-600 transition duration-200 border border-gray-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500"
-                        aria-label="Search by name or digital ID">
+                        placeholder="Search records..."
+                        class="w-full py-2 transition duration-200 border border-gray-300 rounded-md bg-gray-50 text-md ps-12 focus:outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600/50"
+                        aria-label="Search by digital ID">
                     <span class="absolute text-gray-500 left-3 top-2">
                         <i class="fas fa-search"></i>
                     </span>
                 </div>
-
-                <!-- Filter Button -->
-                <button
-                    id="filter-button"
-                    class="flex items-center px-4 py-2 text-white transition duration-200 bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none"
-                    aria-expanded="false"
-                    aria-controls="filter-area">
-                    <i class="mr-1 fas fa-filter"></i>
-                    <span>Filter</span>
-                </button>
-            </div>
-
-            <!-- Collapsible Filter Area -->
-            <div id="filter-area" class="hidden mt-4 transition-all duration-300 ease-in-out" data-expanded="">
-                <!-- Filter Section -->
-                <div class="p-4 mb-4 border border-gray-200 rounded-lg shadow-inner bg-gray-50">
-                    <!-- Outpass Filters Section -->
-                    <h3 class="mb-2 text-sm font-semibold text-gray-600 uppercase">Outpass Filters</h3>
-                    <div class="flex flex-wrap items-center gap-6 mb-4">
-                        <!-- Outpass Type Filter -->
-                        <select
-                            class="flex-grow p-2 text-gray-600 transition duration-200 border border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500"
-                            aria-label="Outpass Type">
-                            <option value="">Outpass Type</option>
-                            <option value="weekend">Weekend</option>
-                            <option value="emergency">Emergency</option>
-                            <option value="medical">Medical</option>
-                        </select>
-
-                        <!-- Approval Date Filter -->
-                        <input
-                            type="date"
-                            class="flex-grow p-2 text-gray-600 transition duration-200 border border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500"
-                            placeholder="Approval Date"
-                            aria-label="Approval Date">
-
-                        <!-- Status Filter -->
-                        <select
-                            class="flex-grow p-2 text-gray-600 transition duration-200 border border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500"
-                            aria-label="Status">
-                            <option value="">Status</option>
-                            <option value="approved">Approved</option>
-                            <option value="pending">Pending</option>
-                            <option value="rejected">Rejected</option>
-                        </select>
-                    </div>
-
-                    <!-- Additional Filters -->
-                    <h3 class="mb-2 text-sm font-semibold text-gray-600 uppercase">Student Filters</h3>
-                    <div class="flex flex-wrap items-center gap-6 mb-4">
-                        <!-- Year Filter -->
-                        <select
-                            class="flex-grow p-2 text-gray-600 transition duration-200 border border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500"
-                            aria-label="Year">
-                            <option value="">Year</option>
-                            <option value="1">1st Year</option>
-                            <option value="2">2nd Year</option>
-                            <option value="3">3rd Year</option>
-                            <option value="4">4th Year</option>
-                        </select>
-
-                        <!-- Branch Filter -->
-                        <select
-                            class="flex-grow p-2 text-gray-600 transition duration-200 border border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500"
-                            aria-label="Branch">
-                            <option value="">Branch</option>
-                            <option value="CSE">CSE</option>
-                            <option value="ECE">ECE</option>
-                            <option value="ME">ME</option>
-                        </select>
-
-                        <!-- Institution Filter -->
-                        <select
-                            class="flex-grow p-2 text-gray-600 transition duration-200 border border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500"
-                            aria-label="Institution">
-                            <option value="">Institution</option>
-                            <option value="institution1">Institution 1</option>
-                            <option value="institution2">Institution 2</option>
-                        </select>
-
-                        <!-- Hostel Filter -->
-                        <select
-                            class="flex-grow p-2 text-gray-600 transition duration-200 border border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500"
-                            aria-label="Hostel No">
-                            <option value="">Hostel No.</option>
-                            <option value="1">Hostel 1</option>
-                            <option value="2">Hostel 2</option>
-                        </select>
-                    </div>
+                <div>
+                    <select class="flex-grow p-2 text-gray-600 transition duration-200 border border-gray-300 rounded-lg bg-gray-50 w-36 focus:border-blue-600/50 focus:ring-2 focus:ring-blue-600/50" aria-label="Outpass Type">
+                        <option value="" disabled selected>
+                            <i class="fa fa-filter"></i>
+                            Filter By
+                        </option>
+                        <option value="home">Outpass ID</option>
+                        <option value="emergency">Name</option>
+                        <option value="medical">Course</option>
+                        <option value="medical">Type</option>
+                        <option value="medical">Status</option>
+                    </select>
                 </div>
             </div>
         </div>
@@ -146,7 +68,7 @@ use App\Enum\OutpassStatus;
                         <th class="px-6 py-3 text-sm font-semibold text-left text-gray-700">Return Time</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-200">
+                <tbody id="records-table-body" class="divide-y divide-gray-200">
                     <?php foreach ($outpasses as $outpass): ?>
                         <tr onclick="location.href='<?= $this->urlFor('admin.outpass.records.details', ['outpass_id' => $outpass->getId()]) ?>'" class="cursor-pointer hover:bg-gray-50">
                             <td class="px-6 py-4 text-sm text-gray-900"># <?= $outpass->getID() ?></td>
@@ -229,5 +151,125 @@ use App\Enum\OutpassStatus;
         const isHidden = filterArea.classList.contains('hidden');
         filterArea.classList.toggle('hidden', !isHidden);
         this.setAttribute('aria-expanded', isHidden);
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('search-records');
+        const tableBody = document.getElementById('records-table-body');
+
+        let timeout = null;
+        const originalRows = Array.from(tableBody.children).map(row => row.cloneNode(true));
+
+        searchInput.addEventListener('input', function() {
+            const query = searchInput.value.trim();
+
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                if (query === '') {
+                    tableBody.innerHTML = '';
+                    originalRows.forEach(row => tableBody.appendChild(row.cloneNode(true)));
+                    return;
+                }
+
+                fetch(`/api/web/admin/outpass/search?query=${encodeURIComponent(query)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        if (data.status && Array.isArray(data.data.data) && data.data.data.length > 0) {
+                            renderTable(data.data.data);
+                        } else {
+                            tableBody.innerHTML = `
+                            <tr>
+                                <td colspan="9" class="px-6 py-4 text-center text-gray-500">No results found.</td>
+                            </tr>`;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error during search:', error);
+                        tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="9" class="px-6 py-4 text-center text-red-500">Search failed. Please try again.</td>
+                        </tr>`;
+                    });
+            }, 400);
+        });
+
+        function renderTable(outpasses) {
+            tableBody.innerHTML = '';
+
+            outpasses.forEach(outpass => {
+                const row = document.createElement('tr');
+                row.className = "cursor-pointer hover:bg-gray-50";
+                row.onclick = () => {
+                    window.location.href = `/admin/outpass/records/${outpass.id}`;
+                };
+
+                // Determine badge style
+                const statusColor = {
+                    approved: 'green',
+                    rejected: 'red',
+                    expired: 'yellow',
+                    pending: 'blue'
+                } [outpass.status.toLowerCase()] || 'gray';
+
+                const statusBadge = `
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-${statusColor}-100 text-${statusColor}-800">
+                        ${capitalize(outpass.status)}
+                    </span>`;
+
+                row.innerHTML = `
+                    <td class="px-6 py-4 text-sm text-gray-900"># ${outpass.id}</td>
+                    <td class="px-6 py-4 text-sm text-gray-900">${outpass.student_name}</td>
+                    <td class="px-6 py-4 text-sm text-gray-900">${formatStudentYear(outpass.year)}</td>
+                    <td class="px-6 py-4 text-sm text-gray-900">${outpass.course} ${outpass.branch}</td>
+                    <td class="px-6 py-4 text-sm text-gray-900">${outpass.type}</td>
+                    <td class="px-6 py-4 text-sm text-gray-900">${outpass.destination}</td>
+                    <td class="px-6 py-4 text-sm text-center text-gray-900">
+                        ${statusBadge}
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="block text-sm text-gray-900">${outpass.depart_date}</span>
+                        <span class="block text-xs text-gray-600">${outpass.depart_time}</span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="block text-sm text-gray-900">${outpass.return_date}</span>
+                        <span class="block text-xs text-gray-600">${outpass.return_time}</span>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function capitalize(str) {
+            if (!str) return '';
+            return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+        }
+
+        function formatStudentYear(year) {
+            const lastDigit = year % 10;
+            const lastTwoDigits = year % 100;
+
+            let suffix;
+            if (lastTwoDigits === 11 || lastTwoDigits === 12 || lastTwoDigits === 13) {
+                suffix = 'th';
+            } else {
+                switch (lastDigit) {
+                    case 1:
+                        suffix = 'st';
+                        break;
+                    case 2:
+                        suffix = 'nd';
+                        break;
+                    case 3:
+                        suffix = 'rd';
+                        break;
+                    default:
+                        suffix = 'th';
+                }
+            }
+
+            return year + suffix;
+        }
     });
 </script>

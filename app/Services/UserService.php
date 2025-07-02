@@ -136,4 +136,12 @@ class UserService
 
         return false;
     }
+
+    /**
+     * Create students from CSV row
+     */
+    public function importStudentFromCsvRow(array $studentData, User $user)
+    {
+        $this->createStudent($studentData, $user);
+    }
 }

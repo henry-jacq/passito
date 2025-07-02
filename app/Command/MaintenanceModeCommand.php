@@ -53,6 +53,8 @@ class MaintenanceModeCommand extends Command
         $currentMode = $settings->getValue();
 
         if ($input->getOption('status')) {
+            $io->info('Need to inform the users about the maintenance mode status by sending email');
+
             $io->info('Maintenance mode is ' . ($currentMode === 'true' ? 'enabled' : 'disabled'));
             return Command::SUCCESS;
         }

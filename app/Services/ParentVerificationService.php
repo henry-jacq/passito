@@ -92,7 +92,7 @@ class ParentVerificationService
 
         $message = $this->config->get('notification.sms.twilio.verification_message');
         $message = str_replace('{student_name}', $user->getName(), $message);
-        $message = str_replace('{purpose}', strtolower($outpass->getPurpose()), $message);
+        $message = str_replace('{purpose}', strtolower($outpass->getReason()), $message);
         $message = str_replace('{verification_link}', $url, $message);
 
         return $message;

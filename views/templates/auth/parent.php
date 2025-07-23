@@ -40,10 +40,10 @@ use App\Enum\OutpassStatus;
             <h3 class="mb-4 text-sm font-semibold tracking-wider text-gray-800 uppercase">Outpass Information</h3>
             <div class="grid grid-cols-1 gap-4 text-sm text-gray-700 sm:grid-cols-2">
                 <div><strong class="text-gray-900">ID:</strong> #<?= $outpass->getId() ?></div>
-                <div><strong class="text-gray-900">Type:</strong> <span class="font-medium text-gray-600"><?= ucfirst($outpass->getPassType()->value) ?></span></div>
+                <div><strong class="text-gray-900">Type:</strong> <span class="font-medium text-gray-600"><?= ucfirst($outpass->getTemplate()->getName()) ?></span></div>
                 <div><strong class="text-gray-900">From:</strong> <?= $outpass->getFromDate()->format('d M Y, ') . $outpass->getFromTime()->format('h:i A') ?></div>
                 <div><strong class="text-gray-900">To:</strong> <?= $outpass->getToDate()->format('d M Y, ') . $outpass->getToTime()->format('h:i A') ?></div>
-                <div class="sm:col-span-2"><strong class="text-gray-900">Purpose:</strong> <?= ucfirst($outpass->getPurpose()) ?></div>
+                <div class="sm:col-span-2"><strong class="text-gray-900">Purpose:</strong> <?= ucfirst($outpass->getReason()) ?></div>
                 <div class="sm:col-span-2"><strong class="text-gray-900">Location:</strong> <?= ucfirst($outpass->getDestination()) ?></div>
             </div>
         </section>

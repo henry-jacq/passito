@@ -28,7 +28,6 @@
                 <thead class="text-xs tracking-wide text-gray-600 uppercase bg-gray-100">
                     <tr>
                         <th class="px-5 py-3 text-left">Template</th>
-                        <th class="px-5 py-3 text-left">Visibility</th>
                         <th class="px-5 py-3 text-left">Custom Fields</th>
                         <th class="px-5 py-3 text-left">Status</th>
                         <th class="px-5 py-3 text-center">Actions</th>
@@ -54,11 +53,6 @@
                                     </span>
                                 </div>
                                 <p class="text-sm text-gray-500"><?= ucfirst($template->getDescription()) ?></p>
-                            </td>
-                            <td class="px-5 py-4">
-                                <span class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-purple-800 bg-purple-100 rounded-md">
-                                    All Years • B.Tech
-                                </span>
                             </td>
                             <td class="px-5 py-4">
                                 <div class="flex flex-wrap gap-2">

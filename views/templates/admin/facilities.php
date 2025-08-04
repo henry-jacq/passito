@@ -113,7 +113,7 @@
         <?php endif; ?>
     </section>
 
-    <section class="p-6 bg-white rounded-lg shadow-sm select-none">
+    <section class="p-6 bg-white rounded-lg shadow-sm">
         <!-- Header -->
         <div class="flex items-center justify-between pb-4 mb-6 border-b border-gray-200">
             <div>
@@ -132,7 +132,9 @@
                 <thead class="bg-gray-100">
                     <tr class="text-left text-gray-600">
                         <th class="px-6 py-3 font-semibold">#</th>
+                        <th class="px-6 py-3 font-semibold">Program Name</th>
                         <th class="px-6 py-3 font-semibold">Course Name</th>
+                        <th class="px-6 py-3 font-semibold">Short Code</th>
                         <th class="px-4 py-3 font-semibold">Duration</th>
                         <th class="px-4 py-3 font-semibold text-center">Provided By</th>
                         <th class="px-6 py-3 font-semibold text-right">Actions</th>
@@ -142,7 +144,9 @@
                     <!-- Row 1 -->
                     <tr class="hover:bg-gray-50">
                         <td class="px-6 py-3 text-gray-800">1</td>
-                        <td class="px-6 py-3 text-gray-800">B.Tech IT</td>
+                        <td class="px-6 py-3 text-gray-800">B.Tech</td>
+                        <td class="px-6 py-3 text-gray-800">Information Technology</td>
+                        <td class="px-6 py-3 text-gray-800">IT</td>
                         <td class="px-4 py-3 text-gray-800">4 Years</td>
                         <td class="px-4 py-3 text-center text-gray-600">SSN College of Engineering</td>
                         <td class="px-6 py-3 text-right">
@@ -169,7 +173,9 @@
                     <!-- Row 2 -->
                     <tr class="hover:bg-gray-50">
                         <td class="px-6 py-3 text-gray-800">2</td>
-                        <td class="px-6 py-3 text-gray-800">B.E Mech</td>
+                        <td class="px-6 py-3 text-gray-800">B.Tech</td>
+                        <td class="px-6 py-3 text-gray-800">Chemical Engineering</td>
+                        <td class="px-6 py-3 text-gray-800">CHE</td>
                         <td class="px-4 py-3 text-gray-800">4 Years</td>
                         <td class="px-4 py-3 text-center text-gray-600">SSN College of Engineering</td>
                         <td class="px-6 py-3 text-right">

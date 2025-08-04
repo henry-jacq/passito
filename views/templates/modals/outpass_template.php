@@ -8,21 +8,11 @@
 
     <div>
         <label class="block mb-1 text-sm font-medium text-gray-700">Template Description</label>
-        <textarea id="template-description" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-md resize-none focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Short description of this template"></textarea>
-    </div>
-
-    <div>
-        <label class="block text-sm font-medium text-gray-700">Visibility</label>
-        <select class="w-full px-3 py-2 border border-gray-300 rounded-md resize-none focus:ring-2 focus:ring-blue-500 focus:outline-none">
-            <option value="visible">Visible</option>
-            <option value="hidden">Hidden</option>
-            <option value="readonly">Read Only</option>
-        </select>
-    </div>
-
-    <div class="flex items-center space-x-2">
-        <input type="checkbox" id="allow-attachments" class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-        <label for="allow-attachments" class="text-sm text-gray-700">Allow students to upload attachments</label>
+        <textarea id="template-description" rows="2" class="w-full px-3 py-2 transition-all transition border border-gray-300 rounded-md resize-none focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Short description of this template"></textarea>
+        <div class="flex items-center space-x-2">
+            <input type="checkbox" id="allow-attachments" class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+            <label for="allow-attachments" class="text-sm text-gray-700">Allow students to upload attachments (Multiple)</label>
+        </div>
     </div>
 
     <div id="template-fields" class="space-y-4">

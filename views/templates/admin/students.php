@@ -77,24 +77,22 @@
                 <thead class="bg-gray-100">
                     <tr>
                         <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Student Name</th>
-                        <th class="px-4 py-3 text-sm font-semibold text-left text-center text-gray-600">Year</th>
-                        <th class="px-4 py-3 text-sm font-semibold text-left text-center text-gray-600">Course</th>
-                        <th class="px-4 py-3 text-sm font-semibold text-left text-center text-gray-600">Branch</th>
-                        <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Hostel</th>
-                        <th class="px-4 py-3 text-sm font-semibold text-left text-center text-gray-600">Room No.</th>
-                        <th class="px-4 py-3 text-sm font-semibold text-left text-center text-gray-600">Parent Contact</th>
-                        <th class="px-4 py-3 text-sm font-semibold text-left text-center text-gray-600">Status</th>
-                        <th class="px-4 py-3 text-sm font-semibold text-left text-center text-gray-600">Actions</th>
+                        <th class="px-4 py-3 text-sm font-semibold text-center text-gray-600">Course</th>
+                        <th class="px-4 py-3 text-sm font-semibold text-center text-gray-600">Year</th>
+                        <th class="px-4 py-3 text-sm font-semibold text-center text-gray-600">Hostel</th>
+                        <th class="px-4 py-3 text-sm font-semibold text-center text-gray-600">Room No.</th>
+                        <th class="px-4 py-3 text-sm font-semibold text-center text-gray-600">Parent Contact</th>
+                        <th class="px-4 py-3 text-sm font-semibold text-center text-gray-600">Status</th>
+                        <th class="px-4 py-3 text-sm font-semibold text-center text-gray-600">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach ($students as $student): ?>
                         <tr class="border-t hover:bg-gray-50">
                             <td class="px-4 py-3 text-sm text-gray-700"><?= $student->getUser()->getName() ?></td>
+                            <td class="px-4 py-3 text-sm text-center text-gray-700"><?= $student->getProgram()->getProgramName() . ' ' . $student->getProgram()->getShortCode() ?></td>
                             <td class="px-4 py-3 text-sm text-center text-gray-700"><?= formatStudentYear($student->getYear()) ?></td>
-                            <td class="px-4 py-3 text-sm text-center text-gray-700"><?= $student->getCourse() ?></td>
-                            <td class="px-4 py-3 text-sm text-center text-gray-700"><?= $student->getBranch() ?></td>
-                            <td class="px-4 py-3 text-sm text-gray-700"><?= $student->getHostel()->getName() ?></td>
+                            <td class="px-4 py-3 text-sm text-center text-gray-700"><?= $student->getHostel()->getName() ?></td>
                             <td class="px-4 py-3 text-sm text-center text-gray-700"><?= $student->getRoomNo() ?></td>
                             <td class="px-4 py-3 text-sm text-center text-gray-700"><?= $student->getParentNo() ?></td>
                             <td class="px-4 py-3 text-sm text-center">

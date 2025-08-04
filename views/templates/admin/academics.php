@@ -73,8 +73,8 @@
                     <tr class="text-left text-gray-600">
                         <th class="px-6 py-3 font-semibold">#</th>
                         <th class="px-6 py-3 font-semibold">Program Name</th>
-                        <th class="px-6 py-3 font-semibold">Course Name</th>
                         <th class="px-6 py-3 font-semibold">Short Code</th>
+                        <th class="px-6 py-3 font-semibold">Course Name</th>
                         <th class="px-4 py-3 font-semibold">Duration</th>
                         <th class="px-4 py-3 font-semibold text-center">Provided By</th>
                         <th class="px-6 py-3 font-semibold text-right">Actions</th>
@@ -85,8 +85,8 @@
                         <tr class="hover:bg-gray-50">
                             <td class="px-6 py-3 text-gray-800"><?= $key + 1 ?></td>
                             <td class="px-6 py-3 text-gray-800"><?= $program->getProgramName() ?></td>
-                            <td class="px-6 py-3 text-gray-800"><?= $program->getCourseName() ?></td>
                             <td class="px-6 py-3 text-gray-800"><?= $program->getShortCode() ?></td>
+                            <td class="px-6 py-3 text-gray-800"><?= $program->getCourseName() ?></td>
                             <td class="px-4 py-3 text-gray-800"><?= $program->getDuration() ?> Years</td>
                             <td class="px-4 py-3 text-center text-gray-600"><?= $program->getProvidedBy()->getName() ?></td>
                             <td class="px-6 py-3 text-right">

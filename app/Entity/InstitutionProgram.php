@@ -109,4 +109,16 @@ class InstitutionProgram
         $this->createdAt = $createdAt;
     }
 
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->getId(),
+            'providedBy' => $this->getProvidedBy()->getId(),
+            'programName' => $this->getProgramName(),
+            'courseName' => $this->getCourseName(),
+            'shortCode' => $this->getShortCode(),
+            'duration' => $this->getDuration(),
+            'createdAt' => $this->getCreatedAt()->format('Y-m-d H:i:s'),
+        ];
+    }
 }

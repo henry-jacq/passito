@@ -128,6 +128,11 @@ class FacilityService
     {
         return $this->em->getRepository(InstitutionProgram::class)->findAll();
     }
+
+    public function getProgramById(int $id): ?InstitutionProgram
+    {
+        return $this->em->getRepository(InstitutionProgram::class)->find($id);
+    }
     
     public function getProgramsByInstitution(Institution $institution)
     {

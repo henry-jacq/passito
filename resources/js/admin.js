@@ -280,22 +280,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const addStudentButton = document.querySelector('.add-student-modal');
     if (addStudentButton) {
         addStudentButton.addEventListener('click', async () => {
-            const fetchHostels = await Ajax.post('/api/web/admin/facilities/hostels/fetch');
-            const fetchInstitutions = await Ajax.post('/api/web/admin/facilities/institutions/fetch');
+            const fetchHostels = await Ajax.post('/api/web/admin/hostels/fetch');
+            const fetchPrograms = await Ajax.post('/api/web/admin/programs/fetch');
 
-            let hostelsData = [];
-            let institutionData = [];
-
-            if (fetchHostels.ok && fetchInstitutions.ok) {
+            
+            if (fetchHostels.ok && fetchPrograms.ok) {
+                let hostelsData = [];
+                let programData = [];
                 const hostels = fetchHostels.data;
-                const institutions = fetchInstitutions.data;
+                const programs = fetchPrograms.data;
 
-                if (hostels.status && Array.isArray(hostels.data.hostels) && institutions.status && Array.isArray(institutions.data.institutions)) {
+                if (hostels.status && Array.isArray(hostels.data.hostels) && programs.status && Array.isArray(programs.data.programs)) {
                     hostelsData = hostels.data.hostels;
-                    institutionData = institutions.data.institutions;
+                    programData = programs.data.programs;
                 } else {
                     const toast = new Toast();
-                    toast.create({ message: hostels.message || 'Invalid hostel or institution data.', position: "bottom-right", type: "warning", duration: 4000 });
+                    toast.create({ message: hostels.message || 'Invalid hostel or program data.', position: "bottom-right", type: "warning", duration: 4000 });
                     return;
                 }
 
@@ -303,7 +303,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const response = await Ajax.post('/api/web/admin/modal', {
                         template: "add_student",
                         hostels: hostelsData,
-                        institutions: institutionData
+                        programs: programData
                     });
 
                     if (response.ok && response.data) {
@@ -317,19 +317,17 @@ document.addEventListener('DOMContentLoaded', () => {
                                         const studentName = document.getElementById('student-name').value;
                                         const email = document.getElementById('email').value;
                                         const digitalId = document.getElementById('digital-id').value;
-                                        const course = document.getElementById('course').value;
-                                        const branch = document.getElementById('branch').value;
                                         const year = document.getElementById('year').value;
                                         const roomNo = document.getElementById('room-no').value;
                                         const hostelNo = document.getElementById('hostel-no').value;
                                         const studentNo = document.getElementById('student-no').value;
                                         const parentNo = document.getElementById('parent-no').value;
-                                        const institutionId = document.getElementById('institution-id').value;
+                                        const programId = document.getElementById('program-id').value;
 
                                         event.target.disabled = true;
                                         event.target.textContent = 'Adding Student...';
 
-                                        if (studentName && email && digitalId && course && branch && year && roomNo && hostelNo && studentNo && parentNo && institutionId) {
+                                        if (studentName && email && digitalId && year && roomNo && hostelNo && studentNo && parentNo && programId) {
                                             if (studentNo === parentNo) {
                                                 alert("Student number and Parent number must not be the same.");
                                                 event.target.textContent = 'Add Student';
@@ -340,12 +338,11 @@ document.addEventListener('DOMContentLoaded', () => {
                                             try {
                                                 const response = await Ajax.post('/api/web/admin/students/create', {
                                                     name: studentName, email,
-                                                    digital_id: digitalId, course, branch,
-                                                    year, room_no: roomNo,
+                                                    digital_id: digitalId, year, room_no: roomNo,
                                                     hostel_no: hostelNo,
                                                     contact: studentNo,
                                                     parent_no: parentNo,
-                                                    institution: institutionId
+                                                    program: programId
                                                 });
 
                                                 if (response.ok) {
@@ -438,7 +435,7 @@ document.addEventListener('DOMContentLoaded', () => {
     importStudentsButton.addEventListener('click', async (event) => {
         event.stopPropagation();
 
-        const fetchInstitutions = await Ajax.post('/api/web/admin/facilities/institutions/fetch');
+        const fetchInstitutions = await Ajax.post('/api/web/admin/institutions/fetch');
 
         if (!fetchInstitutions.ok) {
             const toast = new Toast();

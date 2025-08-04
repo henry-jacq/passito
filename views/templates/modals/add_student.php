@@ -36,12 +36,12 @@
         <div class="space-y-5">
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
-                    <label for="institution-id" class="block text-sm font-medium text-gray-700">Institution</label>
-                    <select id="institution-id" name="institution-id" required
+                    <label for="program-id" class="block text-sm font-medium text-gray-700">Program</label>
+                    <select id="program-id" name="program-id" required
                         class="w-full px-3 py-2 text-sm text-gray-800 transition duration-200 bg-white border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500">
-                        <option value="" disabled selected>Select Institution</option>
-                        <?php foreach ($institutions as $institution): ?>
-                            <option value="<?= $institution['id'] ?>"><?= $institution['name'] ?></option>
+                        <option value="" disabled selected>Select Program</option>
+                        <?php foreach ($programs as $program): ?>
+                            <option value="<?= $program['id'] ?>"><?= $program['programName'] . ' ' . $program['courseName'] ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -56,22 +56,12 @@
                     </select>
                 </div>
             </div>
-            <div>
-                <label for="room-no" class="block text-sm font-medium text-gray-700">Room Number</label>
-                <input type="text" id="room-no" name="room-no" placeholder="e.g., A-102" required
-                    class="w-full px-3 py-2 text-sm text-gray-800 transition duration-200 bg-white border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500">
-            </div>
         </div>
         <div class="space-y-2">
-            <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
-                    <label for="course" class="block text-sm font-medium text-gray-700">Course</label>
-                    <input type="text" id="course" name="course" placeholder="e.g., B.Tech, MBA" required
-                        class="w-full px-3 py-2 text-sm text-gray-800 transition duration-200 bg-white border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500">
-                </div>
-                <div>
-                    <label for="branch" class="block text-sm font-medium text-gray-700">Branch</label>
-                    <input type="text" id="branch" name="branch" placeholder="e.g., CSE, ECE" required
+                    <label for="room-no" class="block text-sm font-medium text-gray-700">Room Number</label>
+                    <input type="text" id="room-no" name="room-no" placeholder="e.g., A-102" required
                         class="w-full px-3 py-2 text-sm text-gray-800 transition duration-200 bg-white border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500">
                 </div>
                 <div>

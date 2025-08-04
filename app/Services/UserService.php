@@ -79,16 +79,14 @@ class UserService
         }
 
         $hostel = $this->facility->getHostelById($data['hostel_no']);
-        $institution = $this->facility->getInstitutionById($data['institution']);
+        $program = $this->facility->getProgramById($data['program']);
         
         $student = new Student();
         $student->setUser($user);
-        $student->setInstitution($institution);
         $student->setHostel($hostel);
         $student->setDigitalId($data['digital_id']);
         $student->setYear($data['year']);
-        $student->setBranch($data['branch']);
-        $student->setCourse($data['course']);
+        $student->setProgram($program);
         $student->setRoomNo($data['room_no']);
         $student->setParentNo($data['parent_no']);
         $student->setStatus(true);

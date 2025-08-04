@@ -264,7 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                                     if (institutionName && institutionAddress && institutionType) {
                                         try {
-                                            const response = await Ajax.post('/api/web/admin/facilities/institutions/create', {
+                                            const response = await Ajax.post('/api/web/admin/institutions/create', {
                                                 name: institutionName,
                                                 address: institutionAddress,
                                                 type: institutionType
@@ -321,7 +321,7 @@ document.addEventListener('DOMContentLoaded', () => {
         addHostelButton.addEventListener('click', () => {
             // Fetch the list of wardens and institutions from the server
             const fetchWardens = Ajax.post('/api/web/admin/wardens/fetch');
-            const fetchInstitutions = Ajax.post('/api/web/admin/facilities/institutions/fetch');
+            const fetchInstitutions = Ajax.post('/api/web/admin/institutions/fetch');
 
             Promise.all([fetchWardens, fetchInstitutions])
                 .then(async (responses) => {
@@ -357,7 +357,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                                                 if (hostelName && wardenId && category && institutionId) {
                                                     try {
-                                                        const response = await Ajax.post('/api/web/admin/facilities/hostels/create', {
+                                                        const response = await Ajax.post('/api/web/admin/hostels/create', {
                                                             hostel_name: hostelName,
                                                             warden_id: wardenId,
                                                             category: category,

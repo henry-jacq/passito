@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20250804181334 extends AbstractMigration
+final class Version20250804211127 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -31,7 +31,7 @@ final class Version20250804181334 extends AbstractMigration
         $this->addSql('CREATE TABLE outpass_templates (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(100) NOT NULL, description LONGTEXT NOT NULL, isSystemTemplate TINYINT(1) NOT NULL, gender VARCHAR(255) NOT NULL, allowAttachments TINYINT(1) NOT NULL, isActive TINYINT(1) NOT NULL, createdAt DATETIME NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE parent_verifications (id INT AUTO_INCREMENT NOT NULL, outpass_id BIGINT NOT NULL, verificationToken VARCHAR(255) NOT NULL, isUsed TINYINT(1) NOT NULL, decision VARCHAR(255) DEFAULT NULL, verifiedAt DATETIME DEFAULT NULL, createdAt DATETIME NOT NULL, UNIQUE INDEX UNIQ_500084D45CE70D23 (verificationToken), INDEX IDX_500084D42070ABE0 (outpass_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE settings (id INT AUTO_INCREMENT NOT NULL, keyName VARCHAR(255) NOT NULL, value VARCHAR(255) NOT NULL, updatedAt DATETIME NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE students (id INT AUTO_INCREMENT NOT NULL, user_id INT NOT NULL, institution_id INT NOT NULL, hostel_id INT NOT NULL, digitalId INT NOT NULL, year INT NOT NULL, branch VARCHAR(255) NOT NULL, course VARCHAR(255) NOT NULL, roomNo VARCHAR(255) NOT NULL, parentNo VARCHAR(15) NOT NULL, status TINYINT(1) NOT NULL, updatedAt DATETIME NOT NULL, UNIQUE INDEX UNIQ_A4698DB2ECA9E64F (digitalId), INDEX IDX_A4698DB2A76ED395 (user_id), INDEX IDX_A4698DB210405986 (institution_id), INDEX IDX_A4698DB2FC68ACC0 (hostel_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE students (id INT AUTO_INCREMENT NOT NULL, user_id INT NOT NULL, hostel_id INT NOT NULL, program_id INT NOT NULL, digitalId INT NOT NULL, year INT NOT NULL, roomNo VARCHAR(255) NOT NULL, parentNo VARCHAR(15) NOT NULL, status TINYINT(1) NOT NULL, updatedAt DATETIME NOT NULL, UNIQUE INDEX UNIQ_A4698DB2ECA9E64F (digitalId), INDEX IDX_A4698DB2A76ED395 (user_id), INDEX IDX_A4698DB2FC68ACC0 (hostel_id), INDEX IDX_A4698DB23EB8070A (program_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE users (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, role VARCHAR(255) NOT NULL, gender VARCHAR(255) NOT NULL, contactNo VARCHAR(32) NOT NULL, createdAt DATETIME NOT NULL, UNIQUE INDEX UNIQ_1483A5E9E7927C74 (email), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE verifiers (id INT AUTO_INCREMENT NOT NULL, verifierName VARCHAR(255) NOT NULL, location VARCHAR(255) NOT NULL, status VARCHAR(255) NOT NULL, ipAddress VARCHAR(255) DEFAULT NULL, machineId VARCHAR(255) DEFAULT NULL, authToken VARCHAR(255) NOT NULL, lastSync DATETIME DEFAULT NULL, createdAt DATETIME NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB');
         $this->addSql('ALTER TABLE hostels ADD CONSTRAINT FK_C8E0C0419533F2F6 FOREIGN KEY (warden_id) REFERENCES users (id)');
@@ -44,8 +44,8 @@ final class Version20250804181334 extends AbstractMigration
         $this->addSql('ALTER TABLE outpass_template_fields ADD CONSTRAINT FK_1A1543DD5DA0FB8 FOREIGN KEY (template_id) REFERENCES outpass_templates (id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE parent_verifications ADD CONSTRAINT FK_500084D42070ABE0 FOREIGN KEY (outpass_id) REFERENCES outpass_requests (id)');
         $this->addSql('ALTER TABLE students ADD CONSTRAINT FK_A4698DB2A76ED395 FOREIGN KEY (user_id) REFERENCES users (id)');
-        $this->addSql('ALTER TABLE students ADD CONSTRAINT FK_A4698DB210405986 FOREIGN KEY (institution_id) REFERENCES institutions (id)');
         $this->addSql('ALTER TABLE students ADD CONSTRAINT FK_A4698DB2FC68ACC0 FOREIGN KEY (hostel_id) REFERENCES hostels (id)');
+        $this->addSql('ALTER TABLE students ADD CONSTRAINT FK_A4698DB23EB8070A FOREIGN KEY (program_id) REFERENCES institution_programs (id)');
     }
 
     public function down(Schema $schema): void
@@ -61,8 +61,8 @@ final class Version20250804181334 extends AbstractMigration
         $this->addSql('ALTER TABLE outpass_template_fields DROP FOREIGN KEY FK_1A1543DD5DA0FB8');
         $this->addSql('ALTER TABLE parent_verifications DROP FOREIGN KEY FK_500084D42070ABE0');
         $this->addSql('ALTER TABLE students DROP FOREIGN KEY FK_A4698DB2A76ED395');
-        $this->addSql('ALTER TABLE students DROP FOREIGN KEY FK_A4698DB210405986');
         $this->addSql('ALTER TABLE students DROP FOREIGN KEY FK_A4698DB2FC68ACC0');
+        $this->addSql('ALTER TABLE students DROP FOREIGN KEY FK_A4698DB23EB8070A');
         $this->addSql('DROP TABLE email_queue');
         $this->addSql('DROP TABLE hostels');
         $this->addSql('DROP TABLE institution_programs');

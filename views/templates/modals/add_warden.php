@@ -1,5 +1,5 @@
 <div class="px-2 space-y-6">
-    <h3 class="text-2xl font-bold text-gray-900">Add New Warden</h3>
+    <h3 class="text-xl font-bold text-gray-900">Add New Warden</h3>
 
     <div class="space-y-5">
         <div class="space-y-2">

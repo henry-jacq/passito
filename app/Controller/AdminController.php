@@ -211,22 +211,24 @@ class AdminController extends BaseController
         return parent::render($request, $response, 'admin/students', $args);
     }
     
-    public function manageWardens(Request $request, Response $response): Response
+    public function manageResidence(Request $request, Response $response): Response
     {
         $this->view->clearCacheIfDev();
 
         $userData = $request->getAttribute('user');
         $wardens = $this->userService->getWardensByGender($userData);
+        $hostels = $this->facilityService->getHostelsByType($userData);
 
         $args = [
-            'title' => 'Manage Wardens',
+            'title' => 'Manage Residence',
             'user' => $userData,
+            'hostels' => $hostels,
             'wardens' => $wardens,
             'routeName' => $this->getRouteName($request),
         ];
 
         $args = array_merge($args, $this->view->getGlobals());
-        return parent::render($request, $response, 'admin/wardens', $args);
+        return parent::render($request, $response, 'admin/residence', $args);
     }
     
     public function manageVerifiers(Request $request, Response $response): Response
@@ -284,26 +286,24 @@ class AdminController extends BaseController
         return parent::render($request, $response, 'admin/logbook', $args);
     }
     
-    public function manageFacilities(Request $request, Response $response): Response
+    public function manageAcademics(Request $request, Response $response): Response
     {
         $this->view->clearCacheIfDev();
 
         $userData = $request->getAttribute('user');
         $institutions = $this->facilityService->getInstitutions();
-        $hostels = $this->facilityService->getHostelsByType($userData);
         $programs = $this->facilityService->getPrograms();
 
         $args = [
-            'title' => 'Manage Facilities',
+            'title' => 'Manage Academics',
             'user' => $userData,
-            'hostels' => $hostels,
             'programs' => $programs,
             'institutions' => $institutions,
             'routeName' => $this->getRouteName($request),
         ];
 
         $args = array_merge($args, $this->view->getGlobals());
-        return parent::render($request, $response, 'admin/facilities', $args);
+        return parent::render($request, $response, 'admin/academics', $args);
     }
 
     public function settings(Request $request, Response $response): Response

@@ -291,11 +291,13 @@ class AdminController extends BaseController
         $userData = $request->getAttribute('user');
         $institutions = $this->facilityService->getInstitutions();
         $hostels = $this->facilityService->getHostelsByType($userData);
+        $programs = $this->facilityService->getPrograms();
 
         $args = [
             'title' => 'Manage Facilities',
             'user' => $userData,
             'hostels' => $hostels,
+            'programs' => $programs,
             'institutions' => $institutions,
             'routeName' => $this->getRouteName($request),
         ];

@@ -122,7 +122,7 @@
             </div>
             <button
                 class="inline-flex items-center px-5 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed add-course-modal">
-                <i class="mr-2 fas fa-plus" aria-hidden="true"></i> Create Course
+                <i class="mr-2 fas fa-plus" aria-hidden="true"></i> Create Program
             </button>
         </div>
 
@@ -141,63 +141,35 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
-                    <!-- Row 1 -->
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-3 text-gray-800">1</td>
-                        <td class="px-6 py-3 text-gray-800">B.Tech</td>
-                        <td class="px-6 py-3 text-gray-800">Information Technology</td>
-                        <td class="px-6 py-3 text-gray-800">IT</td>
-                        <td class="px-4 py-3 text-gray-800">4 Years</td>
-                        <td class="px-4 py-3 text-center text-gray-600">SSN College of Engineering</td>
-                        <td class="px-6 py-3 text-right">
-                            <div class="inline-flex items-center gap-4">
-                                <button
-                                    title="Edit"
-                                    aria-label="Edit course"
-                                    class="text-gray-700 transition hover:text-gray-900"
-                                    data-id="1">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button
-                                    title="Delete"
-                                    aria-label="Delete course"
-                                    class="text-red-700 transition hover:text-red-900 remove-hostel-modal"
-                                    data-id="1"
-                                    data-name="B.Tech IT">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <!-- Row 2 -->
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-3 text-gray-800">2</td>
-                        <td class="px-6 py-3 text-gray-800">B.Tech</td>
-                        <td class="px-6 py-3 text-gray-800">Chemical Engineering</td>
-                        <td class="px-6 py-3 text-gray-800">CHE</td>
-                        <td class="px-4 py-3 text-gray-800">4 Years</td>
-                        <td class="px-4 py-3 text-center text-gray-600">SSN College of Engineering</td>
-                        <td class="px-6 py-3 text-right">
-                            <div class="inline-flex items-center gap-4">
-                                <button
-                                    title="Edit"
-                                    aria-label="Edit course"
-                                    class="text-gray-700 transition hover:text-gray-900"
-                                    data-id="4">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button
-                                    title="Delete"
-                                    aria-label="Delete course"
-                                    class="text-red-700 transition hover:text-red-900 remove-hostel-modal"
-                                    data-id="4"
-                                    data-name="B.E Mech">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
+                    <?php foreach ($programs as $i => $program): ?>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-3 text-gray-800"><?= $i + 1 ?></td>
+                            <td class="px-6 py-3 text-gray-800"><?= $program->getProgramName() ?></td>
+                            <td class="px-6 py-3 text-gray-800"><?= $program->getCourseName() ?></td>
+                            <td class="px-6 py-3 text-gray-800"><?= $program->getShortCode() ?></td>
+                            <td class="px-4 py-3 text-gray-800"><?= $program->getDuration() ?> Years</td>
+                            <td class="px-4 py-3 text-center text-gray-600"><?= $program->getProvidedBy()->getName() ?></td>
+                            <td class="px-6 py-3 text-right">
+                                <div class="inline-flex items-center gap-4">
+                                    <button
+                                        title="Edit"
+                                        aria-label="Edit course"
+                                        class="text-gray-700 transition hover:text-gray-900"
+                                        data-id="1">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button
+                                        title="Delete"
+                                        aria-label="Delete course"
+                                        class="text-red-700 transition hover:text-red-900 remove-hostel-modal"
+                                        data-id="1"
+                                        data-name="B.Tech IT">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
         </div>

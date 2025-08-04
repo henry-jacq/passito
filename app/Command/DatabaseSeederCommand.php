@@ -4,17 +4,19 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Seeders\ProgramSeeder;
 use App\Services\OutpassService;
 use App\Seeders\AppSettingsSeeder;
+use App\Seeders\InstitutionSeeder;
 use App\Seeders\OutpassDataSeeder;
 use App\Seeders\OutpassRulesSeeder;
 use App\Seeders\OutpassTemplateSeeder;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 
 class DatabaseSeederCommand extends Command
 {
@@ -22,9 +24,11 @@ class DatabaseSeederCommand extends Command
 
     private array $seeders = [
         'app_settings' => AppSettingsSeeder::class,
+        'institutions' => InstitutionSeeder::class,
         'outpass_rules' => OutpassRulesSeeder::class,
         'outpass_data' => OutpassDataSeeder::class,
         'outpass_templates' => OutpassTemplateSeeder::class,
+        'programs' => ProgramSeeder::class,
     ];
 
     public function __construct(

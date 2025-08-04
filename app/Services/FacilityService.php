@@ -3,12 +3,13 @@
 namespace App\Services;
 
 use App\Entity\User;
+use App\Enum\Gender;
 use App\Core\Session;
 use App\Entity\Hostel;
 use App\Enum\HostelType;
 use App\Entity\Institution;
-use App\Enum\Gender;
 use App\Enum\InstitutionType;
+use App\Entity\InstitutionProgram;
 use Doctrine\ORM\EntityManagerInterface;
 
 class FacilityService
@@ -121,5 +122,16 @@ class FacilityService
         $this->em->flush();
 
         return true;
+    }
+
+    public function getPrograms()
+    {
+        return $this->em->getRepository(InstitutionProgram::class)->findAll();
+    }
+    
+    public function getProgramsByInstitution(Institution $institution)
+    {
+        return $this->em->getRepository(InstitutionProgram::class)
+            ->findBy(['providedBy' => $institution]);
     }
 }

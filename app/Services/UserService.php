@@ -78,14 +78,21 @@ class UserService
             return false;
         }
 
-        $hostel = $this->facility->getHostelById($data['hostel_no']);
+        $givenYear = (int) $data['year'];
         $program = $this->facility->getProgramById($data['program']);
-        
+
+        // Check the given year is valid
+        if (0 < $givenYear && $givenYear >= $program->getDuration()) {
+            return false;
+        }
+
+        $hostel = $this->facility->getHostelById($data['hostel_no']);
+
         $student = new Student();
         $student->setUser($user);
         $student->setHostel($hostel);
         $student->setDigitalId($data['digital_id']);
-        $student->setYear($data['year']);
+        $student->setYear($givenYear);
         $student->setProgram($program);
         $student->setRoomNo($data['room_no']);
         $student->setParentNo($data['parent_no']);

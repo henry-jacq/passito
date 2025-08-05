@@ -16,12 +16,12 @@ ${basename(__FILE__, '.php')} = function () {
             'role' => UserRole::USER,
             'gender' => $gender,
             'contact' => $this->data['contact'],
-            'program' => $this->data['program'],
+            'program' => (int) $this->data['program'],
             'hostel_no' => $this->data['hostel_no'],
-            'digital_id' => $this->data['digital_id'],
-            'year' => $this->data['year'],
+            'digital_id' => (int) $this->data['digital_id'],
+            'year' => (int) $this->data['year'],
             'room_no' => $this->data['room_no'],
-            'parent_no' => $this->data['parent_no'],
+            'parent_no' => (int) $this->data['parent_no'],
         ];
 
         $user = $this->userService->createUser($studentData);

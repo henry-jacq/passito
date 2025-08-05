@@ -14,7 +14,7 @@ use App\Enum\UserRole; ?>
             <ul class="mt-2">
                 <li class="my-1">
                     <a href="<?= $this->urlFor('admin.dashboard') ?>"
-                        class="flex items-center px-4 py-2.5 <?= ($routeName == 'admin.dashboard') ? 'bg-blue-500/20 text-blue-800 hover:bg-blue-600/20 border-blue-800/80' : 'text-gray-600 hover:bg-gray-50 border-transparent'; ?> transition duration-200 rounded-md border-l-4">
+                        class="flex items-center px-4 py-2.5 <?= str_contains($routeName, 'admin.dashboard') ? 'bg-blue-500/20 text-blue-800 hover:bg-blue-600/20 border-blue-800/80' : 'text-gray-600 hover:bg-gray-50 border-transparent'; ?> transition duration-200 rounded-md border-l-4">
                         <i class="pr-4 fas fa-tachometer-alt"></i>
                         <span>Dashboard</span>
                     </a>
@@ -22,7 +22,7 @@ use App\Enum\UserRole; ?>
                 <li class="my-1">
                     <?php $hostelParam = UserRole::isAdmin($user->getRole()->value) ? ['hostel' => 'default'] : []; ?>
                     <a href="<?= $this->urlFor('admin.outpass.pending', [], $hostelParam) ?>"
-                        class="flex items-center px-4 py-2.5 <?= ($routeName == 'admin.outpass.pending') ? 'bg-blue-500/20 text-blue-800 hover:bg-blue-600/20 border-blue-800/80' : 'text-gray-600 hover:bg-gray-50 border-transparent'; ?> transition duration-200 rounded-md border-l-4">
+                        class="flex items-center px-4 py-2.5 <?= str_contains($routeName, 'admin.outpass.pending') ? 'bg-blue-500/20 text-blue-800 hover:bg-blue-600/20 border-blue-800/80' : 'text-gray-600 hover:bg-gray-50 border-transparent'; ?> transition duration-200 rounded-md border-l-4">
                         <div class="flex items-center justify-between w-full">
                             <div class="flex items-center space-x-5">
                                 <i class="fas fa-clock"></i>
@@ -33,7 +33,7 @@ use App\Enum\UserRole; ?>
                 </li>
                 <li class="my-1">
                     <a href="<?= $this->urlFor('admin.outpass.records') ?>"
-                        class="flex items-center px-4 py-2.5 <?= ($routeName == 'admin.outpass.records') ? 'bg-blue-500/20 text-blue-800 hover:bg-blue-600/20 border-blue-800/80' : 'text-gray-600 hover:bg-gray-50 border-transparent'; ?> transition duration-200 rounded-md border-l-4">
+                        class="flex items-center px-4 py-2.5 <?= str_contains($routeName, 'admin.outpass.records') ? 'bg-blue-500/20 text-blue-800 hover:bg-blue-600/20 border-blue-800/80' : 'text-gray-600 hover:bg-gray-50 border-transparent'; ?> transition duration-200 rounded-md border-l-4">
                         <div class="flex items-center space-x-4">
                             <i class="fas fa-folder-open"></i>
                             <span>Records</span>
@@ -42,7 +42,7 @@ use App\Enum\UserRole; ?>
                 </li>
                 <li class="my-1">
                     <a href="<?= $this->urlFor('admin.manage.logbook') ?>"
-                        class="flex items-center px-4 py-2.5 <?= ($routeName == 'admin.manage.logbook') ? 'bg-blue-500/20 text-blue-800 hover:bg-blue-600/20 border-blue-800/80' : 'text-gray-600 hover:bg-gray-50 border-transparent'; ?> transition duration-200 rounded-md border-l-4">
+                        class="flex items-center px-4 py-2.5 <?= str_contains($routeName, 'admin.manage.logbook') ? 'bg-blue-500/20 text-blue-800 hover:bg-blue-600/20 border-blue-800/80' : 'text-gray-600 hover:bg-gray-50 border-transparent'; ?> transition duration-200 rounded-md border-l-4">
                         <div class="flex items-center space-x-5">
                             <i class="fas fa-book"></i>
                             <span>Logbook</span>
@@ -54,7 +54,7 @@ use App\Enum\UserRole; ?>
             <ul class="mt-2">
                 <li class="my-1">
                     <a href="<?= $this->urlFor('admin.manage.students') ?>"
-                        class="flex items-center px-4 py-2.5 <?= ($routeName == 'admin.manage.students') ? 'bg-blue-500/20 text-blue-800 hover:bg-blue-600/20 border-blue-800/80' : 'text-gray-600 hover:bg-gray-50 border-transparent'; ?> transition duration-200 rounded-md border-l-4">
+                        class="flex items-center px-4 py-2.5 <?= str_contains($routeName, 'admin.manage.students') ? 'bg-blue-500/20 text-blue-800 hover:bg-blue-600/20 border-blue-800/80' : 'text-gray-600 hover:bg-gray-50 border-transparent'; ?> transition duration-200 rounded-md border-l-4">
                         <i class="pr-4 fas fa-user-graduate"></i>
                         <span>Students</span>
                     </a>
@@ -62,7 +62,7 @@ use App\Enum\UserRole; ?>
                 <?php if (UserRole::isSuperAdmin($user->getRole()->value)): ?>
                     <li class="my-1">
                         <a href="<?= $this->urlFor('admin.manage.residence') ?>"
-                            class="flex items-center px-4 py-2.5 <?= ($routeName == 'admin.manage.residence') ? 'bg-blue-500/20 text-blue-800 hover:bg-blue-600/20 border-blue-800/80' : 'text-gray-600 hover:bg-gray-50 border-transparent'; ?> transition duration-200 rounded-md border-l-4">
+                            class="flex items-center px-4 py-2.5 <?= str_contains($routeName, 'admin.manage.residence') ? 'bg-blue-500/20 text-blue-800 hover:bg-blue-600/20 border-blue-800/80' : 'text-gray-600 hover:bg-gray-50 border-transparent'; ?> transition duration-200 rounded-md border-l-4">
                             <i class="pr-5 fas fa-building"></i>
                             <span>Residence</span>
                         </a>
@@ -70,7 +70,7 @@ use App\Enum\UserRole; ?>
 
                     <li class="my-1">
                         <a href="<?= $this->urlFor('admin.manage.academics') ?>"
-                            class="flex items-center px-4 py-2.5 <?= ($routeName == 'admin.manage.academics') ? 'bg-blue-500/20 text-blue-800 hover:bg-blue-600/20 border-blue-800/80' : 'text-gray-600 hover:bg-gray-50 border-transparent'; ?> transition duration-200 rounded-md border-l-4">
+                            class="flex items-center px-4 py-2.5 <?= str_contains($routeName, 'admin.manage.academics') ? 'bg-blue-500/20 text-blue-800 hover:bg-blue-600/20 border-blue-800/80' : 'text-gray-600 hover:bg-gray-50 border-transparent'; ?> transition duration-200 rounded-md border-l-4">
                             <i class="pr-4 fas fa-university"></i>
                             <span>Academics</span>
                         </a>
@@ -82,7 +82,7 @@ use App\Enum\UserRole; ?>
                 <?php if (UserRole::isSuperAdmin($user->getRole()->value)): ?>
                     <li class="my-1">
                         <a href="<?= $this->urlFor('admin.manage.verifiers') ?>"
-                            class="flex items-center px-4 py-2.5 <?= ($routeName == 'admin.manage.verifiers') ? 'bg-blue-500/20 text-blue-800 hover:bg-blue-600/20 border-blue-800/80' : 'text-gray-600 hover:bg-gray-50 border-transparent'; ?> transition duration-200 rounded-md border-l-4">
+                            class="flex items-center px-4 py-2.5 <?= str_contains($routeName, 'admin.manage.verifiers') ? 'bg-blue-500/20 text-blue-800 hover:bg-blue-600/20 border-blue-800/80' : 'text-gray-600 hover:bg-gray-50 border-transparent'; ?> transition duration-200 rounded-md border-l-4">
                             <i class="pr-4 fas fa-qrcode"></i>
                             <span>Verifier Panel</span>
                         </a>
@@ -90,7 +90,7 @@ use App\Enum\UserRole; ?>
                 <?php endif; ?>
                 <li class="my-1">
                     <a href="<?= $this->urlFor('admin.outpass.settings') ?>"
-                        class="flex items-center px-4 py-2.5 <?= ($routeName == 'admin.outpass.settings') ? 'bg-blue-500/20 text-blue-800 hover:bg-blue-600/20 border-blue-800/80' : 'text-gray-600 hover:bg-gray-50 border-transparent'; ?> transition duration-200 rounded-md border-l-4">
+                        class="flex items-center px-4 py-2.5 <?= str_contains($routeName, 'admin.outpass.settings') ? 'bg-blue-500/20 text-blue-800 hover:bg-blue-600/20 border-blue-800/80' : 'text-gray-600 hover:bg-gray-50 border-transparent'; ?> transition duration-200 rounded-md border-l-4">
                         <i class="pr-4 fas fa-shield"></i>
                         <span>Firewall Rules</span>
                     </a>
@@ -98,7 +98,7 @@ use App\Enum\UserRole; ?>
                 <?php if (UserRole::isSuperAdmin($user->getRole()->value)): ?>
                     <li class="my-1">
                         <a href="<?= $this->urlFor('admin.outpass.templates') ?>"
-                            class="flex items-center px-4 py-2.5 <?= ($routeName == 'admin.outpass.templates') ? 'bg-blue-500/20 text-blue-800 hover:bg-blue-600/20 border-blue-800/80' : 'text-gray-600 hover:bg-gray-50 border-transparent'; ?> transition duration-200 rounded-md border-l-4">
+                            class="flex items-center px-4 py-2.5 <?= str_contains($routeName, 'admin.outpass.templates') ? 'bg-blue-500/20 text-blue-800 hover:bg-blue-600/20 border-blue-800/80' : 'text-gray-600 hover:bg-gray-50 border-transparent'; ?> transition duration-200 rounded-md border-l-4">
                             <i class="pr-4 fas fa-layer-group"></i>
                             <span>Template Builder</span>
                         </a>

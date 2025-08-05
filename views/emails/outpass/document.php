@@ -103,8 +103,8 @@
     <div class="org-header">
         <img src="<?= $this->storage->getFullPath("qr_codes/{$outpass->getQrCode()}") ?>" alt="<?= $this->storage->getFullPath("qr_codes/{$outpass->getQrCode()}") ?>">
         <div class="text-container">
-            <h3 class="org-name"><?= $student->getInstitution()->getName() ?></h3>
-            <p class="address-line"><?= $student->getInstitution()->getAddress() ?></p>
+            <h3 class="org-name"><?= $student->getProgram()->getProvidedBy()->getName() ?></h3>
+            <p class="address-line"><?= $student->getProgram()->getProvidedBy()->getAddress() ?></p>
             <p class="form-title">Hostel - Permission Form</p>
         </div>
     </div>
@@ -115,7 +115,7 @@
         <div class="student-section">
             <p><strong>Exit Time:</strong> <?= $outpass->getFromDate()->format('d-m-Y') . ' ' . $outpass->getFromTime()->format('h:iA') ?></p>
             <p><strong>Name:</strong> <?= $student->getUser()->getName() ?></p>
-            <p><strong>Branch:</strong> <?= $student->getBranch() ?></p>
+            <p><strong>Branch:</strong> <?= $student->getProgram()->getCourseName() ?></p>
             <p><strong>Hostel:</strong> <?= $student->getHostel()->getName() ?></p>
             <p><strong>Reason:</strong> <?= $outpass->getReason() ?></p>
             <p><strong>Student No:</strong> <?= $student->getUser()->getContactNo() ?></p>

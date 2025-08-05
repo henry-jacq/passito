@@ -48,7 +48,7 @@
                             </td>
                             <td class="px-4 py-3 text-sm text-gray-700"><?= htmlspecialchars($log->getOutpass()->getStudent()->getUser()->getName()) ?></td>
                             <td class="px-4 py-3 text-sm text-gray-700"><?= htmlspecialchars($log->getOutpass()->getStudent()->getDigitalId()) ?></td>
-                            <td class="px-4 py-3 text-sm text-gray-700"><?= htmlspecialchars($log->getOutpass()->getStudent()->getCourse()) ?></td>
+                            <td class="px-4 py-3 text-sm text-gray-700"><?= htmlspecialchars($log->getOutpass()->getStudent()->getProgram()->getProgramName(). ' ' .$log->getOutpass()->getStudent()->getProgram()->getShortCode()) ?></td>
                             <td class="px-4 py-3 text-sm text-gray-700">
                                 <?php
                                 $status = ucfirst($log->getOutpass()->getStatus()->value);

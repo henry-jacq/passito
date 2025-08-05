@@ -83,7 +83,7 @@ use App\Enum\UserRole; ?>
                                 <td class="px-4 py-3 text-sm text-center"># <?= htmlspecialchars($outpass->getId()) ?></td>
                                 <td class="px-6 py-4 text-sm text-gray-900"><?= $outpass->getStudent()->getUser()->getName() ?></td>
                                 <td class="px-6 py-4 text-sm text-center text-gray-900"><?= formatStudentYear($outpass->getStudent()->getYear()) ?></td>
-                                <td class="px-6 py-4 text-sm text-gray-900"><?= $outpass->getStudent()->getCourse() . ' ' . $outpass->getStudent()->getBranch() ?></td>
+                                <td class="px-6 py-4 text-sm text-gray-900"><?= $outpass->getStudent()->getProgram()->getProgramName() . ' ' . $outpass->getStudent()->getProgram()->getShortCode() ?></td>
                                 <td class="px-6 py-4 text-sm text-gray-900"><?= ucwords($outpass->getTemplate()->getName()) ?></td>
                                 <td class="px-6 py-4 text-sm text-gray-900"><?= $outpass->getDestination() ?></td>
                                 <td class="px-6 py-4">

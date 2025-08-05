@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Core\View;
+use App\Core\Config;
 use App\Entity\OutpassTemplate;
 use App\Services\OutpassService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -12,9 +13,12 @@ class StudentController extends BaseController
 {
     public function __construct(
         protected readonly View $view,
+        protected readonly Config $config,
         private readonly OutpassService $outpassService
     )
-    {}
+    {
+        $this->view->addGlobals('brandLogo', $this->config->get('app.logo'));
+    }
     
     public function dashboard(Request $request, Response $response): Response
     {

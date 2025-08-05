@@ -28,10 +28,7 @@ use App\Enum\OutpassStatus;
         <div class="mb-8 rounded-lg ">
             <div class="flex flex-wrap items-center justify-between gap-4">
                 <div class="relative flex-grow">
-                    <input
-                        id="search-records"
-                        type="text"
-                        placeholder="Search records..."
+                    <input id="search-records" type="text" placeholder="Search records..."
                         class="w-full py-2 transition duration-200 border border-gray-300 rounded-md bg-gray-50 text-md ps-12 focus:outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600/50"
                         aria-label="Search by digital ID">
                     <span class="absolute text-gray-500 left-3 top-2">
@@ -74,7 +71,7 @@ use App\Enum\OutpassStatus;
                             <td class="px-6 py-4 text-sm text-gray-900"># <?= $outpass->getID() ?></td>
                             <td class="px-6 py-4 text-sm text-gray-900"><?= $outpass->getStudent()->getUser()->getName() ?></td>
                             <td class="px-6 py-4 text-sm text-gray-900"><?= formatStudentYear($outpass->getStudent()->getYear()) ?></td>
-                            <td class="px-6 py-4 text-sm text-gray-900"><?= $outpass->getStudent()->getCourse() . ' ' . $outpass->getStudent()->getBranch() ?></td>
+                            <td class="px-6 py-4 text-sm text-gray-900"><?= $outpass->getStudent()->getProgram()->getProgramName() . ' ' . $outpass->getStudent()->getProgram()->getShortCode() ?></td>
                             <td class="px-6 py-4 text-sm text-gray-900"><?= ucwords($outpass->getTemplate()->getName()) ?></td>
                             <td class="px-6 py-4 text-sm text-gray-900"><?= $outpass->getDestination() ?></td>
                             <td class="px-6 py-4 text-sm text-center text-gray-900">

@@ -33,11 +33,11 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Branch</label>
-                    <div class="mt-1 font-medium text-gray-800"><?= $userData->getBranch() ?></div>
+                    <div class="mt-1 font-medium text-gray-800"><?= $userData->getProgram()->getCourseName() ?></div>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Institution</label>
-                    <div class="mt-1 font-medium text-gray-800"><?= $userData->getInstitution()->getName() ?></div>
+                    <div class="mt-1 font-medium text-gray-800"><?= $userData->getProgram()->getProvidedBy()->getName() ?></div>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Hostel Number</label>

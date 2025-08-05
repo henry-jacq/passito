@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use Closure;
 use App\Core\View;
+use App\Entity\User;
 use App\Core\Session;
 use App\Core\Storage;
+use App\Utils\CsvProcessor;
 use App\Services\SMSService;
 use App\Services\AuthService;
 use App\Services\MailService;
@@ -16,7 +18,6 @@ use App\Services\OutpassService;
 use App\Services\FacilityService;
 use App\Services\VerifierService;
 use App\Services\ParentVerificationService;
-use App\Utils\CsvProcessor;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -331,6 +332,16 @@ class ApiController
     public function isAdmin(): bool
     {
         return $this->auth->isAdmin();
+    }
+
+    /**
+     * Get User from request
+     * 
+     * @return \App\Models\User|null
+     */
+    public function getUser(): ?User
+    {
+        return $this->getAttribute('user');
     }
 
     /**

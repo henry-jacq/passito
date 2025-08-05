@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Core\Session;
 use App\Enum\UserRole;
 use App\Entity\Student;
+use App\Entity\InstitutionProgram;
 use Doctrine\ORM\EntityManagerInterface;
 
 class UserService
@@ -35,7 +36,7 @@ class UserService
         $user = new User();
         $user->setName($data['name']);
         $user->setEmail($data['email']);
-        $user->setPassword(password_hash($data['contact'], PASSWORD_DEFAULT, ['cost' => 12]));
+        $user->setPassword(password_hash($data['contact'], PASSWORD_DEFAULT, ['cost' => 10]));
         $user->setContactNo($data['contact']);
         $user->setGender($data['gender']);
         $user->setRole($data['role'] ?? UserRole::USER);
@@ -73,20 +74,19 @@ class UserService
 
     public function createStudent(array $data, User $user): Student|bool
     {
-        // Restrict if user with email not found
-        if (!$this->getUserByEmail($data['email']) === null) {
-            return false;
-        }
-
+        $hostel = $data['hostel'];
+        $program = $data['program'];
         $givenYear = (int) $data['year'];
-        $program = $this->facility->getProgramById($data['program']);
 
+        if (!$data['program'] instanceof InstitutionProgram) {
+            return false;
+        }
+        
         // Check the given year is valid
-        if (0 < $givenYear && $givenYear >= $program->getDuration()) {
+        if ($givenYear < 1 || $givenYear > $program->getDuration()) {
             return false;
         }
 
-        $hostel = $this->facility->getHostelById($data['hostel_no']);
 
         $student = new Student();
         $student->setUser($user);

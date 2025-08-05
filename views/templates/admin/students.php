@@ -1,3 +1,9 @@
+<?php
+$flashKey = $this->session->getCurrentFlashKey() ?? null;
+$successMessage = $this->session->getFlash('success')[$flashKey] ?? null;
+$errorMessage = $this->session->getFlash('error')[$flashKey] ?? null;
+?>
+
 <main class="flex-1 p-6 mt-20 overflow-y-auto">
     <h2 class="mb-4 text-2xl font-semibold text-gray-800">Manage Students</h2>
     <p class="mb-8 text-gray-600 text-md">
@@ -70,6 +76,18 @@
         <input id="import-file" type="file" class="hidden w-full p-2 mt-3 text-sm border border-gray-300 rounded-md" accept=".csv">
         <div id="import-feedback" class="hidden mt-2 text-sm text-blue-700">Import in progress...</div>
     </div>
+
+    <?php if ($successMessage): ?>
+        <div class="p-4 mb-3 text-green-800 bg-green-100 rounded-lg" role="alert">
+            <span class="font-semibold text-[15px] inline-block mr-4"><?= nl2br($successMessage) ?></span>
+        </div>
+    <?php endif; ?>
+
+    <?php if ($errorMessage): ?>
+        <div class="p-4 mb-3 text-red-800 bg-red-100 rounded-lg" role="alert">
+            <span class="font-semibold text-[15px] inline-block mr-4"><?= nl2br($errorMessage) ?></span>
+        </div>
+    <?php endif; ?>
 
     <?php if (!empty($students)): ?>
         <section class="overflow-hidden bg-white rounded-lg shadow-md">

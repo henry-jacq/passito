@@ -80,6 +80,13 @@ class FacilityService
         return $this->em->getRepository(Hostel::class)->find($id);
     }
 
+    public function getHostelByName(string $name)
+    {
+        return $this->em->getRepository(Hostel::class)->findOneBy([
+            'hostelName' => $name
+        ]);
+    }
+
     public function createHostel(array $data): Hostel|bool
     {
         $warden = $this->em->getRepository(User::class)->find($data['warden_id']);
@@ -132,6 +139,11 @@ class FacilityService
     public function getProgramById(int $id): ?InstitutionProgram
     {
         return $this->em->getRepository(InstitutionProgram::class)->find($id);
+    }
+
+    public function getProgramByShortCode(string $shortCode): ?InstitutionProgram
+    {
+        return $this->em->getRepository(InstitutionProgram::class)->findOneBy(['shortCode' => $shortCode]);
     }
     
     public function getProgramsByInstitution(Institution $institution)

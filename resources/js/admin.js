@@ -435,20 +435,8 @@ document.addEventListener('DOMContentLoaded', () => {
     importStudentsButton.addEventListener('click', async (event) => {
         event.stopPropagation();
 
-        const fetchInstitutions = await Ajax.post('/api/web/admin/institutions/fetch');
-
-        if (!fetchInstitutions.ok) {
-            const toast = new Toast();
-            toast.create({ message: fetchInstitutions.message || 'Failed to fetch institutions.', position: "bottom-right", type: "warning", duration: 4000 });
-            return;
-        }
-
         try {
-            const institutions = fetchInstitutions.data.data.institutions;
-            
-            const response = await Ajax.post('/api/web/admin/modal', {
-                template: "import_students", institutions
-            });
+            const response = await Ajax.post('/api/web/admin/modal?template=import_students');
 
             if (response.ok && response.data) {
                 Modal.open({
@@ -457,14 +445,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         {
                             label: 'Perform',
                             class: `inline-flex justify-center rounded-lg bg-gray-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-gray-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-50`,
-                            onClick: async () => {
+                            onClick: async (event) => {
                                 try {
-                                    // Collect form data
-                                    const hostelNo = document.getElementById('hostel-no').value;
-                                    const year = document.getElementById('year').value;
-                                    const institution = document.getElementById('institution').value;
                                     const fileInput = document.getElementById('file');
                                     const file = fileInput.files[0];
+
+                                    const button = event.target;
+                                    const originalHtml = button.innerHTML;
+
+                                    button.disabled = true;
+                                    button.innerHTML = `<span class="flex items-center"><i class="fa-solid fa-spinner fa-spin w-4 h-4 mr-1"></i>Performing</span>`;
 
                                     // Ensure file is selected
                                     if (!file) {
@@ -474,9 +464,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
                                     // Prepare the form data for submission
                                     const formData = new FormData();
-                                    formData.append('hostel_no', hostelNo);
-                                    formData.append('year', year);
-                                    formData.append('institution', institution);
                                     formData.append('file', file);
 
                                     // Make an Ajax request to upload the data
@@ -500,6 +487,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                     console.error(error);
                                     alert('An error occurred while processing the request.');
                                 } finally {
+                                    event.target.innerHTML = originalHtml;
+                                    event.target.disabled = false;
                                     Modal.close();
                                 }
                             },

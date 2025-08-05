@@ -64,7 +64,7 @@ class ApiController
     )
     {
     }
-    
+
     /**
      * Process API request
      */
@@ -77,18 +77,18 @@ class ApiController
         $this->attributes = $request->getAttributes();
         $this->headers = $request->getHeaders();
 
-        $get = $this->cleanInputs($request->getQueryParams());
+        $get = $this->cleanInputs($request->getQueryParams(), true);
         $post = $this->cleanInputs($request->getParsedBody() ?? []);
         $this->data = array_merge($get, $post);
 
         // $this->negotiateHeaders($request->getHeaders());
         // $this->negotiateContentType($request->getHeader('Accept'));
-        
+
         $resource = trim($request->getAttribute('resource'));
         $namespace = trim($request->getAttribute('namespace'));
         $this->namespace = strtolower($namespace);
         $this->resource = strtolower(basename($resource, '.php'));
-        
+
         return $this->handle();
     }
 
@@ -169,21 +169,23 @@ class ApiController
     /**
      * Clean request inputs
      */
-    private function cleanInputs($data)
+    private function cleanInputs($data, $isQuery = false)
     {
-        $clean_input = array();
+        $clean_input = [];
+
         if (is_array($data)) {
             foreach ($data as $k => $v) {
-                $clean_input[$k] = $this->cleanInputs($v);
+                $clean_input[$k] = $this->cleanInputs($v, $isQuery);
             }
         } else {
             if (!is_null($data)) {
-                $data = strip_tags((string) $data); // Cast to string, safely removes null
-                $clean_input = trim($data);
+                $data = (string) $data;
+                $clean_input = $isQuery ? trim($data) : trim(strip_tags($data));
             } else {
-                $clean_input = ''; // or null, based on how you want to handle empty inputs
+                $clean_input = '';
             }
         }
+
         return $clean_input;
     }
 
@@ -338,15 +340,16 @@ class ApiController
     {
         return $this->session->get('user');
     }
-    
+
     /**
      * Return JSON Response
      */
     public function response(
-        array $payload = [], int $statusCode = 200, 
-        $contentType = self::CONTENT_TYPE, array $headers = []
-    )
-    {
+        array $payload = [],
+        int $statusCode = 200,
+        $contentType = self::CONTENT_TYPE,
+        array $headers = []
+    ) {
         $this->slimResponse->getBody()->write(
             $this->packData($payload, $contentType)
         );
@@ -356,7 +359,7 @@ class ApiController
                 $this->slimResponse = $this->slimResponse->withHeader($header, $value);
             }
         }
-        
+
         return $this->slimResponse
             ->withHeader('Content-Type', $contentType)
             ->withStatus($statusCode);

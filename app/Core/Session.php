@@ -8,8 +8,8 @@ use RuntimeException;
 
 class Session
 {
-    public array $options;
-    
+    private array $options;
+
     public function __construct(private readonly Config $config)
     {
         $this->options = $this->config->get('session');
@@ -22,16 +22,14 @@ class Session
         }
 
         if (headers_sent($fileName, $line)) {
-            throw new RuntimeException('Headers have already sent by ' . $fileName . ':' . $line);
+            throw new RuntimeException("Headers already sent by $fileName:$line");
         }
 
-        session_set_cookie_params(
-            [
-                'secure'   => $this->options['secure'],
-                'httponly' => $this->options['httponly'],
-                'samesite' => $this->options['samesite'],
-            ]
-        );
+        session_set_cookie_params([
+            'secure'   => $this->options['secure'],
+            'httponly' => $this->options['httponly'],
+            'samesite' => $this->options['samesite'],
+        ]);
 
         if (!empty($this->options['name'])) {
             session_name($this->options['name']);
@@ -102,5 +100,22 @@ class Session
         unset($_SESSION[$this->options['flash_name']][$key]);
 
         return $messages;
+    }
+
+    public function clearFlash(): void
+    {
+        unset($_SESSION[$this->options['flash_name']]);
+    }
+
+    public function setCurrentFlashKey(string $key): void
+    {
+        $_SESSION[$this->options['flash_name']]['current'] = $key;
+    }
+
+    public function getCurrentFlashKey(): ?string
+    {
+        $current = $_SESSION[$this->options['flash_name']]['current'] ?? null;
+        unset($_SESSION[$this->options['flash_name']]['current']);
+        return $current;
     }
 }

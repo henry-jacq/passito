@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Core\View;
 use App\Core\Config;
+use App\Services\AdminService;
 use App\Services\OutpassService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -13,7 +14,8 @@ class StudentController extends BaseController
     public function __construct(
         protected readonly View $view,
         protected readonly Config $config,
-        private readonly OutpassService $outpassService
+        private readonly AdminService $adminService,
+        private readonly OutpassService $outpassService,
     )
     {
         $this->view->addGlobals('brandLogo', $this->config->get('app.logo'));
@@ -37,6 +39,7 @@ class StudentController extends BaseController
         $this->view->clearCacheIfDev();
         $userData = $request->getAttribute('student');
         $passType = $request->getQueryParams()['type'] ?? null;
+        $lockStatus = $this->adminService->isRequestLock($userData->getUser()->getGender()->value);
 
         // It may return one template or all templates as array based on the $passType
         $templates = $this->outpassService->getTemplates($userData->getUser(), $passType);
@@ -46,6 +49,7 @@ class StudentController extends BaseController
             'passType' => $passType,
             'routeName' => $this->getRouteName($request),
             'templates' => $templates,
+            'lockStatus' => $lockStatus,
         ];
         return parent::render($request, $response, 'user/request_outpass', $args);
     }

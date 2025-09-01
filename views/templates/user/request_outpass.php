@@ -11,8 +11,37 @@
             </div>
         </header>
 
-        <section class="p-8 bg-white rounded-lg shadow">
-            <?php if (is_array($templates) && count($templates) > 0): ?>
+        <section class="p-6 bg-white rounded-lg shadow">
+            <?php if ($lockStatus): ?>
+                <!-- Simple Elegant Locked Status UI -->
+                <div class="flex flex-col items-center justify-center py-16 space-y-8">
+                    <!-- Minimalist Lock Icon -->
+                    <div class="relative">
+                        <div class="flex items-center justify-center w-20 h-20 bg-white border-4 rounded-full shadow-sm border-amber-200">
+                            <i class="text-3xl text-amber-500 fas fa-lock"></i>
+                        </div>
+                        <div class="absolute rounded-full -inset-2 bg-amber-100 -z-10 opacity-20"></div>
+                    </div>
+
+                    <!-- Clean Message -->
+                    <div class="max-w-md space-y-3 text-center">
+                        <h2 class="text-xl font-medium text-gray-900">Requests Temporarily Disabled</h2>
+                        <p class="leading-relaxed text-gray-600">
+                            New outpass submissions are currently unavailable. Please check back later or contact administration if urgent.
+                        </p>
+                    </div>
+
+                    <!-- Single Action Button -->
+                    <div class="pt-4">
+                        <a href="<?= $this->urlFor('student.outpass.history') ?>"
+                            class="inline-flex items-center px-5 py-2.5 text-sm font-medium text-white bg-blue-800 rounded-lg hover:bg-blue-900 transition-colors focus:outline-none focus:ring-4 focus:ring-blue-100">
+                            <i class="mr-2 text-sm fas fa-history"></i>
+                            View Previous Requests
+                        </a>
+                    </div>
+                </div>
+            <?php elseif (is_array($templates) && count($templates) > 0): ?>
+                <!-- Rest of the existing template selection code remains unchanged -->
                 <div class="mb-4 space-x-1 text-sm text-gray-500">
                     <i class="fas fa-info-circle"></i>
                     <span>Select an outpass type to proceed.</span>
@@ -56,6 +85,7 @@
                     });
                 </script>
             <?php elseif (!empty($templates)): ?>
+                <!-- Form display code remains unchanged -->
                 <div class="flex flex-col mb-4 md:flex-row md:items-center md:justify-between">
                     <div class="text-lg">
                         <h2 class="text-lg font-bold text-gray-800"><?= $templates->getName() ?></h2>
@@ -69,6 +99,7 @@
                 </div>
                 <hr class="mt-2 mb-6 border-gray-300">
             <?php else: ?>
+                <!-- Invalid type display code remains unchanged -->
                 <div class="flex items-center justify-center w-full h-64 bg-gray-100 rounded-lg">
                     <p class="text-gray-500 text-md">
                         Invalid Outpass Type selected.

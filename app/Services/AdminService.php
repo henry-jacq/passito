@@ -84,7 +84,7 @@ class AdminService
      *
      * @return bool
      */
-    public function isRequestLock(?Settings $settings = null, string $userGender): bool
+    public function isRequestLock(string $userGender, ?Settings $settings = null): bool
     {
         if ($settings === null) {
             $settings = $this->em->getRepository(Settings::class)->findOneBy([

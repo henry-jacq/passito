@@ -16,7 +16,16 @@ ${basename(__FILE__, '.php')} = function () {
         $fromTime = new DateTime($this->data['from_time']);
         $toTime = new DateTime($this->data['to_time']);
         $destination = $this->data['destination_text'];
-        
+
+        // If requests are disabled, return an error
+        if ($this->adminService->isRequestLock($user->getGender()->value)) {
+            return $this->response([
+                'message' => 'Outpass requests are disabled.',
+                'type' => 'error',
+                'status' => false
+            ], 403);
+        }
+
         // Check if the dates and times are valid
         if ($fromDate > $toDate) {
             return $this->response([

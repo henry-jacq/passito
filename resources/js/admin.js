@@ -513,3 +513,212 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+    const performBulkApproval = document.getElementById('bulkApproval');
+    performBulkApproval.addEventListener('click', async (event) => {
+        try {
+            const response = await Ajax.post('/api/web/admin/modal?template=action_bulk');
+
+            if (response.ok && response.data) {
+                Modal.open({
+                    content: response.data,
+                    actions: [
+                        {
+                            label: 'Approve Requests',
+                            class: `inline-flex justify-center rounded-lg bg-blue-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-blue-500 transition duration-200`,
+                            onClick: async (btn) => {
+                                // Disable button and change text
+                                btn.disabled = true;
+                                btn.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i> Performing...`;
+
+                                // Close modal before initiating request
+                                Modal.close();
+
+                                try {
+                                    const response = await Ajax.post(`/api/web/admin/actions/bulk`, {});
+
+                                    if (response.ok) {
+                                        const data = response.data;
+                                        if (data.status) {
+                                            const toast = new Toast();
+                                            toast.create({ message: data.message, position: "bottom-right", type: "success", duration: 4000 });
+                                            return;
+                                        } else {
+                                            alert(data.message);
+                                        }
+                                    } else {
+                                        handleError(response.status);
+                                    }
+                                } catch (error) {
+                                    console.error(error);
+                                } finally {
+                                    // Re-enable the button if needed (in case of error)
+                                    btn.disabled = false;
+                                    btn.innerHTML = 'Approve Requests';
+                                }
+                            },
+                        },
+                        {
+                            label: 'Cancel',
+                            class: `inline-flex justify-center rounded-lg bg-gray-100 px-6 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200`,
+                            onClick: Modal.close,
+                        },
+                    ],
+                    size: 'sm:max-w-xl',
+                    classes: 'custom-modal-class',
+                    closeOnBackdropClick: false,
+                });
+            } else {
+                console.error('Error loading modal template:', response.data.message || 'Unknown error');
+                alert(response.data.message || 'Failed to load modal template');
+            }
+        } catch (error) {
+            console.error('Failed to load modal content:', error);
+            alert('Failed to load modal content. Please try again later.');
+        }
+    });
+
+    // Notify students
+    const performNotifyStudents = document.getElementById('notifyStudents');
+    performNotifyStudents.addEventListener('click', async (event) => {
+        try {
+            const response = await Ajax.post('/api/web/admin/modal?template=action_notify');
+
+            if (response.ok && response.data) {
+                Modal.open({
+                    content: response.data,
+                    actions: [
+                        {
+                            label: 'Notify Students',
+                            class: `inline-flex justify-center rounded-lg bg-blue-600 px-5 py-2 text-sm font-medium text-white shadow-md hover:bg-blue-500 transition duration-200`,
+                            onClick: async () => {
+                                try {
+                                    const response = await Ajax.post(`/api/web/admin/actions/notify`, {});
+
+                                    if (response.ok) {
+                                        const data = response.data;
+                                        if (data.status) {
+                                            alert("Notification sent successfully!");
+                                            // location.reload();
+                                        } else {
+                                            alert(data.message);
+                                        }
+                                    } else {
+                                        handleError(response.status);
+                                    }
+                                } catch (error) {
+                                    console.error(error);
+                                } finally {
+                                    Modal.close();
+                                }
+                            },
+                        },
+                        {
+                            label: `Cancel`,
+                            class: `inline-flex items-center justify-center rounded-lg bg-gray-100 px-5 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200`,
+                            onClick: Modal.close,
+                        },
+                    ],
+                    size: 'sm:max-w-xl',
+                    classes: 'custom-modal-class',
+                    closeOnBackdropClick: false,
+                });
+            } else {
+                console.error('Error loading modal template:', response.data.message || 'Unknown error');
+                alert(response.data.message || 'Failed to load modal template');
+            }
+        } catch (error) {
+            console.error('Failed to load modal content:', error);
+            alert('Failed to load modal content. Please try again later.');
+        }
+    });
+
+    // Unlock Requests
+    const unlockBtn = document.getElementById('unlockRequests');
+
+    if (unlockBtn) {
+        unlockBtn.addEventListener('click', async () => {
+            try {
+                const response = await Ajax.post(`/api/web/admin/actions/lock`, {
+                    'status': 'unlock'
+                });
+
+                if (response.ok) {
+                    const data = response.data;
+                    // alert(data.message);
+
+                    if (data.status) {
+                        // Optionally refresh UI state
+                        location.reload();
+                    }
+                } else {
+                    handleError(response.status);
+                }
+            } catch (error) {
+                console.error("Unlock request failed:", error);
+                alert("Something went wrong. Please try again.");
+            }
+        });
+    }
+    
+    // Lock Requests
+    const performLockRequests = document.getElementById('lockRequests');
+    performLockRequests.addEventListener('click', async (event) => {
+        try {
+            const response = await Ajax.post('/api/web/admin/modal?template=action_lock');
+
+            if (response.ok && response.data) {
+                Modal.open({
+                    content: response.data,
+                    actions: [
+                        {
+                            label: 'Lock Requests',
+                            class: `inline-flex justify-center rounded-lg bg-blue-600 px-5 py-2 text-sm font-medium text-white shadow-md hover:bg-blue-500 transition duration-200`,
+                            onClick: async () => {
+                                try {
+                                    const response = await Ajax.post(`/api/web/admin/actions/lock`, {
+                                        'status': 'lock'
+                                    });
+
+                                    if (response.ok) {
+                                        const data = response.data;
+                                        if (data.status) {
+                                            // alert(data.message);
+                                            Modal.close();
+                                            setTimeout(() => {
+                                                location.reload();
+                                            }, 100);
+                                        } else {
+                                            alert(data.message);
+                                        }
+                                    } else {
+                                        handleError(response.status);
+                                    }
+                                } catch (error) {
+                                    console.error(error);
+                                } finally {
+                                    Modal.close();
+                                }
+                            },
+                        },
+                        {
+                            label: `Cancel`,
+                            class: `inline-flex items-center justify-center rounded-lg bg-gray-100 px-5 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200`,
+                            onClick: Modal.close,
+                        },
+                    ],
+                    size: 'sm:max-w-xl',
+                    classes: 'custom-modal-class',
+                    closeOnBackdropClick: false,
+                });
+            } else {
+                console.error('Error loading modal template:', response.data.message || 'Unknown error');
+                alert(response.data.message || 'Failed to load modal template');
+            }
+        } catch (error) {
+            console.error('Failed to load modal content:', error);
+            alert('Failed to load modal content. Please try again later.');
+        }
+    });
+});

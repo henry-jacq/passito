@@ -15,11 +15,11 @@ class AppSettingsSeeder
     public function run()
     {
         $settings = [
-            ['keyName' => 'setup_complete', 'value' => 'true'],
-            ['keyName' => 'maintenance_mode', 'value' => 'false'],
-            ['keyName' => 'admin_created', 'value' => 'false'],
             ['keyName' => 'app_name', 'value' => 'Passito'],
-            ['keyName' => 'email_settings', 'value' => '{}'],
+            ['keyName' => 'setup_complete', 'value' => 'true'],
+            ['keyName' => 'admin_created', 'value' => 'false'],
+            ['keyName' => 'lock_requests', 'value' => 'false'],
+            ['keyName' => 'maintenance_mode', 'value' => 'false'],
             ['keyName' => 'max_outpasses_per_day', 'value' => '2'],
         ];
 

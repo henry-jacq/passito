@@ -49,9 +49,7 @@ class AuthService
      */
     public function logout()
     {
-        $this->session->forget('user');
-        $this->session->forget('role');
-        $this->session->forget('userData');
+        $this->session->destroy();
         $this->session->regenerate();
     }
     

@@ -9,6 +9,7 @@ use App\Core\Session;
 use App\Core\Storage;
 use App\Entity\Hostel;
 use App\Entity\Student;
+use App\Entity\Settings;
 use App\Enum\OutpassStatus;
 use App\Utils\CsvProcessor;
 use App\Services\UserService;
@@ -37,13 +38,61 @@ class AdminService
     {
         $counts = $this->outpass->getOutpassStats($adminUser);
         $checkedOut = $this->verifierService->fetchCheckedOutLogs($adminUser);
-        
+        $lockStatus = $this->em->getRepository(Settings::class)->findOneBy([
+            'keyName' => 'lock_requests'
+        ]);
+
         return [
             'pending' => $counts['pending'] ?? 0,
             'approved' => $counts['approved'] ?? 0,
             'rejected' => $counts['rejected'] ?? 0,
             'checkedOut' => count($checkedOut),
+            'lockRequests' => $lockStatus ? filter_var($lockStatus->getValue(), FILTER_VALIDATE_BOOLEAN) : false,
         ];
+    }
+
+    /**
+     * Set Outpass Request Lock for Students
+     *
+     * @return boolean
+     */
+    public function setLockRequests(string $lockStatus): bool
+    {
+        $settings = $this->em->getRepository(Settings::class)->findOneBy([
+            'keyName' => 'lock_requests'
+        ]);
+
+        if (!$settings) {
+            // Initialize if not present
+            $settings = new Settings();
+            $settings->setKeyName('lock_requests');
+            $settings->setValue('false');
+            $this->em->persist($settings);
+        }
+
+        $newValue = strtolower($lockStatus) === 'true' ? 'true' : 'false';
+        $settings->setValue($newValue);
+
+        $this->em->persist($settings);
+        $this->em->flush();
+
+        return $newValue === 'true';
+    }
+
+    /**
+     * Check if requests are currently locked
+     *
+     * @return bool
+     */
+    public function isRequestLock(?Settings $settings = null): bool
+    {
+        if ($settings === null) {
+            $settings = $this->em->getRepository(Settings::class)->findOneBy([
+                'keyName' => 'lock_requests'
+            ]);
+        }
+
+        return $settings && $settings->getValue() === 'true';
     }
 
     public function approveAllPending(User $approvedBy)

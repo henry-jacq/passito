@@ -37,35 +37,16 @@ class StudentMiddleware implements MiddlewareInterface
                     ->createResponse(302)
                     ->withHeader('Location', $this->view->urlFor('auth.login'));
             }
-        } else { 
-            // User is authenticated
-            // Get the student entity
+        } else {
+            // Get the student entity, If User is authenticated
             $student = $this->em->getRepository(Student::class)->findOneBy(
                 ['user' => $this->session->get('user')]
             );
 
             if(is_null($student)) {
-                // Student not found, destroy the session and redirect to login
-                $this->session->destroy();
                 return $this->responseFactory
                     ->createResponse(302)
                     ->withHeader('Location', $this->view->urlFor('auth.login'));              
-            }
-
-            $userRole = $student->getUser()->getRole()->value;
-
-            // Prevent unauthorized users from accessing student routes
-            if (!UserRole::isStudent($userRole)) {
-                return $this->responseFactory
-                    ->createResponse(302)
-                    ->withHeader('Location', $this->view->urlFor('auth.login'));
-            }
-
-            // Prevent administrators from accessing student routes
-            if (UserRole::isAdministrator($userRole) === true) {
-                return $this->responseFactory
-                    ->createResponse(302)
-                    ->withHeader('Location', $this->view->urlFor('auth.login'));
             }
 
             // Set the user data and role in the request

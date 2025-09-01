@@ -48,17 +48,8 @@ class AdminMiddleware implements MiddlewareInterface
                     ->withHeader('Location', $this->view->urlFor('auth.login'));
             }
 
-            $userRole = $user->getRole()->value;
-
             // Prevent unauthorized users from accessing admin routes
-            if (UserRole::isStudent($userRole)) {
-                return $this->responseFactory
-                    ->createResponse(302)
-                    ->withHeader('Location', $this->view->urlFor('auth.login'));
-            }
-                        
-            // Prevent students from accessing admin routes
-            if (UserRole::isAdministrator($userRole) === false) {
+            if (UserRole::isStudent($user->getRole()->value)) {
                 return $this->responseFactory
                     ->createResponse(302)
                     ->withHeader('Location', $this->view->urlFor('auth.login'));

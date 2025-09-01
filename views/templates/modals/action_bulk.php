@@ -1,6 +1,6 @@
 <div class="space-y-4">
     <h3 class="pb-3 text-xl font-bold text-gray-800 border-b border-gray-200">
-        <i class="mr-2 text-green-500 fas fa-check-circle"></i> Bulk Approval
+        <i class="mr-2 fas fa-check-circle"></i> Bulk Approval
     </h3>
     <div class="space-y-4">
         <p class="text-gray-700">

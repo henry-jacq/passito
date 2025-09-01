@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Core\View;
 use App\Core\Config;
-use App\Entity\OutpassTemplate;
 use App\Services\OutpassService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;

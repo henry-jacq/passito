@@ -5,7 +5,7 @@ use App\Enum\UserRole;
 ${basename(__FILE__, '.php')} = function () {
     if ($this->isAuthenticated()) {
 
-        if (!UserRole::isSuperAdmin($this->getRole())) {
+        if (!UserRole::isAdministrator($this->getRole())) {
             return $this->response([
                 'message' => 'Unauthorized',
                 'status' => false

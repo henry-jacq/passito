@@ -39,7 +39,7 @@ class AdminService
         $counts = $this->outpass->getOutpassStats($adminUser);
         $checkedOut = $this->verifierService->fetchCheckedOutLogs($adminUser);
         $lockStatus = $this->em->getRepository(Settings::class)->findOneBy([
-            'keyName' => 'lock_requests'
+            'keyName' => 'lock_requests_' . strtolower($adminUser->getGender()->value)
         ]);
 
         return [
@@ -56,16 +56,16 @@ class AdminService
      *
      * @return boolean
      */
-    public function setLockRequests(string $lockStatus): bool
+    public function setLockRequests(string $lockStatus, string $userGender): bool
     {
         $settings = $this->em->getRepository(Settings::class)->findOneBy([
-            'keyName' => 'lock_requests'
+            'keyName' => 'lock_requests_' . strtolower($userGender)
         ]);
 
         if (!$settings) {
             // Initialize if not present
             $settings = new Settings();
-            $settings->setKeyName('lock_requests');
+            $settings->setKeyName('lock_requests_' . strtolower($userGender));
             $settings->setValue('false');
             $this->em->persist($settings);
         }
@@ -84,11 +84,11 @@ class AdminService
      *
      * @return bool
      */
-    public function isRequestLock(?Settings $settings = null): bool
+    public function isRequestLock(?Settings $settings = null, string $userGender): bool
     {
         if ($settings === null) {
             $settings = $this->em->getRepository(Settings::class)->findOneBy([
-                'keyName' => 'lock_requests'
+                'keyName' => 'lock_requests_' . strtolower($userGender)
             ]);
         }
 

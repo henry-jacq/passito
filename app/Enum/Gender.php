@@ -16,7 +16,7 @@ enum Gender: string {
 
     public static function values(): array
     {
-        return [self::MALE, self::FEMALE];
+        return [self::MALE->value, self::FEMALE->value];
     }
 
     public static function isValid(string $gender): bool

@@ -18,9 +18,10 @@ class AppSettingsSeeder
             ['keyName' => 'app_name', 'value' => 'Passito'],
             ['keyName' => 'setup_complete', 'value' => 'true'],
             ['keyName' => 'admin_created', 'value' => 'false'],
-            ['keyName' => 'lock_requests', 'value' => 'false'],
             ['keyName' => 'maintenance_mode', 'value' => 'false'],
             ['keyName' => 'max_outpasses_per_day', 'value' => '2'],
+            ['keyName' => 'lock_requests_male', 'value' => 'false'],
+            ['keyName' => 'lock_requests_female', 'value' => 'false'],
         ];
 
         foreach ($settings as $setting) {

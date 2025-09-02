@@ -99,7 +99,7 @@ use App\Enum\OutpassStatus;
             </div>
         </div>
 
-        <?php if (count($outpass->getAttachments()) > 0): ?>
+        <?php if (!empty($outpass->getAttachments()) && count($outpass->getAttachments()) > 0): ?>
             <h2 class="pb-2 mt-6 mb-4 text-lg font-semibold text-gray-700 border-b">Attachments</h2>
             <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <ul class="space-y-4 list-disc list-inside">

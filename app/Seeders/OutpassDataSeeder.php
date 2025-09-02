@@ -4,9 +4,9 @@ namespace App\Seeders;
 
 use DateTime;
 use App\Entity\OutpassRequest;
+use App\Entity\OutpassTemplate;
 use App\Entity\Student;
 use App\Enum\OutpassStatus;
-use App\Enum\OutpassType;
 use Doctrine\ORM\EntityManagerInterface;
 
 class OutpassDataSeeder
@@ -25,7 +25,9 @@ class OutpassDataSeeder
             'Tiruvannamalai', 'Madurai', 'Coimbatore', 'Trichy', 'Salem'
         ];
 
-        $passTypes = ['outing', 'home'];
+        $passType = $this->em->getRepository(OutpassTemplate::class)->findOneBy([
+            'name' => 'Home Pass'
+        ]);
 
         for ($i = 1; $i <= 20; $i++) {
             $fromDate = new DateTime();
@@ -41,15 +43,9 @@ class OutpassDataSeeder
             $outpass->setToDate($toDate);
             $outpass->setFromTime($fromTime);
             $outpass->setToTime($toTime);
-            $passTypeSelected = $passTypes[array_rand($passTypes)];
-            $outpass->setPassType(OutpassType::from($passTypeSelected));
+            $outpass->setTemplate($passType);
             $outpass->setDestination($destinations[array_rand($destinations)]);
-
-            if ($passTypeSelected != OutpassType::HOME->value) {
-                $outpass->setPurpose('Personal visit');
-            } else {
-                $outpass->setPurpose(ucfirst(OutpassType::HOME->value));
-            }
+            $outpass->setReason('Personal visit');
             $outpass->setStatus(OutpassStatus::PENDING);
             $outpass->setCreatedAt(new DateTime());
 

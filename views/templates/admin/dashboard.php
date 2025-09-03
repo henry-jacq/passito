@@ -70,7 +70,7 @@
     <!-- Quick Actions -->
     <section class="mt-6">
         <h3 class="mb-3 text-xl font-semibold text-gray-700">Quick Actions</h3>
-        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-1 lg:grid-cols-3">
             <div class="p-4 transition duration-200 bg-white rounded-lg shadow hover:shadow-lg">
                 <h4 class="font-semibold">Bulk Approval</h4>
                 <p class="mb-3 text-sm">Quickly approve all pending requests.</p>
@@ -91,14 +91,6 @@
                 <h4 class="font-semibold">Lock Requests</h4>
                 <p class="mb-3 text-sm">Block new requests until unlocked.</p>
                 <button id="lockRequests" class="flex items-center px-2 py-1 text-sm text-white transition duration-200 bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed" aria-expanded="false">
-                    <i class="mr-2 fas fa-play"></i>
-                    <span>Perform</span>
-                </button>
-            </div>
-            <div class="p-4 transition duration-200 bg-white rounded-lg shadow hover:shadow-lg">
-                <h4 class="font-semibold">Sync Verifiers</h4>
-                <p class="mb-3 text-sm">Refresh verifier devices' data.</p>
-                <button id="syncVerifiers" class="flex items-center px-2 py-1 text-sm text-white transition duration-200 bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed" aria-expanded="false">
                     <i class="mr-2 fas fa-play"></i>
                     <span>Perform</span>
                 </button>

@@ -27,7 +27,7 @@
                 <label for="email_address" class="block mb-1 text-sm font-medium text-gray-600">Email</label>
                 <div class="relative">
                     <input type="email" id="email_address" name="email_address" required
-                        class="w-full px-4 py-3 text-base transition-all duration-300 ease-in-out border border-gray-200 rounded-lg pl-11 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:ring-offset-1 focus:border-blue-500 focus:bg-white"
+                        class="w-full px-4 py-3 text-base transition border border-gray-200 rounded-lg pl-11 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:ring-offset-1 focus:border-blue-500 focus:bg-white"
                         placeholder="Enter your email" autocomplete="email">
                     <div class="absolute inset-y-0 left-0 flex items-center pl-3">
                         <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -41,7 +41,7 @@
                 <label for="password" class="block mb-1 text-sm font-medium text-gray-600">Password</label>
                 <div class="relative">
                     <input type="password" id="password" name="password" required
-                        class="w-full px-4 py-3 text-base transition-all duration-300 ease-in-out border border-gray-200 rounded-lg pl-11 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:ring-offset-1 focus:border-blue-500 focus:bg-white"
+                        class="w-full px-4 py-3 text-base transition border border-gray-200 rounded-lg pl-11 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:ring-offset-1 focus:border-blue-500 focus:bg-white"
                         placeholder="Enter your password" autocomplete="current-password">
                     <div class="absolute inset-y-0 left-0 flex items-center pl-3">
                         <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

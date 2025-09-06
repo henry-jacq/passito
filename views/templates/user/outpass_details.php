@@ -178,7 +178,7 @@ use App\Enum\OutpassStatus; ?>
                         </a>
                     </div>
                 </div>
-                <?php if (count($outpass->getAttachments()) > 0): ?>
+                <?php if (!empty($outpass->getAttachments()) && count($outpass->getAttachments()) > 0): ?>
                     <div class="space-y-4">
                         <div class="flex items-center space-x-4 align-center">
                             <i class="text-2xl text-gray-500 fa-solid fa-file-alt"></i>

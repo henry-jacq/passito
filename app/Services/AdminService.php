@@ -51,6 +51,17 @@ class AdminService
         ];
     }
 
+    public function getLateArrivalsReport(User $adminUser): array
+    {
+        // Fetch late arrivals data
+        $lateArrivals = $this->verifierService->fetchLateArrivals($adminUser);
+
+        return [
+            'total' => count($lateArrivals),
+            'details' => $lateArrivals,
+        ];
+    }
+
     /**
      * Set Outpass Request Lock for Students
      *

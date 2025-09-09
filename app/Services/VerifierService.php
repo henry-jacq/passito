@@ -315,4 +315,48 @@ class VerifierService
             return $logGender === $userGender;
         });
     }
+
+    /**
+     * Fetch late arrivals (more than 30 minutes late)
+/**
+     * Fetch all late arrivals for a given user.
+     */
+    public function fetchLateArrivals(User $user): array
+    {
+        $allLogs = $this->fetchLogsByGender(user: $user, paginate: false);
+        $userGender = $user->getGender()?->value;
+        $lateArrivals = [];
+
+        foreach ($allLogs as $log) {
+            $outpass = $log->getOutpass();
+            $actualInTime = $log->getInTime();
+
+            if ($outpass && $actualInTime !== null) {
+                $expectedReturnDate = $outpass->getToDate();
+                $expectedReturnTime = $outpass->getToTime();
+
+                if ($expectedReturnDate && $expectedReturnTime) {
+                    // Merge expected return date + time into one DateTime
+                    $expectedReturn = \DateTime::createFromFormat(
+                        'Y-m-d H:i:s',
+                        $expectedReturnDate->format('Y-m-d') . ' ' . $expectedReturnTime->format('H:i:s')
+                    );
+
+                    if ($expectedReturn) {
+                        $diff = $expectedReturn->diff($actualInTime);
+                        $minutesLate = ($diff->days * 24 * 60) + ($diff->h * 60) + $diff->i;
+
+                        if ($actualInTime > $expectedReturn && $minutesLate > 30) {
+                            $logGender = $outpass->getStudent()?->getUser()?->getGender()?->value;
+                            if ($logGender === $userGender) {
+                                $lateArrivals[] = $log;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return $lateArrivals;
+    }
 }

@@ -33,11 +33,13 @@ class AdminController extends BaseController
         $this->view->clearCacheIfDev();
         $userData = $request->getAttribute('user');
         $dashboardData = $this->adminService->getDashboardDetails($userData);
+        $lateArrivalsReport = $this->adminService->getLateArrivalsReport($userData);
 
         $args = [
             'title' => 'Dashboard',
             'user' => $userData,
             'data' => $dashboardData,
+            'lateArrivals' => $lateArrivalsReport,
             'routeName' => $this->getRouteName($request),
         ];
 

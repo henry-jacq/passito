@@ -127,7 +127,9 @@
                         <div>
                             <div class="flex items-center space-x-2">
                                 <h4 class="text-lg font-semibold text-gray-700">Late Arrivals</h4>
-                                <span class="px-2 py-1 text-xs font-medium text-red-800 bg-red-100 rounded-full">9</span>
+                                <span class="px-2 py-1 text-xs font-medium text-red-800 bg-red-100 rounded-full"><?php if ($lateArrivals['total'] > 9): echo '9+';
+                                                                                                                    else: echo $lateArrivals['total'];
+                                                                                                                    endif; ?></span>
                             </div>
                             <p class="text-sm text-gray-500">Students who checked in late today</p>
                         </div>
@@ -141,33 +143,23 @@
                     <table class="w-full text-sm">
                         <thead class="bg-gray-50">
                             <tr>
-                                <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Student</th>
+                                <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Student Name</th>
+                                <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Digital ID</th>
                                 <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Hostel</th>
                                 <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Late By</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-4 py-3 text-gray-800">John Doe</td>
-                                <td class="px-4 py-3 text-gray-600">Hostel A</td>
-                                <td class="px-4 py-3">
-                                    <span class="px-2 py-1 text-xs font-medium text-red-800 bg-red-100 rounded-full">2h 15m</span>
-                                </td>
-                            </tr>
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-4 py-3 text-gray-800">Jane Smith</td>
-                                <td class="px-4 py-3 text-gray-600">Hostel B</td>
-                                <td class="px-4 py-3">
-                                    <span class="px-2 py-1 text-xs font-medium text-red-800 bg-red-100 rounded-full">1h 45m</span>
-                                </td>
-                            </tr>
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-4 py-3 text-gray-800">Mike Johnson</td>
-                                <td class="px-4 py-3 text-gray-600">Hostel C</td>
-                                <td class="px-4 py-3">
-                                    <span class="px-2 py-1 text-xs font-medium text-red-800 bg-red-100 rounded-full">45m</span>
-                                </td>
-                            </tr>
+                            <?php foreach ($lateArrivals['details'] as $arrival): ?>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-4 py-3 text-gray-800"><?= $arrival->getOutpass()->getStudent()->getUser()->getName() ?></td>
+                                    <td class="px-4 py-3 text-gray-800"><?= $arrival->getOutpass()->getStudent()->getDigitalId() ?></td>
+                                    <td class="px-4 py-3 text-gray-600"><?= $arrival->getOutpass()->getStudent()->getHostel()->getName() ?></td>
+                                    <td class="px-4 py-3">
+                                        <span class="px-2 py-1 text-xs font-medium text-red-800 bg-red-100 rounded-full"><?= $arrival->getLateDuration() ?></span>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>

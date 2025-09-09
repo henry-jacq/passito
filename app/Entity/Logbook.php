@@ -74,4 +74,25 @@ class Logbook
     {
         $this->outTime = $outTime;
     }
+
+    public function getLateDuration(): string
+    {
+        if ($this->inTime === null || $this->outTime === null) {
+            return sprintf('N/A');
+        }
+
+        $outpass = $this->getOutpass();
+        $outpassReturnTime = \DateTime::createFromFormat(
+            'Y-m-d H:i:s',
+            $outpass->getToDate()->format('Y-m-d') . ' ' . $outpass->getToTime()->format('H:i:s')
+        );
+
+        $logReturnTime = $this->getInTime();
+
+        $interval = $outpassReturnTime->diff($logReturnTime);
+        $hours = (int) $interval->format('%h');
+        $minutes = (int) $interval->format('%i');
+
+        return sprintf('%d hours, %d minutes', $hours, $minutes);
+    }
 }

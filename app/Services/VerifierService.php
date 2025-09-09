@@ -317,8 +317,26 @@ class VerifierService
     }
 
     /**
+     * Fetch checked-in logs
+     */
+    public function fetchCheckedInLogs(User $user): array
+    {
+        $allLogs = $this->fetchLogsByGender(user: $user, paginate: false);
+        $userGender = $user->getGender()?->value;
+
+        return array_filter($allLogs, function ($log) use ($userGender) {
+            if ($log->getInTime() === null) {
+                return false;
+            }
+
+            $logGender = $log->getOutpass()?->getStudent()?->getUser()?->getGender()?->value;
+
+            return $logGender === $userGender;
+        });
+    }
+
+    /**
      * Fetch late arrivals (more than 30 minutes late)
-/**
      * Fetch all late arrivals for a given user.
      */
     public function fetchLateArrivals(User $user): array

@@ -38,6 +38,7 @@ class AdminService
     {
         $counts = $this->outpass->getOutpassStats($adminUser);
         $checkedOut = $this->verifierService->fetchCheckedOutLogs($adminUser);
+        $checkedIn = $this->verifierService->fetchCheckedInLogs($adminUser);
         $lockStatus = $this->em->getRepository(Settings::class)->findOneBy([
             'keyName' => 'lock_requests_' . strtolower($adminUser->getGender()->value)
         ]);
@@ -47,6 +48,7 @@ class AdminService
             'approved' => $counts['approved'] ?? 0,
             'rejected' => $counts['rejected'] ?? 0,
             'checkedOut' => count($checkedOut),
+            'checkedIn' => count($checkedIn),
             'lockRequests' => $lockStatus ? filter_var($lockStatus->getValue(), FILTER_VALIDATE_BOOLEAN) : false,
         ];
     }

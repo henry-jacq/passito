@@ -76,37 +76,23 @@
                 <div class="space-y-3">
                     <div class="flex items-center justify-between p-4 rounded-lg bg-gray-50">
                         <div class="flex items-center space-x-3">
-                            <div class="w-3 h-3 bg-green-500 rounded-full"></div>
-                            <span class="text-sm font-medium text-gray-700">Checked-in Today</span>
-                        </div>
-                        <div class="flex items-center space-x-3">
-                            <span class="px-3 py-1 text-sm font-semibold text-green-800 bg-green-100 rounded-full">24</span>
-                            <button class="px-3 py-1 text-sm font-medium text-blue-600 bg-blue-100 rounded-lg hover:bg-blue-200">
-                                Export
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center justify-between p-4 rounded-lg bg-gray-50">
-                        <div class="flex items-center space-x-3">
                             <div class="w-3 h-3 bg-orange-500 rounded-full"></div>
                             <span class="text-sm font-medium text-gray-700">Checked-out Today</span>
                         </div>
                         <div class="flex items-center space-x-3">
-                            <span class="px-3 py-1 text-sm font-semibold text-orange-800 bg-orange-100 rounded-full">16</span>
+                            <span class="px-3 py-1 text-sm font-semibold text-orange-800 bg-orange-100 rounded-full"><?= $data['checkedOut'] ?></span>
                             <button class="px-3 py-1 text-sm font-medium text-blue-600 bg-blue-100 rounded-lg hover:bg-blue-200">
                                 Export
                             </button>
                         </div>
                     </div>
-
                     <div class="flex items-center justify-between p-4 rounded-lg bg-gray-50">
                         <div class="flex items-center space-x-3">
-                            <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
-                            <span class="text-sm font-medium text-gray-700">Currently Out</span>
+                            <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                            <span class="text-sm font-medium text-gray-700">Checked-in Today</span>
                         </div>
                         <div class="flex items-center space-x-3">
-                            <span class="px-3 py-1 text-sm font-semibold text-blue-800 bg-blue-100 rounded-full">8</span>
+                            <span class="px-3 py-1 text-sm font-semibold text-green-800 bg-green-100 rounded-full"><?= $data['checkedIn'] ?></span>
                             <button class="px-3 py-1 text-sm font-medium text-blue-600 bg-blue-100 rounded-lg hover:bg-blue-200">
                                 Export
                             </button>

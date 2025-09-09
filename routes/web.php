@@ -52,6 +52,8 @@ return function (App $app) {
     // Admin Routes
     $app->group('/admin', function (RouteCollectorProxy $group) {
         $group->any('/dashboard', [AdminController::class, 'dashboard'])->setName('admin.dashboard');
+        $group->any('/reports', [AdminController::class, 'reports'])->setName('admin.reports');
+        $group->any('/reports/create', [AdminController::class, 'createReport'])->setName('admin.reports.create');
         $group->any('/outpass/pending', [AdminController::class, 'pendingRequests'])->setName('admin.outpass.pending');
         $group->any('/outpass/records', [AdminController::class, 'outpassRecords'])->setName('admin.outpass.records');
         $group->any('/outpass/records/{outpass_id:[0-9]+}', [AdminController::class, 'outpassDetails'])->setName('admin.outpass.records.details');

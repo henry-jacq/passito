@@ -3,13 +3,16 @@
 use App\Enum\UserRole; ?>
 <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 flex flex-col w-64 transition-transform duration-300 ease-in-out -translate-x-full bg-white border-r select-none lg:translate-x-0">
     <nav class="flex flex-col h-full bg-white">
+        <!-- Brand -->
         <div class="flex items-center justify-center p-[20px] bg-white border-b space-x-4 text-gray-700">
             <div class="w-22">
                 <img src="<?= $brandLogo ?>" alt="Brand Logo" width="300">
             </div>
         </div>
 
+        <!-- Navigation -->
         <div class="flex-1 px-2 overflow-y-auto scroll-smooth">
+            <!-- Main Navigation -->
             <h4 class="px-2 mt-4 text-xs font-semibold text-gray-600 uppercase">Main Navigation</h4>
             <ul class="mt-2">
                 <li class="my-1">
@@ -49,7 +52,18 @@ use App\Enum\UserRole; ?>
                         </div>
                     </a>
                 </li>
+                <li class="my-1">
+                    <a href="<?= $this->urlFor('admin.reports') ?>"
+                        class="flex items-center px-4 py-2.5 <?= str_contains($routeName, 'admin.reports') ? 'bg-blue-500/20 text-blue-800 hover:bg-blue-600/20 border-blue-800/80' : 'text-gray-600 hover:bg-gray-50 border-transparent'; ?> transition duration-200 rounded-md border-l-4">
+                        <div class="flex items-center space-x-5">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Reports</span>
+                        </div>
+                    </a>
+                </li>
             </ul>
+
+            <!-- Management -->
             <h4 class="px-2 mt-3 text-xs font-semibold text-gray-600 uppercase">Management</h4>
             <ul class="mt-2">
                 <li class="my-1">
@@ -67,7 +81,6 @@ use App\Enum\UserRole; ?>
                             <span>Residence</span>
                         </a>
                     </li>
-
                     <li class="my-1">
                         <a href="<?= $this->urlFor('admin.manage.academics') ?>"
                             class="flex items-center px-4 py-2.5 <?= str_contains($routeName, 'admin.manage.academics') ? 'bg-blue-500/20 text-blue-800 hover:bg-blue-600/20 border-blue-800/80' : 'text-gray-600 hover:bg-gray-50 border-transparent'; ?> transition duration-200 rounded-md border-l-4">
@@ -107,6 +120,7 @@ use App\Enum\UserRole; ?>
             </ul>
         </div>
 
+        <!-- User Settings -->
         <div class="p-2 border-t">
             <button class="w-full flex items-center p-2 rounded-md transition focus:outline-none focus:ring-2 focus:ring-blue-700 <?= ($routeName == 'admin.settings') ? 'bg-gray-100 text-gray-600 hover:bg-gray-200' : 'text-gray-600 hover:bg-gray-100'; ?>"
                 onclick="window.location.href='<?= $this->urlFor('admin.settings') ?>';" title="Go to Settings">

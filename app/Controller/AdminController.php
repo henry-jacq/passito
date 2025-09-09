@@ -45,6 +45,36 @@ class AdminController extends BaseController
         return parent::render($request, $response, 'admin/dashboard', $args);
     }
 
+    public function reports(Request $request, Response $response): Response
+    {
+        $this->view->clearCacheIfDev();
+        $userData = $request->getAttribute('user');
+
+        $args = [
+            'title' => 'Reports',
+            'user' => $userData,
+            'routeName' => $this->getRouteName($request),
+        ];
+
+        $args = array_merge($args, $this->view->getGlobals());
+        return parent::render($request, $response, 'admin/reports', $args);
+    }
+
+    public function createReport(Request $request, Response $response): Response
+    {
+        $this->view->clearCacheIfDev();
+        $userData = $request->getAttribute('user');
+
+        $args = [
+            'title' => 'Create Report',
+            'user' => $userData,
+            'routeName' => $this->getRouteName($request),
+        ];
+
+        $args = array_merge($args, $this->view->getGlobals());
+        return parent::render($request, $response, 'admin/create_report', $args);
+    }
+
     public function pendingRequests(Request $request, Response $response): Response
     {
         $this->view->clearCacheIfDev();

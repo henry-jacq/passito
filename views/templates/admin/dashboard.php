@@ -45,9 +45,9 @@
                 <p class="mt-1 text-sm text-gray-500">Denied by wardens</p>
             </div>
             <div class="p-6 transition duration-200 bg-white rounded-lg shadow hover:shadow-lg">
-                <h3 class="text-lg font-semibold text-gray-700">Checked-out Students</h3>
-                <p class="text-3xl text-green-800"><?= $data['checkedOut'] ?></p>
-                <p class="mt-1 text-sm text-gray-500">Currently outside</p>
+                <h3 class="text-lg font-semibold text-gray-700">Overdue Returns</h3>
+                <p class="text-3xl text-green-800">0</p>
+                <p class="mt-1 text-sm text-gray-500">Students overdue today</p>
             </div>
         </div>
     </section>
@@ -215,7 +215,7 @@
                     <button class="px-3 py-1 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700">
                         Disable
                     </button>
-                    <button class="px-3 py-1 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+                    <button class="px-3 py-1 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 report-settings-button" data-report="daily-movement">
                         Settings
                     </button>
                 </div>
@@ -243,7 +243,7 @@
                     <button class="px-3 py-1 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700">
                         Enable
                     </button>
-                    <button class="px-3 py-1 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+                    <button class="px-3 py-1 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 report-settings-button" data-report="late-arrivals">
                         Settings
                     </button>
                 </div>

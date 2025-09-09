@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use DateTime;
+use Carbon\Carbon;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
@@ -88,11 +89,8 @@ class Logbook
         );
 
         $logReturnTime = $this->getInTime();
+        $carbonInterval = Carbon::instance($outpassReturnTime)->diffForHumans(Carbon::instance($logReturnTime));
 
-        $interval = $outpassReturnTime->diff($logReturnTime);
-        $hours = (int) $interval->format('%h');
-        $minutes = (int) $interval->format('%i');
-
-        return sprintf('%d hours, %d minutes', $hours, $minutes);
+        return $carbonInterval;
     }
 }

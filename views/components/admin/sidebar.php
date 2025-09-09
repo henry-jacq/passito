@@ -52,15 +52,6 @@ use App\Enum\UserRole; ?>
                         </div>
                     </a>
                 </li>
-                <li class="my-1">
-                    <a href="<?= $this->urlFor('admin.reports') ?>"
-                        class="flex items-center px-4 py-2.5 <?= str_contains($routeName, 'admin.reports') ? 'bg-blue-500/20 text-blue-800 hover:bg-blue-600/20 border-blue-800/80' : 'text-gray-600 hover:bg-gray-50 border-transparent'; ?> transition duration-200 rounded-md border-l-4">
-                        <div class="flex items-center space-x-5">
-                            <i class="fas fa-chart-bar"></i>
-                            <span>Reports</span>
-                        </div>
-                    </a>
-                </li>
             </ul>
 
             <!-- Management -->

@@ -22,19 +22,18 @@
             </button>
         </div>
     <?php endif; ?>
-    <section>
+
+    <section class="mb-8">
         <h2 class="mb-4 text-2xl font-semibold text-gray-700">Dashboard</h2>
-        <!-- <p class="mb-8 text-gray-600 text-md">Monitor outpass statistics, trends, and manage requests with quick actions.</p> -->
         <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
             <div class="p-6 transition duration-200 bg-white rounded-lg shadow hover:shadow-lg">
-                <h3 class="text-lg font-semibold text-gray-700">Total Outpasses</h3>
+                <h3 class="text-lg font-semibold text-gray-700">Total Requests</h3>
                 <p class="text-3xl text-blue-800"><?= $data['approved'] ?></p>
                 <p class="mt-1 text-sm text-gray-500">All-time approved requests</p>
             </div>
             <div class="p-6 transition duration-200 bg-white rounded-lg shadow hover:shadow-lg">
                 <h3 class="text-lg font-semibold text-gray-700">Pending Requests</h3>
                 <p class="text-3xl text-yellow-800"><?= $data['pending'] ?></p>
-                <!-- <p class="mt-1 text-sm text-gray-500">Awaiting approval</p> -->
                 <p class="mt-1 text-sm font-medium text-green-500">
                     <i class="mr-1 fa-solid fa-arrow-up"></i>
                     5% from last week
@@ -53,28 +52,136 @@
         </div>
     </section>
 
-    <!-- Outpass Trends & Insights -->
-    <section class="mt-6">
-        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-2">
-            <div class="p-6 transition duration-200 bg-white rounded-lg shadow hover:shadow-lg">
-                <h3 class="mb-4 text-lg font-semibold text-gray-700">Outpass Trends (Monthly)</h3>
-                <canvas id="outpassesChart"></canvas>
+    <section class="mb-8">
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <!-- Daily Movement Summary -->
+            <div class="p-6 bg-white rounded-lg shadow">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-full">
+                            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-semibold text-gray-700">Daily Movement</h4>
+                            <p class="text-sm text-gray-500">Today's check-in/out summary</p>
+                        </div>
+                    </div>
+                    <button class="px-3 py-1 text-sm font-medium text-blue-600 bg-blue-100 rounded-lg hover:bg-blue-200">
+                        Export All
+                    </button>
+                </div>
+
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between p-4 rounded-lg bg-gray-50">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                            <span class="text-sm font-medium text-gray-700">Checked-in Today</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <span class="px-3 py-1 text-sm font-semibold text-green-800 bg-green-100 rounded-full">24</span>
+                            <button class="px-3 py-1 text-sm font-medium text-blue-600 bg-blue-100 rounded-lg hover:bg-blue-200">
+                                Export
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between p-4 rounded-lg bg-gray-50">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-3 h-3 bg-orange-500 rounded-full"></div>
+                            <span class="text-sm font-medium text-gray-700">Checked-out Today</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <span class="px-3 py-1 text-sm font-semibold text-orange-800 bg-orange-100 rounded-full">16</span>
+                            <button class="px-3 py-1 text-sm font-medium text-blue-600 bg-blue-100 rounded-lg hover:bg-blue-200">
+                                Export
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between p-4 rounded-lg bg-gray-50">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
+                            <span class="text-sm font-medium text-gray-700">Currently Out</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <span class="px-3 py-1 text-sm font-semibold text-blue-800 bg-blue-100 rounded-full">8</span>
+                            <button class="px-3 py-1 text-sm font-medium text-blue-600 bg-blue-100 rounded-lg hover:bg-blue-200">
+                                Export
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="p-6 transition duration-200 bg-white rounded-lg shadow hover:shadow-lg">
-                <h3 class="mb-4 text-lg font-semibold text-gray-700">Verifier (Weekly)</h3>
-                <canvas id="checkinCheckoutChart"></canvas>
+
+            <!-- Late Arrivals Report -->
+            <div class="p-6 bg-white rounded-lg shadow">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="flex items-center justify-center w-10 h-10 bg-red-100 rounded-full">
+                            <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <h4 class="text-lg font-semibold text-gray-700">Late Arrivals</h4>
+                                <span class="px-2 py-1 text-xs font-medium text-red-800 bg-red-100 rounded-full">9</span>
+                            </div>
+                            <p class="text-sm text-gray-500">Students who checked in late today</p>
+                        </div>
+                    </div>
+                    <button class="px-3 py-1 text-sm font-medium text-blue-600 bg-blue-100 rounded-lg hover:bg-blue-200">
+                        Export CSV
+                    </button>
+                </div>
+
+                <div class="overflow-hidden border border-gray-200 rounded-lg">
+                    <table class="w-full text-sm">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Student</th>
+                                <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Hostel</th>
+                                <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Late By</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-3 text-gray-800">John Doe</td>
+                                <td class="px-4 py-3 text-gray-600">Hostel A</td>
+                                <td class="px-4 py-3">
+                                    <span class="px-2 py-1 text-xs font-medium text-red-800 bg-red-100 rounded-full">2h 15m</span>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-3 text-gray-800">Jane Smith</td>
+                                <td class="px-4 py-3 text-gray-600">Hostel B</td>
+                                <td class="px-4 py-3">
+                                    <span class="px-2 py-1 text-xs font-medium text-red-800 bg-red-100 rounded-full">1h 45m</span>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-3 text-gray-800">Mike Johnson</td>
+                                <td class="px-4 py-3 text-gray-600">Hostel C</td>
+                                <td class="px-4 py-3">
+                                    <span class="px-2 py-1 text-xs font-medium text-red-800 bg-red-100 rounded-full">45m</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Quick Actions -->
-    <section class="mt-6">
-        <h3 class="mb-3 text-xl font-semibold text-gray-700">Quick Actions</h3>
+    <section class="mb-8">
         <div class="grid grid-cols-1 gap-6 md:grid-cols-1 lg:grid-cols-3">
             <div class="p-4 transition duration-200 bg-white rounded-lg shadow hover:shadow-lg">
                 <h4 class="font-semibold">Bulk Approval</h4>
                 <p class="mb-3 text-sm">Quickly approve all pending requests.</p>
-                <button id="bulkApproval" class="flex items-center px-2 py-1 text-sm text-white transition duration-200 bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed" aria-expanded="false">
+                <button id="bulkApproval" class="flex items-center px-2 py-1 text-sm text-white transition duration-200 bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed">
                     <i class="mr-2 fas fa-play"></i>
                     <span>Perform</span>
                 </button>
@@ -82,7 +189,7 @@
             <div class="p-4 transition duration-200 bg-white rounded-lg shadow hover:shadow-lg">
                 <h4 class="font-semibold">Notify Students</h4>
                 <p class="mb-3 text-sm">Alert students who haven't checked in.</p>
-                <button id="notifyStudents" class="flex items-center px-2 py-1 text-sm text-white transition duration-200 bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed" aria-expanded="false">
+                <button id="notifyStudents" class="flex items-center px-2 py-1 text-sm text-white transition duration-200 bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed">
                     <i class="mr-2 fas fa-play"></i>
                     <span>Perform</span>
                 </button>
@@ -90,95 +197,79 @@
             <div class="p-4 transition duration-200 bg-white rounded-lg shadow hover:shadow-lg">
                 <h4 class="font-semibold">Lock Requests</h4>
                 <p class="mb-3 text-sm">Block new requests until unlocked.</p>
-                <button id="lockRequests" class="flex items-center px-2 py-1 text-sm text-white transition duration-200 bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed" aria-expanded="false">
+                <button id="lockRequests" class="flex items-center px-2 py-1 text-sm text-white transition duration-200 bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed">
                     <i class="mr-2 fas fa-play"></i>
                     <span>Perform</span>
                 </button>
             </div>
         </div>
     </section>
+
+    <!-- Automated Email Reports Section -->
+    <section class="p-6 bg-white rounded-lg shadow">
+        <div class="mb-6">
+            <div class="space-y-2">
+                <h3 class="text-lg font-semibold text-gray-700">Automated Email Reports</h3>
+                <p class="text-sm text-gray-500">Configure automated email delivery for daily and weekly reports</p>
+            </div>
+        </div>
+
+        <div class="space-y-4">
+            <!-- Daily Movement Report Schedule -->
+            <div class="flex flex-col p-4 border border-gray-200 rounded-lg md:flex-row md:items-center md:justify-between">
+                <div class="flex-1 mb-3 md:mb-0">
+                    <div class="flex items-center mb-2 space-x-3">
+                        <h4 class="text-base font-semibold text-gray-700">Daily Movement Summary</h4>
+                        <span class="px-2 py-1 text-xs font-medium text-green-800 bg-green-100 rounded-full">Active</span>
+                    </div>
+                    <div class="space-y-1 text-sm text-gray-500">
+                        <div class="flex items-center space-x-4">
+                            <span><strong>Schedule:</strong> Daily at 08:00 AM</span>
+                            <span><strong>Recipients:</strong> Admin, Wardens</span>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <span><strong>Next Email:</strong> Sep 11, 2025 08:00 AM</span>
+                            <span><strong>Last Sent:</strong> Sep 10, 2025 08:00 AM</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button class="px-3 py-1 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700">
+                        Disable
+                    </button>
+                    <button class="px-3 py-1 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+                        Settings
+                    </button>
+                </div>
+            </div>
+
+            <!-- Late Arrivals Report Schedule -->
+            <div class="flex flex-col p-4 border border-gray-200 rounded-lg md:flex-row md:items-center md:justify-between">
+                <div class="flex-1 mb-3 md:mb-0">
+                    <div class="flex items-center mb-2 space-x-3">
+                        <h4 class="text-base font-semibold text-gray-700">Late Arrivals Report</h4>
+                        <span class="px-2 py-1 text-xs font-medium text-gray-600 bg-gray-100 rounded-full">Disabled</span>
+                    </div>
+                    <div class="space-y-1 text-sm text-gray-500">
+                        <div class="flex items-center space-x-4">
+                            <span><strong>Schedule:</strong> Weekly (Monday) at 09:00 AM</span>
+                            <span><strong>Recipients:</strong> Admin, Wardens</span>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <span><strong>Next Email:</strong> Sep 15, 2025 09:00 AM</span>
+                            <span><strong>Last Sent:</strong> Sep 08, 2025 09:00 AM</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button class="px-3 py-1 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700">
+                        Enable
+                    </button>
+                    <button class="px-3 py-1 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+                        Settings
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
 </main>
-
-
-<!-- Chart.js Library -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    const createChart = (id, type, data, options) => {
-        new Chart(document.getElementById(id).getContext('2d'), {
-            type,
-            data,
-            options
-        });
-    };
-
-    createChart('outpassesChart', 'line', {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-        datasets: [{
-            label: 'Outpasses Issued',
-            data: [30, 50, 80, 60, 90, 120, 100, 130, 110, 140, 150, 160],
-            borderColor: 'rgb(39, 91, 175)', // Tailwind blue-500
-            backgroundColor: 'rgba(65, 126, 225, 0.3)', // Tailwind blue-500 @ 20%
-            fill: true,
-            tension: 0.3
-        }]
-    }, {
-        responsive: true,
-        plugins: {
-            legend: {
-                display: false
-            }
-        },
-        scales: {
-            y: {
-                beginAtZero: true,
-                grid: {
-                    display: true,
-                    color: 'rgba(0, 0, 0, 0.1)'
-                }
-            },
-            x: {
-                grid: {
-                    display: false
-                }
-            }
-        }
-    });
-
-    createChart('checkinCheckoutChart', 'bar', {
-        labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-        datasets: [{
-                label: 'Checked In',
-                data: [80, 100, 90, 110, 120, 130, 140],
-                backgroundColor: 'rgba(37, 99, 235, 0.7)', // Tailwind blue-500 @ 80%
-                borderRadius: 5
-            },
-            {
-                label: 'Checked Out',
-                data: [70, 90, 85, 95, 110, 125, 130],
-                backgroundColor: 'rgba(29, 78, 216, 0.7)', // Tailwind blue-500 @ 60%
-                borderRadius: 5
-            }
-        ]
-    }, {
-        responsive: true,
-        plugins: {
-            legend: {
-                display: false
-            }
-        },
-        scales: {
-            y: {
-                beginAtZero: true,
-                grid: {
-                    display: true,
-                    color: 'rgba(0, 0, 0, 0.1)'
-                }
-            },
-            x: {
-                grid: {
-                    display: false
-                }
-            }
-        }
-    });
-</script>

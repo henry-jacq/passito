@@ -107,7 +107,7 @@
                         <p class="text-sm text-gray-500">Today's check-in/out summary</p>
                     </div>
                     <button class="text-sm font-medium text-blue-600 hover:text-blue-800">
-                        View Timeline <i class="ml-1 fas fa-arrow-right"></i>
+                        View All <i class="ml-1 fas fa-arrow-right"></i>
                     </button>
                 </div>
 

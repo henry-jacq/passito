@@ -23,4 +23,9 @@ enum Gender: string {
     {
         return in_array($gender, self::values(), true);
     }
+
+    public static function all(): array 
+    {
+        return [self::MALE, self::FEMALE];
+    }
 }

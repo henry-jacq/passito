@@ -10,6 +10,7 @@ use App\Seeders\AppSettingsSeeder;
 use App\Seeders\InstitutionSeeder;
 use App\Seeders\OutpassDataSeeder;
 use App\Seeders\OutpassRulesSeeder;
+use App\Seeders\ReportConfigSeeder;
 use App\Seeders\OutpassTemplateSeeder;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -29,6 +30,7 @@ class DatabaseSeederCommand extends Command
         'outpass_data' => OutpassDataSeeder::class,
         'outpass_templates' => OutpassTemplateSeeder::class,
         'programs' => ProgramSeeder::class,
+        'report_configs' => ReportConfigSeeder::class,
     ];
 
     public function __construct(

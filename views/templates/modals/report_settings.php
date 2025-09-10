@@ -70,38 +70,32 @@
 
         <!-- Recipients -->
         <div class="space-y-2">
-            <label for="recipients" class="block font-semibold text-gray-700 text-md">Recipients</label>
-            <textarea id="recipients" name="recipients" rows="3"
-                class="block w-full px-4 py-2 mt-1 text-gray-800 transition duration-200 border border-gray-300 rounded-lg bg-gray-50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md"
-                placeholder="Enter recipient emails, separated by commas"></textarea>
+            <label class="block font-semibold text-gray-700 text-md">Recipients</label>
+            <div class="pl-2 space-y-2">
+                <!-- Super admin (self) -->
+                <label class="flex items-center space-x-2">
+                    <input type="checkbox" name="recipients[]" value="chief_admin_id" checked
+                        class="text-blue-600 rounded focus:ring-blue-500">
+                    <span class="text-gray-800">Chief Warden (You)</span>
+                </label>
+
+                <!-- Stub wardens list -->
+                <label class="flex items-center space-x-2">
+                    <input type="checkbox" name="recipients[]" value="warden1_id"
+                        class="text-blue-600 rounded focus:ring-blue-500">
+                    <span class="text-gray-800">Warden A</span>
+                </label>
+                <label class="flex items-center space-x-2">
+                    <input type="checkbox" name="recipients[]" value="warden2_id"
+                        class="text-blue-600 rounded focus:ring-blue-500">
+                    <span class="text-gray-800">Warden B</span>
+                </label>
+                <label class="flex items-center space-x-2">
+                    <input type="checkbox" name="recipients[]" value="warden3_id"
+                        class="text-blue-600 rounded focus:ring-blue-500">
+                    <span class="text-gray-800">Warden C</span>
+                </label>
+            </div>
         </div>
     </div>
 </div>
-
-<script>
-    const frequencySelect = document.getElementById('frequency');
-    const weeklyOptions = document.getElementById('weekly-options');
-    const monthlyOptions = document.getElementById('monthly-options');
-    const yearlyOptions = document.getElementById('yearly-options');
-
-    function toggleOptions() {
-        weeklyOptions.classList.add('hidden');
-        monthlyOptions.classList.add('hidden');
-        yearlyOptions.classList.add('hidden');
-
-        switch (frequencySelect.value) {
-            case 'weekly':
-                weeklyOptions.classList.remove('hidden');
-                break;
-            case 'monthly':
-                monthlyOptions.classList.remove('hidden');
-                break;
-            case 'yearly':
-                yearlyOptions.classList.remove('hidden');
-                break;
-        }
-    }
-
-    frequencySelect.addEventListener('change', toggleOptions);
-    toggleOptions(); // run on page load
-</script>

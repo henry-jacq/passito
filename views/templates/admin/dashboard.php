@@ -1,3 +1,8 @@
+<?php
+
+use App\Enum\UserRole;
+?>
+
 <main class="flex-1 p-6 mt-20 overflow-y-auto">
     <?php if ($data['lockRequests']): ?>
         <div class="flex items-center justify-between p-4 mb-6 border rounded-lg bg-amber-50 border-amber-200">
@@ -113,9 +118,11 @@
                         <div>
                             <div class="flex items-center space-x-2">
                                 <h4 class="text-lg font-semibold text-gray-700">Late Arrivals</h4>
-                                <span class="px-2 py-1 text-xs font-medium text-red-800 bg-red-100 rounded-full"><?php if ($lateArrivals['total'] > 9): echo '9+';
-                                                                                                                    else: echo $lateArrivals['total'];
-                                                                                                                    endif; ?></span>
+                                <span class="px-2 py-1 text-xs font-medium text-red-800 bg-red-100 rounded-full">
+                                    <?php if ($lateArrivals['total'] > 9): echo '9+';
+                                    else: echo $lateArrivals['total'];
+                                    endif; ?>
+                                </span>
                             </div>
                             <p class="text-sm text-gray-500">Students who checked in late today</p>
                         </div>
@@ -125,36 +132,42 @@
                     </button>
                 </div>
 
-                <div class="overflow-hidden border border-gray-200 rounded-lg">
-                    <table class="w-full text-sm">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Student Name</th>
-                                <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Digital ID</th>
-                                <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Hostel</th>
-                                <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Late By</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            <?php foreach ($lateArrivals['details'] as $arrival): ?>
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-3 text-gray-800"><?= $arrival->getOutpass()->getStudent()->getUser()->getName() ?></td>
-                                    <td class="px-4 py-3 text-gray-800"><?= $arrival->getOutpass()->getStudent()->getDigitalId() ?></td>
-                                    <td class="px-4 py-3 text-gray-600"><?= $arrival->getOutpass()->getStudent()->getHostel()->getName() ?></td>
-                                    <td class="px-4 py-3">
-                                        <span class="px-2 py-1 text-xs font-medium text-red-800 bg-red-100 rounded-full"><?= $arrival->getLateDuration() ?></span>
-                                    </td>
+                <?php if (empty($lateArrivals['details'])): ?>
+                    <div class="flex items-center justify-center w-full h-48 text-gray-500 border border-gray-200 rounded-lg bg-gray-50">
+                        No late arrivals today
+                    </div>
+                <?php else: ?>
+                    <div class="overflow-hidden border border-gray-200 rounded-lg">
+                        <table class="w-full text-sm">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Student Name</th>
+                                    <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Digital ID</th>
+                                    <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Hostel</th>
+                                    <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Late By</th>
                                 </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <?php foreach ($lateArrivals['details'] as $arrival): ?>
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="px-4 py-3 text-gray-800"><?= $arrival->getOutpass()->getStudent()->getUser()->getName() ?></td>
+                                        <td class="px-4 py-3 text-gray-800"><?= $arrival->getOutpass()->getStudent()->getDigitalId() ?></td>
+                                        <td class="px-4 py-3 text-gray-600"><?= $arrival->getOutpass()->getStudent()->getHostel()->getName() ?></td>
+                                        <td class="px-4 py-3">
+                                            <span class="px-2 py-1 text-xs font-medium text-red-800 bg-red-100 rounded-full"><?= $arrival->getLateDuration() ?></span>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </section>
 
     <!-- Quick Actions -->
-    <section class="mb-8">
+    <section>
         <div class="grid grid-cols-1 gap-6 md:grid-cols-1 lg:grid-cols-3">
             <div class="p-4 transition duration-200 bg-white rounded-lg shadow hover:shadow-lg">
                 <h4 class="font-semibold">Bulk Approval</h4>
@@ -183,71 +196,71 @@
         </div>
     </section>
 
-    <!-- Automated Email Reports Section -->
-    <section class="p-6 bg-white rounded-lg shadow">
-        <div class="mb-6">
-            <div class="space-y-2">
-                <h3 class="text-lg font-semibold text-gray-700">Automated Email Reports</h3>
-                <p class="text-sm text-gray-500">Configure automated email delivery for daily and weekly reports</p>
-            </div>
-        </div>
-
-        <div class="space-y-4">
-            <!-- Daily Movement Report Schedule -->
-            <div class="flex flex-col p-4 border border-gray-200 rounded-lg md:flex-row md:items-center md:justify-between">
-                <div class="flex-1 mb-3 md:mb-0">
-                    <div class="flex items-center mb-2 space-x-3">
-                        <h4 class="text-base font-semibold text-gray-700">Daily Movement Summary</h4>
-                        <span class="px-2 py-1 text-xs font-medium text-green-800 bg-green-100 rounded-full">Active</span>
-                    </div>
-                    <div class="space-y-1 text-sm text-gray-500">
-                        <div class="flex items-center space-x-4">
-                            <span><strong>Schedule:</strong> Daily at 08:00 AM</span>
-                            <span><strong>Recipients:</strong> Admin, Wardens</span>
-                        </div>
-                        <div class="flex items-center space-x-4">
-                            <span><strong>Next Email:</strong> Sep 11, 2025 08:00 AM</span>
-                            <span><strong>Last Sent:</strong> Sep 10, 2025 08:00 AM</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex items-center space-x-2">
-                    <button class="px-3 py-1 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700">
-                        Disable
-                    </button>
-                    <button class="px-3 py-1 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 report-settings-button" data-report="daily-movement">
-                        Settings
-                    </button>
+    <?php if (UserRole::isSuperAdmin($user->getRole()->value)): ?>
+        <!-- Automated Email Reports Section -->
+        <section class="p-6 mt-8 bg-white rounded-lg shadow">
+            <div class="mb-6">
+                <div class="space-y-2">
+                    <h3 class="text-lg font-semibold text-gray-700">Automated Email Reports</h3>
+                    <p class="text-sm text-gray-500">Configure automated email delivery for daily and weekly reports</p>
                 </div>
             </div>
 
-            <!-- Late Arrivals Report Schedule -->
-            <div class="flex flex-col p-4 border border-gray-200 rounded-lg md:flex-row md:items-center md:justify-between">
-                <div class="flex-1 mb-3 md:mb-0">
-                    <div class="flex items-center mb-2 space-x-3">
-                        <h4 class="text-base font-semibold text-gray-700">Late Arrivals Report</h4>
-                        <span class="px-2 py-1 text-xs font-medium text-gray-600 bg-gray-100 rounded-full">Disabled</span>
+            <div class="space-y-4">
+                <!-- Daily Movement Report Schedule -->
+                <div class="flex flex-col p-4 border border-gray-200 rounded-lg md:flex-row md:items-center md:justify-between">
+                    <div class="flex-1 mb-3 md:mb-0">
+                        <div class="flex items-center mb-2 space-x-3">
+                            <h4 class="text-base font-semibold text-gray-700">Daily Movement Summary</h4>
+                            <span class="px-2 py-1 text-xs font-medium text-green-800 bg-green-100 rounded-full">Active</span>
+                        </div>
+                        <div class="space-y-1 text-sm text-gray-500">
+                            <div class="flex items-center space-x-4">
+                                <span><strong>Schedule:</strong> Daily at 08:00 AM</span>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <span><strong>Next Email:</strong> Sep 11, 2025 08:00 AM</span>
+                                <span><strong>Last Sent:</strong> Sep 10, 2025 08:00 AM</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="space-y-1 text-sm text-gray-500">
-                        <div class="flex items-center space-x-4">
-                            <span><strong>Schedule:</strong> Weekly (Monday) at 09:00 AM</span>
-                            <span><strong>Recipients:</strong> Admin, Wardens</span>
-                        </div>
-                        <div class="flex items-center space-x-4">
-                            <span><strong>Next Email:</strong> Sep 15, 2025 09:00 AM</span>
-                            <span><strong>Last Sent:</strong> Sep 08, 2025 09:00 AM</span>
-                        </div>
+                    <div class="flex items-center space-x-2">
+                        <button class="px-3 py-1 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700">
+                            Disable
+                        </button>
+                        <button class="px-3 py-1 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 report-settings-button" data-report="daily-movement">
+                            Settings
+                        </button>
                     </div>
                 </div>
-                <div class="flex items-center space-x-2">
-                    <button class="px-3 py-1 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700">
-                        Enable
-                    </button>
-                    <button class="px-3 py-1 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 report-settings-button" data-report="late-arrivals">
-                        Settings
-                    </button>
+
+                <!-- Late Arrivals Report Schedule -->
+                <div class="flex flex-col p-4 border border-gray-200 rounded-lg md:flex-row md:items-center md:justify-between">
+                    <div class="flex-1 mb-3 md:mb-0">
+                        <div class="flex items-center mb-2 space-x-3">
+                            <h4 class="text-base font-semibold text-gray-700">Late Arrivals Report</h4>
+                            <span class="px-2 py-1 text-xs font-medium text-gray-600 bg-gray-100 rounded-full">Disabled</span>
+                        </div>
+                        <div class="space-y-1 text-sm text-gray-500">
+                            <div class="flex items-center space-x-4">
+                                <span><strong>Schedule:</strong> Weekly (Monday) at 09:00 AM</span>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <span><strong>Next Email:</strong> Sep 15, 2025 09:00 AM</span>
+                                <span><strong>Last Sent:</strong> Sep 08, 2025 09:00 AM</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button class="px-3 py-1 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700">
+                            Enable
+                        </button>
+                        <button class="px-3 py-1 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 report-settings-button" data-report="late-arrivals">
+                            Settings
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    <?php endif; ?>
 </main>

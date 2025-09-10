@@ -6,7 +6,9 @@ use DateTime;
 use App\Enum\Gender;
 use App\Enum\ReportKey;
 use App\Enum\CronFrequency;
+use App\Entity\User;
 use App\Entity\ReportConfig;
+use App\Enum\UserRole;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ReportConfigSeeder
@@ -33,10 +35,10 @@ class ReportConfigSeeder
 
         foreach ([Gender::MALE, Gender::FEMALE] as $gender) {
             foreach ($configs as $cfg) {
-                $existing = $this->em->getRepository(ReportConfig::class)
+                $report = $this->em->getRepository(ReportConfig::class)
                     ->findOneBy(['reportKey' => $cfg['reportKey'], 'gender' => $gender]);
 
-                if (!$existing) {
+                if (!$report) {
                     $report = new ReportConfig();
                     $report->setReportKey($cfg['reportKey']);
                     $report->setFrequency($cfg['frequency']);
@@ -52,11 +54,23 @@ class ReportConfigSeeder
 
                     $this->em->persist($report);
                 }
+
+                // attach recipients (super admins of same gender)
+                $superAdmins = $this->em->getRepository(User::class)->findBy([
+                    'role'   => UserRole::SUPER_ADMIN,
+                    'gender' => $gender,
+                ]);
+
+                foreach ($superAdmins as $admin) {
+                    if (!$report->getRecipients()->contains($admin)) {
+                        $report->getRecipients()->add($admin);
+                    }
+                }
             }
         }
 
         $this->em->flush();
 
-        echo "Report Configs seeded successfully!\n";
+        echo "Report configs and default recipients seeded successfully!\n";
     }
 }

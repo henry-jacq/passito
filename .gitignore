@@ -11,6 +11,7 @@ storage/qr_codes/
 storage/attachments/
 storage/outpasses/
 storage/exports/
+storage/reports/
 resources/.sass-cache/
 
 # Logs

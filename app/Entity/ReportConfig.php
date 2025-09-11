@@ -240,4 +240,24 @@ class ReportConfig
         $this->updatedAt = $updatedAt;
         return $this;
     }
+
+    public function toArray()
+    {
+        return [
+            'id' => $this->getId(),
+            'reportKey' => $this->getReportKey()->value,
+            'isEnabled' => $this->isEnabled(),
+            'gender' => $this->getGender()->value,
+            'frequency' => $this->getFrequency()->value,
+            'dayOfWeek' => $this->getDayOfWeek(),
+            'dayOfMonth' => $this->getDayOfMonth(),
+            'month' => $this->getMonth(),
+            'time' => $this->getTime(),
+            'recipients' => $this->getRecipients()->map(fn(User $user) => $user->toArray())->toArray(),
+            'lastSent' => $this->getLastSent(),
+            'nextSend' => $this->getNextSend(),
+            'createdAt' => $this->getCreatedAt(),
+            'updatedAt' => $this->getUpdatedAt(),
+        ];
+    }
 }

@@ -20,6 +20,11 @@ class UserService
     {
     }
 
+    public function getUserById(int $id)
+    {
+        return $this->em->getRepository(User::class)->find($id);
+    }
+
     public function getUserByEmail(string $email): User|null
     {
         return $this->em->getRepository(User::class)->findOneBy(['email' => $email]);

@@ -21,14 +21,12 @@ class ReportConfigSeeder
             [
                 'reportKey' => ReportKey::DAILY_MOVEMENT,
                 'frequency' => CronFrequency::DAILY,
-                'time'      => '08:00:00',
                 'enabled'   => true,
             ],
             [
                 'reportKey' => ReportKey::LATE_ARRIVALS,
                 'frequency' => CronFrequency::DAILY,
                 'dayOfWeek' => 1, // Monday
-                'time'      => '09:00:00',
                 'enabled'   => true,
             ],
         ];
@@ -43,7 +41,9 @@ class ReportConfigSeeder
                     $report->setReportKey($cfg['reportKey']);
                     $report->setFrequency($cfg['frequency']);
                     $report->setIsEnabled($cfg['enabled']);
-                    $report->setTime(new DateTime($cfg['time']));
+
+                    // Default to midnight if not provided
+                    $report->setTime(new DateTime($cfg['time'] ?? '00:00:00'));
                     $report->setGender($gender);
                     $report->setCreatedAt(new DateTime());
                     $report->setUpdatedAt(new DateTime());

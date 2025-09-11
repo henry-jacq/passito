@@ -27,4 +27,12 @@ enum ReportKey: string
             self::LATE_ARRIVALS => 'List of students who have arrived late beyond the allowed time.',
         };
     }
+
+    public function display(): string
+    {
+        return match ($this) {
+            self::DAILY_MOVEMENT => 'Daily Movement',
+            self::LATE_ARRIVALS => 'Late Arrivals',
+        };
+    }
 }

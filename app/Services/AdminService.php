@@ -9,8 +9,10 @@ use App\Entity\User;
 use App\Core\Session;
 use App\Core\Storage;
 use App\Entity\Hostel;
+use App\Enum\UserRole;
 use App\Entity\Student;
 use App\Entity\Settings;
+use App\Enum\CronFrequency;
 use App\Enum\OutpassStatus;
 use App\Utils\CsvProcessor;
 use App\Entity\ReportConfig;
@@ -79,6 +81,68 @@ class AdminService
         ]);
 
         return $settings;
+    }
+
+    /**
+     * Get report setting by ID
+     *
+     * @param int $reportId
+     * @return ReportConfig|null
+     */
+    public function getReportSettingById(int $reportId): ReportConfig|null
+    {
+        return $this->em->getRepository(ReportConfig::class)->find($reportId);
+    }
+
+    /**
+     * Update report settings by its Id
+     * 
+     * @param int $id
+     * @param array $data
+     * @return bool
+     */
+    public function updateReportSettingsById(int $id, array $data): bool
+    {
+        $report = $this->getReportSettingById($id);
+
+        if (!$report) {
+            return false;
+        }
+
+        $report->setFrequency(CronFrequency::from($data['frequency']));
+        $report->setDayOfWeek($data['dayOfWeek']);
+        $report->setDayOfMonth($data['dayOfMonth']);
+        $report->setMonth($data['month']);
+        $dateTime = DateTime::createFromFormat('H:i', $data['time']);
+
+        if ($dateTime == false) {
+            return false;
+        }
+
+        $report->setTime($dateTime);
+        
+        // Remove the recipients who are not super admin
+        foreach($report->getRecipients() as $user) {
+            if (!UserRole::isSuperAdmin($user->getRole()->value)) {
+                $report->removeRecipient($user);
+            }
+        }
+
+        // Add new recipients if got
+        if (count($data['recipients']) > 0) {    
+            foreach($data['recipients'] as $recipient) {
+                $user = $this->userService->getUserById((int) $recipient);
+                if (!$user instanceof User && !UserRole::isAdmin($user->getRole()->value)) {
+                    return false;
+                }
+                $report->addRecipient($user);
+            }
+        }
+
+        $this->em->persist($report);
+        $this->em->flush();
+
+        return true;
     }
 
     /**

@@ -724,12 +724,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Report Settings
     const reportSettingsButtons = document.querySelectorAll('.report-settings-button');
+
     reportSettingsButtons.forEach((button) => {
         button.addEventListener('click', async (event) => {
-            const outpassId = event.target.dataset.id;
+            const settingId = event.target.dataset.id;
 
             try {
-                const response = await Ajax.post('/api/web/admin/modal?template=report_settings');
+                // fetch wardens and report config in parallel
+                const [fetchWardens, fetchConfig] = await Promise.all([
+                    Ajax.post('/api/web/admin/wardens/fetch'),
+                    Ajax.post('/api/web/admin/reports/fetch_config', { report_id: settingId })
+                ]);
+
+                if (!fetchWardens.ok) {
+                    alert(fetchWardens.data?.message || 'Failed to load wardens');
+                    return;
+                }
+
+                if (!fetchConfig.ok) {
+                    alert(fetchConfig.data?.message || 'Failed to load report config');
+                    return;
+                }
+
+                const wardens = fetchWardens.data.data.wardens;
+                const reportConfig = fetchConfig.data.data;
+
+                const response = await Ajax.post('/api/web/admin/modal?template=report_settings', {
+                    wardens,
+                    reportConfig
+                });
 
                 if (response.ok && response.data) {
                     Modal.open({
@@ -740,21 +763,40 @@ document.addEventListener("DOMContentLoaded", () => {
                                 class: `inline-flex justify-center rounded-lg bg-blue-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-blue-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50`,
                                 onClick: async () => {
                                     try {
-                                        const reason = document.getElementById('rejection-reason').value.trim();
-                                        const response = await Ajax.post(`/api/web/admin/outpass/reject`, {
-                                            id: outpassId,
-                                            reason
-                                        });
+                                        const modal = document.getElementById('modal-panel');
+                                        const frequency = modal.querySelector('#frequency')?.value || '';
 
-                                        if (response.ok) {
-                                            const data = response.data;
+                                        // dynamically pick the correct day field
+                                        let dayOfMonth = '';
+                                        if (frequency === 'monthly') {
+                                            dayOfMonth = modal.querySelector('#day-of-month')?.value || '';
+                                        } else if (frequency === 'yearly') {
+                                            dayOfMonth = modal.querySelector('#yearly-day-of-month')?.value || '';
+                                        }
+
+                                        const formData = {
+                                            report_id: settingId,
+                                            frequency,
+                                            dayOfWeek: modal.querySelector('#day-of-week')?.value || '',
+                                            dayOfMonth, // <- dynamic
+                                            month: modal.querySelector('#month')?.value || '',
+                                            time: modal.querySelector('#time')?.value || '',
+                                            recipients: Array.from(
+                                                modal.querySelectorAll('input[name="recipients[]"]:checked')
+                                            ).map(input => parseInt(input.value)),
+                                        };
+
+                                        const saveResponse = await Ajax.post(`/api/web/admin/reports/save_config`, formData);
+
+                                        if (saveResponse.ok) {
+                                            const data = saveResponse.data;
                                             if (data.status) {
                                                 location.reload();
                                             } else {
                                                 alert(data.message);
                                             }
                                         } else {
-                                            handleError(response.status);
+                                            handleError(saveResponse.status);
                                         }
                                     } catch (error) {
                                         console.error(error);
@@ -773,9 +815,85 @@ document.addEventListener("DOMContentLoaded", () => {
                         classes: 'custom-modal-class',
                         closeOnBackdropClick: false,
                     });
+
+                    // Initialize frequency-dependent fields and pre-check recipients
+                    const initModalFields = () => {
+                        const modalPanel = document.getElementById('modal-panel');
+                        if (!modalPanel) return;
+
+                        const freqSelect = modalPanel.querySelector('#frequency');
+                        const weekly = modalPanel.querySelector('#weekly-options');
+                        const monthly = modalPanel.querySelector('#monthly-options');
+                        const yearly = modalPanel.querySelector('#yearly-options');
+
+                        const dayOfWeek = modalPanel.querySelector('#day-of-week');
+                        const dayOfMonth = modalPanel.querySelector('#day-of-month');
+                        const yearlyDay = modalPanel.querySelector('#yearly-day-of-month');
+                        const month = modalPanel.querySelector('#month');
+
+                        const toggleSections = () => {
+                            const val = freqSelect.value;
+
+                            // reset dependent fields
+                            if (dayOfWeek) dayOfWeek.value = '';
+                            if (dayOfMonth) dayOfMonth.value = '';
+                            if (yearlyDay) yearlyDay.value = '';
+                            if (month) month.value = '';
+
+                            // Weekly
+                            if (weekly) {
+                                if (val === 'weekly') {
+                                    weekly.classList.remove('hidden');
+                                } else {
+                                    weekly.classList.add('hidden');
+                                }
+                            }
+
+                            // Monthly
+                            if (monthly) {
+                                if (val === 'monthly') {
+                                    monthly.classList.remove('hidden');
+                                } else {
+                                    monthly.classList.add('hidden');
+                                }
+                            }
+
+                            // Yearly
+                            if (yearly) {
+                                if (val === 'yearly') {
+                                    yearly.classList.remove('hidden');
+                                    yearly.classList.add('md:flex', 'space-x-4');
+                                } else {
+                                    yearly.classList.add('hidden');
+                                    yearly.classList.remove('md:flex', 'space-x-4');
+                                }
+                            }
+                        };
+
+                        toggleSections(); // set initial visibility
+                        freqSelect.addEventListener('change', toggleSections);
+
+                        // pre-check recipients
+                        const preSelectedIds = reportConfig.recipients.map(r => parseInt(r.id));
+                        modalPanel.querySelectorAll('input[name="recipients[]"]').forEach(input => {
+                            input.checked = preSelectedIds.includes(parseInt(input.value));
+                        });
+
+                        // pre-fill saved values (only if available)
+                        if (dayOfWeek) dayOfWeek.value = reportConfig.dayOfWeek || '';
+                        if (dayOfMonth) dayOfMonth.value = reportConfig.dayOfMonth || '';
+                        if (yearlyDay) yearlyDay.value = reportConfig.dayOfMonth || '';
+                        if (month) month.value = reportConfig.month || '';
+
+                        const timeInput = modalPanel.querySelector('#time');
+                        if (timeInput) timeInput.value = reportConfig.time || '00:00';
+                    };
+
+                    // Small delay to ensure innerHTML is rendered
+                    setTimeout(initModalFields, 50);
                 } else {
-                    console.error('Error loading modal template:', response.data.message || 'Unknown error');
-                    alert(response.data.message || 'Failed to load modal template');
+                    console.error('Error loading modal template:', response.data?.message || 'Unknown error');
+                    alert(response.data?.message || 'Failed to load modal template');
                 }
             } catch (error) {
                 console.error('Failed to load modal content:', error);
@@ -783,5 +901,4 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     });
-
 });

@@ -28,4 +28,12 @@ enum Gender: string {
     {
         return [self::MALE, self::FEMALE];
     }
+
+    public function getLabel(): string
+    {
+        return match ($this) {
+            self::MALE   => 'Male',
+            self::FEMALE  => 'Female',
+        };
+    }
 }

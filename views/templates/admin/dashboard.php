@@ -196,7 +196,7 @@ use App\Enum\UserRole;
         </div>
     </section>
 
-    <?php if (UserRole::isSuperAdmin($user->getRole()->value)): ?>
+    <?php if (isset($reportSettings) && !empty($reportSettings)): ?>
         <!-- Automated Email Reports Section -->
         <section class="p-6 mt-8 bg-white rounded-lg shadow">
             <div class="mb-6">
@@ -207,59 +207,75 @@ use App\Enum\UserRole;
             </div>
 
             <div class="space-y-4">
-                <!-- Daily Movement Report Schedule -->
-                <div class="flex flex-col p-4 border border-gray-200 rounded-lg md:flex-row md:items-center md:justify-between">
-                    <div class="flex-1 mb-3 md:mb-0">
-                        <div class="flex items-center mb-2 space-x-3">
-                            <h4 class="text-base font-semibold text-gray-700">Daily Movement Summary</h4>
-                            <span class="px-2 py-1 text-xs font-medium text-green-800 bg-green-100 rounded-full">Active</span>
-                        </div>
-                        <div class="space-y-1 text-sm text-gray-500">
-                            <div class="flex items-center space-x-4">
-                                <span><strong>Schedule:</strong> Daily at 08:00 AM</span>
-                            </div>
-                            <div class="flex items-center space-x-4">
-                                <span><strong>Next Email:</strong> Sep 11, 2025 08:00 AM</span>
-                                <span><strong>Last Sent:</strong> Sep 10, 2025 08:00 AM</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <button class="px-3 py-1 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700">
-                            Disable
-                        </button>
-                        <button class="px-3 py-1 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 report-settings-button" data-report="daily-movement">
-                            Settings
-                        </button>
-                    </div>
-                </div>
+                <?php foreach ($reportSettings as $setting): ?>
+                    <div class="flex flex-col p-4 border border-gray-200 rounded-lg md:flex-row md:items-center md:justify-between">
+                        <div class="flex-1 mb-3 md:mb-0">
+                            <div class="flex items-center mb-2 space-x-3">
+                                <h4 class="text-base font-semibold text-gray-700">
+                                    <?= $setting->getReportKey()->display() ?>
+                                </h4>
 
-                <!-- Late Arrivals Report Schedule -->
-                <div class="flex flex-col p-4 border border-gray-200 rounded-lg md:flex-row md:items-center md:justify-between">
-                    <div class="flex-1 mb-3 md:mb-0">
-                        <div class="flex items-center mb-2 space-x-3">
-                            <h4 class="text-base font-semibold text-gray-700">Late Arrivals Report</h4>
-                            <span class="px-2 py-1 text-xs font-medium text-gray-600 bg-gray-100 rounded-full">Disabled</span>
+                                <?php if ($setting->isEnabled()): ?>
+                                    <span class="px-2 py-1 text-xs font-medium text-green-800 bg-green-100 rounded-full">
+                                        Active
+                                    </span>
+                                <?php else: ?>
+                                    <span class="px-2 py-1 text-xs font-medium text-red-800 bg-red-100 rounded-full">
+                                        Disabled
+                                    </span>
+                                <?php endif; ?>
+                            </div>
+
+                            <div class="space-y-1 text-sm text-gray-500">
+                                <span><?= $setting->getReportKey()->description() ?></span>
+
+                                <div class="flex items-center space-x-4">
+                                    <span>
+                                        <strong>Schedule:</strong>
+                                        <?= ucfirst(strtolower($setting->getFrequency()->value)) ?>
+                                        <?php if ($setting->getTime()): ?>
+                                            at <?= $setting->getTime()->format('h:i A') ?>
+                                        <?php endif; ?>
+                                    </span>
+                                </div>
+
+                                <div class="flex items-center space-x-4">
+                                    <span>
+                                        <strong>Next Email:</strong>
+                                        <?= $setting->getNextSend() ? $setting->getNextSend()->format('M d, Y h:i A') : '—' ?>
+                                    </span>
+                                    <span>
+                                        <strong>Last Sent:</strong>
+                                        <?= $setting->getLastSent() ? $setting->getLastSent()->format('M d, Y h:i A') : '—' ?>
+                                    </span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="space-y-1 text-sm text-gray-500">
-                            <div class="flex items-center space-x-4">
-                                <span><strong>Schedule:</strong> Weekly (Monday) at 09:00 AM</span>
-                            </div>
-                            <div class="flex items-center space-x-4">
-                                <span><strong>Next Email:</strong> Sep 15, 2025 09:00 AM</span>
-                                <span><strong>Last Sent:</strong> Sep 08, 2025 09:00 AM</span>
-                            </div>
+
+                        <div class="flex items-center space-x-2">
+                            <?php if ($setting->isEnabled()): ?>
+                                <button
+                                    class="px-3 py-1 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 toggle-report-status"
+                                    data-id="<?= $setting->getId() ?>" data-action="disable">
+                                    Disable
+                                </button>
+                            <?php else: ?>
+                                <button
+                                    class="px-3 py-1 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 toggle-report-status"
+                                    data-id="<?= $setting->getId() ?>" data-action="enable">
+                                    Enable
+                                </button>
+                            <?php endif; ?>
+
+                            <button
+                                class="px-3 py-1 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 report-settings-button"
+                                data-id="<?= $setting->getId() ?>">
+                                Settings
+                            </button>
                         </div>
                     </div>
-                    <div class="flex items-center space-x-2">
-                        <button class="px-3 py-1 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700">
-                            Enable
-                        </button>
-                        <button class="px-3 py-1 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 report-settings-button" data-report="late-arrivals">
-                            Settings
-                        </button>
-                    </div>
-                </div>
+                <?php endforeach; ?>
+
             </div>
         </section>
     <?php endif; ?>

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use DateTime;
 use Exception;
 use App\Core\View;
 use App\Entity\User;
@@ -12,6 +13,7 @@ use App\Entity\Student;
 use App\Entity\Settings;
 use App\Enum\OutpassStatus;
 use App\Utils\CsvProcessor;
+use App\Entity\ReportConfig;
 use App\Services\UserService;
 use App\Entity\OutpassRequest;
 use App\Services\FacilityService;
@@ -62,6 +64,21 @@ class AdminService
             'total' => count($lateArrivals),
             'details' => $lateArrivals,
         ];
+    }
+
+    /**
+     * Get all report settings
+     *
+     * @param User $adminUser
+     * @return array
+     */
+    public function getAllReportSettings(User $adminUser): array
+    {
+        $settings = $this->em->getRepository(ReportConfig::class)->findBy([
+            'gender' => $adminUser->getGender()
+        ]);
+
+        return $settings;
     }
 
     /**

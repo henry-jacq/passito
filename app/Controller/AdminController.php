@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Core\View;
 use App\Core\Config;
+use App\Enum\UserRole;
 use App\Services\UserService;
 use App\Services\AdminService;
 use App\Services\OutpassService;
@@ -42,6 +43,11 @@ class AdminController extends BaseController
             'lateArrivals' => $lateArrivalsReport,
             'routeName' => $this->getRouteName($request),
         ];
+
+        if ($userData->getRole() == UserRole::SUPER_ADMIN) {
+            $reportSettings = $this->adminService->getAllReportSettings($userData);
+            $args['reportSettings'] = $reportSettings;
+        }
 
         $args = array_merge($args, $this->view->getGlobals());
         return parent::render($request, $response, 'admin/dashboard', $args);

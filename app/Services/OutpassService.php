@@ -286,8 +286,8 @@ class OutpassService
                     'id' => $o->getId(),
                     'student_name' => $o->getStudent()->getUser()->getName(),
                     'year' => $o->getStudent()->getYear(),
-                    'course' => $o->getStudent()->getCourse(),
-                    'branch' => $o->getStudent()->getBranch(),
+                    'course' => $o->getStudent()->getProgram()->getProgramName(),
+                    'branch' => $o->getStudent()->getProgram()->getShortCode(),
                     'type' => $o->getTemplate()->getName(),
                     'destination' => $o->getDestination(),
                     'status' => $o->getStatus()->value,
@@ -406,7 +406,7 @@ class OutpassService
     /**
      * Generate a QR code for the given data
      */
-    public function generateQRCode(mixed $data, int $size = 300, int $margin = 10): string
+    public function generateQRCode(mixed $data, int $size = 300, int $margin = 10): mixed
     {
         try {
             if (is_array($data)) {
@@ -443,6 +443,7 @@ class OutpassService
             // Handle exceptions
             error_log('QR Code generation failed: ' . $e->getMessage());
             echo 'QR Code generation failed: ' . $e->getMessage();
+            return null;
         }
     }
 

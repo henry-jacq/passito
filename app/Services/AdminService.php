@@ -95,6 +95,27 @@ class AdminService
     }
 
     /**
+     * Toggle report status (enable/disable) by its Id
+     * 
+     * @param int $reportId
+     * @return bool|ReportConfig
+     */
+    public function toggleReportStatus(int $reportId): bool|ReportConfig
+    {
+        $report = $this->getReportSettingById($reportId);
+
+        if (!$report) {
+            return false;
+        }
+
+        $report->setIsEnabled(!$report->isEnabled());
+        $this->em->persist($report);
+        $this->em->flush();
+
+        return $report;
+    }
+
+    /**
      * Update report settings by its Id
      * 
      * @param int $id

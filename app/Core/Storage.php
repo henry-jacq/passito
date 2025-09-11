@@ -154,16 +154,20 @@ class Storage
      */
     public function ensureDirectoryExists(string $directory, int $permissions = 0775): void
     {
-        if (!$this->filesystem->directoryExists($directory)) {
-            $this->filesystem->createDirectory($directory);
+        // Resolve full system path
+        $fullPath = $this->getFullPath($directory);
 
-            // Get the absolute path (you may need to adjust this depending on your setup)
-            $fullPath = $this->getFullPath($directory);
-
-            // Set permissions after creation
-            chmod($fullPath, $permissions | 02000);
+        // If directory doesn’t exist, create recursively
+        if (!is_dir($fullPath)) {
+            if (!mkdir($fullPath, $permissions | 02000, true)) {
+                throw new \RuntimeException("Failed to create directory: $fullPath");
+            }
         }
+
+        // Apply sticky group bit + permissions
+        chmod($fullPath, $permissions | 02000);
     }
+
 
     /**
      * Generates a unique file name within the specified directory.
@@ -175,25 +179,30 @@ class Storage
      *
      * @throws \Exception If a unique file name cannot be generated.
      */
-    public function generateFileName(string $directory, string $extension): string
+    public function generateFileName(string $directory, string $extension, ?string $prefix = null): string
     {
-        // Ensure that the target directory exists.
         $this->ensureDirectoryExists($directory);
 
         $retry = 0;
         $maxRetries = 5;
         do {
-            // Generate a pseudo-random file name
-            $fileName = substr(md5(microtime(true) . random_int(1000, 9999)), 0, 16) . ".{$extension}";
+            $randomName = substr(md5(microtime(true) . random_int(1000, 9999)), 0, 16);
+
+            $name = $prefix
+                ? $prefix . '_' . $randomName  // add underscore for readability
+                : $randomName;
+
+            $fileName = $name . '.' . ltrim($extension, '.');
             $path = rtrim($directory, '/') . '/' . $fileName;
+
             $retry++;
         } while ($this->fileExists($path) && $retry < $maxRetries);
 
         if ($this->fileExists($path)) {
-            throw new \Exception("Failed to generate unique file name after {$maxRetries} retries.");
+            throw new \RuntimeException("Failed to generate unique file name after {$maxRetries} retries.");
         }
 
-        return $path;
+        return $path; // full path
     }
 
     /**

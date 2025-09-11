@@ -12,8 +12,6 @@ use App\Enum\VerifierStatus;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
-// TODO: Generate outpass report
-// TODO: Generate detailed analytics report
 
 class VerifierService
 {

@@ -119,8 +119,8 @@ use App\Enum\UserRole;
                             <div class="flex items-center space-x-2">
                                 <h4 class="text-lg font-semibold text-gray-700">Late Arrivals</h4>
                                 <span class="px-2 py-1 text-xs font-medium text-red-800 bg-red-100 rounded-full">
-                                    <?php if ($lateArrivals['total'] > 9): echo '9+';
-                                    else: echo $lateArrivals['total'];
+                                    <?php if (count($lateArrivals) > 9): echo '9+';
+                                    else: echo count($lateArrivals);
                                     endif; ?>
                                 </span>
                             </div>
@@ -132,7 +132,7 @@ use App\Enum\UserRole;
                     </button>
                 </div>
 
-                <?php if (empty($lateArrivals['details'])): ?>
+                <?php if (empty($lateArrivals)): ?>
                     <div class="flex items-center justify-center w-full h-48 text-gray-500 border border-gray-200 rounded-lg bg-gray-50">
                         No late arrivals today
                     </div>
@@ -148,7 +148,7 @@ use App\Enum\UserRole;
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
-                                <?php foreach ($lateArrivals['details'] as $arrival): ?>
+                                <?php foreach ($lateArrivals as $arrival): ?>
                                     <tr class="hover:bg-gray-50">
                                         <td class="px-4 py-3 text-gray-800"><?= $arrival->getOutpass()->getStudent()->getUser()->getName() ?></td>
                                         <td class="px-4 py-3 text-gray-800"><?= $arrival->getOutpass()->getStudent()->getDigitalId() ?></td>

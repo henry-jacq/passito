@@ -4,31 +4,124 @@ namespace App\Services;
 
 use DateTime;
 use App\Entity\User;
+use App\Core\Storage;
 use App\Enum\UserRole;
+use App\Enum\ReportKey;
 use App\Enum\CronFrequency;
+use App\Utils\CsvProcessor;
 use App\Entity\ReportConfig;
 use App\Services\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ReportService
 {
+    private array $reportHandlers;
+
     public function __construct(
         private readonly UserService $userService,
         private readonly VerifierService $verifierService,
-        private readonly EntityManagerInterface $em
-    )
-    {
+        private readonly EntityManagerInterface $em,
+        private readonly CsvProcessor $csvProcessor,
+        private readonly Storage $storage
+    ) {
+        $this->reportHandlers = [
+            ReportKey::DAILY_MOVEMENT->value => 'generateDailyMovementReport',
+            ReportKey::LATE_ARRIVALS->value  => 'generateLateArrivalsReport',
+        ];
     }
 
-    public function getLateArrivalsReport(User $adminUser): array
+    /**
+     * Generate report and return the stored file path
+     */
+    public function generateReport(User $user, ReportConfig $config): ?string
     {
-        // Fetch late arrivals data
-        $lateArrivals = $this->verifierService->fetchLateArrivals($adminUser);
+        $reportKey = $config->getReportKey();
+        $key = $reportKey instanceof ReportKey ? $reportKey->value : $reportKey;
 
-        return [
-            'total' => count($lateArrivals),
-            'details' => $lateArrivals,
-        ];
+        if (!isset($this->reportHandlers[$key])) {
+            throw new \RuntimeException("Unknown report key: $key");
+        }
+
+        $method = $this->reportHandlers[$key];
+        return $this->$method($user, $config);
+    }
+
+    /**
+     * Generate Daily Movement Report
+     */
+    private function generateDailyMovementReport(User $user, ReportConfig $config): string
+    {
+        // Fetch logs
+        $checkedIn = $this->verifierService->fetchCheckedInLogs($user);
+        $checkedOut = $this->verifierService->fetchCheckedOutLogs($user);
+
+        // Define headers for CSV
+        $headers = ['Name', 'Digital ID', 'Email', 'Date', 'Time', 'Action'];
+
+        $rows = [];
+
+        // Map checked-in logs
+        foreach ($checkedIn as $log) {
+            $rows[] = [
+                $log->getOutpass()->getStudent()->getUser()->getName() ?? null,
+                $log->getOutpass()->getStudent()->getDigitalId() ?? null,
+                $log->getOutpass()->getStudent()->getUser()->getEmail() ?? null,
+                $log->getInTime()->format('d-m-Y') ?? null,
+                $log->getInTime()->format('h:i:s A') ?? null,
+                'CHECKED_IN',
+            ];
+        }
+
+        // Map checked-out logs
+        foreach ($checkedOut as $log) {
+            $rows[] = [
+                $log->getOutpass()->getStudent()->getUser()->getName() ?? null,
+                $log->getOutpass()->getStudent()->getDigitalId() ?? null,
+                $log->getOutpass()->getStudent()->getUser()->getEmail() ?? null,
+                $log->getOutTime()->format('d-m-Y') ?? null,
+                $log->getOutTime()->format('h:i:s A') ?? null,
+                'CHECKED_OUT',
+            ];
+        }
+
+        // Save into storage
+        // The prefix will have date in future
+        return $this->saveCsv($rows, $headers, 'reports/daily_movement', 'daily_movement');
+    }
+
+
+    /**
+     * Generate Late Arrivals Report
+     */
+    private function generateLateArrivalsReport(User $user, ReportConfig $config): string
+    {
+        $lateArrivals = $this->verifierService->fetchLateArrivals($user);
+
+        $headers = ['Digital ID', 'Student Name', 'Email', 'Arrival Time', 'Date'];
+        $rows = $this->csvProcessor->mapDataToRows($lateArrivals, function ($record) {
+            return [
+                $record['id'],
+                $record['name'],
+                $record['email'],
+                $record['arrival_time'],
+                $record['date'],
+            ];
+        });
+
+        return $this->saveCsv($rows, $headers, 'reports/late_arrivals', 'late_arrivals');
+    }
+
+    /**
+     * Save CSV into storage and return its path
+     */
+    private function saveCsv(array $rows, array $headers, string $directory, ?string $prefix=null): string
+    {
+        $relativePath = $this->storage->generateFileName($directory, "csv", $prefix);
+        $fullPath = $this->storage->getFullPath($relativePath, true);
+
+        $this->csvProcessor->writeToFile($fullPath, $headers, $rows);
+
+        return $relativePath; // stored path for queue + retrieval
     }
 
     /**

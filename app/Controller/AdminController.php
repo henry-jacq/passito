@@ -9,6 +9,7 @@ use App\Services\UserService;
 use App\Services\AdminService;
 use App\Services\OutpassService;
 use App\Services\FacilityService;
+use App\Services\ReportService;
 use App\Services\VerifierService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -20,8 +21,9 @@ class AdminController extends BaseController
         protected readonly View $view,
         protected readonly Config $config,
         private readonly UserService $userService,
-        private readonly OutpassService $outpassService,
         private readonly AdminService $adminService,
+        private readonly ReportService $reportService,
+        private readonly OutpassService $outpassService,
         private readonly VerifierService $verifierService,
         private readonly FacilityService $facilityService
     )
@@ -34,7 +36,7 @@ class AdminController extends BaseController
         $this->view->clearCacheIfDev();
         $userData = $request->getAttribute('user');
         $dashboardData = $this->adminService->getDashboardDetails($userData);
-        $lateArrivalsReport = $this->adminService->getLateArrivalsReport($userData);
+        $lateArrivalsReport = $this->reportService->getLateArrivalsReport($userData);
 
         $args = [
             'title' => 'Dashboard',
@@ -45,7 +47,7 @@ class AdminController extends BaseController
         ];
 
         if ($userData->getRole() == UserRole::SUPER_ADMIN) {
-            $reportSettings = $this->adminService->getAllReportSettings($userData);
+            $reportSettings = $this->reportService->getAllReportSettings($userData);
             $args['reportSettings'] = $reportSettings;
         }
 

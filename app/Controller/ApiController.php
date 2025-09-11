@@ -18,6 +18,7 @@ use App\Services\OutpassService;
 use App\Services\FacilityService;
 use App\Services\VerifierService;
 use App\Services\ParentVerificationService;
+use App\Services\ReportService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -57,6 +58,7 @@ class ApiController
         private readonly Storage $storage,
         private readonly UserService $userService,
         private readonly AdminService $adminService,
+        private readonly ReportService $reportService,
         private readonly OutpassService $outpassService,
         private readonly VerifierService $verifierService,
         private readonly FacilityService $facilityService,

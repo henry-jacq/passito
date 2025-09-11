@@ -13,7 +13,7 @@ ${basename(__FILE__, '.php')} = function () {
         }
         
         $reportId = (int) $this->data['report_id'];
-        $report = $this->adminService->toggleReportStatus($reportId);
+        $report = $this->reportService->toggleReportStatus($reportId);
         
         if (!$report instanceof ReportConfig) {
             return $this->response([

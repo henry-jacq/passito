@@ -21,7 +21,7 @@ ${basename(__FILE__, '.php')} = function () {
             'recipients' => array_map('intval', $this->data['recipients']) ?? []
         ];
 
-        $result = $this->adminService->updateReportSettingsById($reportId, $reportData);
+        $result = $this->reportService->updateReportSettingsById($reportId, $reportData);
 
         if (!$result) {
             return $this->response([

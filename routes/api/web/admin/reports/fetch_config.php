@@ -13,7 +13,7 @@ ${basename(__FILE__, '.php')} = function () {
         }
         
         $reportId = (int) $this->data['report_id'];
-        $report = $this->adminService->getReportSettingById($reportId);
+        $report = $this->reportService->getReportSettingById($reportId);
 
         if (!$report) {
             return $this->response([

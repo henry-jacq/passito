@@ -721,4 +721,67 @@ document.addEventListener("DOMContentLoaded", () => {
             alert('Failed to load modal content. Please try again later.');
         }
     });
+
+    // Export Report CSV
+    const exportReportButtons = document.querySelectorAll('.export-report-btn');
+
+    if (exportReportButtons.length > 0) {
+        exportReportButtons.forEach((button) => {
+            button.addEventListener('click', async (event) => {
+                event.stopPropagation();
+                const key = button.getAttribute('data-key');
+
+                const toast = new Toast();
+                toast.create({
+                    message: "Exporting, please wait...",
+                    position: "bottom-right",
+                    type: "queue",
+                    duration: 4000
+                });
+
+                try {
+                    const response = await Ajax.download(
+                        `/api/web/admin/reports/export?key=${key}`,
+                        'POST',
+                        { 'Content-Type': 'application/json' }
+                    );
+
+                    if (response.ok) {
+                        const url = window.URL.createObjectURL(response.data);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = response.filename || `${key}_export.csv`; // fallback filename
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
+                        window.URL.revokeObjectURL(url);
+
+                        toast.create({
+                            message: "Export completed successfully",
+                            position: "bottom-right",
+                            type: "success",
+                            duration: 4000
+                        });
+                    } else {
+                        toast.create({
+                            message: response.message || "Failed to export data",
+                            position: "bottom-right",
+                            type: "error",
+                            duration: 4000
+                        });
+                    }
+                } catch (error) {
+                    console.error('Export failed:', error);
+                    toast.create({
+                        message: "An error occurred during export",
+                        position: "bottom-right",
+                        type: "error",
+                        duration: 4000
+                    });
+                } finally {
+                    Modal.close();
+                }
+            });
+        });
+    }
 });

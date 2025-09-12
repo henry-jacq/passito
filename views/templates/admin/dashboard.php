@@ -1,6 +1,6 @@
 <?php
 
-use App\Enum\UserRole;
+use App\Enum\ReportKey;
 ?>
 
 <main class="flex-1 p-6 mt-20 overflow-y-auto">
@@ -73,12 +73,13 @@ use App\Enum\UserRole;
                             <p class="text-sm text-gray-500">Today's check-in/out summary</p>
                         </div>
                     </div>
-                    <button class="px-3 py-1 text-sm font-medium text-blue-600 bg-blue-100 rounded-lg hover:bg-blue-200">
-                        Export All
+                    <button class="px-3 py-1 text-sm font-medium text-blue-600 transition bg-blue-100 rounded-lg hover:bg-blue-200 export-report-btn" data-key="<?= ReportKey::DAILY_MOVEMENT->value ?>">
+                        <i class="mr-1 fa fa-download"></i>
+                        Export CSV
                     </button>
                 </div>
 
-                <div class="space-y-3">
+                <div class="pt-4 space-y-5">
                     <div class="flex items-center justify-between p-4 rounded-lg bg-gray-50">
                         <div class="flex items-center space-x-3">
                             <div class="w-3 h-3 bg-orange-500 rounded-full"></div>
@@ -86,9 +87,6 @@ use App\Enum\UserRole;
                         </div>
                         <div class="flex items-center space-x-3">
                             <span class="px-3 py-1 text-sm font-semibold text-orange-800 bg-orange-100 rounded-full"><?= $data['checkedOut'] ?></span>
-                            <button class="px-3 py-1 text-sm font-medium text-blue-600 bg-blue-100 rounded-lg hover:bg-blue-200">
-                                Export
-                            </button>
                         </div>
                     </div>
                     <div class="flex items-center justify-between p-4 rounded-lg bg-gray-50">
@@ -98,9 +96,6 @@ use App\Enum\UserRole;
                         </div>
                         <div class="flex items-center space-x-3">
                             <span class="px-3 py-1 text-sm font-semibold text-green-800 bg-green-100 rounded-full"><?= $data['checkedIn'] ?></span>
-                            <button class="px-3 py-1 text-sm font-medium text-blue-600 bg-blue-100 rounded-lg hover:bg-blue-200">
-                                Export
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -127,7 +122,8 @@ use App\Enum\UserRole;
                             <p class="text-sm text-gray-500">Students who checked in late today</p>
                         </div>
                     </div>
-                    <button class="px-3 py-1 text-sm font-medium text-blue-600 bg-blue-100 rounded-lg hover:bg-blue-200">
+                    <button class="px-3 py-1 text-sm font-medium text-blue-600 transition bg-blue-100 rounded-lg hover:bg-blue-200 export-report-btn" data-key="<?= ReportKey::LATE_ARRIVALS->value ?>">
+                        <i class="mr-1 fa fa-download"></i>
                         Export CSV
                     </button>
                 </div>

@@ -97,14 +97,31 @@ class ReportService
     {
         $lateArrivals = $this->verifierService->fetchLateArrivals($user);
 
-        $headers = ['Digital ID', 'Student Name', 'Email', 'Arrival Time', 'Date'];
-        $rows = $this->csvProcessor->mapDataToRows($lateArrivals, function ($record) {
+        $headers = [
+            'Student Name',
+            'Digital ID',
+            'Email',
+            'From Duration',
+            'To Duration',
+            'Check-In',
+            'Check-Out',
+            'Late Duration'
+        ];
+        $rows = $this->csvProcessor->mapDataToRows($lateArrivals, function ($log) {
+            $fromTime = $log->getOutpass()->getFromTime()->format('h:i:s A') ?? null;
+            $fromDate = $log->getOutpass()->getFromDate()->format('d-m-Y') ?? null;
+            $toTime = $log->getOutpass()->getToTime()->format('h:i:s A') ?? null;
+            $toDate = $log->getOutpass()->getToDate()->format('d-m-Y') ?? null;
+            
             return [
-                $record['id'],
-                $record['name'],
-                $record['email'],
-                $record['arrival_time'],
-                $record['date'],
+                $log->getOutpass()->getStudent()->getUser()->getName() ?? null,
+                $log->getOutpass()->getStudent()->getDigitalId() ?? null,
+                $log->getOutpass()->getStudent()->getUser()->getEmail() ?? null,
+                $fromDate . ' ' . $fromTime,
+                $toDate . ' ' . $toTime,
+                $log->getOutTime()->format('d-m-Y h:i:s A') ?? null,
+                $log->getInTime()->format('d-m-Y h:i:s A') ?? null,
+                $log->getLateDuration()
             ];
         });
 
@@ -148,6 +165,17 @@ class ReportService
     public function getReportSettingById(int $reportId): ReportConfig|null
     {
         return $this->em->getRepository(ReportConfig::class)->find($reportId);
+    }
+
+    /**
+     * Get Report Setting by ReportKey and User Gender
+     */
+    public function getReportSettingByKey(ReportKey $key, User $user): ?ReportConfig
+    {
+        return $this->em->getRepository(ReportConfig::class)->findOneBy([
+            'reportKey' => $key,
+            'gender' => $user->getGender()
+        ]);
     }
 
     /**

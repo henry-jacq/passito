@@ -11,6 +11,8 @@ use App\Core\Storage;
 use App\Entity\Hostel;
 use App\Entity\Student;
 use App\Entity\Settings;
+use App\Jobs\SendEmailJob;
+use App\Core\JobDispatcher;
 use App\Enum\OutpassStatus;
 use App\Utils\CsvProcessor;
 use App\Services\UserService;
@@ -30,7 +32,8 @@ class AdminService
         private readonly OutpassService $outpass,
         private readonly FacilityService $facilityService,
         private readonly VerifierService $verifierService,
-        private readonly EntityManagerInterface $em
+        private readonly EntityManagerInterface $em,
+        private readonly JobDispatcher $jobDispatcher
     )
     {
     }
@@ -112,7 +115,7 @@ class AdminService
         }
     }
 
-    public function approvePending(OutpassRequest $outpass, $approvedBy): OutpassRequest|bool
+    public function approvePending(OutpassRequest $outpass, $approvedBy): OutpassRequest
     {
         $outpass->setStatus(OutpassStatus::APPROVED);
         $outpass->setRemarks(null);
@@ -144,21 +147,18 @@ class AdminService
 
         // Update outpass status
         $outpass = $this->outpass->updateOutpass($outpass);
-        $queue = $this->mail->queueEmail(
-            $subject,
-            $accepted,
-            $userEmail,
-            $attachments
-        );
 
-        if (!$queue) {
-            return false;
-        }
+        $this->jobDispatcher->dispatch(SendEmailJob::class, [
+            'subject' => $subject,
+            'body' => $accepted,
+            'to' => $userEmail,
+            'attachments' => $attachments
+        ]);
 
         return $outpass;
     }
 
-    public function rejectPending(OutpassRequest $outpass, $approvedBy, $reason=null): OutpassRequest|bool
+    public function rejectPending(OutpassRequest $outpass, $approvedBy, $reason=null): OutpassRequest
     {
         $outpass->setStatus(OutpassStatus::REJECTED);
         $outpass->setApprovedTime($time = new \DateTime());
@@ -182,15 +182,12 @@ class AdminService
 
         // Update outpass status
         $outpass = $this->outpass->updateOutpass($outpass);
-        $queue = $this->mail->queueEmail(
-            $subject,
-            $rejected,
-            $userEmail
-        );
 
-        if (!$queue) {
-            return false;
-        }
+        $this->jobDispatcher->dispatch(SendEmailJob::class, [
+            'subject' => $subject,
+            'body' => $rejected,
+            'to' => $userEmail
+        ]);
 
         return $outpass;
     }

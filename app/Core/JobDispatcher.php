@@ -9,19 +9,42 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class JobDispatcher
 {
-    public function __construct(private readonly EntityManagerInterface $em) {}
+    public function __construct(
+        private readonly EntityManagerInterface $em
+    ) {}
 
-    public function dispatch(string $jobClass, array $payload = [], ?DateTimeInterface $availableAt = null): void
-    {
+    /**
+     * Dispatch a job into the queue.
+     *
+     * @param string                 $jobClass     Fully qualified job class name (must exist).
+     * @param JobPayloadBuilder      $payload      The payload for the job.
+     * @param DateTimeInterface|null $availableAt  When the job becomes eligible.
+     *
+     * @return Job
+     */
+    public function dispatch(
+        string $jobClass,
+        JobPayloadBuilder $payload,
+        ?DateTimeInterface $availableAt = null
+    ): Job {
         if (!class_exists($jobClass)) {
             throw new RuntimeException("Job class {$jobClass} not found");
         }
 
-        $job = new Job($jobClass, $payload);
+        // Flatten + sanitize dependencies
+        $dependencies = array_values(array_unique(array_map(
+            fn($id) => (int) $id,
+            $payload->getDependencies()
+        )));
+
+        $job = new Job($jobClass, $payload->getPayload());
+        $job->setDependencies($dependencies);
         $job->setStatus('pending');
-        $job->setAvailableAt($availableAt ?? new \DateTime());
+        $job->setAvailableAt($availableAt ?? new \DateTimeImmutable());
 
         $this->em->persist($job);
         $this->em->flush();
+
+        return $job;
     }
 }

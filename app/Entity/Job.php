@@ -32,11 +32,18 @@ class Job
     #[ORM\Column(type: "string", length: 20)]
     private string $status = 'pending';
 
-    #[ORM\Column(type: "text", nullable: true)]
+    #[ORM\Column(type: 'json')]
+    private array $dependencies = [];
+
+    #[ORM\Column(type: 'json', nullable: true)]
+    private ?array $result = null;
+
+    #[ORM\Column(type: 'datetime')]
+    private DateTimeInterface $createdAt;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $lastError = null;
 
-    #[ORM\Column(type: "datetime")]
-    private DateTimeInterface $createdAt;
 
     public function __construct(string $type, array $payload, int $delay = 0, int $maxAttempts = 3)
     {
@@ -47,7 +54,6 @@ class Job
         $this->status = 'pending';
         $this->createdAt = new \DateTime();
     }
-
 
     public function getId(): ?int
     {
@@ -103,9 +109,30 @@ class Job
     {
         return $this->lastError;
     }
-    
+
     public function setLastError(?string $error): void
     {
         $this->lastError = $error;
+    }
+
+    public function setDependencies(array $dependencies): self
+    {
+        $this->dependencies = array_values(array_unique(array_map('intval', $dependencies)));
+        return $this;
+    }
+
+    public function getDependencies(): array
+    {
+        return $this->dependencies;
+    }
+
+    public function setResult(?array $result): void
+    {
+        $this->result = $result;
+    }
+
+    public function getResult(): ?array
+    {
+        return $this->result;
     }
 }

@@ -42,7 +42,7 @@ class JobWorkerCommand extends Command
 
         while (true) {
             $job = $this->fetchNextJob();
-            if ($job) {
+            if ($job && $this->canRun($job)) {
                 $this->processJob($job, $output);
             } else {
                 sleep(2);
@@ -75,9 +75,29 @@ class JobWorkerCommand extends Command
         $this->printLine($output, 'INFO', "Processing Job #{$job->getId()} ({$job->getType()})", $startTime);
 
         try {
+            // Base payload
+            $payload = $job->getPayload();
+
+            // Merge dependency results
+            if (!empty($job->getDependencies())) {
+                foreach ($job->getDependencies() as $depId) {
+                    $dep = $this->em->find(Job::class, $depId);
+
+                    if ($dep && $dep->getStatus() === 'done' && $dep->getResult()) {
+                        // Namespace each dependency by job ID
+                        $payload['dependencies'][(string)$depId] = $dep->getResult();
+                    }
+                }
+            }
+
             /** @var JobInterface $handler */
             $handler = $this->container->get($job->getType());
-            $handler->handle($job->getPayload());
+            $result = $handler->handle($payload);
+
+            // Save result if provided
+            if (is_array($result)) {
+                $job->setResult($result);
+            }
 
             $job->setStatus('done');
             $this->em->flush();
@@ -91,15 +111,36 @@ class JobWorkerCommand extends Command
             if ($job->getAttempts() >= $job->getMaxAttempts()) {
                 $job->setStatus('failed');
                 $job->setLastError($e->getMessage());
-                $this->printLine($output, 'FAIL', "Job Failed #{$job->getId()} ({$job->getType()}): {$e->getMessage()}", $endTime);
+                $this->printLine(
+                    $output,
+                    'FAIL',
+                    "Job Failed #{$job->getId()} ({$job->getType()}): {$e->getMessage()}",
+                    $endTime
+                );
             } else {
                 $job->setStatus('pending');
                 $job->setLastError($e->getMessage());
-                $this->printLine($output, 'WARN', "Job Failed #{$job->getId()}, will retry. Error: {$e->getMessage()}", $endTime);
+                $this->printLine(
+                    $output,
+                    'WARN',
+                    "Job Failed #{$job->getId()}, will retry. Error: {$e->getMessage()}",
+                    $endTime
+                );
             }
 
             $this->em->flush();
         }
+    }
+
+    private function canRun(Job $job): bool
+    {
+        foreach ($job->getDependencies() as $depId) {
+            $dep = $this->em->getRepository(Job::class)->find($depId);
+            if (!$dep || $dep->getStatus() !== 'done') {
+                return false; // wait until dependency is done
+            }
+        }
+        return true;
     }
 
     /**

@@ -13,12 +13,16 @@ use App\Entity\Student;
 use App\Entity\Settings;
 use App\Jobs\SendEmailJob;
 use App\Core\JobDispatcher;
+use App\Core\JobPayloadBuilder;
 use App\Enum\OutpassStatus;
 use App\Utils\CsvProcessor;
 use App\Services\UserService;
 use App\Entity\OutpassRequest;
 use App\Services\FacilityService;
 use App\Entity\InstitutionProgram;
+use App\Jobs\GenerateOutpassPdf;
+use App\Jobs\GenerateQrCode;
+use App\Jobs\SendOutpassEmail;
 use Doctrine\ORM\EntityManagerInterface;
 
 class AdminService
@@ -33,7 +37,7 @@ class AdminService
         private readonly FacilityService $facilityService,
         private readonly VerifierService $verifierService,
         private readonly EntityManagerInterface $em,
-        private readonly JobDispatcher $jobDispatcher
+        private readonly JobDispatcher $queue
     )
     {
     }
@@ -117,43 +121,48 @@ class AdminService
 
     public function approvePending(OutpassRequest $outpass, $approvedBy): OutpassRequest
     {
+        // Update outpass status to approved
         $outpass->setStatus(OutpassStatus::APPROVED);
         $outpass->setRemarks(null);
-        $outpass->setApprovedTime($time = new \DateTime());
+        $outpass->setApprovedTime(new \DateTime());
         $outpass->setApprovedBy($approvedBy);
 
-        $accepted = $this->view->renderEmail('outpass/accepted', [
-            'studentName' => $outpass->getStudent()->getUser()->getName(),
-            'outpass' => $outpass,
-        ]);
-
-        $userEmail = $outpass->getStudent()->getUser()->getEmail();
-        $subject = "Your Outpass Request #{$outpass->getId()} Has Been Approved";
-
-        $qrData = [
-            'id' => $outpass->getId(),
-            'type' => $outpass->getTemplate()->getName(),
-            'student' => $userEmail,
-        ];
-
-        // Generate QR code and outpass document
-        $qrCodePath = $this->outpass->generateQRCode($qrData);
-        $outpass->setQrCode(basename($qrCodePath));
-
-        $documentPath = $this->outpass->generateOutpassDocument($outpass);
-        $outpass->setDocument(basename($documentPath));
-
-        $attachments = [$documentPath, $qrCodePath];
-
-        // Update outpass status
+        // Persist update
         $outpass = $this->outpass->updateOutpass($outpass);
 
-        $this->jobDispatcher->dispatch(SendEmailJob::class, [
-            'subject' => $subject,
-            'body' => $accepted,
-            'to' => $userEmail,
-            'attachments' => $attachments
-        ]);
+        // --- QR Job ---
+        $qrJobPayload = JobPayloadBuilder::create()
+            ->set('directory', 'qr_codes')
+            ->set('prefix', 'qrcode_')
+            ->set('size', 300)
+            ->set('margin', 10)
+            ->set('qr_data', [
+                'id'      => $outpass->getId(),
+                'student' => $outpass->getStudent()->getUser()->getEmail(),
+                'type'    => $outpass->getTemplate()->getName(),
+            ])
+            ->set('qr_secret', $_ENV['QR_SECRET']);
+
+        $qrJob = $this->queue->dispatch(GenerateQrCode::class, $qrJobPayload);
+
+        // --- PDF Job (depends on QR) ---
+        $pdfJobPayload = JobPayloadBuilder::create()
+            ->addDependency($qrJob->getId())
+            ->set('directory', 'outpasses')
+            ->set('prefix', 'outpass_')
+            ->set('outpass_id', $outpass->getId());
+
+        $pdfJob = $this->queue->dispatch(GenerateOutpassPdf::class, $pdfJobPayload);
+
+        // --- Email Job (depends on PDF) ---
+        $emailJobPayload = JobPayloadBuilder::create()
+            ->addDependencies([$qrJob->getId(), $pdfJob->getId()])
+            ->set('subject', "Your Outpass Request #{$outpass->getId()} Has Been Approved")
+            ->set('to', $outpass->getStudent()->getUser()->getEmail())
+            ->set('outpass_id', $outpass->getId())
+            ->set('email_template', 'outpass/accepted');
+
+        $this->queue->dispatch(SendOutpassEmail::class, $emailJobPayload);
 
         return $outpass;
     }
@@ -161,7 +170,7 @@ class AdminService
     public function rejectPending(OutpassRequest $outpass, $approvedBy, $reason=null): OutpassRequest
     {
         $outpass->setStatus(OutpassStatus::REJECTED);
-        $outpass->setApprovedTime($time = new \DateTime());
+        $outpass->setApprovedTime(new \DateTime());
         $outpass->setApprovedBy($approvedBy);
         $outpass->setAttachments(null);
 
@@ -172,22 +181,16 @@ class AdminService
             $outpass->setRemarks($reason);
         }
 
-        $rejected = $this->view->renderEmail('outpass/rejected', [
-            'studentName' => $outpass->getStudent()->getUser()->getName(),
-            'outpass' => $outpass,
-        ]);
-
-        $userEmail = $outpass->getStudent()->getUser()->getEmail();
-        $subject = "Your Outpass Request #{$outpass->getId()} Has Been Rejected";
-
         // Update outpass status
         $outpass = $this->outpass->updateOutpass($outpass);
 
-        $this->jobDispatcher->dispatch(SendEmailJob::class, [
-            'subject' => $subject,
-            'body' => $rejected,
-            'to' => $userEmail
-        ]);
+        // --- Email Job ---
+        $emailJobPayload = JobPayloadBuilder::create()
+            ->set('subject', "Your Outpass Request #{$outpass->getId()} Has Been Rejected")
+            ->set('to', $outpass->getStudent()->getUser()->getEmail())
+            ->set('outpass_id', $outpass->getId())
+            ->set('email_template', 'outpass/rejected');
+        $this->queue->dispatch(SendOutpassEmail::class, $emailJobPayload);
 
         return $outpass;
     }

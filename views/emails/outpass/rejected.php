@@ -21,7 +21,7 @@
         <tr>
             <td style="padding: 30px;">
                 <p style="margin: 0 0 20px; font-size: 18px; font-weight: bold; color: #374151;">
-                    Dear <?= $studentName ?>,
+                    Dear <?= $outpass->getStudent()->getUser()->getName() ?>,
                 </p>
                 <p style="margin: 0 0 20px; font-size: 16px; line-height: 1.6; color: #374151;">
                     We regret to inform you that your outpass request has been rejected. Here are the details of your request:

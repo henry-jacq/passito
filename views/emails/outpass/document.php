@@ -99,9 +99,10 @@
 </head>
 
 <body>
+    <?php $student = $outpass->getStudent(); ?>
 
     <div class="org-header">
-        <img src="<?= $this->storage->getFullPath("qr_codes/{$outpass->getQrCode()}") ?>" alt="<?= $this->storage->getFullPath("qr_codes/{$outpass->getQrCode()}") ?>">
+        <img src="<?= $this->storage->getFullPath("qr_codes/{$qrCodeFile}") ?>" alt="<?= $this->storage->getFullPath("qr_codes/{$qrCodeFile}") ?>">
         <div class="text-container">
             <h3 class="org-name"><?= $student->getProgram()->getProvidedBy()->getName() ?></h3>
             <p class="address-line"><?= $student->getProgram()->getProvidedBy()->getAddress() ?></p>

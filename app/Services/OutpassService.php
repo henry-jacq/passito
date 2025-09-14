@@ -4,26 +4,17 @@ namespace App\Services;
 
 use DateTime;
 use App\Core\View;
-use Dompdf\Dompdf;
-use Dompdf\Options;
 use App\Entity\User;
 use App\Enum\Gender;
 use App\Core\Storage;
 use App\Enum\UserRole;
 use App\Entity\Student;
-use App\Enum\OutpassType;
-use Endroid\QrCode\QrCode;
 use App\Enum\OutpassStatus;
 use App\Entity\OutpassRequest;
 use App\Entity\OutpassSettings;
 use App\Entity\OutpassTemplate;
-use Endroid\QrCode\Color\Color;
 use App\Entity\OutpassTemplateField;
-use Endroid\QrCode\Writer\PngWriter;
-use Endroid\QrCode\Encoding\Encoding;
-use Endroid\QrCode\RoundBlockSizeMode;
 use Doctrine\ORM\EntityManagerInterface;
-use Endroid\QrCode\ErrorCorrectionLevel;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class OutpassService
@@ -401,89 +392,6 @@ class OutpassService
             'emailNotification' => true,
             'smsNotification' => true,
         ];
-    }
-
-    /**
-     * Generate a QR code for the given data
-     */
-    public function generateQRCode(mixed $data, int $size = 300, int $margin = 10): mixed
-    {
-        try {
-            if (is_array($data)) {
-                $data = json_encode($data);
-            }
-
-            // Encrypt the data
-            $data = $this->encryptQrData($data, $_ENV['QR_SECRET']);
-            
-            $qrCode = new QrCode(
-                $data, // Data to encode in the QR code
-                new Encoding('UTF-8'), // Encoding
-                ErrorCorrectionLevel::High, // Error correction level
-                $size, // Size
-                $margin, // Margin
-                RoundBlockSizeMode::Margin, // Round block size mode
-                new Color(0, 0, 0), // Foreground color (black)
-                new Color(255, 255, 255) // Background color (white)
-            );
-
-            // Generate the QR code image data
-            $writer = new PngWriter();
-            $imageData = $writer->write($qrCode)->getString();
-
-            // Generate unique file name with path
-            $qrCodePath = $this->storage->generateFileName('qr_codes', 'png');
-
-            // Save the QR code image
-            $this->storage->write($qrCodePath, $imageData);
-
-            return $qrCodePath;
-    
-        } catch (\Exception $e) {
-            // Handle exceptions
-            error_log('QR Code generation failed: ' . $e->getMessage());
-            echo 'QR Code generation failed: ' . $e->getMessage();
-            return null;
-        }
-    }
-
-    /**
-     * Generate outpass document and return the file path
-     */
-    public function generateOutpassDocument(OutpassRequest $outpass): string
-    {
-        // Render Outpass document HTML
-        $html = $this->view->renderEmail('outpass/document', [
-            'outpass' => $outpass,
-            'student' => $outpass->getStudent(),
-        ]);
-
-        // Change the working directory to storage path
-        $options = new Options();
-        // To get warden signature image
-        $options->set('isRemoteEnabled', true);
-        $options->set('chroot', realpath(STORAGE_PATH));
-
-        // Initialize Dompdf
-        $dompdf = new Dompdf($options);
-        $dompdf->loadHtml($html);
-
-        // (Optional) Setup the paper size and orientation
-        $dompdf->setPaper('A4', 'portrait');
-
-        // Render the HTML as PDF
-        $dompdf->render();
-
-        // Output the generated PDF
-        $output = $dompdf->output();
-
-        // Generate unique file name with path
-        $pdfPath = $this->storage->generateFileName('outpasses', 'pdf');
-
-        // Save the PDF to a file
-        $this->storage->write($pdfPath, $output);
-
-        return $pdfPath;
     }
 
     /**

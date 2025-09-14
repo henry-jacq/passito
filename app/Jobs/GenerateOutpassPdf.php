@@ -8,12 +8,14 @@ use Dompdf\Options;
 use App\Core\Storage;
 use App\Interfaces\JobInterface;
 use App\Services\OutpassService;
+use Doctrine\ORM\EntityManagerInterface;
 
 class GenerateOutpassPdf implements JobInterface
 {
     public function __construct(
         private readonly View $view,
         private readonly Storage $storage,
+        private readonly EntityManagerInterface $em,
         private readonly OutpassService $outpassService
     ) {}
 
@@ -69,6 +71,10 @@ class GenerateOutpassPdf implements JobInterface
 
         // Save the PDF to a file
         $this->storage->write($pdfPath, $output);
+
+        $outpass->setDocument(basename($pdfPath));
+        $this->em->persist($outpass);
+        $this->em->flush();
 
         return ['pdfPath' => $pdfPath];
     }

@@ -116,6 +116,10 @@ class StorageController extends BaseController
                 return true;
             }
 
+            if (empty($attachment)) {
+                continue;
+            }
+
             foreach ($attachment as $file) {
                 $attachmentPath = $this->storage->getFullPath("attachments/{$file}");
 

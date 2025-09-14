@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Core\Config;
 use App\Core\Storage;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Color\Color;
@@ -10,32 +11,47 @@ use App\Services\OutpassService;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\RoundBlockSizeMode;
+use Doctrine\ORM\EntityManagerInterface;
 use Endroid\QrCode\ErrorCorrectionLevel;
 
 class GenerateQrCode implements JobInterface
 {
     public function __construct(
+        private readonly Config $config,
         private readonly Storage $storage,
+        private readonly EntityManagerInterface $em,
         private readonly OutpassService $outpassService
     ) {}
 
     public function handle(array $payload)
     {
-        try {
+        try {            
             if (
                 empty($payload['directory'])
-                || empty($payload['qr_data'])
-                || empty($payload['qr_secret'])
+                || empty($payload['prefix'])
                 || empty($payload['margin'])
                 || empty($payload['size'])
+                || empty($payload['outpass_id'])
             ) {
                 throw new \InvalidArgumentException('Invalid payload for GenerateQrJob ' . json_encode($payload));
             }
             
+            // Fetch outpass details
+            $outpass = $this->outpassService->getOutpassById($payload['outpass_id']);
+            
+            $qr_data = [
+                'id'      => $outpass->getId(),
+                'student' => $outpass->getStudent()->getUser()->getEmail(),
+                'type'    => $outpass->getTemplate()->getName(),
+            ];
+
+            // Fetch secret key from config
+            $secretKey = $this->config->get('app.qr_secret');
+
             // Encrypt the QR data with the provided secret
             $data = $this->outpassService->encryptQrData(
-                json_encode($payload['qr_data']),
-                $payload['qr_secret']
+                json_encode($qr_data),
+                $secretKey
             );
 
             $qrCode = new QrCode(
@@ -58,6 +74,10 @@ class GenerateQrCode implements JobInterface
 
             // Save the QR code image
             $this->storage->write($qrCodePath, $imageData);
+
+            $outpass->setQrCode(basename($qrCodePath));
+            $this->em->persist($outpass);
+            $this->em->flush();
 
             // Send qrCodePath to dependent jobs
             return ['qrCodePath' => $qrCodePath];

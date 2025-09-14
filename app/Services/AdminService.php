@@ -134,14 +134,8 @@ class AdminService
         $qrJobPayload = JobPayloadBuilder::create()
             ->set('directory', 'qr_codes')
             ->set('prefix', 'qrcode_')
-            ->set('size', 300)
-            ->set('margin', 10)
-            ->set('qr_data', [
-                'id'      => $outpass->getId(),
-                'student' => $outpass->getStudent()->getUser()->getEmail(),
-                'type'    => $outpass->getTemplate()->getName(),
-            ])
-            ->set('qr_secret', $_ENV['QR_SECRET']);
+            ->set('size', 300)->set('margin', 10)
+            ->set('outpass_id', $outpass->getId());
 
         $qrJob = $this->queue->dispatch(GenerateQrCode::class, $qrJobPayload);
 

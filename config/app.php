@@ -27,6 +27,7 @@ return [
         'display_error_details' => $boolean($_ENV['APP_DEBUG'] ?? 0),
         'log_errors' => true,
         'log_error_details' => true,
+        'qr_secret' => $_ENV['QR_SECRET'] ?? 'passito',
     ],
     'doctrine' => [
         'dev_mode' => AppEnvironment::isDevelopment($appEnv) ?? 'development',

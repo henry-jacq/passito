@@ -2,13 +2,13 @@
 
 namespace App\Controller;
 
+use App\Core\JobDispatcher;
 use Closure;
 use App\Core\View;
 use App\Entity\User;
 use App\Core\Session;
 use App\Core\Storage;
 use App\Utils\CsvProcessor;
-use App\Services\SMSService;
 use App\Services\AuthService;
 use App\Services\MailService;
 use App\Services\UserService;
@@ -54,7 +54,6 @@ class ApiController
         private readonly Session $session,
         private readonly AuthService $auth,
         private readonly MailService $mail,
-        private readonly SMSService $sms,
         private readonly Storage $storage,
         private readonly UserService $userService,
         private readonly AdminService $adminService,
@@ -63,7 +62,8 @@ class ApiController
         private readonly VerifierService $verifierService,
         private readonly FacilityService $facilityService,
         private readonly CsvProcessor $csvProcessor,
-        private readonly ParentVerificationService $verificationService
+        private readonly JobDispatcher $queue,
+        private readonly ParentVerificationService $verificationService,
     )
     {
     }

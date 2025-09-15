@@ -1,13 +1,26 @@
 <?php
 
+use App\Enum\UserRole;
 use App\Entity\OutpassRequest;
+use App\Core\JobPayloadBuilder;
+use App\Jobs\SendParentApproval;
 
 ${basename(__FILE__, '.php')} = function () {
 
     $expectedParams = ['from_date', 'to_date', 'from_time', 'to_time', 'destination_text', 'type', 'reason_text'];
     
     if ($this->isAuthenticated() && $this->paramsExists($expectedParams)) {
+        
         $user = $this->getAttribute('user');
+
+        if (UserRole::isAdministrator($user->getRole()->value)) {
+            return $this->response([
+                'message' => 'Bad Request',
+                'type' => 'error',
+                'status' => false
+            ], 400);
+        }
+        
         $student = $this->userService->getStudentByUser($user);
         $template = $this->outpassService->getTemplates($user, $this->data['type']);
         
@@ -84,9 +97,10 @@ ${basename(__FILE__, '.php')} = function () {
 
         // Check if parent approval is required
         if ($settings->getParentApproval()) {
-            $entry = $this->verificationService->createEntry($outpass);
-            $message = $this->verificationService->getMessage($user, $outpass, $entry);
-            $this->sms->send($student->getParentNo(), $message);
+            // Dispatch job to send SMS to parent
+            $parentPayload = JobPayloadBuilder::create();
+            $parentPayload->set('outpass_id', $outpass->getId());
+            $this->queue->dispatch(SendParentApproval::class, $parentPayload);
         }
 
         if ($outpass instanceof OutpassRequest) {

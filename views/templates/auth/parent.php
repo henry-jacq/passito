@@ -16,12 +16,12 @@ use App\Enum\OutpassStatus;
 
         <?php if (isset($response) && !empty($response)): ?>
             <?php if ($response === OutpassStatus::PARENT_APPROVED->value): ?>
-                <div class="flex items-center justify-start gap-3 px-4 py-3 mb-4 text-sm text-green-800 bg-green-100 border border-green-300 rounded-md">
+                <div class="flex items-center justify-start gap-2 px-4 py-3 mb-4 text-sm text-green-800 bg-green-100 border border-green-300 rounded-md">
                     <i class="mr-2 fa fa-check-circle"></i>
                     <span>Parental approval for outpass #<?= $outpass->getId() ?> is approved. You can close this page!</span>
                 </div>
             <?php else: ?>
-                <div class="flex items-center justify-start gap-3 px-4 py-3 mb-4 text-sm text-red-800 bg-red-100 border border-red-300 rounded-md">
+                <div class="flex items-center justify-start gap-2 px-4 py-3 mb-4 text-sm text-red-800 bg-red-100 border border-red-300 rounded-md">
                     <i class="mr-2 text-red-600 fa fa-info-circle"></i>
                     <span>Parental verification for outpass #<?= $outpass->getId() ?> is denied. You can close this page!</span>
                 </div>

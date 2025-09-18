@@ -25,29 +25,48 @@ class ParentController extends BaseController
         $token = $args['token'] ?? null;
         $parentResponse = $args['response'] ?? null;
 
-        if(!$token) {
-            return parent::renderErrorPage($response, ['code' => 400,]);
+        if (!$token) {
+            return parent::renderErrorPage($response, ['code' => 400, 'message' => 'Missing verification token']);
         }
-        
+
         $verification = $this->verificationService->getVerificationByToken($token);
-        
+
+        if (!$verification) {
+            return parent::renderErrorPage($response, ['code' => 403, 'message' => 'Invalid or expired verification link']);
+        }
+
+        // Don’t allow reprocessing
+        if ($verification->isUsed()) {
+            $outpass = $verification->getOutpassRequest();
+            return parent::render($request, $response, 'auth/parent', [
+                'title' => 'Parental Verification',
+                'outpass' => $outpass,
+                'student' => $outpass->getStudent(),
+                'verification' => $verification,
+                'response' => $verification->getDecision()->value, // show final status
+            ]);
+        }
+
+        // Process only if parent clicked Allow / Deny
         if ($parentResponse) {
-            $verification = $this->verificationService->processDecision($verification, $parentResponse);
+            try {
+                $verification = $this->verificationService->processDecision($verification, $parentResponse);
+            } catch (\Throwable $e) {
+                return parent::renderErrorPage($response, [
+                    'code' => 400,
+                    'message' => $e->getMessage(),
+                ]);
+            }
         }
-        
-        if (!$verification || $verification->isUsed()) {
-            return parent::renderErrorPage($response, ['code' => 403,]);
-        }
-        
+
         $outpass = $verification->getOutpassRequest();
-        
-        $args += [
+
+        return parent::render($request, $response, 'auth/parent', [
             'title' => 'Parental Verification',
             'outpass' => $outpass,
             'student' => $outpass->getStudent(),
-            'verification' => $verification
-        ];
-
-        return parent::render($request, $response, 'auth/parent', $args);
+            'verification' => $verification,
+            'response' => $parentResponse, // ensures template shows result
+        ]);
     }
 }

@@ -75,6 +75,9 @@ class ParentVerificationService
         $outpass = $verification->getOutpassRequest();
         $outpass->setStatus($status);
 
+        $this->em->persist($verification);
+        $this->em->persist($outpass);
+
         $this->em->flush();
 
         return $verification;

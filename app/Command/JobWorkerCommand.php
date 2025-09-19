@@ -37,11 +37,28 @@ class JobWorkerCommand extends Command
     {
         // Define custom console styles
         $output->getFormatter()->setStyle('info', new OutputFormatterStyle('cyan'));
-        $output->getFormatter()->setStyle('done',   new OutputFormatterStyle('green', null, ['bold']));
+        $output->getFormatter()->setStyle('done', new OutputFormatterStyle('green', null, ['bold']));
         $output->getFormatter()->setStyle('warn', new OutputFormatterStyle('yellow', null, ['bold']));
         $output->getFormatter()->setStyle('fail', new OutputFormatterStyle('red', null, ['bold']));
 
-        while (true) {
+        // Ensure signals are handled
+        if (function_exists('pcntl_async_signals')) {
+            pcntl_async_signals(true);
+        }
+
+        $shouldRun = true;
+
+        pcntl_signal(SIGINT, function () use (&$shouldRun, $output) {
+            $output->writeln("\n<warn>Keyboard interrupt received. Stopping worker...</warn>");
+            $shouldRun = false;
+        });
+
+        pcntl_signal(SIGTERM, function () use (&$shouldRun, $output) {
+            $output->writeln("\n<warn>Termination signal received. Stopping worker...</warn>");
+            $shouldRun = false;
+        });
+
+        while ($shouldRun) {
             $job = $this->fetchNextJob();
             if ($job && $this->canRun($job)) {
                 $this->processJob($job, $output);
@@ -50,6 +67,7 @@ class JobWorkerCommand extends Command
             }
         }
 
+        $output->writeln("<info>Worker stopped gracefully.</info>");
         return Command::SUCCESS;
     }
 

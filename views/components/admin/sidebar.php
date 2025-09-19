@@ -73,13 +73,6 @@ use App\Enum\UserRole; ?>
                         </a>
                     </li>
                     <li class="my-1">
-                        <a href="<?= $this->urlFor('admin.manage.assignments') ?>"
-                            class="flex items-center px-4 py-2.5 <?= str_contains($routeName, 'admin.manage.assignments') ? 'bg-blue-500/20 text-blue-800 hover:bg-blue-600/20 border-blue-800/80' : 'text-gray-600 hover:bg-gray-50 border-transparent'; ?> transition duration-200 rounded-md border-l-4">
-                            <i class="pr-4 fas fa-user-shield"></i>
-                            <span>Assignments</span>
-                        </a>
-                    </li>
-                    <li class="my-1">
                         <a href="<?= $this->urlFor('admin.manage.academics') ?>"
                             class="flex items-center px-4 py-2.5 <?= str_contains($routeName, 'admin.manage.academics') ? 'bg-blue-500/20 text-blue-800 hover:bg-blue-600/20 border-blue-800/80' : 'text-gray-600 hover:bg-gray-50 border-transparent'; ?> transition duration-200 rounded-md border-l-4">
                             <i class="pr-4 fas fa-university"></i>

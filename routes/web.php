@@ -58,7 +58,6 @@ return function (App $app) {
         $group->any('/manage/students', [AdminController::class, 'manageStudents'])->setName('admin.manage.students');
         $group->any('/outpass/settings', [AdminController::class, 'outpassSettings'])->setName('admin.outpass.settings');
         $group->any('/manage/residence', [AdminController::class, 'manageResidence'])->setName('admin.manage.residence')->add(SuperAdminMiddleware::class);
-        $group->any('/manage/assignments', [AdminController::class, 'manageAssignments'])->setName('admin.manage.assignments')->add(SuperAdminMiddleware::class);
         $group->any('/manage/academics', [AdminController::class, 'manageAcademics'])->setName('admin.manage.academics')->add(SuperAdminMiddleware::class);
         $group->any('/manage/verifiers', [AdminController::class, 'manageVerifiers'])->setName('admin.manage.verifiers')->add(SuperAdminMiddleware::class);
         $group->any('/manage/logbook', [AdminController::class, 'manageLogbook'])->setName('admin.manage.logbook');

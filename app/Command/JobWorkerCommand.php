@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Entity\Job;
+use Doctrine\DBAL\LockMode;
 use App\Interfaces\JobInterface;
-use Doctrine\ORM\EntityManagerInterface;
 use Psr\Container\ContainerInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -52,18 +53,76 @@ class JobWorkerCommand extends Command
         return Command::SUCCESS;
     }
 
+    /**
+     * Atomically fetch a single pending job and mark it as processing.
+     *
+     * Notes:
+     *  - uses SELECT ... FOR UPDATE SKIP LOCKED to allow multiple workers safely
+     *  - runs inside a DB transaction (begin/commit/rollback on the connection)
+     */
     private function fetchNextJob(): ?Job
     {
-        return $this->em->getRepository(Job::class)
-            ->createQueryBuilder('j')
-            ->where('j.status = :status')
-            ->andWhere('j.availableAt <= :now')
-            ->setParameter('status', 'pending')
-            ->setParameter('now', new \DateTimeImmutable())
-            ->orderBy('j.id', 'ASC')
-            ->setMaxResults(1)
-            ->getQuery()
-            ->getOneOrNullResult();
+        $conn = $this->em->getConnection();
+
+        try {
+            // start DB transaction on the connection
+            $conn->beginTransaction();
+
+            $sql = <<<SQL
+            SELECT id FROM jobs
+            WHERE status = :status
+            AND availableAt <= :now
+            ORDER BY id ASC LIMIT 1
+            FOR UPDATE SKIP LOCKED
+            SQL;
+
+            $now = (new \DateTimeImmutable())->format('Y-m-d H:i:s');
+
+            // executeQuery works in DBAL 3: pass params to avoid SQL injection + ensure types
+            $stmt = $conn->executeQuery($sql, [
+                'status' => 'pending',
+                'now' => $now,
+            ]);
+
+            $row = $stmt->fetchAssociative();
+
+            if (!$row) {
+                // nothing to pick — commit and return null
+                $conn->commit();
+                return null;
+            }
+
+            $jobId = (int) $row['id'];
+
+            // Hydrate the ORM entity within the same transaction
+            // Use PESSIMISTIC_WRITE to be explicit
+            $job = $this->em->find(Job::class, $jobId, LockMode::PESSIMISTIC_WRITE);
+
+            if (!$job) {
+                $conn->commit();
+                return null;
+            }
+
+            // Mark as processing (still inside tx)
+            $job->setStatus('processing');
+            $this->em->persist($job);
+            $this->em->flush(); // flush so other workers see status change
+
+            // commit the transaction and release DB row lock
+            $conn->commit();
+
+            return $job;
+        } catch (\Throwable $e) {
+            // ensure we rollback the DB transaction on error
+            try {
+                $conn->rollBack();
+            } catch (\Throwable) {
+                // ignore rollback failure
+            }
+
+            // rethrow so caller can log/handle
+            throw $e;
+        }
     }
 
     private function processJob(Job $job, OutputInterface $output): void

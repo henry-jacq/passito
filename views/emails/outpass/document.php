@@ -102,50 +102,59 @@
     <?php $student = $outpass->getStudent(); ?>
 
     <div class="org-header">
-        <img src="<?= $this->storage->getFullPath("qr_codes/{$qrCodeFile}") ?>" alt="<?= $this->storage->getFullPath("qr_codes/{$qrCodeFile}") ?>">
+        <img src="<?= $this->storage->getFullPath("qr_codes/{$qrCodeFile}") ?>" alt="QR Code">
         <div class="text-container">
-            <h3 class="org-name"><?= $student->getProgram()->getProvidedBy()->getName() ?></h3>
-            <p class="address-line"><?= $student->getProgram()->getProvidedBy()->getAddress() ?></p>
+            <h3 class="org-name"><?= $student?->getProgram()?->getProvidedBy()?->getName() ?? 'N/A' ?></h3>
+            <p class="address-line"><?= $student?->getProgram()?->getProvidedBy()?->getAddress() ?? 'N/A' ?></p>
             <p class="form-title">Hostel - Permission Form</p>
         </div>
     </div>
     <hr>
-    <p><strong>No.: #<?= $outpass->getId() ?></strong></p>
-    </strong></p>
+    <p><strong>No.: #<?= $outpass?->getId() ?? 'N/A' ?></strong></p>
+
     <div class="sections-container">
         <div class="student-section">
-            <p><strong>Exit Time:</strong> <?= $outpass->getFromDate()->format('d-m-Y') . ' ' . $outpass->getFromTime()->format('h:iA') ?></p>
-            <p><strong>Name:</strong> <?= $student->getUser()->getName() ?></p>
-            <p><strong>Branch:</strong> <?= $student->getProgram()->getCourseName() ?></p>
-            <p><strong>Hostel:</strong> <?= $student->getHostel()->getName() ?></p>
-            <p><strong>Reason:</strong> <?= $outpass->getReason() ?></p>
-            <p><strong>Student No:</strong> <?= $student->getUser()->getContactNo() ?></p>
-            <p><strong>Approved On:</strong> <?= $outpass->getApprovedTime()->format('d-m-Y h:iA') ?></p>
+            <p><strong>Exit Time:</strong>
+                <?= $outpass->getFromDate()?->format('d-m-Y') ?? 'N/A' ?>
+                <?= $outpass->getFromTime()?->format('h:i A') ?? '' ?>
+            </p>
+            <p><strong>Name:</strong> <?= $student?->getUser()?->getName() ?? 'N/A' ?></p>
+            <p><strong>Branch:</strong> <?= $student?->getProgram()?->getCourseName() ?? 'N/A' ?></p>
+            <p><strong>Hostel:</strong> <?= $student?->getHostel()?->getName() ?? 'N/A' ?></p>
+            <p><strong>Reason:</strong> <?= $outpass?->getReason() ?? 'N/A' ?></p>
+            <p><strong>Student No:</strong> <?= $student?->getUser()?->getContactNo() ?? 'N/A' ?></p>
+            <p><strong>Approved On:</strong>
+                <?= $outpass->getApprovedTime()?->format('d-m-Y h:i A') ?? 'N/A' ?>
+            </p>
         </div>
         <div class="outpass-section">
-            <p><strong>Entry Time:</strong> <?= $outpass->getToDate()->format('d-m-Y') . ' ' . $outpass->getToTime()->format('h:iA') ?></p>
-            <p><strong>ID No:</strong> <?= $student->getDigitalId() ?></p>
-            <p><strong>Year:</strong> <?= formatStudentYear($student->getYear()) ?> Year</p>
-            <p><strong>Room:</strong> <?= $student->getRoomNo() ?></p>
-            <p><strong>Destination:</strong> <?= $outpass->getDestination() ?></p>
-            <p><strong>Parent No:</strong> <?= $student->getParentNo() ?></p>
-            <p><strong>Approved By:</strong> <?= $outpass->getApprovedBy()->getName() ?></p>
+            <p><strong>Entry Time:</strong>
+                <?= $outpass->getToDate()?->format('d-m-Y') ?? 'N/A' ?>
+                <?= $outpass->getToTime()?->format('h:i A') ?? '' ?>
+            </p>
+            <p><strong>ID No:</strong> <?= $student?->getDigitalId() ?? 'N/A' ?></p>
+            <p><strong>Year:</strong> <?= $student ? formatStudentYear($student->getYear()) : 'N/A' ?> Year</p>
+            <p><strong>Room:</strong> <?= $student?->getRoomNo() ?? 'N/A' ?></p>
+            <p><strong>Destination:</strong> <?= $outpass?->getDestination() ?? 'N/A' ?></p>
+            <p><strong>Parent No:</strong> <?= $student?->getParentNo() ?? 'N/A' ?></p>
+            <p><strong>Approved By:</strong> <?= $outpass?->getApprovedBy()?->getName() ?? 'N/A' ?></p>
         </div>
-        <br><br>
     </div>
+
     <div class="instructions-section">
         <p class="instruction-header">Instructions:</p>
         <ul>
             <li>Ensure that you carry your ID card during the outpass period.</li>
             <li>Return to the hostel before the end time specified in the outpass.</li>
-            <li>Any changes to the outpass schedule must be done advance.</li>
+            <li>Any changes to the outpass schedule must be done in advance.</li>
             <li>Keep this outpass document with you as it is required for verification.</li>
             <li>Follow all hostel rules and regulations during the outpass period.</li>
             <li>For any queries, contact the hostel warden.</li>
         </ul>
     </div>
+
     <div class="footer-section">
-        <p>Issued on <?= date('d-m-Y h:iA') ?></p>
+        <p>Issued on <?= date('d-m-Y h:i A') ?></p>
         <p>This is a system-generated document and does not require a signature.</p>
     </div>
 

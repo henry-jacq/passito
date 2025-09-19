@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Outpass Approval Notification</title>
+    <title>Outpass Approval Mail</title>
 </head>
 
 <body style="margin: 0; padding: 0; font-family: Arial, sans-serif;">
@@ -35,7 +35,7 @@
                     </tr>
                     <tr>
                         <td style="padding: 10px; font-size: 14px; color: #6b7280;">Approved On:</td>
-                        <td style="padding: 10px; font-size: 14px; color: #111827;"><?= $outpass->getApprovedTime()->format('F d, Y') ?> at <?= $outpass->getApprovedTime()->format('h:i A') ?></td>
+                        <td style="padding: 10px; font-size: 14px; color: #111827;"><?= $outpass->getApprovedTime()?->format('d-m-Y h:i A') ?? 'N/A' ?></td>
                     </tr>
                     <tr style="background-color: #f9fafb;">
                         <td style="padding: 10px; font-size: 14px; color: #6b7280;">Destination:</td>
@@ -44,13 +44,13 @@
                     <tr>
                         <td style="padding: 10px; font-size: 14px; color: #6b7280;">Exit Time:</td>
                         <td style="padding: 10px; font-size: 14px; color: #111827;">
-                            <?= $outpass->getFromDate()->format('F d, Y') ?> at <?= $outpass->getFromTime()->format('h:i A') ?>
+                            <?= $outpass->getFromDate()?->format('d-m-Y') ?? 'N/A' ?> at <?= $outpass->getFromTime()?->format('h:i A') ?? 'N/A' ?>
                         </td>
                     </tr>
                     <tr style="background-color: #f9fafb;">
                         <td style="padding: 10px; font-size: 14px; color: #6b7280;">Entry Time:</td>
                         <td style="padding: 10px; font-size: 14px; color: #111827;">
-                            <?= $outpass->getToDate()->format('F d, Y') ?> at <?= $outpass->getToTime()->format('h:i A') ?>
+                            <?= $outpass->getToDate()?->format('d-m-Y') ?? 'N/A' ?> at <?= $outpass->getToTime()?->format('h:i A') ?? 'N/A' ?>
                         </td>
                     </tr>
                 </table>

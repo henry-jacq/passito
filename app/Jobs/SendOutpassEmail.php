@@ -17,30 +17,59 @@ class SendOutpassEmail implements JobInterface
 
     public function handle(array $payload): void
     {
-        if (empty($payload['subject']) || empty($payload['to']) || empty($payload['outpass_id']) || empty($payload['email_template'])) {
-            throw new \InvalidArgumentException('Invalid payload for SendEmailJob ' . json_encode($payload));
-        }
-
-        $outpass = $this->outpassService->getOutpassById($payload['outpass_id']);
-        $args = ['outpass' => $outpass];
-        
-        // Prepare email body with email template args from payload
-        $body = $this->view->renderEmail($payload['email_template'], $args ?? []);
-
-        $attachments = [];
-        
-        // Attach files from dependencies if any
-        foreach ($payload['dependencies'] ?? [] as $depResult) {
-            if (!empty($depResult['pdfPath'])) {
-                $attachments[] = $depResult['pdfPath'];
+        try {
+            // Validate Payload
+            if (empty($payload['subject']) || empty($payload['to']) || empty($payload['outpass_id']) || empty($payload['email_template'])) {
+                throw new \InvalidArgumentException(
+                    'Invalid payload for SendOutpassEmail ' . json_encode($payload)
+                );
             }
-            if (!empty($depResult['qrCodePath'])) {
-                $attachments[] = $depResult['qrCodePath'];
+
+            // Fetch Outpass
+            try {
+                $outpass = $this->outpassService->getOutpassById($payload['outpass_id']);
+            } catch (\Throwable $e) {
+                throw new \RuntimeException("Failed fetching outpass: " . $e->getMessage(), 0, $e);
             }
+
+            // Render Email Body
+            try {
+                $args = ['outpass' => $outpass];
+                $body = $this->view->renderEmail($payload['email_template'], $args);
+            } catch (\Throwable $e) {
+                throw new \RuntimeException("Failed rendering email body: " . $e->getMessage(), 0, $e);
+            }
+
+            // Build Attachments
+            $attachments = [];
+            try {
+                foreach ($payload['dependencies'] ?? [] as $depResult) {
+                    if (!empty($depResult['pdfPath'])) {
+                        $attachments[] = $depResult['pdfPath'];
+                    }
+                    if (!empty($depResult['qrCodePath'])) {
+                        $attachments[] = $depResult['qrCodePath'];
+                    }
+                }
+            } catch (\Throwable $e) {
+                throw new \RuntimeException("Failed processing attachments: " . $e->getMessage(), 0, $e);
+            }
+
+            // Send Email
+            try {
+                $this->mailService->notify(
+                    $payload['to'],
+                    $payload['subject'],
+                    $body,
+                    true,
+                    empty($attachments) ? null : $attachments
+                );
+            } catch (\Throwable $e) {
+                throw new \RuntimeException("Failed sending email: " . $e->getMessage(), 0, $e);
+            }
+        } catch (\Throwable $e) {
+            error_log("[SendOutpassEmail] " . $e->getMessage() . "\n" . $e->getTraceAsString());
+            throw $e; // rethrow so job system can retry/fail
         }
-
-        // Send email using MailService
-        $this->mailService->notify($payload['to'], $payload['subject'], $body, true, empty($attachments) ? null : $attachments);
-
     }
 }

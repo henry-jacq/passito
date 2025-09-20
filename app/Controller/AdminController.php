@@ -28,7 +28,9 @@ class AdminController extends BaseController
         private readonly AcademicService $academicService
     )
     {
+        $this->view->addGlobals('appName', $this->config->get('app.name'));
         $this->view->addGlobals('brandLogo', $this->config->get('app.logo'));
+        $this->view->addGlobals('appVersion', $this->config->get('app.version'));
     }
     
     public function dashboard(Request $request, Response $response): Response

@@ -73,6 +73,13 @@ sudo chown -R www-data:{username} /home/{username}/htdocs/passito/storage
 sudo chmod -R 775 /home/{username}/htdocs/passito/storage
 ```
 
+### Set Group-Writable Permissions (Dev Mode)
+
+```bash
+sudo chown -R {username}:www-data /home/{username}/htdocs/passito/storage
+sudo chmod -R 775 /home/{username}/htdocs/passito/storage
+```
+
 ### Set the SGID Bit on the Directory
 
 This ensures new files created in the storage directory inherit the group ownership of the parent directory.

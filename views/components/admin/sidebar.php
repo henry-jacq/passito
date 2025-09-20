@@ -121,6 +121,9 @@ use App\Enum\UserRole; ?>
                     <span class="text-sm text-gray-500"><?= $user->getEmail() ?></span>
                 </div>
             </button>
+            <div class="mt-2 text-xs text-center text-gray-400">
+                v<?= $appVersion ?>
+            </div>
         </div>
     </nav>
 </aside>

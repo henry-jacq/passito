@@ -6,7 +6,7 @@ ${basename(__FILE__, '.php')} = function () {
     if ($this->isAuthenticated() && UserRole::isAdministrator($this->getRole())) {
         $programs = [];
 
-        foreach ($this->facilityService->getPrograms() as $program) {
+        foreach ($this->academicService->getPrograms() as $program) {
             $program = $program->toArray();
             $programs[] = $program;
         }

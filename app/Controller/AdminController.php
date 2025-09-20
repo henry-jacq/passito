@@ -5,10 +5,10 @@ namespace App\Controller;
 use App\Core\View;
 use App\Core\Config;
 use App\Enum\UserRole;
+use App\Services\AcademicService;
 use App\Services\UserService;
 use App\Services\AdminService;
 use App\Services\OutpassService;
-use App\Services\FacilityService;
 use App\Services\ReportService;
 use App\Services\VerifierService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -25,7 +25,7 @@ class AdminController extends BaseController
         private readonly ReportService $reportService,
         private readonly OutpassService $outpassService,
         private readonly VerifierService $verifierService,
-        private readonly FacilityService $facilityService
+        private readonly AcademicService $academicService
     )
     {
         $this->view->addGlobals('brandLogo', $this->config->get('app.logo'));
@@ -63,7 +63,7 @@ class AdminController extends BaseController
         $hostelFilter = $request->getQueryParams()['hostel'] ?? 'default';
 
         $wardenHostels = $userData->getHostels(); // Doctrine Collection
-        $allHostels = iterator_to_array($this->facilityService->getHostelsByType($userData));
+        $allHostels = iterator_to_array($this->academicService->getHostelsByType($userData));
         $wardenHostelsArray = $wardenHostels->toArray();
 
         // Compute the difference (hostels not assigned to warden)
@@ -227,7 +227,7 @@ class AdminController extends BaseController
 
         $userData = $request->getAttribute('user');
         $wardens = $this->userService->getWardensByGender($userData);
-        $hostels = $this->facilityService->getHostelsByType($userData);
+        $hostels = $this->academicService->getHostelsByType($userData);
 
         $args = [
             'title' => 'Manage Residence',
@@ -301,8 +301,8 @@ class AdminController extends BaseController
         $this->view->clearCacheIfDev();
 
         $userData = $request->getAttribute('user');
-        $institutions = $this->facilityService->getInstitutions();
-        $programs = $this->facilityService->getPrograms();
+        $institutions = $this->academicService->getInstitutions();
+        $programs = $this->academicService->getPrograms();
 
         $args = [
             'title' => 'Manage Academics',

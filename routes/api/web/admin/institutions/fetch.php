@@ -6,7 +6,7 @@ ${basename(__FILE__, '.php')} = function () {
     if ($this->isAuthenticated() && UserRole::isSuperAdmin($this->getRole())) {
         $institutions = null;
 
-        foreach ($this->facilityService->getInstitutions() as $institution) {
+        foreach ($this->academicService->getInstitutions() as $institution) {
             $institutions[] = $institution->toArray();
         }
 

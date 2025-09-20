@@ -8,6 +8,7 @@ use App\Core\View;
 use App\Entity\User;
 use App\Core\Session;
 use App\Core\Storage;
+use App\Services\AcademicService;
 use App\Utils\CsvProcessor;
 use App\Services\AuthService;
 use App\Services\MailService;
@@ -60,7 +61,7 @@ class ApiController
         private readonly ReportService $reportService,
         private readonly OutpassService $outpassService,
         private readonly VerifierService $verifierService,
-        private readonly FacilityService $facilityService,
+        private readonly AcademicService $academicService,
         private readonly CsvProcessor $csvProcessor,
         private readonly JobDispatcher $queue,
         private readonly ParentVerificationService $verificationService,

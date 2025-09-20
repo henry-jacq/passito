@@ -11,14 +11,13 @@ use App\Core\Storage;
 use App\Entity\Hostel;
 use App\Entity\Student;
 use App\Entity\Settings;
-use App\Jobs\SendEmailJob;
 use App\Core\JobDispatcher;
 use App\Core\JobPayloadBuilder;
 use App\Enum\OutpassStatus;
 use App\Utils\CsvProcessor;
 use App\Services\UserService;
 use App\Entity\OutpassRequest;
-use App\Services\FacilityService;
+use App\Services\AcademicService;
 use App\Entity\InstitutionProgram;
 use App\Jobs\GenerateOutpassPdf;
 use App\Jobs\GenerateQrCode;
@@ -34,7 +33,7 @@ class AdminService
         private readonly MailService $mail,
         private readonly UserService $userService,
         private readonly OutpassService $outpass,
-        private readonly FacilityService $facilityService,
+        private readonly AcademicService $academicService,
         private readonly VerifierService $verifierService,
         private readonly EntityManagerInterface $em,
         private readonly JobDispatcher $queue
@@ -271,14 +270,14 @@ class AdminService
                     continue;
                 }
 
-                $program = $this->facilityService->getProgramByShortCode(trim($row['program'])) ?? null;
+                $program = $this->academicService->getProgramByShortCode(trim($row['program'])) ?? null;
 
                 if (!$program instanceof InstitutionProgram) {
                     $invalidUsers[] = "Row $rowNumber ($name): Program entity is null or invalid";
                     continue;
                 }
 
-                $hostel = $this->facilityService->getHostelByName($row['hostel_name']);
+                $hostel = $this->academicService->getHostelByName($row['hostel_name']);
 
                 if (!$hostel instanceof Hostel) {
                     $invalidUsers[] = "Row $rowNumber ($name): Invalid hostel name '{$row['hostel_name']}'";

@@ -17,7 +17,7 @@ ${basename(__FILE__, '.php')} = function () {
                 'type' => $this->data['type']
             ];
 
-            $this->facilityService->createInstitution($data);
+            $this->academicService->createInstitution($data);
 
             return $this->response([
                 'message' => 'Institution created',

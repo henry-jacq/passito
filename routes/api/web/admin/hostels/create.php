@@ -21,7 +21,7 @@ ${basename(__FILE__, '.php')} = function () {
                 'hostel_type' => $hostel_type,
             ];
 
-            $hostel = $this->facilityService->createHostel($data);
+            $hostel = $this->academicService->createHostel($data);
 
             if ($hostel instanceof Hostel) {
                 return $this->response([

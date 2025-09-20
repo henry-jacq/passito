@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Entity\User;
 use App\Enum\Gender;
 use App\Core\Session;
+use App\Entity\AcademicYear;
 use App\Entity\Hostel;
 use App\Enum\HostelType;
 use App\Entity\Institution;
@@ -12,7 +13,7 @@ use App\Enum\InstitutionType;
 use App\Entity\InstitutionProgram;
 use Doctrine\ORM\EntityManagerInterface;
 
-class FacilityService
+class AcademicService
 {
     public function __construct(
         private readonly Session $session,
@@ -150,5 +151,10 @@ class FacilityService
     {
         return $this->em->getRepository(InstitutionProgram::class)
             ->findBy(['providedBy' => $institution]);
+    }
+
+    public function getAcademicYears(User $adminUser)
+    {
+        return $this->em->getRepository(AcademicYear::class)->findAll();
     }
 }

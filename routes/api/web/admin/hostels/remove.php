@@ -6,7 +6,7 @@ ${basename(__FILE__, '.php')} = function () {
     if ($this->isAuthenticated() && $this->paramsExists(['hostel_id'])) {
         if (UserRole::isSuperAdmin($this->getRole())) {
             
-            $hostel = $this->facilityService->removeHostel($this->data['hostel_id']);
+            $hostel = $this->academicService->removeHostel($this->data['hostel_id']);
 
             if ($hostel) {
                 return $this->response([

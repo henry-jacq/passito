@@ -14,7 +14,6 @@ class UserService
 {
     public function __construct(
         private readonly Session $session,
-        private readonly FacilityService $facility,
         private readonly EntityManagerInterface $em
     )
     {

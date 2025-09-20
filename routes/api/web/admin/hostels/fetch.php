@@ -7,7 +7,7 @@ ${basename(__FILE__, '.php')} = function () {
         $hostels = null;
         $admin = $this->getAttribute('user');
 
-        foreach ($this->facilityService->getHostelsByType($admin) as $hostel) {
+        foreach ($this->academicService->getHostelsByType($admin) as $hostel) {
             $hostel = $hostel->toArray();
             unset($hostel['warden']);
             $hostels[] = $hostel;

@@ -8,8 +8,8 @@ ${basename(__FILE__, '.php')} = function () {
     if ($this->isAuthenticated() && $this->paramsExists($required) && UserRole::isAdministrator($this->getRole())) {
 
         $gender = $this->getAttribute('user')->getGender();
-        $hostel = $this->facilityService->getHostelById((int) $this->data['hostel_no']);
-        $program = $this->facilityService->getProgramById((int) $this->data['program']);
+        $hostel = $this->academicService->getHostelById((int) $this->data['hostel_no']);
+        $program = $this->academicService->getProgramById((int) $this->data['program']);
 
         // Student
         $studentData = [

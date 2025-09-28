@@ -33,6 +33,10 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',  // Allows access to the Vite server externally
     port: 5173,       // Vite port
+    cors: {
+      origin: 'http://passito.local', // allow your site
+      credentials: true
+    },
     watch: {
       // Watch the PHP views folder for changes
       usePolling: true, // Necessary for Docker environments

@@ -1,7 +1,6 @@
 <?php
 
 use App\Enum\UserRole;
-use DateTimeInterface;
 
 ${basename(__FILE__, '.php')} = function () {
     if ($this->isAuthenticated() && $this->paramsExists(['report_id'])) {

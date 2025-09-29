@@ -6,12 +6,13 @@ namespace App\Entity;
 
 use App\Enum\HostelType;
 use Doctrine\ORM\Mapping as ORM;
+use App\Interfaces\AssignmentTargetInterface;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'hostels', indexes: [
     new ORM\Index(name: "hostel_type_idx", columns: ["hostelType"])
 ])]
-class Hostel
+class Hostel implements AssignmentTargetInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

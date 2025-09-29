@@ -911,3 +911,121 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+    const wardenSelect = document.getElementById("warden");
+    const typeSelect = document.getElementById("assignment_type");
+    const hostelSelection = document.getElementById("hostel_selection");
+    const yearSelection = document.getElementById("year_selection");
+    const form = document.querySelector("form");
+    const submitBtn = form.querySelector("button[type=submit]");
+    const previewBox = document.getElementById("assignment_preview");
+    const previewText = document.getElementById("preview_text");
+
+    // Disable submit initially
+    submitBtn.disabled = true;
+    submitBtn.classList.add("opacity-50", "cursor-not-allowed");
+
+    function toggleAssignmentOptions() {
+        const type = typeSelect.value;
+
+        // Hide all conditional fields
+        hostelSelection.classList.add("hidden");
+        yearSelection.classList.add("hidden");
+
+        if (type === "hostel") {
+            hostelSelection.classList.remove("hidden");
+        } else if (type === "year") {
+            yearSelection.classList.remove("hidden");
+        }
+
+        validateForm();
+    }
+
+    function updatePreview() {
+        const wardenName = wardenSelect.options[wardenSelect.selectedIndex]?.text || "";
+        const type = typeSelect.value;
+
+        let chosenValues = [];
+        if (type === "hostel") {
+            chosenValues = [...hostelSelection.querySelectorAll("input[type=checkbox]:checked")].map(cb => cb.nextElementSibling?.innerText || cb.value);
+        } else if (type === "year") {
+            chosenValues = [...yearSelection.querySelectorAll("input[type=checkbox]:checked")].map(cb => cb.nextElementSibling?.innerText || cb.value);
+        }
+
+        if (wardenName && type && chosenValues.length > 0) {
+            previewBox.classList.remove("hidden");
+            previewText.textContent = `You’re about to assign ${wardenName} to ${type} → ${chosenValues.join(", ")}`;
+        } else {
+            previewBox.classList.add("hidden");
+            previewText.textContent = "";
+        }
+    }
+
+    function validateForm() {
+        const wardenChosen = wardenSelect.value !== "";
+        const typeChosen = typeSelect.value !== "";
+        let valuesChosen = false;
+
+        if (typeSelect.value === "hostel") {
+            valuesChosen = hostelSelection.querySelectorAll("input[type=checkbox]:checked").length > 0;
+        } else if (typeSelect.value === "year") {
+            valuesChosen = yearSelection.querySelectorAll("input[type=checkbox]:checked").length > 0;
+        }
+
+        if (wardenChosen && typeChosen && valuesChosen) {
+            submitBtn.disabled = false;
+            submitBtn.classList.remove("opacity-50", "cursor-not-allowed");
+        } else {
+            submitBtn.disabled = true;
+            submitBtn.classList.add("opacity-50", "cursor-not-allowed");
+        }
+
+        updatePreview();
+    }
+
+    // Attach listeners
+    wardenSelect.addEventListener("change", validateForm);
+    typeSelect.addEventListener("change", toggleAssignmentOptions);
+
+    [hostelSelection, yearSelection].forEach(section => {
+        section.addEventListener("change", validateForm);
+    });
+
+    // Handle submit
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const wardenId = wardenSelect.value;
+        const type = typeSelect.value;
+
+        let values = [];
+        if (type === "hostel") {
+            values = [...hostelSelection.querySelectorAll("input[type=checkbox]:checked")].map(cb => cb.value);
+        } else if (type === "year") {
+            values = [...yearSelection.querySelectorAll("input[type=checkbox]:checked")].map(cb => cb.value);
+        }
+
+        const payload = {
+            warden_id: wardenId,
+            assignment_type: type,
+            assignment_data: values
+        };
+
+        try {
+            const response = await Ajax.post(`/api/web/admin/wardens/assign`, payload);
+
+            if (response.ok && response.data.status) {
+                location.reload();
+            } else {
+                alert(response.data?.message || "Failed to assign warden");
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Unexpected error assigning warden");
+        }
+    });
+
+    // Initial preview update
+    updatePreview();
+});

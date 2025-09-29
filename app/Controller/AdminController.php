@@ -230,12 +230,14 @@ class AdminController extends BaseController
         $userData = $request->getAttribute('user');
         $wardens = $this->userService->getWardensByGender($userData);
         $hostels = $this->academicService->getHostelsByType($userData);
+        $assignments = $this->adminService->getAssignmentsByGender($userData);
 
         $args = [
             'title' => 'Manage Residence',
             'user' => $userData,
             'hostels' => $hostels,
             'wardens' => $wardens,
+            'assignmentsView' => $assignments,
             'routeName' => $this->getRouteName($request),
         ];
 

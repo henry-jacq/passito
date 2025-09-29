@@ -9,19 +9,24 @@ use App\Entity\User;
 use App\Core\Session;
 use App\Core\Storage;
 use App\Entity\Hostel;
+use App\Enum\UserRole;
 use App\Entity\Student;
 use App\Entity\Settings;
 use App\Core\JobDispatcher;
-use App\Core\JobPayloadBuilder;
 use App\Enum\OutpassStatus;
 use App\Utils\CsvProcessor;
+use App\Entity\AcademicYear;
+use App\Jobs\GenerateQrCode;
 use App\Services\UserService;
 use App\Entity\OutpassRequest;
+use App\Enum\AssignmentTarget;
+use App\Jobs\SendOutpassEmail;
+use App\Core\JobPayloadBuilder;
+use App\Entity\WardenAssignment;
+use App\Jobs\GenerateOutpassPdf;
+use App\DTO\WardenAssignmentView;
 use App\Services\AcademicService;
 use App\Entity\InstitutionProgram;
-use App\Jobs\GenerateOutpassPdf;
-use App\Jobs\GenerateQrCode;
-use App\Jobs\SendOutpassEmail;
 use Doctrine\ORM\EntityManagerInterface;
 
 class AdminService
@@ -59,6 +64,66 @@ class AdminService
             'lockRequests' => $lockStatus ? filter_var($lockStatus->getValue(), FILTER_VALIDATE_BOOLEAN) : false,
         ];
     }
+
+    /**
+     * Assign Warden based on assignment type
+     *
+     * @param User $warden
+     * @param User $admin
+     * @param AssignmentTarget $target
+     * @param array $assignmentData
+     * @return bool
+     */
+    public function assignWarden(User $warden, User $admin, AssignmentTarget $target, array $assignmentData): bool
+    {
+        if (!$warden || $warden->getRole() !== UserRole::ADMIN) {
+            return false; // Invalid warden
+        }
+
+        foreach ($assignmentData as $entityId) {
+            $assignment = new WardenAssignment();
+            $assignment->setAssignedTo($warden);
+            $assignment->setAssignedBy($admin);
+            $assignment->setTargetType($target);
+            $assignment->setAssignmentId((int) $entityId);
+            $assignment->setCreatedAt(new DateTime());
+
+            $this->em->persist($assignment);
+        }
+
+        $this->em->flush();
+        return true;
+    }
+
+    /**
+     * Get Warden Assignments based on gender
+     * @return WardenAssignmentView[]
+     */
+    public function getAssignmentsByGender(User $user): array
+    {
+        $assignments = $this->em->createQueryBuilder()
+            ->select('wa', 'assignedBy', 'assignedTo')
+            ->from(WardenAssignment::class, 'wa')
+            ->join('wa.assignedBy', 'assignedBy')
+            ->join('wa.assignedTo', 'assignedTo')
+            ->where('assignedBy.gender = :gender')
+            ->setParameter('gender', $user->getGender())
+            ->getQuery()
+            ->getResult();
+
+        $views = [];
+        foreach ($assignments as $wa) {
+            $target = match ($wa->getTargetType()) {
+                AssignmentTarget::HOSTEL => $this->em->getRepository(Hostel::class)->find($wa->getAssignmentId()),
+                AssignmentTarget::ACADEMIC_YEAR => $this->em->getRepository(AcademicYear::class)->find($wa->getAssignmentId()),
+                default => null,
+            };
+
+            $views[] = new WardenAssignmentView($wa, $target);
+        }
+        return $views;
+    }
+
 
     /**
      * Set Outpass Request Lock for Students

@@ -45,7 +45,7 @@ use App\Enum\AssignmentTarget; ?>
 
             <!-- Action -->
             <div class="flex items-end">
-                <button type="submit" class="w-full px-5 py-2 text-sm font-medium text-white transition-all duration-200 ease-in-out bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 focus:ring focus:ring-blue-400">
+                <button type="submit" class="w-full px-5 py-2 text-sm font-medium text-white transition-all duration-200 ease-in-out bg-blue-600 rounded-lg shadow-md opacity-50 cursor-not-allowed hover:bg-blue-700 focus:ring focus:ring-blue-400" disabled="true">
                     <i class="mr-2 fas fa-plus"></i> Assign Warden
                 </button>
             </div>
@@ -158,7 +158,6 @@ use App\Enum\AssignmentTarget; ?>
                             <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Warden Name</th>
                             <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Email</th>
                             <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Contact No.</th>
-                            <th class="px-4 py-3 text-sm font-semibold text-center text-gray-600">Hostels Managed</th>
                             <th class="px-4 py-3 text-sm font-semibold text-left text-center text-gray-600">Status</th>
                             <th class="px-4 py-3 text-sm font-semibold text-center text-gray-600">Actions</th>
 
@@ -171,14 +170,6 @@ use App\Enum\AssignmentTarget; ?>
                                 <td class="px-6 py-3 text-sm text-gray-700"><?= $warden->getName() ?></td>
                                 <td class="px-6 py-3 text-sm text-gray-700"><?= $warden->getEmail() ?></td>
                                 <td class="px-6 py-3 text-sm text-gray-700"><?= $warden->getContactNo() ?></td>
-                                <td class="px-6 py-3 text-sm text-center text-gray-700">
-                                    <?=
-                                    empty($warden->getHostels()->toArray()) ? 'N/A' :
-                                        implode(', ', array_map(
-                                            fn($hostel) => htmlspecialchars($hostel->getName()),
-                                            $warden->getHostels()->toArray()
-                                        )) ?>
-                                </td>
                                 <td class="px-6 py-3 text-sm text-center">
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                         Active
@@ -203,7 +194,8 @@ use App\Enum\AssignmentTarget; ?>
                 <h3 class="text-lg font-bold text-gray-800">Hostels</h3>
                 <p class="text-sm text-gray-600">Manage all hostels effectively.</p>
             </div>
-            <button class="inline-flex items-center justify-center px-5 py-2 text-sm font-medium text-white transition duration-200 bg-blue-600 rounded-lg shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed add-hostel-modal" <?php if (empty($wardens)): echo ("disabled"); endif; ?>>
+            <button class="inline-flex items-center justify-center px-5 py-2 text-sm font-medium text-white transition duration-200 bg-blue-600 rounded-lg shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed add-hostel-modal" <?php if (empty($wardens)): echo ("disabled");
+                                                                                                                                                                                                                                                                                                                                endif; ?>>
                 <i class="mr-2 fas fa-plus"></i> Add Hostel
             </button>
         </div>
@@ -219,7 +211,6 @@ use App\Enum\AssignmentTarget; ?>
                             <th class="px-6 py-3 text-sm font-semibold text-left text-gray-600">#</th>
                             <th class="px-6 py-3 text-sm font-semibold text-left text-gray-600">Hostel Name</th>
                             <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Category</th>
-                            <th class="px-4 py-3 text-sm font-semibold text-center text-gray-600">Warden Incharge</th>
                             <th class="px-6 py-3 text-sm font-semibold text-right text-gray-600">Actions</th>
                         </tr>
                     </thead>
@@ -229,14 +220,6 @@ use App\Enum\AssignmentTarget; ?>
                                 <td class="px-6 py-3 text-sm text-gray-800"><?= $key + 1 ?></td>
                                 <td class="px-6 py-3 text-sm text-gray-800"><?= $hostel->getName() ?></td>
                                 <td class="px-4 py-3 text-sm text-gray-800"><?= $hostel->getCategory() ?></td>
-                                <td class="px-4 py-3 text-sm text-center text-gray-600">
-                                    <div class="flex items-center justify-center space-x-2">
-                                        <div class="w-6 h-6 bg-gray-300 rounded-full">
-                                            <img class="rounded-full" src="https://ui-avatars.com/api/?name=<?= $hostel->getWarden()->getName() ?>&background=c7d2fe&color=3730a3&bold=true" alt="">
-                                        </div>
-                                        <span class="ml-2"><?= $hostel->getWarden()->getName() ?></span>
-                                    </div>
-                                </td>
                                 <td class="px-6 py-3 text-right">
                                     <div class="inline-flex items-center space-x-4 text-gray-500">
                                         <button title="Edit" class="text-gray-700 hover:text-gray-800" data-id="<?= $hostel->getId() ?>">

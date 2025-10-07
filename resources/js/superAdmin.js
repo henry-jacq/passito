@@ -911,7 +911,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
-
 document.addEventListener("DOMContentLoaded", () => {
     const wardenSelect = document.getElementById("warden");
     const typeSelect = document.getElementById("assignment_type");
@@ -922,9 +921,28 @@ document.addEventListener("DOMContentLoaded", () => {
     const previewBox = document.getElementById("assignment_preview");
     const previewText = document.getElementById("preview_text");
 
-    // Disable submit initially
-    submitBtn.disabled = true;
-    submitBtn.classList.add("opacity-50", "cursor-not-allowed");
+    // Function to update the submit button state based on the form
+    function updateSubmitButtonState() {
+        const wardenChosen = wardenSelect.value !== "";
+        const typeChosen = typeSelect.value !== "";
+        let valuesChosen = false;
+
+        if (typeSelect.value === "hostel") {
+            valuesChosen = hostelSelection.querySelectorAll("input[type=checkbox]:checked").length > 0;
+        } else if (typeSelect.value === "year") {
+            valuesChosen = yearSelection.querySelectorAll("input[type=checkbox]:checked").length > 0;
+        }
+
+        if (wardenChosen && typeChosen && valuesChosen) {
+            submitBtn.disabled = false;
+            submitBtn.classList.remove("opacity-50", "cursor-not-allowed");
+        } else {
+            submitBtn.disabled = true;
+            submitBtn.classList.add("opacity-50", "cursor-not-allowed");
+        }
+
+        updatePreview();
+    }
 
     function toggleAssignmentOptions() {
         const type = typeSelect.value;
@@ -939,7 +957,7 @@ document.addEventListener("DOMContentLoaded", () => {
             yearSelection.classList.remove("hidden");
         }
 
-        validateForm();
+        updateSubmitButtonState();
     }
 
     function updatePreview() {
@@ -962,34 +980,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    function validateForm() {
-        const wardenChosen = wardenSelect.value !== "";
-        const typeChosen = typeSelect.value !== "";
-        let valuesChosen = false;
-
-        if (typeSelect.value === "hostel") {
-            valuesChosen = hostelSelection.querySelectorAll("input[type=checkbox]:checked").length > 0;
-        } else if (typeSelect.value === "year") {
-            valuesChosen = yearSelection.querySelectorAll("input[type=checkbox]:checked").length > 0;
-        }
-
-        if (wardenChosen && typeChosen && valuesChosen) {
-            submitBtn.disabled = false;
-            submitBtn.classList.remove("opacity-50", "cursor-not-allowed");
-        } else {
-            submitBtn.disabled = true;
-            submitBtn.classList.add("opacity-50", "cursor-not-allowed");
-        }
-
-        updatePreview();
-    }
-
     // Attach listeners
-    wardenSelect.addEventListener("change", validateForm);
+    wardenSelect.addEventListener("change", updateSubmitButtonState);
     typeSelect.addEventListener("change", toggleAssignmentOptions);
 
     [hostelSelection, yearSelection].forEach(section => {
-        section.addEventListener("change", validateForm);
+        section.addEventListener("change", updateSubmitButtonState);
     });
 
     // Handle submit

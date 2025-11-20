@@ -32,7 +32,7 @@ class MaintenanceMiddleware implements MiddlewareInterface
         $isMaintenance = filter_var($setting?->getValue(), FILTER_VALIDATE_BOOLEAN);
 
         if ($isMaintenance) {
-            $this->session->destroy();
+            //$this->session->destroy();
 
             if ($this->requestService->isXhr($request)) {
                 // Respond with JSON for API calls

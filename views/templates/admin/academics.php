@@ -37,10 +37,20 @@
                                     <td class="px-6 py-3 text-sm text-gray-600"><?= ucfirst($institution->getType()->value) ?></td>
                                     <td class="px-6 py-3 text-right">
                                         <div class="inline-flex items-center space-x-4 text-gray-500">
-                                            <button title="Edit" class="text-gray-700 hover:text-gray-800" data-id="<?= $institution->getId() ?>">
+                                            <button
+                                                title="Edit"
+                                                class="text-gray-700 hover:text-gray-800 edit-institution-modal"
+                                                data-id="<?= $institution->getId() ?>"
+                                                data-name="<?= htmlspecialchars($institution->getName()) ?>"
+                                                data-address="<?= htmlspecialchars($institution->getAddress()) ?>"
+                                                data-type="<?= htmlspecialchars($institution->getType()->value) ?>">
                                                 <i class="fas fa-edit"></i>
                                             </button>
-                                            <button title="Delete" class="text-red-700 hover:text-red-800" data-id="<?= $institution->getId() ?>">
+                                            <button
+                                                title="Delete"
+                                                class="text-red-700 hover:text-red-800 delete-institution-modal"
+                                                data-id="<?= $institution->getId() ?>"
+                                                data-name="<?= htmlspecialchars($institution->getName()) ?>">
                                                 <i class="fas fa-trash-alt"></i>
                                             </button>
                                         </div>
@@ -137,7 +147,7 @@
                 <p class="text-sm text-gray-600">Manage institution programs.</p>
             </div>
             <button
-                class="inline-flex items-center px-5 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed add-course-modal">
+                class="inline-flex items-center px-5 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed add-program-modal">
                 <i class="mr-2 fas fa-plus" aria-hidden="true"></i> Create Program
             </button>
         </div>
@@ -170,16 +180,21 @@
                                     <button
                                         title="Edit"
                                         aria-label="Edit course"
-                                        class="text-gray-700 transition hover:text-gray-900"
-                                        data-id="1">
+                                        class="text-gray-700 transition hover:text-gray-900 edit-program-modal"
+                                        data-id="<?= $program->getId() ?>"
+                                        data-program-name="<?= htmlspecialchars($program->getProgramName()) ?>"
+                                        data-course-name="<?= htmlspecialchars($program->getCourseName()) ?>"
+                                        data-short-code="<?= htmlspecialchars($program->getShortCode()) ?>"
+                                        data-duration="<?= $program->getDuration() ?>"
+                                        data-institution-id="<?= $program->getProvidedBy()->getId() ?>">
                                         <i class="fas fa-edit"></i>
                                     </button>
                                     <button
                                         title="Delete"
                                         aria-label="Delete course"
-                                        class="text-red-700 transition hover:text-red-900 remove-hostel-modal"
-                                        data-id="1"
-                                        data-name="B.Tech IT">
+                                        class="text-red-700 transition hover:text-red-900 delete-program-modal"
+                                        data-id="<?= $program->getId() ?>"
+                                        data-name="<?= htmlspecialchars($program->getProgramName()) ?>">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
                                 </div>

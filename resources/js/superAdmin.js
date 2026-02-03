@@ -411,6 +411,441 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Edit Institution modal
+    const editInstitutionButtons = document.querySelectorAll('.edit-institution-modal');
+    editInstitutionButtons.forEach((button) => {
+        button.addEventListener('click', async () => {
+            const institution = {
+                id: button.dataset.id,
+                name: button.dataset.name,
+                address: button.dataset.address,
+                type: button.dataset.type
+            };
+
+            try {
+                const response = await Ajax.post('/api/web/admin/modal', {
+                    template: "edit_institution",
+                    institution: institution,
+                    types: ['college', 'university']
+                });
+
+                if (response.ok && response.data) {
+                    Modal.open({
+                        content: response.data,
+                        actions: [
+                            {
+                                label: 'Update Institution',
+                                class: `inline-flex justify-center rounded-lg bg-blue-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-blue-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50`,
+                                onClick: async (event) => {
+                                    let toastMessage = null;
+                                    const name = document.getElementById('institution-name').value;
+                                    const address = document.getElementById('institution-address').value;
+                                    const type = document.getElementById('institution-type').value;
+
+                                    event.target.disabled = true;
+                                    event.target.textContent = 'Updating Institution...';
+
+                                    if (name && address && type) {
+                                        try {
+                                            const response = await Ajax.post('/api/web/admin/institutions/update', {
+                                                institution_id: institution.id,
+                                                name: name,
+                                                address: address,
+                                                type: type
+                                            });
+
+                                            if (response.ok) {
+                                                const data = response.data;
+                                                if (data.status) {
+                                                    location.reload();
+                                                } else {
+                                                    toastMessage = data.message || 'Institution not updated.';
+                                                }
+                                            } else {
+                                                toastMessage = response.data?.message || `Institution not updated. (HTTP ${response.status})`;
+                                            }
+                                        } catch (error) {
+                                            console.error(error);
+                                            toastMessage = 'An error occurred while updating institution.';
+                                        } finally {
+                                            Modal.close();
+                                            if (toastMessage) {
+                                                const toast = new Toast();
+                                                toast.create({ message: toastMessage, position: "bottom-right", type: "error", duration: 5000 });
+                                            }
+                                        }
+                                    } else {
+                                        const toast = new Toast();
+                                        toast.create({ message: 'Please fill in all the required fields.', position: "bottom-right", type: "warning", duration: 4000 });
+                                        event.target.textContent = 'Update Institution';
+                                        event.target.disabled = false;
+                                    }
+                                },
+                            },
+                            {
+                                label: 'Cancel',
+                                class: `inline-flex justify-center rounded-lg bg-gray-100 px-6 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`,
+                                onClick: Modal.close,
+                            },
+                        ],
+                        size: 'sm:max-w-xl',
+                        classes: 'custom-modal-class',
+                        closeOnBackdropClick: false,
+                    });
+                } else {
+                    console.error('Error loading modal template:', response.data.message || 'Unknown error');
+                    alert(response.data.message || 'Failed to load modal template');
+                }
+            } catch (error) {
+                console.error('Failed to load modal content:', error);
+                alert('Failed to load modal content. Please try again later.');
+            }
+        });
+    });
+
+    // Delete Institution modal
+    const deleteInstitutionButtons = document.querySelectorAll('.delete-institution-modal');
+    deleteInstitutionButtons.forEach((button) => {
+        button.addEventListener('click', async () => {
+            const institutionId = button.dataset.id;
+            const institutionName = button.dataset.name;
+
+            try {
+                const response = await Ajax.post('/api/web/admin/modal', {
+                    template: "delete_institution",
+                    institutionName: institutionName
+                });
+
+                if (response.ok && response.data) {
+                    Modal.open({
+                        content: response.data,
+                        actions: [
+                            {
+                                label: 'Delete',
+                                class: `inline-flex justify-center rounded-lg bg-red-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-red-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50`,
+                                onClick: async (event) => {
+                                    let toastMessage = null;
+                                    event.target.disabled = true;
+                                    event.target.textContent = 'Deleting...';
+
+                                    try {
+                                        const response = await Ajax.post(`/api/web/admin/institutions/remove`, {
+                                            institution_id: institutionId
+                                        });
+
+                                        if (response.ok) {
+                                            const data = response.data;
+                                            if (data.status) {
+                                                location.reload();
+                                            } else {
+                                                toastMessage = data.message || 'Failed to delete institution.';
+                                            }
+                                        } else {
+                                            toastMessage = response.data?.message || `Failed to delete institution. (HTTP ${response.status})`;
+                                        }
+                                    } catch (error) {
+                                        console.error(error);
+                                        toastMessage = 'An error occurred while deleting institution.';
+                                    } finally {
+                                        Modal.close();
+                                        if (toastMessage) {
+                                            const toast = new Toast();
+                                            toast.create({ message: toastMessage, position: "bottom-right", type: "error", duration: 5000 });
+                                        }
+                                    }
+                                },
+                            },
+                            {
+                                label: 'Cancel',
+                                class: `inline-flex justify-center rounded-lg bg-gray-100 px-6 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`,
+                                onClick: Modal.close,
+                            },
+                        ],
+                        size: 'sm:max-w-md',
+                        classes: 'custom-modal-class',
+                        closeOnBackdropClick: false,
+                    });
+                } else {
+                    console.error('Error loading modal template:', response.data.message || 'Unknown error');
+                    alert(response.data.message || 'Failed to load modal template');
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        });
+    });
+
+    // Add Program modal
+    const addProgramButton = document.querySelector('.add-program-modal');
+    if (addProgramButton) {
+        addProgramButton.addEventListener('click', async () => {
+            try {
+                const fetchInstitutions = await Ajax.post('/api/web/admin/institutions/fetch');
+                if (!fetchInstitutions.ok || !fetchInstitutions.data?.status) {
+                    const toast = new Toast();
+                    toast.create({ message: fetchInstitutions.data?.message || 'Failed to load institutions.', position: "bottom-right", type: "error", duration: 5000 });
+                    return;
+                }
+
+                const response = await Ajax.post('/api/web/admin/modal', {
+                    template: "add_program",
+                    institutions: fetchInstitutions.data.data.institutions
+                });
+
+                if (response.ok && response.data) {
+                    Modal.open({
+                        content: response.data,
+                        actions: [
+                            {
+                                label: 'Create Program',
+                                class: `inline-flex justify-center rounded-lg bg-blue-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-blue-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50`,
+                                onClick: async (event) => {
+                                    let toastMessage = null;
+                                    const programName = document.getElementById('program-name').value;
+                                    const shortCode = document.getElementById('program-shortcode').value;
+                                    const courseName = document.getElementById('program-course').value;
+                                    const duration = document.getElementById('program-duration').value;
+                                    const institutionId = document.getElementById('program-institution').value;
+
+                                    event.target.disabled = true;
+                                    event.target.textContent = 'Creating Program...';
+
+                                    if (programName && shortCode && courseName && duration && institutionId) {
+                                        try {
+                                            const response = await Ajax.post('/api/web/admin/programs/create', {
+                                                program_name: programName,
+                                                short_code: shortCode,
+                                                course_name: courseName,
+                                                duration: duration,
+                                                institution_id: institutionId
+                                            });
+
+                                            if (response.ok) {
+                                                const data = response.data;
+                                                if (data.status) {
+                                                    location.reload();
+                                                } else {
+                                                    toastMessage = data.message || 'Program not created.';
+                                                }
+                                            } else {
+                                                toastMessage = response.data?.message || `Program not created. (HTTP ${response.status})`;
+                                            }
+                                        } catch (error) {
+                                            console.error(error);
+                                            toastMessage = 'An error occurred while creating program.';
+                                        } finally {
+                                            Modal.close();
+                                            if (toastMessage) {
+                                                const toast = new Toast();
+                                                toast.create({ message: toastMessage, position: "bottom-right", type: "error", duration: 5000 });
+                                            }
+                                        }
+                                    } else {
+                                        const toast = new Toast();
+                                        toast.create({ message: 'Please fill in all the required fields.', position: "bottom-right", type: "warning", duration: 4000 });
+                                        event.target.textContent = 'Create Program';
+                                        event.target.disabled = false;
+                                    }
+                                },
+                            },
+                            {
+                                label: 'Cancel',
+                                class: `inline-flex justify-center rounded-lg bg-gray-100 px-6 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`,
+                                onClick: Modal.close,
+                            },
+                        ],
+                        size: 'sm:max-w-xl',
+                        classes: 'custom-modal-class',
+                        closeOnBackdropClick: false,
+                    });
+                } else {
+                    console.error('Error loading modal template:', response.data.message || 'Unknown error');
+                    alert(response.data.message || 'Failed to load modal template');
+                }
+            } catch (error) {
+                console.error('Failed to load modal content:', error);
+                alert('Failed to load modal content. Please try again later.');
+            }
+        });
+    }
+
+    // Edit Program modal
+    const editProgramButtons = document.querySelectorAll('.edit-program-modal');
+    editProgramButtons.forEach((button) => {
+        button.addEventListener('click', async () => {
+            const program = {
+                id: button.dataset.id,
+                program_name: button.dataset.programName,
+                course_name: button.dataset.courseName,
+                short_code: button.dataset.shortCode,
+                duration: button.dataset.duration,
+                institution_id: button.dataset.institutionId
+            };
+
+            try {
+                const fetchInstitutions = await Ajax.post('/api/web/admin/institutions/fetch');
+                if (!fetchInstitutions.ok || !fetchInstitutions.data?.status) {
+                    const toast = new Toast();
+                    toast.create({ message: fetchInstitutions.data?.message || 'Failed to load institutions.', position: "bottom-right", type: "error", duration: 5000 });
+                    return;
+                }
+
+                const response = await Ajax.post('/api/web/admin/modal', {
+                    template: "edit_program",
+                    program: program,
+                    institutions: fetchInstitutions.data.data.institutions
+                });
+
+                if (response.ok && response.data) {
+                    Modal.open({
+                        content: response.data,
+                        actions: [
+                            {
+                                label: 'Update Program',
+                                class: `inline-flex justify-center rounded-lg bg-blue-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-blue-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50`,
+                                onClick: async (event) => {
+                                    let toastMessage = null;
+                                    const programName = document.getElementById('program-name').value;
+                                    const shortCode = document.getElementById('program-shortcode').value;
+                                    const courseName = document.getElementById('program-course').value;
+                                    const duration = document.getElementById('program-duration').value;
+                                    const institutionId = document.getElementById('program-institution').value;
+
+                                    event.target.disabled = true;
+                                    event.target.textContent = 'Updating Program...';
+
+                                    if (programName && shortCode && courseName && duration && institutionId) {
+                                        try {
+                                            const response = await Ajax.post('/api/web/admin/programs/update', {
+                                                program_id: program.id,
+                                                program_name: programName,
+                                                short_code: shortCode,
+                                                course_name: courseName,
+                                                duration: duration,
+                                                institution_id: institutionId
+                                            });
+
+                                            if (response.ok) {
+                                                const data = response.data;
+                                                if (data.status) {
+                                                    location.reload();
+                                                } else {
+                                                    toastMessage = data.message || 'Program not updated.';
+                                                }
+                                            } else {
+                                                toastMessage = response.data?.message || `Program not updated. (HTTP ${response.status})`;
+                                            }
+                                        } catch (error) {
+                                            console.error(error);
+                                            toastMessage = 'An error occurred while updating program.';
+                                        } finally {
+                                            Modal.close();
+                                            if (toastMessage) {
+                                                const toast = new Toast();
+                                                toast.create({ message: toastMessage, position: "bottom-right", type: "error", duration: 5000 });
+                                            }
+                                        }
+                                    } else {
+                                        const toast = new Toast();
+                                        toast.create({ message: 'Please fill in all the required fields.', position: "bottom-right", type: "warning", duration: 4000 });
+                                        event.target.textContent = 'Update Program';
+                                        event.target.disabled = false;
+                                    }
+                                },
+                            },
+                            {
+                                label: 'Cancel',
+                                class: `inline-flex justify-center rounded-lg bg-gray-100 px-6 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`,
+                                onClick: Modal.close,
+                            },
+                        ],
+                        size: 'sm:max-w-xl',
+                        classes: 'custom-modal-class',
+                        closeOnBackdropClick: false,
+                    });
+                } else {
+                    console.error('Error loading modal template:', response.data.message || 'Unknown error');
+                    alert(response.data.message || 'Failed to load modal template');
+                }
+            } catch (error) {
+                console.error('Failed to load modal content:', error);
+                alert('Failed to load modal content. Please try again later.');
+            }
+        });
+    });
+
+    // Delete Program modal
+    const deleteProgramButtons = document.querySelectorAll('.delete-program-modal');
+    deleteProgramButtons.forEach((button) => {
+        button.addEventListener('click', async () => {
+            const programId = button.dataset.id;
+            const programName = button.dataset.name;
+
+            try {
+                const response = await Ajax.post('/api/web/admin/modal', {
+                    template: "delete_program",
+                    programName: programName
+                });
+
+                if (response.ok && response.data) {
+                    Modal.open({
+                        content: response.data,
+                        actions: [
+                            {
+                                label: 'Delete',
+                                class: `inline-flex justify-center rounded-lg bg-red-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-red-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50`,
+                                onClick: async (event) => {
+                                    let toastMessage = null;
+                                    event.target.disabled = true;
+                                    event.target.textContent = 'Deleting...';
+
+                                    try {
+                                        const response = await Ajax.post(`/api/web/admin/programs/remove`, {
+                                            program_id: programId
+                                        });
+
+                                        if (response.ok) {
+                                            const data = response.data;
+                                            if (data.status) {
+                                                location.reload();
+                                            } else {
+                                                toastMessage = data.message || 'Failed to delete program.';
+                                            }
+                                        } else {
+                                            toastMessage = response.data?.message || `Failed to delete program. (HTTP ${response.status})`;
+                                        }
+                                    } catch (error) {
+                                        console.error(error);
+                                        toastMessage = 'An error occurred while deleting program.';
+                                    } finally {
+                                        Modal.close();
+                                        if (toastMessage) {
+                                            const toast = new Toast();
+                                            toast.create({ message: toastMessage, position: "bottom-right", type: "error", duration: 5000 });
+                                        }
+                                    }
+                                },
+                            },
+                            {
+                                label: 'Cancel',
+                                class: `inline-flex justify-center rounded-lg bg-gray-100 px-6 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`,
+                                onClick: Modal.close,
+                            },
+                        ],
+                        size: 'sm:max-w-md',
+                        classes: 'custom-modal-class',
+                        closeOnBackdropClick: false,
+                    });
+                } else {
+                    console.error('Error loading modal template:', response.data.message || 'Unknown error');
+                    alert(response.data.message || 'Failed to load modal template');
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        });
+    });
+
     // Add Academic Year modal
     const addAcademicYearButton = document.querySelector('.add-academic-year-modal');
     if (addAcademicYearButton) {

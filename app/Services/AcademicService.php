@@ -52,7 +52,7 @@ class AcademicService
         $institution = $this->getInstitutionById($id);
         $institution->setName($data['name']);
         $institution->setAddress($data['address']);
-        $institution->setType($data['type']);
+        $institution->setType(InstitutionType::from($data['type']));
         $institution->setUpdatedAt(new \DateTime());
 
         $this->em->flush();
@@ -172,6 +172,80 @@ class AcademicService
     {
         return $this->em->getRepository(InstitutionProgram::class)
             ->findBy(['providedBy' => $institution]);
+    }
+
+    public function createProgram(array $data): InstitutionProgram|bool
+    {
+        $institution = $data['institution'] ?? null;
+        if (!$institution instanceof Institution) {
+            return false;
+        }
+
+        $program = new InstitutionProgram();
+        $program->setProvidedBy($institution);
+        $program->setProgramName($data['program_name']);
+        $program->setCourseName($data['course_name']);
+        $program->setShortCode($data['short_code']);
+        $program->setDuration((int)$data['duration']);
+        $program->setCreatedAt(new \DateTime());
+
+        $this->em->persist($program);
+        $this->em->flush();
+
+        return $program;
+    }
+
+    public function updateProgram(int $id, array $data): InstitutionProgram|bool
+    {
+        $program = $this->getProgramById($id);
+        if (!$program) {
+            return false;
+        }
+
+        $institution = $data['institution'] ?? null;
+        if ($institution instanceof Institution) {
+            $program->setProvidedBy($institution);
+        }
+
+        $program->setProgramName($data['program_name']);
+        $program->setCourseName($data['course_name']);
+        $program->setShortCode($data['short_code']);
+        $program->setDuration((int)$data['duration']);
+
+        $this->em->flush();
+
+        return $program;
+    }
+
+    public function removeProgram(int $id): bool
+    {
+        $program = $this->getProgramById($id);
+        if (!$program) {
+            return false;
+        }
+
+        $this->em->remove($program);
+        $this->em->flush();
+
+        return true;
+    }
+
+    public function institutionHasPrograms(Institution $institution): bool
+    {
+        $count = $this->em->getRepository(InstitutionProgram::class)->count([
+            'providedBy' => $institution
+        ]);
+
+        return $count > 0;
+    }
+
+    public function programHasStudents(InstitutionProgram $program): bool
+    {
+        $count = $this->em->getRepository(\App\Entity\Student::class)->count([
+            'program' => $program
+        ]);
+
+        return $count > 0;
     }
 
     public function getAcademicYears(User $adminUser)

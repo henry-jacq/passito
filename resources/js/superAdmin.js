@@ -206,9 +206,12 @@ document.addEventListener('DOMContentLoaded', () => {
                                             if (data.status) {
                                                 location.reload();
                                             } else {
-                                                alert(data.message);
+                                                const toast = new Toast();
+                                                toast.create({ message: data.message || 'Failed to delete hostel.', position: "bottom-right", type: "error", duration: 5000 });
                                             }
                                         } else {
+                                            const toast = new Toast();
+                                            toast.create({ message: `Failed to delete hostel. (HTTP ${response.status})`, position: "bottom-right", type: "error", duration: 5000 });
                                             handleError(response.status);
                                         }
                                     } catch (error) {
@@ -604,10 +607,12 @@ document.addEventListener('DOMContentLoaded', () => {
                                             if (data.status) {
                                                 location.reload();
                                             } else {
-                                                alert(data.message);
+                                                const toast = new Toast();
+                                                toast.create({ message: data.message || 'Failed to delete hostel.', position: "bottom-right", type: "error", duration: 5000 });
                                             }
                                         } else {
-                                            handleError(response.status);
+                                            const toast = new Toast();
+                                            toast.create({ message: response.data?.message || `Failed to delete hostel. (HTTP ${response.status})`, position: "bottom-right", type: "error", duration: 5000 });
                                         }
                                     } catch (error) {
                                         console.error(error);
@@ -815,6 +820,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 label: 'Delete',
                                 class: `inline-flex justify-center rounded-lg bg-red-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-red-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50`,
                                 onClick: async (event) => {
+                                    let toastMessage = null;
                                     event.target.disabled = true;
                                     event.target.textContent = 'Deleting...';
 
@@ -828,15 +834,20 @@ document.addEventListener('DOMContentLoaded', () => {
                                             if (data.status) {
                                                 location.reload();
                                             } else {
-                                                alert(data.message);
+                                                toastMessage = data.message || 'Failed to delete hostel.';
                                             }
                                         } else {
-                                            handleError(response.status);
+                                            toastMessage = response.data?.message || `Failed to delete hostel. (HTTP ${response.status})`;
                                         }
                                     } catch (error) {
                                         console.error(error);
+                                        toastMessage = 'An error occurred while processing the request.';
                                     } finally {
                                         Modal.close();
+                                        if (toastMessage) {
+                                            const toast = new Toast();
+                                            toast.create({ message: toastMessage, position: "bottom-right", type: "error", duration: 5000 });
+                                        }
                                     }
                                 },
                             },

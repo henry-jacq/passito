@@ -127,10 +127,30 @@ class AcademicService
     public function removeHostel(int $id): bool
     {
         $hostel = $this->getHostelById($id);
+        if (!$hostel) {
+            return false;
+        }
+
+        $this->em->createQueryBuilder()
+            ->delete(\App\Entity\WardenAssignment::class, 'wa')
+            ->where('wa.hostelId = :hostelId')
+            ->setParameter('hostelId', $id)
+            ->getQuery()
+            ->execute();
+
         $this->em->remove($hostel);
         $this->em->flush();
 
         return true;
+    }
+
+    public function hostelHasStudents(Hostel $hostel): bool
+    {
+        $count = $this->em->getRepository(\App\Entity\Student::class)->count([
+            'hostel' => $hostel
+        ]);
+
+        return $count > 0;
     }
 
     public function getPrograms()

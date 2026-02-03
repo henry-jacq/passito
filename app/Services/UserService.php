@@ -9,13 +9,18 @@ use App\Enum\UserRole;
 use App\Entity\Student;
 use App\Entity\AcademicYear;
 use App\Entity\InstitutionProgram;
+use App\Entity\OutpassRequest;
+use App\Entity\Logbook;
+use App\Entity\WardenAssignment;
+use App\Services\OutpassService;
 use Doctrine\ORM\EntityManagerInterface;
 
 class UserService
 {
     public function __construct(
         private readonly Session $session,
-        private readonly EntityManagerInterface $em
+        private readonly EntityManagerInterface $em,
+        private readonly OutpassService $outpassService
     )
     {
     }
@@ -69,6 +74,20 @@ class UserService
         $user = $this->em->getRepository(User::class)->find($wardenId);
 
         if ($user) {
+            $assignments = $this->em->getRepository(WardenAssignment::class)->findBy([
+                'assignedTo' => $user
+            ]);
+            foreach ($assignments as $assignment) {
+                $this->em->remove($assignment);
+            }
+
+            $assignedBy = $this->em->getRepository(WardenAssignment::class)->findBy([
+                'assignedBy' => $user
+            ]);
+            foreach ($assignedBy as $assignment) {
+                $this->em->remove($assignment);
+            }
+
             $this->em->remove($user);
             $this->em->flush();
             return true;
@@ -171,7 +190,29 @@ class UserService
         $student = $this->em->getRepository(Student::class)->find($studentId);
 
         if ($student) {
+            $outpasses = $this->em->getRepository(OutpassRequest::class)->findBy([
+                'student' => $student
+            ]);
+
+            if (!empty($outpasses)) {
+                $this->em->createQueryBuilder()
+                    ->delete(Logbook::class, 'l')
+                    ->where('l.outpass IN (:outpasses)')
+                    ->setParameter('outpasses', $outpasses)
+                    ->getQuery()
+                    ->execute();
+
+                foreach ($outpasses as $outpass) {
+                    $this->outpassService->removeAttachments($outpass);
+                    $this->outpassService->removeOutpassDocument($outpass);
+                    $this->outpassService->removeQrCode($outpass);
+                    $this->em->remove($outpass);
+                }
+            }
+
+            $user = $student->getUser();
             $this->em->remove($student);
+            $this->em->remove($user);
             $this->em->flush();
             return true;
         }

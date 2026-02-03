@@ -20,11 +20,11 @@ class WardenAssignment
     private int $id;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn(name: 'assigned_to', referencedColumnName: 'id', nullable: false)]
+    #[ORM\JoinColumn(name: 'assigned_to', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     private User $assignedTo;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn(name: 'assigned_by', referencedColumnName: 'id', nullable: false)]
+    #[ORM\JoinColumn(name: 'assigned_by', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     private User $assignedBy;
 
     // The hostel ID this assignment is for

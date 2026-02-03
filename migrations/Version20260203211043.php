@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20260203201042 extends AbstractMigration
+final class Version20260203211043 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -40,9 +40,9 @@ final class Version20260203201042 extends AbstractMigration
         $this->addSql('CREATE TABLE warden_assignments (id INT AUTO_INCREMENT NOT NULL, assigned_to INT NOT NULL, assigned_by INT NOT NULL, hostel_id INT NOT NULL, createdAt DATETIME NOT NULL, INDEX IDX_C213683089EEAF91 (assigned_to), INDEX IDX_C213683061A2AF17 (assigned_by), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB');
         $this->addSql('ALTER TABLE institution_programs ADD CONSTRAINT FK_EF2C69DBFFD315FB FOREIGN KEY (provided_by) REFERENCES institutions (id)');
         $this->addSql('ALTER TABLE logbook ADD CONSTRAINT FK_E96B931095561DEE FOREIGN KEY (verifier_id) REFERENCES verifiers (id)');
-        $this->addSql('ALTER TABLE logbook ADD CONSTRAINT FK_E96B93102070ABE0 FOREIGN KEY (outpass_id) REFERENCES outpass_requests (id)');
+        $this->addSql('ALTER TABLE logbook ADD CONSTRAINT FK_E96B93102070ABE0 FOREIGN KEY (outpass_id) REFERENCES outpass_requests (id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE outpass_requests ADD CONSTRAINT FK_5DF928845DA0FB8 FOREIGN KEY (template_id) REFERENCES outpass_templates (id)');
-        $this->addSql('ALTER TABLE outpass_requests ADD CONSTRAINT FK_5DF92884CB944F1A FOREIGN KEY (student_id) REFERENCES students (id)');
+        $this->addSql('ALTER TABLE outpass_requests ADD CONSTRAINT FK_5DF92884CB944F1A FOREIGN KEY (student_id) REFERENCES students (id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE outpass_requests ADD CONSTRAINT FK_5DF928844EA3CB3D FOREIGN KEY (approved_by) REFERENCES users (id)');
         $this->addSql('ALTER TABLE outpass_template_fields ADD CONSTRAINT FK_1A1543DD5DA0FB8 FOREIGN KEY (template_id) REFERENCES outpass_templates (id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE parent_verifications ADD CONSTRAINT FK_500084D42070ABE0 FOREIGN KEY (outpass_id) REFERENCES outpass_requests (id)');
@@ -52,8 +52,8 @@ final class Version20260203201042 extends AbstractMigration
         $this->addSql('ALTER TABLE students ADD CONSTRAINT FK_A4698DB2FC68ACC0 FOREIGN KEY (hostel_id) REFERENCES hostels (id)');
         $this->addSql('ALTER TABLE students ADD CONSTRAINT FK_A4698DB23EB8070A FOREIGN KEY (program_id) REFERENCES institution_programs (id)');
         $this->addSql('ALTER TABLE students ADD CONSTRAINT FK_A4698DB2C54F3401 FOREIGN KEY (academic_year_id) REFERENCES academic_years (id)');
-        $this->addSql('ALTER TABLE warden_assignments ADD CONSTRAINT FK_C213683089EEAF91 FOREIGN KEY (assigned_to) REFERENCES users (id)');
-        $this->addSql('ALTER TABLE warden_assignments ADD CONSTRAINT FK_C213683061A2AF17 FOREIGN KEY (assigned_by) REFERENCES users (id)');
+        $this->addSql('ALTER TABLE warden_assignments ADD CONSTRAINT FK_C213683089EEAF91 FOREIGN KEY (assigned_to) REFERENCES users (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE warden_assignments ADD CONSTRAINT FK_C213683061A2AF17 FOREIGN KEY (assigned_by) REFERENCES users (id) ON DELETE CASCADE');
     }
 
     public function down(Schema $schema): void

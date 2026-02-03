@@ -28,7 +28,7 @@ class OutpassRequest
     private OutpassTemplate $template;
     
     #[ORM\ManyToOne(targetEntity: Student::class)]
-    #[ORM\JoinColumn(name: 'student_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\JoinColumn(name: 'student_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     private Student $student;
 
     #[ORM\Column(type: 'date')]

@@ -22,7 +22,7 @@ class Logbook
     private Verifier $verifier;
 
     #[ORM\ManyToOne(targetEntity: OutpassRequest::class)]
-    #[ORM\JoinColumn(name: 'outpass_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\JoinColumn(name: 'outpass_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     private OutpassRequest $outpass;
 
     #[ORM\Column(type: 'datetime', nullable: true)]

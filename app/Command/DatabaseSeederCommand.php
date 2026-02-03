@@ -7,11 +7,14 @@ namespace App\Command;
 use App\Seeders\ProgramSeeder;
 use App\Services\OutpassService;
 use App\Seeders\AppSettingsSeeder;
+use App\Seeders\AcademicYearSeeder;
+use App\Seeders\HostelSeeder;
 use App\Seeders\InstitutionSeeder;
 use App\Seeders\OutpassDataSeeder;
 use App\Seeders\OutpassRulesSeeder;
 use App\Seeders\ReportConfigSeeder;
 use App\Seeders\OutpassTemplateSeeder;
+use App\Seeders\WardenSeeder;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -25,12 +28,15 @@ class DatabaseSeederCommand extends Command
 
     private array $seeders = [
         'app_settings' => AppSettingsSeeder::class,
+        'academic_years' => AcademicYearSeeder::class,
         'institutions' => InstitutionSeeder::class,
+        'hostels' => HostelSeeder::class,
         'outpass_rules' => OutpassRulesSeeder::class,
         'outpass_data' => OutpassDataSeeder::class,
         'outpass_templates' => OutpassTemplateSeeder::class,
         'programs' => ProgramSeeder::class,
         'report_configs' => ReportConfigSeeder::class,
+        'wardens' => WardenSeeder::class,
     ];
 
     public function __construct(

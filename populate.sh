@@ -17,9 +17,13 @@ echo "Running migrations..."
 php passito.php migrations:migrate
 php passito.php app:seed app_settings
 php passito.php app:seed institutions
+php passito.php app:seed hostels
 php passito.php app:seed outpass_rules
 php passito.php app:seed outpass_templates
 php passito.php app:seed programs
+php passito.php app:seed report_configs
+php passito.php app:seed academic_years
+php passito.php app:seed wardens
 
 echo "Creating super admin accounts..."
 

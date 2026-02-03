@@ -181,6 +181,14 @@ class AcademicService
             return false;
         }
 
+        $existing = $this->em->getRepository(InstitutionProgram::class)->findOneBy([
+            'providedBy' => $institution,
+            'shortCode' => $data['short_code']
+        ]);
+        if ($existing) {
+            return false;
+        }
+
         $program = new InstitutionProgram();
         $program->setProvidedBy($institution);
         $program->setProgramName($data['program_name']);
@@ -204,6 +212,13 @@ class AcademicService
 
         $institution = $data['institution'] ?? null;
         if ($institution instanceof Institution) {
+            $existing = $this->em->getRepository(InstitutionProgram::class)->findOneBy([
+                'providedBy' => $institution,
+                'shortCode' => $data['short_code']
+            ]);
+            if ($existing && $existing->getId() !== $program->getId()) {
+                return false;
+            }
             $program->setProvidedBy($institution);
         }
 

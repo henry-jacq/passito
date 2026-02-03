@@ -28,7 +28,7 @@ ${basename(__FILE__, '.php')} = function () {
         }
 
         return $this->response([
-            'message' => 'Failed to create program',
+            'message' => 'Program with this short code already exists for the selected institution.',
             'status' => false
         ], 400);
     }

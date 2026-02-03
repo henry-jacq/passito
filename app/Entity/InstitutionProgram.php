@@ -11,6 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'institution_programs', indexes: [
     new ORM\Index(name: "program_name_idx", columns: ["programName"]),
     new ORM\Index(name: "short_code_idx", columns: ["shortCode"])
+], uniqueConstraints: [
+    new ORM\UniqueConstraint(name: "uniq_institution_short_code", columns: ["provided_by", "shortCode"])
 ])]
 class InstitutionProgram
 {

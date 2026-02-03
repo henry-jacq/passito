@@ -28,6 +28,9 @@ class AcademicYear
     #[ORM\Column(type: 'integer', name: 'end_year', nullable: true)]
     protected ?int $endYear = null;
 
+    #[ORM\Column(type: 'boolean')]
+    protected bool $status = true;
+
     #[ORM\Column(type: 'datetime')]
     protected DateTime $createdAt;
 
@@ -48,6 +51,7 @@ class AcademicYear
             'label' => $this->getLabel(),
             'start_year' => $this->getStartYear(),
             'end_year' => $this->getEndYear(),
+            'status' => $this->getStatus(),
             'created_at' => $this->getCreatedAt()->format('Y-m-d H:i:s'),
         ];
     }

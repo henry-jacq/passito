@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20260203194135 extends AbstractMigration
+final class Version20260203201042 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,7 +20,7 @@ final class Version20260203194135 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE TABLE academic_years (id INT AUTO_INCREMENT NOT NULL, label VARCHAR(255) NOT NULL, start_year INT DEFAULT NULL, end_year INT DEFAULT NULL, createdAt DATETIME NOT NULL, UNIQUE INDEX UNIQ_574085B2EA750E8 (label), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE academic_years (id INT AUTO_INCREMENT NOT NULL, label VARCHAR(255) NOT NULL, start_year INT DEFAULT NULL, end_year INT DEFAULT NULL, status TINYINT(1) NOT NULL, createdAt DATETIME NOT NULL, UNIQUE INDEX UNIQ_574085B2EA750E8 (label), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE hostels (id INT AUTO_INCREMENT NOT NULL, hostelName VARCHAR(255) NOT NULL, hostelType VARCHAR(255) NOT NULL, category VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE institution_programs (id INT AUTO_INCREMENT NOT NULL, provided_by INT NOT NULL, programName VARCHAR(255) NOT NULL, courseName VARCHAR(255) NOT NULL, shortCode VARCHAR(255) NOT NULL, duration INT NOT NULL, createdAt DATETIME NOT NULL, INDEX IDX_EF2C69DBFFD315FB (provided_by), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE institutions (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(255) NOT NULL, address VARCHAR(255) NOT NULL, type VARCHAR(255) NOT NULL, createdAt DATETIME NOT NULL, updatedAt DATETIME DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB');

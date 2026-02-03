@@ -333,16 +333,18 @@ document.addEventListener('DOMContentLoaded', () => {
                                     const label = document.getElementById('academic-year-label').value;
                                     const startYear = document.getElementById('academic-year-start').value;
                                     const endYear = document.getElementById('academic-year-end').value;
+                                    const status = document.getElementById('academic-year-status').value;
 
                                     event.target.disabled = true;
                                     event.target.textContent = 'Adding Academic Year...';
 
-                                    if (label && startYear && endYear) {
+                                    if (label && startYear && endYear && status !== '') {
                                         try {
                                             const response = await Ajax.post('/api/web/admin/academic_years/create', {
                                                 label: label,
                                                 start_year: startYear,
-                                                end_year: endYear
+                                                end_year: endYear,
+                                                status: status
                                             });
 
                                             if (response.ok) {
@@ -399,6 +401,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 label: button.dataset.label,
                 start_year: button.dataset.start,
                 end_year: button.dataset.end,
+                status: button.dataset.status,
             };
 
             try {
@@ -418,17 +421,19 @@ document.addEventListener('DOMContentLoaded', () => {
                                     const label = document.getElementById('academic-year-label').value;
                                     const startYear = document.getElementById('academic-year-start').value;
                                     const endYear = document.getElementById('academic-year-end').value;
+                                    const status = document.getElementById('academic-year-status').value;
 
                                     event.target.disabled = true;
                                     event.target.textContent = 'Updating Academic Year...';
 
-                                    if (label && startYear && endYear) {
+                                    if (label && startYear && endYear && status !== '') {
                                         try {
                                             const response = await Ajax.post('/api/web/admin/academic_years/update', {
                                                 academic_year_id: academicYear.id,
                                                 label: label,
                                                 start_year: startYear,
-                                                end_year: endYear
+                                                end_year: endYear,
+                                                status: status
                                             });
 
                                             if (response.ok) {

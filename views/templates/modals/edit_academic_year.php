@@ -22,5 +22,13 @@
                     class="w-full px-3 py-2 text-sm text-gray-800 transition duration-200 bg-white border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500">
             </div>
         </div>
+        <div>
+            <label for="academic-year-status" class="block text-sm font-medium text-gray-700">Status</label>
+            <select id="academic-year-status" name="academic-year-status" required
+                class="w-full px-3 py-2 text-sm text-gray-800 transition duration-200 bg-white border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500">
+                <option value="1" <?= ($academic_year['status'] ?? true) ? 'selected' : '' ?>>Active</option>
+                <option value="0" <?= ($academic_year['status'] ?? true) ? '' : 'selected' ?>>Inactive</option>
+            </select>
+        </div>
     </div>
 </div>

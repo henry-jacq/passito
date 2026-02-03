@@ -163,7 +163,13 @@ class ApiController
             return false;
         }
         foreach ($params as $param) {
-            if (!array_key_exists($param, $this->data) || empty($this->data[$param])) {
+            if (!array_key_exists($param, $this->data)) {
+                $exists = false;
+                continue;
+            }
+
+            $value = $this->data[$param];
+            if ($value === '' || $value === null) {
                 $exists = false;
             }
         }

@@ -180,6 +180,7 @@ class AcademicService
         $academicYear->setLabel($label);
         $academicYear->setStartYear(isset($data['start_year']) ? (int)$data['start_year'] : null);
         $academicYear->setEndYear(isset($data['end_year']) ? (int)$data['end_year'] : null);
+        $academicYear->setStatus(isset($data['status']) ? (bool)$data['status'] : true);
 
         $this->em->persist($academicYear);
         $this->em->flush();
@@ -207,6 +208,7 @@ class AcademicService
         $academicYear->setLabel($label);
         $academicYear->setStartYear(isset($data['start_year']) ? (int)$data['start_year'] : null);
         $academicYear->setEndYear(isset($data['end_year']) ? (int)$data['end_year'] : null);
+        $academicYear->setStatus(isset($data['status']) ? (bool)$data['status'] : $academicYear->getStatus());
 
         $this->em->flush();
 

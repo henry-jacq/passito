@@ -72,22 +72,34 @@
         <?php else: ?>
             <div class="overflow-x-auto rounded-md shadow-md">
                 <table class="min-w-full bg-white">
-                    <thead class="bg-gray-100">
+                    <thead class="text-sm bg-gray-100">
                         <tr>
-                            <th class="px-6 py-3 text-sm font-semibold text-left text-gray-600">#</th>
-                            <th class="px-6 py-3 text-sm font-semibold text-left text-gray-600">Label</th>
-                            <th class="px-6 py-3 text-sm font-semibold text-left text-gray-600">Start Year</th>
-                            <th class="px-6 py-3 text-sm font-semibold text-left text-gray-600">End Year</th>
-                            <th class="px-6 py-3 text-sm font-semibold text-right text-gray-600">Actions</th>
+                            <th class="px-6 py-3 font-semibold text-left text-gray-600">#</th>
+                            <th class="px-6 py-3 font-semibold text-left text-gray-600">Label</th>
+                            <th class="px-6 py-3 font-semibold text-center text-gray-600">Start Year</th>
+                            <th class="px-6 py-3 font-semibold text-center text-gray-600">End Year</th>
+                            <th class="px-6 py-3 font-semibold text-center text-gray-600">Status</th>
+                            <th class="px-6 py-3 font-semibold text-right text-gray-600">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200">
                         <?php foreach ($academicYears as $key => $academicYear): ?>
-                            <tr class="hover:bg-gray-50">
+                            <tr class="text-sm hover:bg-gray-50">
                                 <td class="px-6 py-3 text-gray-800"><?= $key + 1 ?></td>
                                 <td class="px-6 py-3 text-gray-800"><?= $academicYear->getLabel() ?></td>
-                                <td class="px-6 py-3 text-gray-600"><?= $academicYear->getStartYear() ?? 'N/A' ?></td>
-                                <td class="px-6 py-3 text-gray-600"><?= $academicYear->getEndYear() ?? 'N/A' ?></td>
+                                <td class="px-6 py-3 text-center text-gray-600"><?= $academicYear->getStartYear() ?? 'N/A' ?></td>
+                                <td class="px-6 py-3 text-center text-gray-600"><?= $academicYear->getEndYear() ?? 'N/A' ?></td>
+                                <td class="px-6 py-3 text-center">
+                                    <?php if ($academicYear->getStatus()): ?>
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                            Active
+                                        </span>
+                                    <?php else: ?>
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                            Inactive
+                                        </span>
+                                    <?php endif; ?>
+                                </td>
                                 <td class="px-6 py-3 text-right">
                                     <div class="inline-flex items-center space-x-4 text-gray-500">
                                         <button
@@ -96,7 +108,8 @@
                                             data-id="<?= $academicYear->getId() ?>"
                                             data-label="<?= $academicYear->getLabel() ?>"
                                             data-start="<?= $academicYear->getStartYear() ?? '' ?>"
-                                            data-end="<?= $academicYear->getEndYear() ?? '' ?>">
+                                            data-end="<?= $academicYear->getEndYear() ?? '' ?>"
+                                            data-status="<?= $academicYear->getStatus() ? 1 : 0 ?>">
                                             <i class="fas fa-edit"></i>
                                         </button>
                                         <button

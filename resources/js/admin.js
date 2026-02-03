@@ -483,21 +483,31 @@ document.addEventListener('DOMContentLoaded', () => {
                             label: 'Perform',
                             class: `inline-flex justify-center rounded-lg bg-gray-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-gray-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-50`,
                             onClick: async (event) => {
+                                let toastMessage = null;
+                                let toastType = 'error';
+                                let originalHtml = event.target.innerHTML;
                                 try {
                                     const fileInput = document.getElementById('file');
                                     const file = fileInput.files[0];
 
                                     const button = event.target;
-                                    const originalHtml = button.innerHTML;
 
                                     button.disabled = true;
                                     button.innerHTML = `<span class="flex items-center"><i class="fa-solid fa-spinner fa-spin w-4 h-4 mr-1"></i>Performing</span>`;
 
                                     // Ensure file is selected
                                     if (!file) {
-                                        alert('Please select a CSV file.');
+                                        toastMessage = 'Please select a CSV file.';
                                         return;
                                     }
+
+                                    const readJson = async (res) => {
+                                        try {
+                                            return await res.json();
+                                        } catch (error) {
+                                            return null;
+                                        }
+                                    };
 
                                     // Prepare the form data for submission
                                     const formData = new FormData();
@@ -510,23 +520,27 @@ document.addEventListener('DOMContentLoaded', () => {
                                     });
 
                                     if (response.ok) {
-                                        const data = await response.json();
+                                        const data = await readJson(response);
                                         if (data.status) {
                                             location.reload();
                                         } else {
-                                            alert(data.message);
+                                            toastMessage = data?.errors?.bulk_upload || data?.message || 'Students could not be created.';
                                         }
                                     } else {
-                                        const errorData = await response.json();
-                                        alert(errorData.message || 'An error occurred while importing students.');
+                                        const errorData = await readJson(response);
+                                        toastMessage = errorData?.errors?.bulk_upload || errorData?.message || `An error occurred while importing students. (HTTP ${response.status})`;
                                     }
                                 } catch (error) {
                                     console.error(error);
-                                    alert('An error occurred while processing the request.');
+                                    toastMessage = 'An error occurred while processing the request.';
                                 } finally {
                                     event.target.innerHTML = originalHtml;
                                     event.target.disabled = false;
                                     Modal.close();
+                                    if (toastMessage) {
+                                        const toast = new Toast();
+                                        toast.create({ message: toastMessage, position: "bottom-right", type: toastType, duration: 5000 });
+                                    }
                                 }
                             },
                         },

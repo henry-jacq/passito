@@ -4,12 +4,20 @@ use App\Enum\UserRole;
 use App\Entity\Student;
 
 ${basename(__FILE__, '.php')} = function () {
-    $required = ['name', 'email', 'digital_id', 'year', 'room_no', 'hostel_no', 'contact', 'parent_no', 'program'];
+    $required = ['name', 'email', 'digital_id', 'year', 'room_no', 'hostel_no', 'contact', 'parent_no', 'program', 'academic_year'];
     if ($this->isAuthenticated() && $this->paramsExists($required) && UserRole::isAdministrator($this->getRole())) {
 
         $gender = $this->getAttribute('user')->getGender();
         $hostel = $this->academicService->getHostelById((int) $this->data['hostel_no']);
         $program = $this->academicService->getProgramById((int) $this->data['program']);
+        $academicYear = $this->academicService->getAcademicYearById((int) $this->data['academic_year']);
+
+        if ($academicYear === null) {
+            return $this->response([
+                'message' => 'Invalid academic year',
+                'status' => false
+            ], 400);
+        }
 
         // Student
         $studentData = [
@@ -20,6 +28,7 @@ ${basename(__FILE__, '.php')} = function () {
             'contact' => $this->data['contact'],
             'program' => $program,
             'hostel' => $hostel,
+            'academic_year' => $academicYear,
             'digital_id' => (int) $this->data['digital_id'],
             'year' => (int) $this->data['year'],
             'room_no' => $this->data['room_no'],

@@ -153,4 +153,76 @@ class AcademicService
     {
         return $this->em->getRepository(AcademicYear::class)->findAll();
     }
+
+    public function getAcademicYearById(int $id): ?AcademicYear
+    {
+        return $this->em->getRepository(AcademicYear::class)->find($id);
+    }
+
+    public function getAcademicYearByLabel(string $label): ?AcademicYear
+    {
+        return $this->em->getRepository(AcademicYear::class)->findOneBy(['label' => $label]);
+    }
+
+    public function createAcademicYear(array $data): AcademicYear|bool
+    {
+        $label = trim((string)($data['label'] ?? ''));
+        if ($label === '') {
+            return false;
+        }
+
+        $existing = $this->getAcademicYearByLabel($label);
+        if ($existing) {
+            return false;
+        }
+
+        $academicYear = new AcademicYear();
+        $academicYear->setLabel($label);
+        $academicYear->setStartYear(isset($data['start_year']) ? (int)$data['start_year'] : null);
+        $academicYear->setEndYear(isset($data['end_year']) ? (int)$data['end_year'] : null);
+
+        $this->em->persist($academicYear);
+        $this->em->flush();
+
+        return $academicYear;
+    }
+
+    public function updateAcademicYear(int $id, array $data): AcademicYear|bool
+    {
+        $academicYear = $this->getAcademicYearById($id);
+        if (!$academicYear) {
+            return false;
+        }
+
+        $label = trim((string)($data['label'] ?? ''));
+        if ($label === '') {
+            return false;
+        }
+
+        $existing = $this->getAcademicYearByLabel($label);
+        if ($existing && $existing->getId() !== $academicYear->getId()) {
+            return false;
+        }
+
+        $academicYear->setLabel($label);
+        $academicYear->setStartYear(isset($data['start_year']) ? (int)$data['start_year'] : null);
+        $academicYear->setEndYear(isset($data['end_year']) ? (int)$data['end_year'] : null);
+
+        $this->em->flush();
+
+        return $academicYear;
+    }
+
+    public function removeAcademicYear(int $id): bool
+    {
+        $academicYear = $this->getAcademicYearById($id);
+        if (!$academicYear) {
+            return false;
+        }
+
+        $this->em->remove($academicYear);
+        $this->em->flush();
+
+        return true;
+    }
 }

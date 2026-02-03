@@ -17,19 +17,19 @@ class AcademicYear
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private int $id;
+    protected int $id;
 
-    #[ORM\Column(type: 'string', length: 9, unique: true)]
-    private string $label; // e.g. "UG2022-2026"
+    #[ORM\Column(type: 'string', unique: true)]
+    protected string $label; // e.g. "UG2022-2026"
 
-    #[ORM\Column(type: 'integer', name: 'start_year')]
-    private int $startYear;
+    #[ORM\Column(type: 'integer', name: 'start_year', nullable: true)]
+    protected ?int $startYear = null;
 
-    #[ORM\Column(type: 'integer', name: 'end_year')]
-    private int $endYear;
+    #[ORM\Column(type: 'integer', name: 'end_year', nullable: true)]
+    protected ?int $endYear = null;
 
     #[ORM\Column(type: 'datetime')]
-    private DateTime $createdAt;
+    protected DateTime $createdAt;
 
     public function __construct()
     {
@@ -39,5 +39,16 @@ class AcademicYear
     public function getId(): int
     {
         return $this->id;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->getId(),
+            'label' => $this->getLabel(),
+            'start_year' => $this->getStartYear(),
+            'end_year' => $this->getEndYear(),
+            'created_at' => $this->getCreatedAt()->format('Y-m-d H:i:s'),
+        ];
     }
 }

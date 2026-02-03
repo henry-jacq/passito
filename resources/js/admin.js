@@ -282,20 +282,54 @@ document.addEventListener('DOMContentLoaded', () => {
         addStudentButton.addEventListener('click', async () => {
             const fetchHostels = await Ajax.post('/api/web/admin/hostels/fetch');
             const fetchPrograms = await Ajax.post('/api/web/admin/programs/fetch');
+            const fetchAcademicYears = await Ajax.post('/api/web/admin/academic_years/fetch');
 
             
-            if (fetchHostels.ok && fetchPrograms.ok) {
+            if (fetchHostels.ok && fetchPrograms.ok && fetchAcademicYears.ok) {
                 let hostelsData = [];
                 let programData = [];
+                let academicYearsData = [];
                 const hostels = fetchHostels.data;
                 const programs = fetchPrograms.data;
+                const academicYears = fetchAcademicYears.data;
 
-                if (hostels.status && Array.isArray(hostels.data.hostels) && programs.status && Array.isArray(programs.data.programs)) {
+                if (hostels.status === false) {
+                    const toast = new Toast();
+                    toast.create({ message: hostels.message || 'Unable to fetch hostels.', position: "bottom-right", type: "warning", duration: 4000 });
+                    return;
+                }
+
+                if (programs.status === false) {
+                    const toast = new Toast();
+                    toast.create({ message: programs.message || 'Unable to fetch programs.', position: "bottom-right", type: "warning", duration: 4000 });
+                    return;
+                }
+
+                if (academicYears.status === false) {
+                    const toast = new Toast();
+                    toast.create({ message: academicYears.message || 'Unable to fetch academic years.', position: "bottom-right", type: "warning", duration: 4000 });
+                    return;
+                }
+
+                if (
+                    hostels.status && Array.isArray(hostels.data.hostels)
+                    && programs.status && Array.isArray(programs.data.programs)
+                    && academicYears.status && Array.isArray(academicYears.data.academic_years)
+                ) {
                     hostelsData = hostels.data.hostels;
                     programData = programs.data.programs;
+                    academicYearsData = academicYears.data.academic_years;
                 } else {
                     const toast = new Toast();
-                    toast.create({ message: hostels.message || 'Invalid hostel or program data.', position: "bottom-right", type: "warning", duration: 4000 });
+                    const errorMessage =
+                        (academicYears && academicYears.status === false && academicYears.message)
+                        || (hostels && hostels.status === false && hostels.message)
+                        || (programs && programs.status === false && programs.message)
+                        || academicYears?.message
+                        || hostels?.message
+                        || programs?.message
+                        || 'Invalid hostel, program, or academic year data.';
+                    toast.create({ message: errorMessage, position: "bottom-right", type: "warning", duration: 4000 });
                     return;
                 }
 
@@ -303,7 +337,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     const response = await Ajax.post('/api/web/admin/modal', {
                         template: "add_student",
                         hostels: hostelsData,
-                        programs: programData
+                        programs: programData,
+                        academic_years: academicYearsData
                     });
 
                     if (response.ok && response.data) {
@@ -323,11 +358,12 @@ document.addEventListener('DOMContentLoaded', () => {
                                         const studentNo = document.getElementById('student-no').value;
                                         const parentNo = document.getElementById('parent-no').value;
                                         const programId = document.getElementById('program-id').value;
+                                        const academicYearId = document.getElementById('academic-year-id').value;
 
                                         event.target.disabled = true;
                                         event.target.textContent = 'Adding Student...';
 
-                                        if (studentName && email && digitalId && year && roomNo && hostelNo && studentNo && parentNo && programId) {
+                                        if (studentName && email && digitalId && year && roomNo && hostelNo && studentNo && parentNo && programId && academicYearId) {
                                             if (studentNo === parentNo) {
                                                 alert("Student number and Parent number must not be the same.");
                                                 event.target.textContent = 'Add Student';
@@ -342,7 +378,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                                     hostel_no: hostelNo,
                                                     contact: studentNo,
                                                     parent_no: parentNo,
-                                                    program: programId
+                                                    program: programId,
+                                                    academic_year: academicYearId
                                                 });
 
                                                 if (response.ok) {

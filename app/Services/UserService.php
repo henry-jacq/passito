@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Core\Session;
 use App\Enum\UserRole;
 use App\Entity\Student;
+use App\Entity\AcademicYear;
 use App\Entity\InstitutionProgram;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -80,9 +81,14 @@ class UserService
     {
         $hostel = $data['hostel'];
         $program = $data['program'];
+        $academicYear = $data['academic_year'] ?? null;
         $givenYear = (int) $data['year'];
 
         if (!$data['program'] instanceof InstitutionProgram) {
+            return false;
+        }
+
+        if ($academicYear !== null && !$academicYear instanceof AcademicYear) {
             return false;
         }
         
@@ -97,6 +103,7 @@ class UserService
         $student->setHostel($hostel);
         $student->setDigitalId($data['digital_id']);
         $student->setYear($givenYear);
+        $student->setAcademicYear($academicYear);
         $student->setProgram($program);
         $student->setRoomNo($data['room_no']);
         $student->setParentNo($data['parent_no']);

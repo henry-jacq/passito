@@ -19,7 +19,7 @@ ${basename(__FILE__, '.php')} = function () {
         $csvPath = $this->storage->generateFileName('exports', 'csv');
         $fullPath = $this->storage->getFullPath($csvPath, true);
 
-        $headers = ['name', 'email', 'digital_id', 'program', 'branch', 'year', 'room_no', 'hostel_name', 'student_no', 'parent_no'];
+        $headers = ['name', 'email', 'digital_id', 'program', 'branch', 'year', 'academic_year', 'room_no', 'hostel_name', 'student_no', 'parent_no'];
 
         $rows = $this->csvProcessor->mapDataToRows($students, function ($student) {
             return [
@@ -29,6 +29,7 @@ ${basename(__FILE__, '.php')} = function () {
                 $student->getProgram()->getProgramName(),
                 $student->getProgram()->getShortCode(),
                 $student->getYear(),
+                $student->getAcademicYear()?->getLabel() ?? '',
                 $student->getRoomNo(),
                 $student->getHostel()->getName(),
                 $student->getUser()->getContactNo(),

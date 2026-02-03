@@ -65,57 +65,55 @@
             </button>
         </div>
 
-        <div class="overflow-x-auto rounded-md shadow-md">
-            <table class="min-w-full bg-white">
-                <thead class="bg-gray-100">
-                    <tr>
-                        <th class="px-6 py-3 text-sm font-semibold text-left text-gray-600">#</th>
-                        <th class="px-6 py-3 text-sm font-semibold text-left text-gray-600">Label</th>
-                        <th class="px-6 py-3 text-sm font-semibold text-left text-gray-600">Start Date</th>
-                        <th class="px-6 py-3 text-sm font-semibold text-left text-gray-600">End Date</th>
-                        <th class="px-6 py-3 text-sm font-semibold text-right text-gray-600">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200">
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-3 text-gray-800">1</td>
-                        <td class="px-6 py-3 text-gray-800">2024-25</td>
-                        <td class="px-6 py-3 text-gray-600">01-07-2024</td>
-                        <td class="px-6 py-3 text-gray-600">30-06-2025</td>
-                        <td class="px-6 py-3 text-right">
-                            <div class="inline-flex items-center space-x-4 text-gray-500">
-                                <button title="Edit" class="text-gray-700 hover:text-gray-800"><i class="fas fa-edit"></i></button>
-                                <button title="Delete" class="text-red-700 hover:text-red-800"><i class="fas fa-trash-alt"></i></button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-3 text-gray-800">2</td>
-                        <td class="px-6 py-3 text-gray-800">2025-26</td>
-                        <td class="px-6 py-3 text-gray-600">01-07-2025</td>
-                        <td class="px-6 py-3 text-gray-600">30-06-2026</td>
-                        <td class="px-6 py-3 text-right">
-                            <div class="inline-flex items-center space-x-4 text-gray-500">
-                                <button title="Edit" class="text-gray-700 hover:text-gray-800"><i class="fas fa-edit"></i></button>
-                                <button title="Delete" class="text-red-700 hover:text-red-800"><i class="fas fa-trash-alt"></i></button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-3 text-gray-800">3</td>
-                        <td class="px-6 py-3 text-gray-800">2026-27</td>
-                        <td class="px-6 py-3 text-gray-600">01-07-2026</td>
-                        <td class="px-6 py-3 text-gray-600">30-06-2027</td>
-                        <td class="px-6 py-3 text-right">
-                            <div class="inline-flex items-center space-x-4 text-gray-500">
-                                <button title="Edit" class="text-gray-700 hover:text-gray-800"><i class="fas fa-edit"></i></button>
-                                <button title="Delete" class="text-red-700 hover:text-red-800"><i class="fas fa-trash-alt"></i></button>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        <?php if (empty($academicYears)): ?>
+            <div class="flex items-center justify-center py-8 rounded-lg bg-gray-50">
+                <p class="text-sm text-gray-600">No academic years found. Click the button above to create one.</p>
+            </div>
+        <?php else: ?>
+            <div class="overflow-x-auto rounded-md shadow-md">
+                <table class="min-w-full bg-white">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="px-6 py-3 text-sm font-semibold text-left text-gray-600">#</th>
+                            <th class="px-6 py-3 text-sm font-semibold text-left text-gray-600">Label</th>
+                            <th class="px-6 py-3 text-sm font-semibold text-left text-gray-600">Start Year</th>
+                            <th class="px-6 py-3 text-sm font-semibold text-left text-gray-600">End Year</th>
+                            <th class="px-6 py-3 text-sm font-semibold text-right text-gray-600">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        <?php foreach ($academicYears as $key => $academicYear): ?>
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-3 text-gray-800"><?= $key + 1 ?></td>
+                                <td class="px-6 py-3 text-gray-800"><?= $academicYear->getLabel() ?></td>
+                                <td class="px-6 py-3 text-gray-600"><?= $academicYear->getStartYear() ?? 'N/A' ?></td>
+                                <td class="px-6 py-3 text-gray-600"><?= $academicYear->getEndYear() ?? 'N/A' ?></td>
+                                <td class="px-6 py-3 text-right">
+                                    <div class="inline-flex items-center space-x-4 text-gray-500">
+                                        <button
+                                            title="Edit"
+                                            class="text-gray-700 hover:text-gray-800 edit-academic-year"
+                                            data-id="<?= $academicYear->getId() ?>"
+                                            data-label="<?= $academicYear->getLabel() ?>"
+                                            data-start="<?= $academicYear->getStartYear() ?? '' ?>"
+                                            data-end="<?= $academicYear->getEndYear() ?? '' ?>">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button
+                                            title="Delete"
+                                            class="text-red-700 hover:text-red-800 delete-academic-year"
+                                            data-id="<?= $academicYear->getId() ?>"
+                                            data-label="<?= $academicYear->getLabel() ?>">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        <?php endif; ?>
     </section>
 
     <section class="p-6 bg-white rounded-lg shadow-sm">

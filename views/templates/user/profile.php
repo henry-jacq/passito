@@ -32,6 +32,10 @@
                     <div class="mt-1 font-medium text-gray-800"><?= $userData->getYear() ?> Year</div>
                 </div>
                 <div>
+                    <label class="block text-sm font-medium text-gray-700">Academic Year</label>
+                    <div class="mt-1 font-medium text-gray-800"><?= $userData->getAcademicYear()?->getLabel() ?? 'N/A' ?></div>
+                </div>
+                <div>
                     <label class="block text-sm font-medium text-gray-700">Branch</label>
                     <div class="mt-1 font-medium text-gray-800"><?= $userData->getProgram()->getCourseName() ?></div>
                 </div>

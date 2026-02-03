@@ -298,12 +298,14 @@ class AdminController extends BaseController
         $userData = $request->getAttribute('user');
         $institutions = $this->academicService->getInstitutions();
         $programs = $this->academicService->getPrograms();
+        $academicYears = $this->academicService->getAcademicYears($userData);
 
         $args = [
             'title' => 'Manage Academics',
             'user' => $userData,
             'programs' => $programs,
             'institutions' => $institutions,
+            'academicYears' => $academicYears,
             'routeName' => $this->getRouteName($request),
         ];
 

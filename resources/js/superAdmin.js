@@ -315,6 +315,236 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Add Academic Year modal
+    const addAcademicYearButton = document.querySelector('.add-academic-year-modal');
+    if (addAcademicYearButton) {
+        addAcademicYearButton.addEventListener('click', async () => {
+            try {
+                const response = await Ajax.get('/api/web/admin/modal?template=add_academic_year');
+
+                if (response.ok && response.data) {
+                    Modal.open({
+                        content: response.data,
+                        actions: [
+                            {
+                                label: 'Add Academic Year',
+                                class: `inline-flex justify-center rounded-lg bg-blue-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-blue-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50`,
+                                onClick: async (event) => {
+                                    const label = document.getElementById('academic-year-label').value;
+                                    const startYear = document.getElementById('academic-year-start').value;
+                                    const endYear = document.getElementById('academic-year-end').value;
+
+                                    event.target.disabled = true;
+                                    event.target.textContent = 'Adding Academic Year...';
+
+                                    if (label && startYear && endYear) {
+                                        try {
+                                            const response = await Ajax.post('/api/web/admin/academic_years/create', {
+                                                label: label,
+                                                start_year: startYear,
+                                                end_year: endYear
+                                            });
+
+                                            if (response.ok) {
+                                                const data = response.data;
+                                                if (data.status) {
+                                                    location.reload();
+                                                } else {
+                                                    alert(data.message);
+                                                }
+                                            } else {
+                                                handleError(response.status);
+                                                event.target.textContent = 'Add Academic Year';
+                                                event.target.disabled = false;
+                                            }
+                                        } catch (error) {
+                                            console.error(error);
+                                        } finally {
+                                            Modal.close();
+                                        }
+                                    } else {
+                                        alert('Please fill in all the required fields correctly.');
+                                        event.target.textContent = 'Add Academic Year';
+                                        event.target.disabled = false;
+                                    }
+                                },
+                            },
+                            {
+                                label: 'Cancel',
+                                class: `inline-flex justify-center rounded-lg bg-gray-100 px-6 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`,
+                                onClick: Modal.close,
+                            },
+                        ],
+                        size: 'sm:max-w-xl',
+                        classes: 'custom-modal-class',
+                        closeOnBackdropClick: false,
+                    });
+                } else {
+                    console.error('Error loading modal template:', response.data.message || 'Unknown error');
+                    alert(response.data.message || 'Failed to load modal template');
+                }
+            } catch (error) {
+                console.error('Failed to load modal content:', error);
+                alert('Failed to load modal content. Please try again later.');
+            }
+        });
+    }
+
+    // Edit Academic Year modal
+    const editAcademicYearButtons = document.querySelectorAll('.edit-academic-year');
+    editAcademicYearButtons.forEach((button) => {
+        button.addEventListener('click', async () => {
+            const academicYear = {
+                id: button.dataset.id,
+                label: button.dataset.label,
+                start_year: button.dataset.start,
+                end_year: button.dataset.end,
+            };
+
+            try {
+                const response = await Ajax.post('/api/web/admin/modal', {
+                    template: "edit_academic_year",
+                    academic_year: academicYear
+                });
+
+                if (response.ok && response.data) {
+                    Modal.open({
+                        content: response.data,
+                        actions: [
+                            {
+                                label: 'Update Academic Year',
+                                class: `inline-flex justify-center rounded-lg bg-blue-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-blue-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50`,
+                                onClick: async (event) => {
+                                    const label = document.getElementById('academic-year-label').value;
+                                    const startYear = document.getElementById('academic-year-start').value;
+                                    const endYear = document.getElementById('academic-year-end').value;
+
+                                    event.target.disabled = true;
+                                    event.target.textContent = 'Updating Academic Year...';
+
+                                    if (label && startYear && endYear) {
+                                        try {
+                                            const response = await Ajax.post('/api/web/admin/academic_years/update', {
+                                                academic_year_id: academicYear.id,
+                                                label: label,
+                                                start_year: startYear,
+                                                end_year: endYear
+                                            });
+
+                                            if (response.ok) {
+                                                const data = response.data;
+                                                if (data.status) {
+                                                    location.reload();
+                                                } else {
+                                                    alert(data.message);
+                                                }
+                                            } else {
+                                                handleError(response.status);
+                                                event.target.textContent = 'Update Academic Year';
+                                                event.target.disabled = false;
+                                            }
+                                        } catch (error) {
+                                            console.error(error);
+                                        } finally {
+                                            Modal.close();
+                                        }
+                                    } else {
+                                        alert('Please fill in all the required fields correctly.');
+                                        event.target.textContent = 'Update Academic Year';
+                                        event.target.disabled = false;
+                                    }
+                                },
+                            },
+                            {
+                                label: 'Cancel',
+                                class: `inline-flex justify-center rounded-lg bg-gray-100 px-6 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`,
+                                onClick: Modal.close,
+                            },
+                        ],
+                        size: 'sm:max-w-xl',
+                        classes: 'custom-modal-class',
+                        closeOnBackdropClick: false,
+                    });
+                } else {
+                    console.error('Error loading modal template:', response.data.message || 'Unknown error');
+                    alert(response.data.message || 'Failed to load modal template');
+                }
+            } catch (error) {
+                console.error('Failed to load modal content:', error);
+                alert('Failed to load modal content. Please try again later.');
+            }
+        });
+    });
+
+    // Delete Academic Year
+    const deleteAcademicYearButtons = document.querySelectorAll('.delete-academic-year');
+    deleteAcademicYearButtons.forEach((button) => {
+        button.addEventListener('click', async () => {
+            const academicYearId = button.dataset.id;
+            const academicYearLabel = button.dataset.label;
+
+            try {
+                const response = await Ajax.post('/api/web/admin/modal', {
+                    template: "delete_academic_year",
+                    academic_year: {
+                        id: academicYearId,
+                        label: academicYearLabel
+                    }
+                });
+
+                if (response.ok && response.data) {
+                    Modal.open({
+                        content: response.data,
+                        actions: [
+                            {
+                                label: 'Delete',
+                                class: `inline-flex justify-center rounded-lg bg-red-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-red-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50`,
+                                onClick: async (event) => {
+                                    event.target.disabled = true;
+                                    event.target.textContent = 'Deleting...';
+
+                                    try {
+                                        const response = await Ajax.post('/api/web/admin/academic_years/remove', {
+                                            academic_year_id: academicYearId
+                                        });
+
+                                        if (response.ok) {
+                                            const data = response.data;
+                                            if (data.status) {
+                                                location.reload();
+                                            } else {
+                                                alert(data.message);
+                                            }
+                                        } else {
+                                            handleError(response.status);
+                                        }
+                                    } catch (error) {
+                                        console.error(error);
+                                    } finally {
+                                        Modal.close();
+                                    }
+                                },
+                            },
+                            {
+                                label: 'Cancel',
+                                class: `inline-flex justify-center rounded-lg bg-gray-100 px-6 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`,
+                                onClick: Modal.close,
+                            },
+                        ],
+                        size: 'sm:max-w-md',
+                        classes: 'custom-modal-class',
+                        closeOnBackdropClick: false,
+                    });
+                } else {
+                    console.error('Error loading modal template:', response.data.message || 'Unknown error');
+                    alert(response.data.message || 'Failed to load modal template');
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        });
+    });
+
     // Add Hostel modal usage
     const addHostelButton = document.querySelector('.add-hostel-modal');
     if (addHostelButton) {

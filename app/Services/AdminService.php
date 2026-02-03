@@ -258,7 +258,7 @@ class AdminService
         $parsed = $csv->readFromFile($filePath);
 
         // Validate headers
-        $required = ['name', 'program', 'email', 'digital_id', 'student_no', 'parent_no', 'hostel_name', 'room_no', 'year'];
+        $required = ['name', 'program', 'email', 'digital_id', 'student_no', 'parent_no', 'hostel_name', 'room_no', 'year', 'academic_year'];
         $headerValidation = $csv->validateHeaders($parsed['headers'], $required);
 
         // Set flash key for bulk upload
@@ -341,11 +341,24 @@ class AdminService
                     continue;
                 }
 
+                $academicYearLabel = trim((string)($row['academic_year'] ?? ''));
+                if ($academicYearLabel === '') {
+                    $invalidUsers[] = "Row $rowNumber ($name): Missing academic year";
+                    continue;
+                }
+
+                $academicYear = $this->academicService->getAcademicYearByLabel($academicYearLabel);
+                if (!$academicYear instanceof AcademicYear) {
+                    $invalidUsers[] = "Row $rowNumber ($name): Invalid academic year '$academicYearLabel'";
+                    continue;
+                }
+
                 $student = $this->userService->createStudent([
                     'email' => $email,
                     'year' => (int)($row['year'] ?? 1),
                     'program' => $program,
                     'hostel' => $hostel,
+                    'academic_year' => $academicYear,
                     'digital_id' => (int)$digitalId,
                     'room_no' => trim($row['room_no']) ?? null,
                     'parent_no' => trim($row['parent_no']) ?? null,

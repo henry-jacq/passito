@@ -10,7 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity]
 #[ORM\Table(name: 'students', indexes: [
     new ORM\Index(name: "digital_id_idx", columns: ["digitalId"]),
-    new ORM\Index(name: "year_idx", columns: ["year"])
+    new ORM\Index(name: "year_idx", columns: ["year"]),
+    new ORM\Index(name: "academic_year_idx", columns: ["academic_year_id"])
 ])]
 class Student
 {
@@ -30,6 +31,10 @@ class Student
     #[ORM\ManyToOne(targetEntity: InstitutionProgram::class)]
     #[ORM\JoinColumn(name: 'program_id', referencedColumnName: 'id', nullable: false)]
     private InstitutionProgram $program;
+
+    #[ORM\ManyToOne(targetEntity: AcademicYear::class)]
+    #[ORM\JoinColumn(name: 'academic_year_id', referencedColumnName: 'id', nullable: true)]
+    private ?AcademicYear $academicYear = null;
 
     #[ORM\Column(type: 'integer', unique: true)]
     private int $digitalId;
@@ -95,6 +100,16 @@ class Student
         $this->digitalId = $digitalId;
     }
 
+    public function getAcademicYear(): ?AcademicYear
+    {
+        return $this->academicYear;
+    }
+
+    public function setAcademicYear(?AcademicYear $academicYear): void
+    {
+        $this->academicYear = $academicYear;
+    }
+
     public function getYear(): int
     {
         return $this->year;
@@ -153,6 +168,7 @@ class Student
             'hostel' => $this->getHostel()->toArray(),
             'digital_id' => $this->getDigitalId(),
             'year' => $this->getYear(),
+            'academic_year' => $this->getAcademicYear()?->toArray(),
             'program' => $this->getProgram()->toArray(),
             'room_no' => $this->getRoomNo(),
             'parent_no' => $this->getParentNo(),

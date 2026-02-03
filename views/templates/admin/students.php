@@ -97,6 +97,7 @@ $errorMessage = $this->session->getFlash('error')[$flashKey] ?? null;
                         <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Student Name</th>
                         <th class="px-4 py-3 text-sm font-semibold text-center text-gray-600">Course</th>
                         <th class="px-4 py-3 text-sm font-semibold text-center text-gray-600">Year</th>
+                        <th class="px-4 py-3 text-sm font-semibold text-center text-gray-600">Academic Year</th>
                         <th class="px-4 py-3 text-sm font-semibold text-center text-gray-600">Hostel</th>
                         <th class="px-4 py-3 text-sm font-semibold text-center text-gray-600">Room No.</th>
                         <th class="px-4 py-3 text-sm font-semibold text-center text-gray-600">Parent Contact</th>
@@ -110,6 +111,7 @@ $errorMessage = $this->session->getFlash('error')[$flashKey] ?? null;
                             <td class="px-4 py-3 text-sm text-gray-700"><?= $student->getUser()->getName() ?></td>
                             <td class="px-4 py-3 text-sm text-center text-gray-700"><?= $student->getProgram()->getProgramName() . ' ' . $student->getProgram()->getShortCode() ?></td>
                             <td class="px-4 py-3 text-sm text-center text-gray-700"><?= formatStudentYear($student->getYear()) ?></td>
+                            <td class="px-4 py-3 text-sm text-center text-gray-700"><?= $student->getAcademicYear()?->getLabel() ?? 'N/A' ?></td>
                             <td class="px-4 py-3 text-sm text-center text-gray-700"><?= $student->getHostel()->getName() ?></td>
                             <td class="px-4 py-3 text-sm text-center text-gray-700"><?= $student->getRoomNo() ?></td>
                             <td class="px-4 py-3 text-sm text-center text-gray-700"><?= $student->getParentNo() ?></td>

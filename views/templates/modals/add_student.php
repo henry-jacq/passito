@@ -34,7 +34,7 @@
             </div>
         </div>
         <div class="space-y-5">
-            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
                 <div>
                     <label for="program-id" class="block text-sm font-medium text-gray-700">Program</label>
                     <select id="program-id" name="program-id" required
@@ -42,6 +42,16 @@
                         <option value="" disabled selected>Select Program</option>
                         <?php foreach ($programs as $program): ?>
                             <option value="<?= $program['id'] ?>"><?= $program['programName'] . ' ' . $program['courseName'] ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div>
+                    <label for="academic-year-id" class="block text-sm font-medium text-gray-700">Academic Year</label>
+                    <select id="academic-year-id" name="academic-year-id" required
+                        class="w-full px-3 py-2 text-sm text-gray-800 transition duration-200 bg-white border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500">
+                        <option value="" disabled selected>Select Academic Year</option>
+                        <?php foreach (($academic_years ?? []) as $year): ?>
+                            <option value="<?= $year['id'] ?>"><?= $year['label'] ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>

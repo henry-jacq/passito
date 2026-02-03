@@ -12,6 +12,6 @@
     <ul class="mt-4 space-y-1 text-sm text-gray-500 list-disc list-inside">
         <li>Ensure CSV format matches the provided template.</li>
         <li>Selected year must align with the course duration.</li>
-        <li>Students are imported year-wise for better categorization.</li>
+        <li>Academic year is required for each student.</li>
     </ul>
 </div>

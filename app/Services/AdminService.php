@@ -19,7 +19,6 @@ use App\Entity\AcademicYear;
 use App\Jobs\GenerateQrCode;
 use App\Services\UserService;
 use App\Entity\OutpassRequest;
-use App\Enum\AssignmentTarget;
 use App\Jobs\SendOutpassEmail;
 use App\Core\JobPayloadBuilder;
 use App\Entity\WardenAssignment;
@@ -66,26 +65,24 @@ class AdminService
     }
 
     /**
-     * Assign Warden based on assignment type
+     * Assign Warden to hostel
      *
      * @param User $warden
      * @param User $admin
-     * @param AssignmentTarget $target
      * @param array $assignmentData
      * @return bool
      */
-    public function assignWarden(User $warden, User $admin, AssignmentTarget $target, array $assignmentData): bool
+    public function assignWarden(User $warden, User $admin, array $assignmentData): bool
     {
         if (!$warden || $warden->getRole() !== UserRole::ADMIN) {
             return false; // Invalid warden
         }
 
-        foreach ($assignmentData as $entityId) {
+        foreach ($assignmentData as $hostelId) {
             $assignment = new WardenAssignment();
             $assignment->setAssignedTo($warden);
             $assignment->setAssignedBy($admin);
-            $assignment->setTargetType($target);
-            $assignment->setAssignmentId((int) $entityId);
+            $assignment->setHostelId((int) $hostelId);
             $assignment->setCreatedAt(new DateTime());
 
             $this->em->persist($assignment);
@@ -113,13 +110,8 @@ class AdminService
 
         $views = [];
         foreach ($assignments as $wa) {
-            $target = match ($wa->getTargetType()) {
-                AssignmentTarget::HOSTEL => $this->em->getRepository(Hostel::class)->find($wa->getAssignmentId()),
-                AssignmentTarget::ACADEMIC_YEAR => $this->em->getRepository(AcademicYear::class)->find($wa->getAssignmentId()),
-                default => null,
-            };
-
-            $views[] = new WardenAssignmentView($wa, $target);
+            $hostel = $this->em->getRepository(Hostel::class)->find($wa->getHostelId());
+            $views[] = new WardenAssignmentView($wa, $hostel);
         }
         return $views;
     }

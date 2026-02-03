@@ -64,15 +64,6 @@ class AdminController extends BaseController
         $userData = $request->getAttribute('user');
         $hostelFilter = $request->getQueryParams()['hostel'] ?? 'default';
 
-        $wardenHostels = $userData->getHostels(); // Doctrine Collection
-        $allHostels = iterator_to_array($this->academicService->getHostelsByType($userData));
-        $wardenHostelsArray = $wardenHostels->toArray();
-
-        // Compute the difference (hostels not assigned to warden)
-        $unassignedHostels = array_udiff($allHostels, $wardenHostelsArray, function ($a, $b) {
-            return $a->getId() <=> $b->getId();
-        });
-
         $page = max(1, (int) ($request->getQueryParams()['page'] ?? 1));
         $limit = 10;
 
@@ -107,7 +98,7 @@ class AdminController extends BaseController
             'routeName' => $this->getRouteName($request),
             'pendingCount' => $pendingCount,
             'hostelFilter' => $hostelFilter,
-            'unassignedHostels' => $unassignedHostels
+            'unassignedHostels' => []
         ];
 
         $args = array_merge($args, $this->view->getGlobals());

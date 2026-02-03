@@ -13,21 +13,4 @@
                 Examples: Non-AC Shared (Common Bath), AC with Attached Bath and Balcony, AC Shared Room
             </p>
         </div>
-        <div class="space-y-2">
-            <label for="select-warden" class="block font-semibold text-gray-700 text-md">Select Warden</label>
-            <select id="select-warden" name="select-warden" class="w-full px-4 py-2 mt-1 text-gray-800 transition duration-200 border border-gray-300 rounded-lg bg-gray-50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md" required>
-                <?php foreach ($wardens as $warden): ?>
-                    <option value="<?= $warden['id'] ?>"><?= $warden['name'] . ' (' . $warden['email'] . ')' ?></option>
-                <?php endforeach; ?>
-            </select>
-        </div>
-        <div class="space-y-2">
-            <label for="select-institution" class="block font-semibold text-gray-700 text-md">Select Institution</label>
-            <select id="select-institution" name="select-institution" class="w-full px-4 py-2 mt-1 text-gray-800 transition duration-200 border border-gray-300 rounded-lg bg-gray-50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-md" required>
-                <?php foreach ($institutions as $institution): ?>
-                    <option value="<?= $institution['id'] ?>"><?= $institution['name'] ?></option>
-                <?php endforeach; ?>
-            </select>
-        </div>
-    </div>
 </div>

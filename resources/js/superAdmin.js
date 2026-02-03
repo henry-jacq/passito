@@ -318,123 +318,75 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add Hostel modal usage
     const addHostelButton = document.querySelector('.add-hostel-modal');
     if (addHostelButton) {
-        addHostelButton.addEventListener('click', () => {
-            // Fetch the list of wardens and institutions from the server
-            const fetchWardens = Ajax.post('/api/web/admin/wardens/fetch');
-            const fetchInstitutions = Ajax.post('/api/web/admin/institutions/fetch');
-
-            Promise.all([fetchWardens, fetchInstitutions])
-                .then(async (responses) => {
-
-                    const wardenResponse = responses[0];
-                    const institutionResponse = responses[1];
-
-                    if (wardenResponse.ok && institutionResponse.ok) {
-                        const wardens = wardenResponse.data.data.wardens;
-                        const institutions = institutionResponse.data.data.institutions;
-
-                        try {
-                            const response = await Ajax.post('/api/web/admin/modal', {
-                                template: "add_hostel",
-                                wardens, institutions
-                            });
-
-                            if (response.ok && response.data) {
-                                Modal.open({
-                                    content: response.data,
-                                    actions: [
-                                        {
-                                            label: 'Add Hostel',
-                                            class: `inline-flex justify-center rounded-lg bg-blue-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-blue-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50`,
-                                            onClick: async (event) => {
-                                                const hostelName = document.getElementById('hostel-name').value;
-                                                const category = document.getElementById('hostel-category').value;
-                                                const wardenId = document.getElementById('select-warden').value;
-                                                const institutionId = document.getElementById('select-institution').value;
-
-                                                event.target.disabled = true;
-                                                event.target.textContent = 'Adding Hostel...';
-
-                                                if (hostelName && wardenId && category && institutionId) {
-                                                    try {
-                                                        const response = await Ajax.post('/api/web/admin/hostels/create', {
-                                                            hostel_name: hostelName,
-                                                            warden_id: wardenId,
-                                                            category: category,
-                                                            institution_id: institutionId
-                                                        });
-
-                                                        if (response.ok) {
-                                                            const data = response.data;
-                                                            if (data.status) {
-                                                                location.reload();
-                                                            } else {
-                                                                alert(data.message);
-                                                            }
-                                                        } else {
-                                                            handleError(response.status);
-                                                        }
-                                                    } catch (error) {
-                                                        console.error(error);
-                                                    } finally {
-                                                        event.target.textContent = 'Add Hostel';
-                                                        event.target.disabled = false;
-                                                        Modal.close();
-                                                    }
-                                                } else {
-                                                    alert('Please fill in all the required fields.');
-                                                    event.target.textContent = 'Add Hostel';
-                                                    event.target.disabled = false;
-                                                }
-                                            },
-                                        },
-                                        {
-                                            label: 'Cancel',
-                                            class: `inline-flex justify-center rounded-lg bg-gray-100 px-6 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`,
-                                            onClick: Modal.close,
-                                        },
-                                    ],
-                                    size: 'sm:max-w-xl',
-                                    classes: 'custom-modal-class',
-                                    closeOnBackdropClick: false,
-                                });
-                            } else {
-                                console.error('Error loading modal template:', response.data.message || 'Unknown error');
-                                alert(response.data.message || 'Failed to load modal template');
-                            }
-                        } catch (error) {
-                            console.error('Failed to load modal content:', error);
-                            alert('Failed to load modal content. Please try again later.');
-                        }
-                    } else {
-                        let toast = new Toast();
-
-                        if (!wardenResponse.ok) {
-                            const message = wardenResponse?.data?.message || "Failed to fetch wardens.";
-                            toast.create({
-                                message,
-                                position: "bottom-right",
-                                type: "warning",
-                                duration: 4000,
-                            });
-                        }
-
-                        if (!institutionResponse.ok) {
-                            const message = institutionResponse?.data?.message || "Failed to fetch institutions.";
-                            toast.create({
-                                message,
-                                position: "bottom-right",
-                                type: "warning",
-                                duration: 4000,
-                            });
-                        }
-                    }
-                })
-                .catch((error) => {
-                    console.error('Error fetching data:', error);
-                    alert('An error occurred while fetching data.');
+        addHostelButton.addEventListener('click', async () => {
+            try {
+                const response = await Ajax.post('/api/web/admin/modal', {
+                    template: "add_hostel"
                 });
 
+                if (response.ok && response.data) {
+                    Modal.open({
+                        content: response.data,
+                        actions: [
+                            {
+                                label: 'Add Hostel',
+                                class: `inline-flex justify-center rounded-lg bg-blue-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-blue-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50`,
+                                onClick: async (event) => {
+                                    const hostelName = document.getElementById('hostel-name').value;
+                                    const category = document.getElementById('hostel-category').value;
+
+                                    event.target.disabled = true;
+                                    event.target.textContent = 'Adding Hostel...';
+
+                                    if (hostelName && category) {
+                                        try {
+                                            const response = await Ajax.post('/api/web/admin/hostels/create', {
+                                                hostel_name: hostelName,
+                                                category: category
+                                            });
+
+                                            if (response.ok) {
+                                                const data = response.data;
+                                                if (data.status) {
+                                                    location.reload();
+                                                } else {
+                                                    alert(data.message);
+                                                }
+                                            } else {
+                                                handleError(response.status);
+                                            }
+                                        } catch (error) {
+                                            console.error(error);
+                                        } finally {
+                                            event.target.textContent = 'Add Hostel';
+                                            event.target.disabled = false;
+                                            Modal.close();
+                                        }
+                                    } else {
+                                        alert('Please fill in all the required fields.');
+                                        event.target.textContent = 'Add Hostel';
+                                        event.target.disabled = false;
+                                    }
+                                }
+                            },
+                            {
+                                label: 'Cancel',
+                                class: `inline-flex justify-center rounded-lg bg-gray-100 px-6 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`,
+                                onClick: Modal.close,
+                            }
+                        ],
+                        size: 'sm:max-w-xl',
+                        classes: 'custom-modal-class',
+                        closeOnBackdropClick: false,
+                    });
+                } else {
+                    console.error('Error loading modal template:', response.data.message || 'Unknown error');
+                    alert(response.data.message || 'Failed to load modal template');
+                }
+            } catch (error) {
+                console.error('Failed to load modal content:', error);
+                alert('Failed to load modal content. Please try again later.');
+            }
         });
     }
 
@@ -913,99 +865,39 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 document.addEventListener("DOMContentLoaded", () => {
     const wardenSelect = document.getElementById("warden");
-    const typeSelect = document.getElementById("assignment_type");
-    const hostelSelection = document.getElementById("hostel_selection");
-    const yearSelection = document.getElementById("year_selection");
+    const hostelSelect = document.getElementById("hostel");
     const form = document.querySelector("form");
     const submitBtn = form.querySelector("button[type=submit]");
-    const previewBox = document.getElementById("assignment_preview");
-    const previewText = document.getElementById("preview_text");
 
     // Function to update the submit button state based on the form
     function updateSubmitButtonState() {
         const wardenChosen = wardenSelect.value !== "";
-        const typeChosen = typeSelect.value !== "";
-        let valuesChosen = false;
+        const hostelChosen = hostelSelect.value !== "";
 
-        if (typeSelect.value === "hostel") {
-            valuesChosen = hostelSelection.querySelectorAll("input[type=checkbox]:checked").length > 0;
-        } else if (typeSelect.value === "year") {
-            valuesChosen = yearSelection.querySelectorAll("input[type=checkbox]:checked").length > 0;
-        }
-
-        if (wardenChosen && typeChosen && valuesChosen) {
+        if (wardenChosen && hostelChosen) {
             submitBtn.disabled = false;
             submitBtn.classList.remove("opacity-50", "cursor-not-allowed");
         } else {
             submitBtn.disabled = true;
             submitBtn.classList.add("opacity-50", "cursor-not-allowed");
         }
-
-        updatePreview();
-    }
-
-    function toggleAssignmentOptions() {
-        const type = typeSelect.value;
-
-        // Hide all conditional fields
-        hostelSelection.classList.add("hidden");
-        yearSelection.classList.add("hidden");
-
-        if (type === "hostel") {
-            hostelSelection.classList.remove("hidden");
-        } else if (type === "year") {
-            yearSelection.classList.remove("hidden");
-        }
-
-        updateSubmitButtonState();
-    }
-
-    function updatePreview() {
-        const wardenName = wardenSelect.options[wardenSelect.selectedIndex]?.text || "";
-        const type = typeSelect.value;
-
-        let chosenValues = [];
-        if (type === "hostel") {
-            chosenValues = [...hostelSelection.querySelectorAll("input[type=checkbox]:checked")].map(cb => cb.nextElementSibling?.innerText || cb.value);
-        } else if (type === "year") {
-            chosenValues = [...yearSelection.querySelectorAll("input[type=checkbox]:checked")].map(cb => cb.nextElementSibling?.innerText || cb.value);
-        }
-
-        if (wardenName && type && chosenValues.length > 0) {
-            previewBox.classList.remove("hidden");
-            previewText.textContent = `You’re about to assign ${wardenName} to ${type} → ${chosenValues.join(", ")}`;
-        } else {
-            previewBox.classList.add("hidden");
-            previewText.textContent = "";
-        }
     }
 
     // Attach listeners
     wardenSelect.addEventListener("change", updateSubmitButtonState);
-    typeSelect.addEventListener("change", toggleAssignmentOptions);
-
-    [hostelSelection, yearSelection].forEach(section => {
-        section.addEventListener("change", updateSubmitButtonState);
-    });
+    hostelSelect.addEventListener("change", updateSubmitButtonState);
 
     // Handle submit
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
 
         const wardenId = wardenSelect.value;
-        const type = typeSelect.value;
-
-        let values = [];
-        if (type === "hostel") {
-            values = [...hostelSelection.querySelectorAll("input[type=checkbox]:checked")].map(cb => cb.value);
-        } else if (type === "year") {
-            values = [...yearSelection.querySelectorAll("input[type=checkbox]:checked")].map(cb => cb.value);
-        }
+        const hostelId = hostelSelect.value;
 
         const payload = {
             warden_id: wardenId,
-            assignment_type: type,
-            assignment_data: values
+            assignment_type: "hostel",
+            assignment_data: [hostelId]
         };
 
         try {
@@ -1022,6 +914,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Initial preview update
-    updatePreview();
+    // Initial state update
+    updateSubmitButtonState();
 });

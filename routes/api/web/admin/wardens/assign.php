@@ -1,10 +1,9 @@
 <?php
 
-use App\Enum\AssignmentTarget;
 use App\Enum\UserRole;
 
 ${basename(__FILE__, '.php')} = function () {
-    if ($this->isAuthenticated() && $this->paramsExists(['warden_id', 'assignment_type', 'assignment_data'])) {
+    if ($this->isAuthenticated() && $this->paramsExists(['warden_id', 'assignment_data'])) {
 
         if (!UserRole::isSuperAdmin($this->getRole())) {
             return $this->response([
@@ -14,10 +13,9 @@ ${basename(__FILE__, '.php')} = function () {
         }
 
         $wardenId       = (int) $this->data['warden_id'];
-        $assignmentType = AssignmentTarget::tryFrom($this->data['assignment_type']);
         $assignmentData = (array) $this->data['assignment_data'];
 
-        if (!$wardenId || !$assignmentType || empty($assignmentData)) {
+        if (!$wardenId || empty($assignmentData)) {
             return $this->response([
                 'message' => 'Invalid request data',
                 'status'  => false,
@@ -32,9 +30,9 @@ ${basename(__FILE__, '.php')} = function () {
             ], 404);
         }
 
-        // Assign the warden for given assignment type
+        // Assign the warden to hostel
         $result = $this->adminService->assignWarden(
-            $warden, $this->getUser(), $assignmentType, $assignmentData,
+            $warden, $this->getUser(), $assignmentData,
         );
 
         if (!$result) {

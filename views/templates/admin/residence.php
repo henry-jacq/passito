@@ -1,6 +1,6 @@
 <?php
 
-use App\Enum\AssignmentTarget; ?>
+?>
 
 <main class="flex-1 p-6 mt-20 overflow-y-auto">
     <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
@@ -20,7 +20,7 @@ use App\Enum\AssignmentTarget; ?>
             </div>
         </div>
 
-        <form class="grid grid-cols-1 gap-6 md:grid-cols-3">
+        <form class="grid grid-cols-1 gap-6 md:grid-cols-2">
             <!-- Warden Selection -->
             <div>
                 <label for="warden" class="block mb-2 text-sm font-medium text-gray-700">Select Warden</label>
@@ -32,61 +32,25 @@ use App\Enum\AssignmentTarget; ?>
                 </select>
             </div>
 
-            <!-- Assignment Type -->
+            <!-- Hostel Selection -->
             <div>
-                <label for="assignment_type" class="block mb-2 text-sm font-medium text-gray-700">Assignment Type</label>
-                <select id="assignment_type" name="assignment_type" class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                    <option value="">Select Type...</option>
-                    <?php foreach (AssignmentTarget::getLabels() as $key => $label): ?>
-                        <option value="<?= strtolower($key) ?>"><?= htmlspecialchars($label) ?></option>
+                <label for="hostel" class="block mb-2 text-sm font-medium text-gray-700">Select Hostel</label>
+                <select id="hostel" name="hostel" class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    <option value="">Choose Hostel...</option>
+                    <?php foreach ($hostels as $hostel): ?>
+                        <option value="<?= $hostel->getId() ?>"><?= htmlspecialchars($hostel->getName()) ?> (<?= htmlspecialchars($hostel->getCategory()) ?>)</option>
                     <?php endforeach; ?>
                 </select>
             </div>
 
             <!-- Action -->
-            <div class="flex items-end">
+            <div class="flex items-end md:col-span-2">
                 <button type="submit" class="w-full px-5 py-2 text-sm font-medium text-white transition-all duration-200 ease-in-out bg-blue-600 rounded-lg shadow-md opacity-50 cursor-not-allowed hover:bg-blue-700 focus:ring focus:ring-blue-400" disabled="true">
                     <i class="mr-2 fas fa-plus"></i> Assign Warden
                 </button>
             </div>
         </form>
 
-        <!-- Conditional Assignment Options -->
-        <div id="hostel_selection" class="hidden mt-6">
-            <label for="hostels" class="block mb-2 text-sm font-medium text-gray-700">Select Hostels</label>
-            <div class="grid grid-cols-2 gap-3 md:grid-cols-4">
-                <?php foreach ($hostels as $hostel): ?>
-                    <label class="flex items-center space-x-2">
-                        <input type="checkbox" name="hostels[]" value="<?= $hostel->getId() ?>" class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                        <span class="text-sm text-gray-700"><?= htmlspecialchars($hostel->getName()) ?> (<?= htmlspecialchars($hostel->getCategory()) ?>)</span>
-                    </label>
-                <?php endforeach; ?>
-            </div>
-            <p class="mt-2 text-xs text-gray-500">Select one or more hostels. Warden will handle requests from these hostels.</p>
-        </div>
-
-        <div id="year_selection" class="hidden mt-6">
-            <label for="student_years" class="block mb-2 text-sm font-medium text-gray-700">Select Student Academic Years</label>
-            <div class="grid grid-cols-2 gap-3 md:grid-cols-4">
-                <label class="flex items-center space-x-2">
-                    <input type="checkbox" name="student_years[]" value="1st_year" class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                    <span class="text-sm text-gray-700">1st Year</span>
-                </label>
-                <label class="flex items-center space-x-2">
-                    <input type="checkbox" name="student_years[]" value="2nd_year" class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                    <span class="text-sm text-gray-700">2nd Year</span>
-                </label>
-                <label class="flex items-center space-x-2">
-                    <input type="checkbox" name="student_years[]" value="3rd_year" class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                    <span class="text-sm text-gray-700">3rd Year</span>
-                </label>
-                <label class="flex items-center space-x-2">
-                    <input type="checkbox" name="student_years[]" value="4th_year" class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                    <span class="text-sm text-gray-700">4th Year</span>
-                </label>
-            </div>
-            <p class="mt-2 text-xs text-gray-500">Select one or more years. Warden will handle requests from students of selected years.</p>
-        </div>
 
         <div class="mt-6 overflow-x-auto rounded-md shadow-md">
             <table class="min-w-full bg-white">
@@ -94,8 +58,7 @@ use App\Enum\AssignmentTarget; ?>
                     <tr>
                         <th class="px-6 py-3 text-sm font-semibold text-left text-gray-600">#</th>
                         <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Warden Name</th>
-                        <th class="px-4 py-3 text-sm font-semibold text-center text-gray-600">Assignment Type</th>
-                        <th class="px-4 py-3 text-sm font-semibold text-center text-gray-600">Assignment Target</th>
+                        <th class="px-4 py-3 text-sm font-semibold text-center text-gray-600">Assigned Hostel</th>
                         <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Assigned By</th>
                         <th class="px-4 py-3 text-sm font-semibold text-center text-gray-600">Actions</th>
                     </tr>
@@ -106,11 +69,6 @@ use App\Enum\AssignmentTarget; ?>
                             <tr class="hover:bg-gray-50">
                                 <td class="px-6 py-3 text-sm text-gray-700"><?= $key + 1; ?></td>
                                 <td class="px-4 py-3 text-sm text-gray-700"><?= htmlspecialchars($view->assignment->getAssignedTo()->getName()); ?></td>
-                                <td class="px-4 py-3 text-center">
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                        <?= htmlspecialchars($view->assignment->getTargetType()->label()); ?>
-                                    </span>
-                                </td>
                                 <td class="px-4 py-3 text-sm text-center text-gray-700">
                                     <?= $view->resolvedTarget->getName() ?>
                                 </td>
@@ -124,7 +82,7 @@ use App\Enum\AssignmentTarget; ?>
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="6" class="px-6 py-4 text-sm text-center text-gray-500">
+                            <td colspan="5" class="px-6 py-4 text-sm text-center text-gray-500">
                                 No warden assignments found.
                             </td>
                         </tr>
@@ -194,8 +152,7 @@ use App\Enum\AssignmentTarget; ?>
                 <h3 class="text-lg font-bold text-gray-800">Hostels</h3>
                 <p class="text-sm text-gray-600">Manage all hostels effectively.</p>
             </div>
-            <button class="inline-flex items-center justify-center px-5 py-2 text-sm font-medium text-white transition duration-200 bg-blue-600 rounded-lg shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed add-hostel-modal" <?php if (empty($wardens)): echo ("disabled");
-                                                                                                                                                                                                                                                                                                                                endif; ?>>
+            <button class="inline-flex items-center justify-center px-5 py-2 text-sm font-medium text-white transition duration-200 bg-blue-600 rounded-lg shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed add-hostel-modal">
                 <i class="mr-2 fas fa-plus"></i> Add Hostel
             </button>
         </div>

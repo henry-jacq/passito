@@ -7,11 +7,10 @@ namespace App\Entity;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use App\Traits\EntityGetSetTrait;
-use App\Interfaces\AssignmentTargetInterface;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'academic_years')]
-class AcademicYear implements AssignmentTargetInterface
+class AcademicYear
 {
     use EntityGetSetTrait;
 
@@ -21,7 +20,13 @@ class AcademicYear implements AssignmentTargetInterface
     private int $id;
 
     #[ORM\Column(type: 'string', length: 9, unique: true)]
-    private string $year; // e.g. "2024-2025"
+    private string $label; // e.g. "UG2022-2026"
+
+    #[ORM\Column(type: 'integer', name: 'start_year')]
+    private int $startYear;
+
+    #[ORM\Column(type: 'integer', name: 'end_year')]
+    private int $endYear;
 
     #[ORM\Column(type: 'datetime')]
     private DateTime $createdAt;
@@ -34,10 +39,5 @@ class AcademicYear implements AssignmentTargetInterface
     public function getId(): int
     {
         return $this->id;
-    }
-
-    public function getName(): string
-    {
-        return $this->year;
     }
 }

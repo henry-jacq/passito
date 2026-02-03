@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use DateTime;
-use App\Enum\AssignmentTarget;
 use Doctrine\ORM\Mapping as ORM;
 use App\Traits\EntityGetSetTrait;
 
@@ -28,12 +27,9 @@ class WardenAssignment
     #[ORM\JoinColumn(name: 'assigned_by', referencedColumnName: 'id', nullable: false)]
     private User $assignedBy;
 
-    #[ORM\Column(type: 'string', enumType: AssignmentTarget::class, name: 'target_type', nullable: false)]
-    private AssignmentTarget $targetType;
-
-    // The actual entity ID corresponding to the enum (FK stored as plain int)
-    #[ORM\Column(type: 'integer', name: 'assignment_id', nullable: false)]
-    private int $assignmentId;
+    // The hostel ID this assignment is for
+    #[ORM\Column(type: 'integer', name: 'hostel_id', nullable: false)]
+    private int $hostelId;
 
     #[ORM\Column(type: 'datetime')]
     private DateTime $createdAt;

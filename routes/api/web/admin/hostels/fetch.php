@@ -9,7 +9,6 @@ ${basename(__FILE__, '.php')} = function () {
 
         foreach ($this->academicService->getHostelsByType($admin) as $hostel) {
             $hostel = $hostel->toArray();
-            unset($hostel['warden']);
             $hostels[] = $hostel;
         }
 

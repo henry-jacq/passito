@@ -111,6 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 label: 'Add Warden',
                                 class: `inline-flex justify-center rounded-lg bg-blue-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-blue-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50`,
                                 onClick: async (event) => {
+                                    let toastMessage = null;
                                     const wardenName = document.getElementById('warden-name').value;
                                     const wardenEmail = document.getElementById('warden-email').value;
                                     const wardenContact = document.getElementById('warden-contact').value;
@@ -132,20 +133,26 @@ document.addEventListener('DOMContentLoaded', () => {
                                                 if (data.status) {
                                                     location.reload();
                                                 } else {
-                                                    alert(data.message);
+                                                    toastMessage = data.message || 'Warden not created.';
                                                 }
                                             } else {
-                                                handleError(response.status);
+                                                toastMessage = response.data?.message || `Warden not created. (HTTP ${response.status})`;
                                                 event.target.textContent = 'Add Warden';
                                                 event.target.disabled = false;
                                             }
                                         } catch (error) {
                                             console.error(error);
+                                            toastMessage = 'An error occurred while creating warden.';
                                         } finally {
                                             Modal.close();
+                                            if (toastMessage) {
+                                                const toast = new Toast();
+                                                toast.create({ message: toastMessage, position: "bottom-right", type: "error", duration: 5000 });
+                                            }
                                         }
                                     } else {
-                                        alert('Please fill in all the required fields correctly.');
+                                        const toast = new Toast();
+                                        toast.create({ message: 'Please fill in all the required fields correctly.', position: "bottom-right", type: "warning", duration: 4000 });
                                         event.target.textContent = 'Add Warden';
                                         event.target.disabled = false;
                                     }
@@ -658,6 +665,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 label: 'Add Hostel',
                                 class: `inline-flex justify-center rounded-lg bg-blue-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-blue-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50`,
                                 onClick: async (event) => {
+                                    let toastMessage = null;
                                     const hostelName = document.getElementById('hostel-name').value;
                                     const category = document.getElementById('hostel-category').value;
 
@@ -676,20 +684,26 @@ document.addEventListener('DOMContentLoaded', () => {
                                                 if (data.status) {
                                                     location.reload();
                                                 } else {
-                                                    alert(data.message);
+                                                    toastMessage = data.message || 'Hostel not created.';
                                                 }
                                             } else {
-                                                handleError(response.status);
+                                                toastMessage = response.data?.message || `Hostel not created. (HTTP ${response.status})`;
                                             }
                                         } catch (error) {
                                             console.error(error);
+                                            toastMessage = 'An error occurred while creating hostel.';
                                         } finally {
                                             event.target.textContent = 'Add Hostel';
                                             event.target.disabled = false;
                                             Modal.close();
+                                            if (toastMessage) {
+                                                const toast = new Toast();
+                                                toast.create({ message: toastMessage, position: "bottom-right", type: "error", duration: 5000 });
+                                            }
                                         }
                                     } else {
-                                        alert('Please fill in all the required fields.');
+                                        const toast = new Toast();
+                                        toast.create({ message: 'Please fill in all the required fields.', position: "bottom-right", type: "warning", duration: 4000 });
                                         event.target.textContent = 'Add Hostel';
                                         event.target.disabled = false;
                                     }

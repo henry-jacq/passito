@@ -30,7 +30,7 @@ ${basename(__FILE__, '.php')} = function () {
             }
 
             return $this->response([
-                'message' => 'Hostel not created',
+                'message' => 'Hostel already exists',
                 'status' => false,
             ], 500);
         }

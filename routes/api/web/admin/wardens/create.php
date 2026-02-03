@@ -6,6 +6,14 @@ use App\Enum\UserRole;
 ${basename(__FILE__, '.php')} = function () {
     if ($this->isAuthenticated() && $this->paramsExists(['name', 'email', 'contact'])) {
 
+        $existingUser = $this->userService->getUserByEmail(strtolower(trim($this->data['email'])));
+        if ($existingUser) {
+            return $this->response([
+                'message' => 'Warden with email already exists',
+                'status' => false
+            ], 409);
+        }
+
         // UserRole::isSuperAdmin($this->getRole()
         // user must be authenticated
         // super admin is the only one who can create wardens

@@ -116,6 +116,19 @@ class AdminService
         return $views;
     }
 
+    public function removeAssignment(int $assignmentId): bool
+    {
+        $assignment = $this->em->getRepository(WardenAssignment::class)->find($assignmentId);
+        if (!$assignment) {
+            return false;
+        }
+
+        $this->em->remove($assignment);
+        $this->em->flush();
+
+        return true;
+    }
+
 
     /**
      * Set Outpass Request Lock for Students

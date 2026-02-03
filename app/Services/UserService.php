@@ -77,6 +77,32 @@ class UserService
         return false;
     }
 
+    public function updateWarden(int $wardenId, array $data): User|bool
+    {
+        $warden = $this->em->getRepository(User::class)->find($wardenId);
+        if (!$warden) {
+            return false;
+        }
+
+        $email = strtolower(trim((string)($data['email'] ?? '')));
+        if ($email === '') {
+            return false;
+        }
+
+        $existing = $this->em->getRepository(User::class)->findOneBy(['email' => $email]);
+        if ($existing && $existing->getId() !== $warden->getId()) {
+            return false;
+        }
+
+        $warden->setName($data['name']);
+        $warden->setEmail($email);
+        $warden->setContactNo($data['contact']);
+
+        $this->em->flush();
+
+        return $warden;
+    }
+
     public function createStudent(array $data, User $user): Student|bool
     {
         $hostel = $data['hostel'];

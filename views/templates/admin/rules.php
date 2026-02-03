@@ -4,7 +4,7 @@ use App\Enum\Gender;
 ?>
 <!-- Outpass Settings Page -->
 <main class="flex-1 p-6 mt-20 overflow-y-auto bg-gray-50">
-    <h2 class="mb-4 text-2xl font-semibold text-gray-700">Firewall Rules</h2>
+    <h2 class="mb-4 text-2xl font-semibold text-gray-700">System Settings</h2>
     <p class="mb-8 text-base text-gray-700">
         Set rules and preferences to manage outpass requests, enforce guidelines, and enhance security.
     </p>

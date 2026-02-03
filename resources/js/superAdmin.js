@@ -239,6 +239,92 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Edit Warden modal
+    const editWardenButtons = document.querySelectorAll('.edit-warden-modal');
+    editWardenButtons.forEach((button) => {
+        button.addEventListener('click', async () => {
+            const warden = {
+                id: button.dataset.id,
+                name: button.dataset.name,
+                email: button.dataset.email,
+                contact: button.dataset.contact
+            };
+
+            try {
+                const response = await Ajax.post('/api/web/admin/modal', {
+                    template: "edit_warden",
+                    warden: warden
+                });
+
+                if (response.ok && response.data) {
+                    Modal.open({
+                        content: response.data,
+                        actions: [
+                            {
+                                label: 'Update Warden',
+                                class: `inline-flex justify-center rounded-lg bg-blue-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-blue-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50`,
+                                onClick: async (event) => {
+                                    const wardenName = document.getElementById('warden-name').value;
+                                    const wardenEmail = document.getElementById('warden-email').value;
+                                    const wardenContact = document.getElementById('warden-contact').value;
+
+                                    event.target.disabled = true;
+                                    event.target.textContent = 'Updating Warden...';
+
+                                    if (wardenName && isValidEmail(wardenEmail) && wardenContact) {
+                                        try {
+                                            const response = await Ajax.post('/api/web/admin/wardens/update', {
+                                                warden_id: warden.id,
+                                                name: wardenName,
+                                                email: wardenEmail,
+                                                contact: wardenContact
+                                            });
+
+                                            if (response.ok) {
+                                                const data = response.data;
+                                                if (data.status) {
+                                                    location.reload();
+                                                } else {
+                                                    alert(data.message);
+                                                }
+                                            } else {
+                                                handleError(response.status);
+                                                event.target.textContent = 'Update Warden';
+                                                event.target.disabled = false;
+                                            }
+                                        } catch (error) {
+                                            console.error(error);
+                                        } finally {
+                                            Modal.close();
+                                        }
+                                    } else {
+                                        alert('Please fill in all the required fields correctly.');
+                                        event.target.textContent = 'Update Warden';
+                                        event.target.disabled = false;
+                                    }
+                                },
+                            },
+                            {
+                                label: 'Cancel',
+                                class: `inline-flex justify-center rounded-lg bg-gray-100 px-6 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`,
+                                onClick: Modal.close,
+                            },
+                        ],
+                        size: 'sm:max-w-xl',
+                        classes: 'custom-modal-class',
+                        closeOnBackdropClick: false,
+                    });
+                } else {
+                    console.error('Error loading modal template:', response.data.message || 'Unknown error');
+                    alert(response.data.message || 'Failed to load modal template');
+                }
+            } catch (error) {
+                console.error('Failed to load modal content:', error);
+                alert('Failed to load modal content. Please try again later.');
+            }
+        });
+    });
+
     // Add Institution modal usage
     const addInstitutionButton = document.querySelector('.add-institution-modal');
     if (addInstitutionButton) {
@@ -624,6 +710,223 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // Edit Hostel modal
+    const editHostelButtons = document.querySelectorAll('.edit-hostel-modal');
+    editHostelButtons.forEach((button) => {
+        button.addEventListener('click', async () => {
+            const hostel = {
+                id: button.dataset.id,
+                name: button.dataset.name,
+                category: button.dataset.category
+            };
+
+            try {
+                const response = await Ajax.post('/api/web/admin/modal', {
+                    template: "edit_hostel",
+                    hostel: hostel
+                });
+
+                if (response.ok && response.data) {
+                    Modal.open({
+                        content: response.data,
+                        actions: [
+                            {
+                                label: 'Update Hostel',
+                                class: `inline-flex justify-center rounded-lg bg-blue-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-blue-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50`,
+                                onClick: async (event) => {
+                                    const hostelName = document.getElementById('hostel-name').value;
+                                    const category = document.getElementById('hostel-category').value;
+
+                                    event.target.disabled = true;
+                                    event.target.textContent = 'Updating Hostel...';
+
+                                    if (hostelName && category) {
+                                        try {
+                                            const response = await Ajax.post('/api/web/admin/hostels/update', {
+                                                hostel_id: hostel.id,
+                                                hostel_name: hostelName,
+                                                category: category
+                                            });
+
+                                            if (response.ok) {
+                                                const data = response.data;
+                                                if (data.status) {
+                                                    location.reload();
+                                                } else {
+                                                    alert(data.message);
+                                                }
+                                            } else {
+                                                handleError(response.status);
+                                                event.target.textContent = 'Update Hostel';
+                                                event.target.disabled = false;
+                                            }
+                                        } catch (error) {
+                                            console.error(error);
+                                        } finally {
+                                            Modal.close();
+                                        }
+                                    } else {
+                                        alert('Please fill in all the required fields.');
+                                        event.target.textContent = 'Update Hostel';
+                                        event.target.disabled = false;
+                                    }
+                                }
+                            },
+                            {
+                                label: 'Cancel',
+                                class: `inline-flex justify-center rounded-lg bg-gray-100 px-6 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`,
+                                onClick: Modal.close,
+                            }
+                        ],
+                        size: 'sm:max-w-xl',
+                        classes: 'custom-modal-class',
+                        closeOnBackdropClick: false,
+                    });
+                } else {
+                    console.error('Error loading modal template:', response.data.message || 'Unknown error');
+                    alert(response.data.message || 'Failed to load modal template');
+                }
+            } catch (error) {
+                console.error('Failed to load modal content:', error);
+                alert('Failed to load modal content. Please try again later.');
+            }
+        });
+    });
+
+    // Delete Hostel modal
+    const deleteHostelButtons = document.querySelectorAll('.remove-hostel-modal');
+    deleteHostelButtons.forEach((button) => {
+        button.addEventListener('click', async () => {
+            const hostelId = button.dataset.id;
+            const hostelName = button.dataset.name;
+
+            try {
+                const response = await Ajax.post('/api/web/admin/modal', {
+                    template: "delete_hostel",
+                    hostelName: hostelName
+                });
+
+                if (response.ok && response.data) {
+                    Modal.open({
+                        content: response.data,
+                        actions: [
+                            {
+                                label: 'Delete',
+                                class: `inline-flex justify-center rounded-lg bg-red-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-red-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50`,
+                                onClick: async (event) => {
+                                    event.target.disabled = true;
+                                    event.target.textContent = 'Deleting...';
+
+                                    try {
+                                        const response = await Ajax.post(`/api/web/admin/hostels/remove`, {
+                                            hostel_id: hostelId
+                                        });
+
+                                        if (response.ok) {
+                                            const data = response.data;
+                                            if (data.status) {
+                                                location.reload();
+                                            } else {
+                                                alert(data.message);
+                                            }
+                                        } else {
+                                            handleError(response.status);
+                                        }
+                                    } catch (error) {
+                                        console.error(error);
+                                    } finally {
+                                        Modal.close();
+                                    }
+                                },
+                            },
+                            {
+                                label: 'Cancel',
+                                class: `inline-flex justify-center rounded-lg bg-gray-100 px-6 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`,
+                                onClick: Modal.close,
+                            },
+                        ],
+                        size: 'sm:max-w-md',
+                        classes: 'custom-modal-class',
+                        closeOnBackdropClick: false,
+                    });
+                } else {
+                    console.error('Error loading modal template:', response.data.message || 'Unknown error');
+                    alert(response.data.message || 'Failed to load modal template');
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        });
+    });
+
+    // Remove Assignment modal
+    const removeAssignmentButtons = document.querySelectorAll('.remove-assignment-modal');
+    removeAssignmentButtons.forEach((button) => {
+        button.addEventListener('click', async () => {
+            const assignmentId = button.dataset.id;
+            const wardenName = button.dataset.wardenname;
+            const hostelName = button.dataset.hostelname;
+
+            try {
+                const response = await Ajax.post('/api/web/admin/modal', {
+                    template: "delete_assignment",
+                    wardenName: wardenName,
+                    hostelName: hostelName
+                });
+
+                if (response.ok && response.data) {
+                    Modal.open({
+                        content: response.data,
+                        actions: [
+                            {
+                                label: 'Remove',
+                                class: `inline-flex justify-center rounded-lg bg-red-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-red-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50`,
+                                onClick: async (event) => {
+                                    event.target.disabled = true;
+                                    event.target.textContent = 'Removing...';
+
+                                    try {
+                                        const response = await Ajax.post(`/api/web/admin/wardens/assignments/remove`, {
+                                            assignment_id: assignmentId
+                                        });
+
+                                        if (response.ok) {
+                                            const data = response.data;
+                                            if (data.status) {
+                                                location.reload();
+                                            } else {
+                                                alert(data.message);
+                                            }
+                                        } else {
+                                            handleError(response.status);
+                                        }
+                                    } catch (error) {
+                                        console.error(error);
+                                    } finally {
+                                        Modal.close();
+                                    }
+                                },
+                            },
+                            {
+                                label: 'Cancel',
+                                class: `inline-flex justify-center rounded-lg bg-gray-100 px-6 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`,
+                                onClick: Modal.close,
+                            },
+                        ],
+                        size: 'sm:max-w-md',
+                        classes: 'custom-modal-class',
+                        closeOnBackdropClick: false,
+                    });
+                } else {
+                    console.error('Error loading modal template:', response.data.message || 'Unknown error');
+                    alert(response.data.message || 'Failed to load modal template');
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        });
+    });
 
     // Outpass Template Modal
     const addTemplate = document.getElementById('add-outpass-template');

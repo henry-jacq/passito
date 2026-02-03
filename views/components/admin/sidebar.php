@@ -96,7 +96,7 @@ use App\Enum\UserRole; ?>
                     <a href="<?= $this->urlFor('admin.outpass.settings') ?>"
                         class="flex items-center px-4 py-2.5 <?= str_contains($routeName, 'admin.outpass.settings') ? 'bg-blue-500/20 text-blue-800 hover:bg-blue-600/20 border-blue-800/80' : 'text-gray-600 hover:bg-gray-50 border-transparent'; ?> transition duration-200 rounded-md border-l-4">
                         <i class="pr-4 fas fa-shield"></i>
-                        <span>Firewall Rules</span>
+                        <span>System Settings</span>
                     </a>
                 </li>
                 <?php if (UserRole::isSuperAdmin($user->getRole()->value)): ?>

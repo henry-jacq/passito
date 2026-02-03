@@ -112,7 +112,12 @@ class AcademicService
     {
         $hostel = $this->getHostelById($id);
         $hostel->setName($data['hostel_name']);
-        $hostel->setHostelType($data['hostel_type']);
+        if (isset($data['hostel_type'])) {
+            $hostel->setHostelType($data['hostel_type']);
+        }
+        if (isset($data['category'])) {
+            $hostel->setCategory($data['category']);
+        }
 
         $this->em->flush();
 

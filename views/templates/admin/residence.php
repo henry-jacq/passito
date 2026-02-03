@@ -74,7 +74,11 @@
                                 </td>
                                 <td class="px-4 py-3 text-sm text-gray-700"><?= htmlspecialchars($view->assignment->getAssignedBy()->getName()); ?></td>
                                 <td class="px-6 py-3 text-sm text-center">
-                                    <button class="text-red-600 transition duration-200 hover:text-red-800" data-id="<?= $view->assignment->getId(); ?>">
+                                    <button
+                                        class="text-red-600 transition duration-200 hover:text-red-800 remove-assignment-modal"
+                                        data-id="<?= $view->assignment->getId(); ?>"
+                                        data-wardenname="<?= htmlspecialchars($view->assignment->getAssignedTo()->getName()); ?>"
+                                        data-hostelname="<?= htmlspecialchars($view->resolvedTarget->getName()); ?>">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
                                 </td>
@@ -134,7 +138,14 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-3 text-sm text-center">
-                                    <button class="mr-4 text-gray-600 transition duration-200 hover:text-gray-800 edit-warden-modal" data-id="<?= $warden->getId() ?>"><i class="fas fa-edit"></i></button>
+                                    <button
+                                        class="mr-4 text-gray-600 transition duration-200 hover:text-gray-800 edit-warden-modal"
+                                        data-id="<?= $warden->getId() ?>"
+                                        data-name="<?= htmlspecialchars($warden->getName()) ?>"
+                                        data-email="<?= htmlspecialchars($warden->getEmail()) ?>"
+                                        data-contact="<?= htmlspecialchars($warden->getContactNo()) ?>">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
                                     <button class="text-red-600 transition duration-200 hover:text-red-800 remove-warden-modal" data-wardenname="<?= $warden->getName() ?>" data-id="<?= $warden->getId() ?>"><i class="fas fa-trash-alt"></i></button>
                                 </td>
                             </tr>
@@ -179,7 +190,12 @@
                                 <td class="px-4 py-3 text-sm text-gray-800"><?= $hostel->getCategory() ?></td>
                                 <td class="px-6 py-3 text-right">
                                     <div class="inline-flex items-center space-x-4 text-gray-500">
-                                        <button title="Edit" class="text-gray-700 hover:text-gray-800" data-id="<?= $hostel->getId() ?>">
+                                        <button
+                                            title="Edit"
+                                            class="text-gray-700 hover:text-gray-800 edit-hostel-modal"
+                                            data-id="<?= $hostel->getId() ?>"
+                                            data-name="<?= htmlspecialchars($hostel->getName()) ?>"
+                                            data-category="<?= htmlspecialchars($hostel->getCategory()) ?>">
                                             <i class="fas fa-edit"></i>
                                         </button>
                                         <button title="Delete" class="text-red-700 hover:text-red-800 remove-hostel-modal" data-id="<?= $hostel->getId() ?>" data-name="<?= $hostel->getName() ?>">

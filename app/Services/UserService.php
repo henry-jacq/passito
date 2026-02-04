@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Core\Session;
 use App\Enum\UserRole;
 use App\Entity\Student;
+use App\Entity\Hostel;
 use App\Entity\AcademicYear;
 use App\Entity\InstitutionProgram;
 use App\Entity\OutpassRequest;
@@ -161,6 +162,74 @@ class UserService
         return $student;
     }
 
+    public function updateStudent(int $studentId, array $data): Student|bool
+    {
+        $student = $this->em->getRepository(Student::class)->find($studentId);
+        if (!$student) {
+            return false;
+        }
+
+        $email = strtolower(trim((string)($data['email'] ?? '')));
+        if ($email === '') {
+            return false;
+        }
+
+        $existingUser = $this->em->getRepository(User::class)->findOneBy(['email' => $email]);
+        if ($existingUser && $existingUser->getId() !== $student->getUser()->getId()) {
+            return false;
+        }
+
+        $digitalId = (int) ($data['digital_id'] ?? 0);
+        if ($digitalId <= 0) {
+            return false;
+        }
+
+        $existingStudent = $this->em->getRepository(Student::class)->findOneBy(['digitalId' => $digitalId]);
+        if ($existingStudent && $existingStudent->getId() !== $student->getId()) {
+            return false;
+        }
+
+        $hostel = $data['hostel'] ?? null;
+        $program = $data['program'] ?? null;
+        $academicYear = $data['academic_year'] ?? null;
+        $givenYear = (int) ($data['year'] ?? 0);
+
+        if (!$hostel instanceof Hostel) {
+            return false;
+        }
+
+        if (!$program instanceof InstitutionProgram) {
+            return false;
+        }
+
+        if ($academicYear !== null && !$academicYear instanceof AcademicYear) {
+            return false;
+        }
+
+        if ($givenYear < 1 || $givenYear > $program->getDuration()) {
+            return false;
+        }
+
+        $user = $student->getUser();
+        $user->setName($data['name']);
+        $user->setEmail($email);
+        $user->setContactNo($data['contact']);
+
+        $student->setHostel($hostel);
+        $student->setProgram($program);
+        $student->setAcademicYear($academicYear);
+        $student->setDigitalId($digitalId);
+        $student->setYear($givenYear);
+        $student->setRoomNo($data['room_no']);
+        $student->setParentNo($data['parent_no']);
+        $student->setStatus((bool) ($data['status'] ?? true));
+        $student->setUpdatedAt(new DateTime());
+
+        $this->em->flush();
+
+        return $student;
+    }
+
     /**
      * Get students of a admin based on gender
      */
@@ -180,6 +249,11 @@ class UserService
     public function getStudentByUser(User $user): Student
     {
         return $this->em->getRepository(Student::class)->findOneBy(['user' => $user]);
+    }
+
+    public function getStudentById(int $studentId): ?Student
+    {
+        return $this->em->getRepository(Student::class)->find($studentId);
     }
     
     /**

@@ -1,0 +1,34 @@
+<?php
+
+use App\Enum\UserRole;
+
+${basename(__FILE__, '.php')} = function () {
+    if ($this->isAuthenticated() && $this->paramsExists(['student_id']) && UserRole::isAdministrator($this->getRole())) {
+        $studentId = (int) $this->data['student_id'];
+
+        $student = $this->userService->getStudentById($studentId);
+        if (!$student) {
+            return $this->response([
+                'message' => 'Student not found',
+                'status' => false
+            ], 404);
+        }
+
+        $removed = $this->userService->removeStudent($studentId);
+        if ($removed) {
+            return $this->response([
+                'message' => 'Student removed',
+                'status' => true
+            ]);
+        }
+
+        return $this->response([
+            'message' => 'Student not removed',
+            'status' => false
+        ], 400);
+    }
+
+    return $this->response([
+        'message' => 'Bad Request'
+    ], 400);
+};

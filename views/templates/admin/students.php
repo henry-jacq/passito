@@ -128,8 +128,30 @@ $errorMessage = $this->session->getFlash('error')[$flashKey] ?? null;
                             </td>
 
                             <td class="px-4 py-3 text-sm text-center">
-                                <button class="mr-4 text-gray-600 transition duration-200 hover:text-gray-800" data-id="<?= $student->getId() ?>"><i class="fas fa-edit"></i></button>
-                                <button class="text-red-600 transition duration-200 hover:text-red-800" data-id="<?= $student->getId() ?>"><i class="fas fa-trash-alt"></i></button>
+                                <button
+                                    class="mr-4 text-gray-600 transition duration-200 hover:text-gray-800 edit-student-modal"
+                                    data-id="<?= $student->getId() ?>"
+                                    data-name="<?= $student->getUser()->getName() ?>"
+                                    data-email="<?= $student->getUser()->getEmail() ?>"
+                                    data-digital-id="<?= $student->getDigitalId() ?>"
+                                    data-year="<?= $student->getYear() ?>"
+                                    data-room-no="<?= $student->getRoomNo() ?>"
+                                    data-hostel-id="<?= $student->getHostel()->getId() ?>"
+                                    data-student-no="<?= $student->getUser()->getContactNo() ?>"
+                                    data-parent-no="<?= $student->getParentNo() ?>"
+                                    data-program-id="<?= $student->getProgram()->getId() ?>"
+                                    data-academic-year-id="<?= $student->getAcademicYear()?->getId() ?>"
+                                    data-status="<?= $student->getStatus() ? 1 : 0 ?>"
+                                >
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button
+                                    class="text-red-600 transition duration-200 hover:text-red-800 remove-student-modal"
+                                    data-id="<?= $student->getId() ?>"
+                                    data-name="<?= $student->getUser()->getName() ?>"
+                                >
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
                             </td>
                         </tr>
                     <?php endforeach; ?>

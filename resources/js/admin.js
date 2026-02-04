@@ -430,6 +430,260 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Edit Student modal
+    const editStudentButtons = document.querySelectorAll('.edit-student-modal');
+    editStudentButtons.forEach((button) => {
+        button.addEventListener('click', async () => {
+            const student = {
+                id: button.dataset.id,
+                name: button.dataset.name,
+                email: button.dataset.email,
+                digital_id: button.dataset.digitalId,
+                year: button.dataset.year,
+                room_no: button.dataset.roomNo,
+                hostel_id: button.dataset.hostelId,
+                student_no: button.dataset.studentNo,
+                parent_no: button.dataset.parentNo,
+                program_id: button.dataset.programId,
+                academic_year_id: button.dataset.academicYearId,
+                status: button.dataset.status,
+            };
+
+            const fetchHostels = await Ajax.post('/api/web/admin/hostels/fetch');
+            const fetchPrograms = await Ajax.post('/api/web/admin/programs/fetch');
+            const fetchAcademicYears = await Ajax.post('/api/web/admin/academic_years/fetch');
+
+            if (fetchHostels.ok && fetchPrograms.ok && fetchAcademicYears.ok) {
+                let hostelsData = [];
+                let programData = [];
+                let academicYearsData = [];
+                const hostels = fetchHostels.data;
+                const programs = fetchPrograms.data;
+                const academicYears = fetchAcademicYears.data;
+
+                if (hostels.status === false) {
+                    const toast = new Toast();
+                    toast.create({ message: hostels.message || 'Unable to fetch hostels.', position: "bottom-right", type: "warning", duration: 4000 });
+                    return;
+                }
+
+                if (programs.status === false) {
+                    const toast = new Toast();
+                    toast.create({ message: programs.message || 'Unable to fetch programs.', position: "bottom-right", type: "warning", duration: 4000 });
+                    return;
+                }
+
+                if (academicYears.status === false) {
+                    const toast = new Toast();
+                    toast.create({ message: academicYears.message || 'Unable to fetch academic years.', position: "bottom-right", type: "warning", duration: 4000 });
+                    return;
+                }
+
+                if (
+                    hostels.status && Array.isArray(hostels.data.hostels)
+                    && programs.status && Array.isArray(programs.data.programs)
+                    && academicYears.status && Array.isArray(academicYears.data.academic_years)
+                ) {
+                    hostelsData = hostels.data.hostels;
+                    programData = programs.data.programs;
+                    academicYearsData = academicYears.data.academic_years;
+                } else {
+                    const toast = new Toast();
+                    const errorMessage =
+                        (academicYears && academicYears.status === false && academicYears.message)
+                        || (hostels && hostels.status === false && hostels.message)
+                        || (programs && programs.status === false && programs.message)
+                        || academicYears?.message
+                        || hostels?.message
+                        || programs?.message
+                        || 'Invalid hostel, program, or academic year data.';
+                    toast.create({ message: errorMessage, position: "bottom-right", type: "warning", duration: 4000 });
+                    return;
+                }
+
+                try {
+                    const response = await Ajax.post('/api/web/admin/modal', {
+                        template: "edit_student",
+                        hostels: hostelsData,
+                        programs: programData,
+                        academic_years: academicYearsData,
+                        student: student
+                    });
+
+                    if (response.ok && response.data) {
+                        Modal.open({
+                            content: response.data,
+                            actions: [
+                                {
+                                    label: 'Update Student',
+                                    class: `inline-flex justify-center rounded-lg bg-blue-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-blue-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50`,
+                                    onClick: async (event) => {
+                                        const studentId = document.getElementById('student-id').value;
+                                        const studentName = document.getElementById('student-name').value;
+                                        const email = document.getElementById('email').value;
+                                        const digitalId = document.getElementById('digital-id').value;
+                                        const year = document.getElementById('year').value;
+                                        const roomNo = document.getElementById('room-no').value;
+                                        const hostelNo = document.getElementById('hostel-no').value;
+                                        const studentNo = document.getElementById('student-no').value;
+                                        const parentNo = document.getElementById('parent-no').value;
+                                        const programId = document.getElementById('program-id').value;
+                                        const academicYearId = document.getElementById('academic-year-id').value;
+                                        const status = document.getElementById('status').value;
+
+                                        event.target.disabled = true;
+                                        event.target.textContent = 'Updating Student...';
+
+                                        if (studentName && email && digitalId && year && roomNo && hostelNo && studentNo && parentNo && programId && academicYearId) {
+                                            if (!isValidEmail(email)) {
+                                                alert('Please enter a valid email address.');
+                                                event.target.textContent = 'Update Student';
+                                                event.target.disabled = false;
+                                                return;
+                                            }
+                                            if (studentNo === parentNo) {
+                                                alert("Student number and Parent number must not be the same.");
+                                                event.target.textContent = 'Update Student';
+                                                event.target.disabled = false;
+                                                return;
+                                            }
+
+                                            try {
+                                                const response = await Ajax.post('/api/web/admin/students/update', {
+                                                    student_id: studentId,
+                                                    name: studentName,
+                                                    email,
+                                                    digital_id: digitalId,
+                                                    year,
+                                                    room_no: roomNo,
+                                                    hostel_no: hostelNo,
+                                                    contact: studentNo,
+                                                    parent_no: parentNo,
+                                                    program: programId,
+                                                    academic_year: academicYearId,
+                                                    status: status
+                                                });
+
+                                                if (response.ok) {
+                                                    const data = response.data;
+                                                    if (data.status) {
+                                                        location.reload();
+                                                    } else {
+                                                        alert(data.message);
+                                                    }
+                                                } else {
+                                                    handleError(response.status);
+                                                    event.target.textContent = 'Update Student';
+                                                    event.target.disabled = false;
+                                                }
+                                            } catch (error) {
+                                                console.error(error);
+                                            } finally {
+                                                Modal.close();
+                                            }
+                                        } else {
+                                            alert('Please fill in all the required fields correctly.');
+                                            event.target.textContent = 'Update Student';
+                                            event.target.disabled = false;
+                                        }
+                                    },
+                                },
+                                {
+                                    label: 'Cancel',
+                                    class: `inline-flex justify-center rounded-lg bg-gray-100 px-6 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`,
+                                    onClick: Modal.close,
+                                },
+                            ],
+                            size: 'sm:max-w-3xl',
+                            classes: 'focus:outline-none focus:ring-0 focus:border-transparent',
+                            closeOnBackdropClick: false,
+                        });
+                    } else {
+                        console.error('Error loading modal template:', response.data.message || 'Unknown error');
+                        alert(response.data.message || 'Failed to load modal template');
+                    }
+                } catch (error) {
+                    console.error('Failed to load modal content:', error);
+                    alert('Failed to load modal content. Please try again later.');
+                }
+            } else {
+                handleError(fetchHostels.status);
+            }
+        });
+    });
+
+    // Delete Student modal
+    const removeStudentButtons = document.querySelectorAll('.remove-student-modal');
+    removeStudentButtons.forEach((button) => {
+        button.addEventListener('click', async () => {
+            const studentId = button.dataset.id;
+            const studentName = button.dataset.name;
+
+            try {
+                const response = await Ajax.post('/api/web/admin/modal', {
+                    template: "delete_student",
+                    studentName: studentName
+                });
+
+                if (response.ok && response.data) {
+                    Modal.open({
+                        content: response.data,
+                        actions: [
+                            {
+                                label: 'Delete',
+                                class: `inline-flex justify-center rounded-lg bg-red-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-red-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50`,
+                                onClick: async (event) => {
+                                    let toastMessage = null;
+                                    event.target.disabled = true;
+                                    event.target.textContent = 'Deleting...';
+
+                                    try {
+                                        const response = await Ajax.post(`/api/web/admin/students/remove`, {
+                                            student_id: studentId
+                                        });
+
+                                        if (response.ok) {
+                                            const data = response.data;
+                                            if (data.status) {
+                                                location.reload();
+                                            } else {
+                                                toastMessage = data.message || 'Failed to delete student.';
+                                            }
+                                        } else {
+                                            toastMessage = response.data?.message || `Failed to delete student. (HTTP ${response.status})`;
+                                        }
+                                    } catch (error) {
+                                        console.error(error);
+                                        toastMessage = 'An error occurred while processing the request.';
+                                    } finally {
+                                        Modal.close();
+                                        if (toastMessage) {
+                                            const toast = new Toast();
+                                            toast.create({ message: toastMessage, position: "bottom-right", type: "error", duration: 5000 });
+                                        }
+                                    }
+                                },
+                            },
+                            {
+                                label: 'Cancel',
+                                class: `inline-flex justify-center rounded-lg bg-gray-100 px-6 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`,
+                                onClick: Modal.close,
+                            },
+                        ],
+                        size: 'sm:max-w-md',
+                        classes: 'custom-modal-class',
+                        closeOnBackdropClick: false,
+                    });
+                } else {
+                    console.error('Error loading modal template:', response.data.message || 'Unknown error');
+                    alert(response.data.message || 'Failed to load modal template');
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        });
+    });
+
     // Export student data
     const exportStudentsButton = document.querySelector('.export-students');
     if (exportStudentsButton) {

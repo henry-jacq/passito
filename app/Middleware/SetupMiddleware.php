@@ -38,12 +38,17 @@ class SetupMiddleware implements MiddlewareInterface
         }
 
         if ($settings && $settings->getValue() === 'false') {
-            // Avoid redirect loop by checking if we are already on the install page
-            if (strpos($request->getUri()->getPath(), $this->view->urlFor('setup.install')) !== false) {
-                return $handler->handle($request);  // Allow access to setup install page
+            // Avoid redirect loop by checking if we are already on the install or update page
+            $path = $request->getUri()->getPath();
+            $installPath = $this->view->urlFor('setup.install');
+            $updatePath = $this->view->urlFor('setup.update');
+
+            if (strpos($path, $installPath) !== false || strpos($path, $updatePath) !== false) {
+                return $handler->handle($request);  // Allow access to setup install/update page
             }
+
             return $this->responseFactory->createResponse(302)
-            ->withHeader('Location', $this->view->urlFor('setup.install'));
+                ->withHeader('Location', $this->view->urlFor('setup.install'));
         }
         
         return $handler->handle($request);

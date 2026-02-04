@@ -16,7 +16,7 @@ class AppSettingsSeeder
     {
         $settings = [
             ['keyName' => 'app_name', 'value' => 'Passito'],
-            ['keyName' => 'setup_complete', 'value' => 'true'],
+            ['keyName' => 'setup_complete', 'value' => 'false'],
             ['keyName' => 'admin_created', 'value' => 'false'],
             ['keyName' => 'maintenance_mode', 'value' => 'false'],
             ['keyName' => 'max_outpasses_per_day', 'value' => '2'],

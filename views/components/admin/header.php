@@ -1,10 +1,22 @@
 <header class="flex items-center justify-between p-[18.5px] bg-white border-b fixed top-0 left-0 w-full z-30">
     <!-- Breadcrumb -->
     <nav class="flex items-center space-x-2 text-gray-600">
-        <a href="<?= $this->urlFor('admin.dashboard')?>" class="hover:text-gray-500">Admin</a>
-        <span>/</span>
-        <?php $breadcrumbParams = $routeParams ?? []; ?>
-        <a href="<?= $this->urlFor($routeName, $breadcrumbParams)?>" class="hover:text-gray-500"><?= ucwords(str_replace('.', ' ', str_replace('admin.', '', $routeName))) ?></a>
+        <?php if (!empty($breadcrumbs) && is_array($breadcrumbs)) : ?>
+            <?php foreach ($breadcrumbs as $index => $breadcrumb): ?>
+                <?php if ($index > 0): ?>
+                    <span>/</span>
+                <?php endif; ?>
+                <?php if (!empty($breadcrumb['url'])): ?>
+                    <a href="<?= $breadcrumb['url'] ?>" class="hover:text-gray-500"><?= $breadcrumb['label'] ?></a>
+                <?php else: ?>
+                    <span class="text-gray-700"><?= $breadcrumb['label'] ?></span>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <a href="<?= $this->urlFor('admin.dashboard')?>" class="hover:text-gray-500">Admin</a>
+            <span>/</span>
+            <span class="text-gray-700"><?= $title ?? 'Dashboard' ?></span>
+        <?php endif; ?>
     </nav>
 
     <!-- Actions -->

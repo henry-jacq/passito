@@ -46,6 +46,16 @@ class AdminController extends BaseController
             'data' => $dashboardData,
             'lateArrivals' => $lateArrivalsReport,
             'routeName' => $this->getRouteName($request),
+            'breadcrumbs' => [
+                [
+                    'label' => 'Admin',
+                    'url' => null,
+                ],
+                [
+                    'label' => 'Dashboard',
+                    'url' => null,
+                ],
+            ],
         ];
 
         if ($userData->getRole() == UserRole::SUPER_ADMIN) {
@@ -98,7 +108,17 @@ class AdminController extends BaseController
             'routeName' => $this->getRouteName($request),
             'pendingCount' => $pendingCount,
             'hostelFilter' => $hostelFilter,
-            'unassignedHostels' => []
+            'unassignedHostels' => [],
+            'breadcrumbs' => [
+                [
+                    'label' => 'Admin',
+                    'url' => $this->view->urlFor('admin.dashboard'),
+                ],
+                [
+                    'label' => 'Pending',
+                    'url' => null,
+                ],
+            ],
         ];
 
         $args = array_merge($args, $this->view->getGlobals());
@@ -131,6 +151,16 @@ class AdminController extends BaseController
                 'totalRecords' => $paginationData['total'],
             ],
             'routeName' => $this->getRouteName($request),
+            'breadcrumbs' => [
+                [
+                    'label' => 'Admin',
+                    'url' => $this->view->urlFor('admin.dashboard'),
+                ],
+                [
+                    'label' => 'Records',
+                    'url' => null,
+                ],
+            ],
         ];
 
         $args = array_merge($args, $this->view->getGlobals());
@@ -151,6 +181,20 @@ class AdminController extends BaseController
             'outpass' => $outpass,
             'outpass_id' => $outpassId,
             'routeName' => $this->getRouteName($request),
+            'breadcrumbs' => [
+                [
+                    'label' => 'Admin',
+                    'url' => $this->view->urlFor('admin.dashboard'),
+                ],
+                [
+                    'label' => 'Records',
+                    'url' => $this->view->urlFor('admin.outpass.records'),
+                ],
+                [
+                    'label' => 'Outpass Details',
+                    'url' => null,
+                ],
+            ],
         ];
         
         return parent::render($request, $response, 'admin/outpass', $args);
@@ -166,6 +210,16 @@ class AdminController extends BaseController
             'user' => $userData,
             'title' => 'Firewall Rules',
             'routeName' => $this->getRouteName($request),
+            'breadcrumbs' => [
+                [
+                    'label' => 'Admin',
+                    'url' => $this->view->urlFor('admin.dashboard'),
+                ],
+                [
+                    'label' => 'System Settings',
+                    'url' => null,
+                ],
+            ],
         ];
 
         if ($data != null) {
@@ -191,6 +245,16 @@ class AdminController extends BaseController
             'title' => 'Template Builder',
             'routeName' => $this->getRouteName($request),
             'templates' => $templates,
+            'breadcrumbs' => [
+                [
+                    'label' => 'Admin',
+                    'url' => $this->view->urlFor('admin.dashboard'),
+                ],
+                [
+                    'label' => 'Template Builder',
+                    'url' => null,
+                ],
+            ],
         ];
 
         return parent::render($request, $response, 'admin/templates', $args);
@@ -225,6 +289,16 @@ class AdminController extends BaseController
                 'limit' => $limit,
             ],
             'routeName' => $this->getRouteName($request),
+            'breadcrumbs' => [
+                [
+                    'label' => 'Admin',
+                    'url' => $this->view->urlFor('admin.dashboard'),
+                ],
+                [
+                    'label' => 'Students',
+                    'url' => null,
+                ],
+            ],
         ];
 
         $args = array_merge($args, $this->view->getGlobals());
@@ -259,6 +333,20 @@ class AdminController extends BaseController
                 'student_id' => $studentId,
             ],
             'routeName' => $this->getRouteName($request),
+            'breadcrumbs' => [
+                [
+                    'label' => 'Admin',
+                    'url' => $this->view->urlFor('admin.dashboard'),
+                ],
+                [
+                    'label' => 'Students',
+                    'url' => $this->view->urlFor('admin.manage.students'),
+                ],
+                [
+                    'label' => 'Student Details',
+                    'url' => null,
+                ],
+            ],
         ];
 
         $viewArgs = array_merge($viewArgs, $this->view->getGlobals());
@@ -281,6 +369,16 @@ class AdminController extends BaseController
             'wardens' => $wardens,
             'assignmentsView' => $assignments,
             'routeName' => $this->getRouteName($request),
+            'breadcrumbs' => [
+                [
+                    'label' => 'Admin',
+                    'url' => $this->view->urlFor('admin.dashboard'),
+                ],
+                [
+                    'label' => 'Residence',
+                    'url' => null,
+                ],
+            ],
         ];
 
         $args = array_merge($args, $this->view->getGlobals());
@@ -299,6 +397,16 @@ class AdminController extends BaseController
             'user' => $userData,
             'verifiers' => $verifiers,
             'routeName' => $this->getRouteName($request),
+            'breadcrumbs' => [
+                [
+                    'label' => 'Admin',
+                    'url' => $this->view->urlFor('admin.dashboard'),
+                ],
+                [
+                    'label' => 'Verifiers',
+                    'url' => null,
+                ],
+            ],
         ];
 
         $args = array_merge($args, $this->view->getGlobals());
@@ -336,6 +444,16 @@ class AdminController extends BaseController
                 'totalRecords' => $paginationData['total'],
             ],
             'routeName' => $this->getRouteName($request),
+            'breadcrumbs' => [
+                [
+                    'label' => 'Admin',
+                    'url' => $this->view->urlFor('admin.dashboard'),
+                ],
+                [
+                    'label' => 'Logbook',
+                    'url' => null,
+                ],
+            ],
         ];
 
         $args = array_merge($args, $this->view->getGlobals());
@@ -358,6 +476,16 @@ class AdminController extends BaseController
             'institutions' => $institutions,
             'academicYears' => $academicYears,
             'routeName' => $this->getRouteName($request),
+            'breadcrumbs' => [
+                [
+                    'label' => 'Admin',
+                    'url' => $this->view->urlFor('admin.dashboard'),
+                ],
+                [
+                    'label' => 'Academics',
+                    'url' => null,
+                ],
+            ],
         ];
 
         $args = array_merge($args, $this->view->getGlobals());
@@ -373,6 +501,16 @@ class AdminController extends BaseController
             'title' => 'Settings',
             'user' => $userData,
             'routeName' => $this->getRouteName($request),
+            'breadcrumbs' => [
+                [
+                    'label' => 'Admin',
+                    'url' => $this->view->urlFor('admin.dashboard'),
+                ],
+                [
+                    'label' => 'Settings',
+                    'url' => null,
+                ],
+            ],
         ];
 
         $args = array_merge($args, $this->view->getGlobals());

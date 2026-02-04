@@ -1,49 +1,55 @@
 #!/bin/bash
 
-# This script populates the database with initial data.
+# Project: Passito - Hostel Outpass Management System
+# Script: populate.sh
+# Description: This script populates the database with initial data for Passito.
 
-echo "Populating database with initial data..."
+echo "[!] Populating database with initial data..."
 
-read -p "Do you want to create a migration diff? (y/n): " diff
+read -p "[?] Do you want to create a migration diff? (y/n): " diff
 
 if [ "$diff" == "y" ]; then
     php passito.php migrations:diff
 else
-    echo "Skipping migration diff creation."
+    echo "[!] Skipping migration diff creation."
 fi
 
-read -p "Do you want to setup super admins in CLI? (y/n): " setup_done
 
-read -p "Do you want to seed domain-specific data? (y/n): " seed_domain
+read -p "[?] Do you want to seed super admins in CLI? (y/n): " setup_done
 
-echo "Running migrations..."
+read -p "[?] Do you want to seed domain-specific data? (y/n): " seed_domain
+
+
+echo -e "\n[!] Running migrations..."
 php passito.php migrations:migrate
+echo -e "[+] Migrations completed successfully.\n"
 
 
-if [ "$setup_done" != "y" ]; then
-    echo "Creating super admin accounts..."
-    php passito.php app:create-super-admin admin@passito.com admin@098 male
-    php passito.php app:create-super-admin superadmin@passito.com superadmin@098 female
-fi
-
-echo "Seeding initial application data..."
+echo -e "[!] Seeding initial application data...\n"
 php passito.php app:seed app_settings
 php passito.php app:seed outpass_rules
 php passito.php app:seed outpass_templates
 php passito.php app:seed report_configs
 
 
-if [ "$seed_domain" != "y" || "$seed_domain" != "" ]; then
-    echo "Skipping domain-specific data seeding."
-    echo "Data population completed."
-    exit 0
+if [ "$seed_domain" == "y" ]; then
+    echo "[!] Seeding domain-specific data..."
+    php passito.php app:seed institutions
+    php passito.php app:seed hostels
+    php passito.php app:seed programs
+    php passito.php app:seed academic_years
+    php passito.php app:seed wardens
+else
+    echo "[!] Skipping domain-specific data seeding."
 fi
 
-echo "Seeding domain-specific data..."
-php passito.php app:seed institutions
-php passito.php app:seed hostels
-php passito.php app:seed programs
-php passito.php app:seed academic_years
-php passito.php app:seed wardens
 
-echo "Data population completed."
+if [ "$setup_done" == "y" ]; then
+    echo "[!] Creating super admin accounts..."
+    php passito.php app:create-super-admin admin@passito.com admin@098 male
+    php passito.php app:create-super-admin superadmin@passito.com superadmin@098 female
+else
+    echo "[!] Skipping super admin account creation."
+fi
+
+echo -e "\n[+] Database population process completed.\n"

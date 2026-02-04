@@ -2,7 +2,7 @@
 
 ${basename(__FILE__, '.php')} = function () {
     
-    if ($this->auth->isAuthenticated() && $this->paramsExists(['template'])) {
+    if ($this->isAuthenticated() && $this->paramsExists(['template'])) {
 
         $templateName = $this->data['template'];
         $modalBody = $this->view->renderTemplate('modals/'.$templateName, $this->data);

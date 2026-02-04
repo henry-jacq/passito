@@ -68,6 +68,29 @@ return [
         'httponly'   => $boolean($_ENV['SESSION_HTTP_ONLY'] ?? true),
         'samesite'   => $_ENV['SESSION_SAME_SITE'] ?? 'lax',
     ],
+    'jwt' => [
+        'secret' => $_ENV['JWT_SECRET'] ?? '',
+        'issuer' => $_ENV['JWT_ISSUER'] ?? $appSnakeName,
+        'audience' => $_ENV['JWT_AUDIENCE'] ?? $appSnakeName,
+        'ttl' => (int) ($_ENV['JWT_TTL'] ?? 3600),
+        'cookie' => [
+            'name' => $_ENV['JWT_COOKIE_NAME'] ?? $appSnakeName . '_token',
+            'secure' => $boolean($_ENV['JWT_COOKIE_SECURE'] ?? true),
+            'httponly' => $boolean($_ENV['JWT_COOKIE_HTTP_ONLY'] ?? true),
+            'samesite' => $_ENV['JWT_COOKIE_SAME_SITE'] ?? 'lax',
+            'path' => '/',
+        ],
+    ],
+    'csrf' => [
+        'cookie' => [
+            'name' => $_ENV['CSRF_COOKIE_NAME'] ?? $appSnakeName . '_csrf',
+            'secure' => $boolean($_ENV['CSRF_COOKIE_SECURE'] ?? true),
+            'httponly' => $boolean($_ENV['CSRF_COOKIE_HTTP_ONLY'] ?? false),
+            'samesite' => $_ENV['CSRF_COOKIE_SAME_SITE'] ?? 'lax',
+            'path' => '/',
+        ],
+        'header' => $_ENV['CSRF_HEADER_NAME'] ?? 'X-CSRF-Token',
+    ],
     'view' => [
         'layouts' => [
             UserRole::USER->value => 'user.php',

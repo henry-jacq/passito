@@ -20,6 +20,7 @@ use App\Services\FacilityService;
 use App\Services\VerifierService;
 use App\Services\ParentVerificationService;
 use App\Services\ReportService;
+use App\Services\JwtService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -65,6 +66,7 @@ class ApiController
         private readonly CsvProcessor $csvProcessor,
         private readonly JobDispatcher $queue,
         private readonly ParentVerificationService $verificationService,
+        private readonly JwtService $jwt,
     )
     {
     }
@@ -324,7 +326,7 @@ class ApiController
      */
     public function isAuthenticated(): bool
     {
-        return $this->auth->isAuthenticated();
+        return (bool) $this->getAttribute('user');
     }
 
     /**
@@ -332,7 +334,12 @@ class ApiController
      */
     public function getRole(): string
     {
-        return $this->session->get('role');
+        $user = $this->getAttribute('user');
+        if ($user instanceof User) {
+            return $user->getRole()->value;
+        }
+
+        return '';
     }
 
     /**
@@ -358,7 +365,12 @@ class ApiController
      */
     public function getUserId(): string
     {
-        return $this->session->get('user');
+        $user = $this->getAttribute('user');
+        if ($user instanceof User) {
+            return (string) $user->getId();
+        }
+
+        return '';
     }
 
     /**

@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Core\Session;
 use App\Entity\User;
 use App\Enum\UserRole;
 use Doctrine\ORM\EntityManagerInterface;
@@ -10,7 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 class AuthService
 {
     public function __construct(
-        private readonly Session $session,
+        private readonly JwtService $jwt,
         private readonly EntityManagerInterface $em
     )
     {
@@ -19,7 +18,7 @@ class AuthService
     /**
      * Authenticate user with provided credentials
      */
-    public function login(array $data): bool|User
+    public function login(array $data): bool|array
     {
         // Fetch user by email
         $user = $this->em->getRepository(User::class)->findOneBy(['email' => $data['email']]);
@@ -36,12 +35,12 @@ class AuthService
             return false; // Invalid role
         }
 
-        // Authentication successful, initialize session
-        // Set user and role in the session
-        $this->session->put('role', $userRole);
-        $this->session->put('user', $user->getId());
+        $token = $this->jwt->createToken($user);
 
-        return $user;
+        return [
+            'user' => $user,
+            'token' => $token,
+        ];
     }
 
     /**
@@ -49,8 +48,7 @@ class AuthService
      */
     public function logout()
     {
-        $this->session->destroy();
-        $this->session->regenerate();
+        return;
     }
     
     /**
@@ -58,10 +56,13 @@ class AuthService
      */
     public function isAuthenticated()
     {
-        if ($this->session->get('user') !== null) {
-            return true;
+        $cookieName = $this->jwt->getCookieName();
+        $token = $_COOKIE[$cookieName] ?? null;
+        if (empty($token)) {
+            return false;
         }
-        return false;
+
+        return (bool) $this->jwt->decode($token);
     }
 
     /**
@@ -69,10 +70,18 @@ class AuthService
      */
     public function isAdmin()
     {
-        if (UserRole::isAdministrator($this->session->get('role'))) {
-            return true;
+        $cookieName = $this->jwt->getCookieName();
+        $token = $_COOKIE[$cookieName] ?? null;
+        if (empty($token)) {
+            return false;
         }
-        return false;
+
+        $payload = $this->jwt->decode($token);
+        if (!$payload) {
+            return false;
+        }
+
+        return UserRole::isAdministrator($payload['role'] ?? '');
     }
 
     // TODO: Add more methods for password reset, session management, 2FA, rbac etc.

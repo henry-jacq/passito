@@ -6,6 +6,7 @@ use App\Core\Config;
 use App\Core\Request;
 use App\Core\Session;
 use App\Core\Storage;
+use App\Services\JwtService;
 use function DI\create;
 use Doctrine\ORM\ORMSetup;
 use Slim\Factory\AppFactory;
@@ -65,6 +66,7 @@ return [
             $container->get(Config::class),
             $container->get(Storage::class),
             $container->get(Session::class),
+            $container->get(JwtService::class),
             $routeParser
         );
     },

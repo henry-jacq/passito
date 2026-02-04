@@ -2,8 +2,34 @@
 
 const Ajax = (function () {
     // Function to make a generic request
+    const getMeta = (name) => {
+        return document.querySelector(`meta[name="${name}"]`)?.getAttribute('content');
+    };
+
+    const getCookie = (name) => {
+        return document.cookie
+            .split('; ')
+            .find((row) => row.startsWith(`${name}=`))
+            ?.split('=')[1];
+    };
+
     const request = async (url, options = {}) => {
-        const response = await fetch(url, options);
+        const headers = {
+            ...(options.headers || {}),
+        };
+
+        const csrfCookieName = getMeta('csrf-cookie-name') || 'passito_csrf';
+        const csrfHeaderName = getMeta('csrf-header-name') || 'X-CSRF-Token';
+        const csrfToken = getCookie(csrfCookieName);
+        if (csrfToken && !headers[csrfHeaderName]) {
+            headers[csrfHeaderName] = decodeURIComponent(csrfToken);
+        }
+
+        const response = await fetch(url, {
+            credentials: 'same-origin',
+            ...options,
+            headers,
+        });
 
         // Create a unified response structure
         const contentType = response.headers.get('Content-Type');

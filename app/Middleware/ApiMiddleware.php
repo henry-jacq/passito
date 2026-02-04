@@ -5,8 +5,8 @@ namespace App\Middleware;
 use App\Core\View;
 use App\Entity\User;
 use App\Core\Request;
-use App\Core\Session;
 use App\Enum\UserRole;
+use App\Services\JwtService;
 use Psr\Http\Message\ResponseInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -19,9 +19,9 @@ class ApiMiddleware implements MiddlewareInterface
 {
     public function __construct(
         private readonly View $view,
-        private readonly Session $session,
         private readonly Request $requestService,
         private readonly EntityManagerInterface $em,
+        private readonly JwtService $jwt,
         private readonly StreamFactoryInterface $streamFactory,
         private readonly ResponseFactoryInterface $responseFactory
     )
@@ -30,21 +30,25 @@ class ApiMiddleware implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        // Check if user is logged in
-        if (empty($this->session->get('user'))) {
+        $path = $request->getUri()->getPath();
+        if (str_starts_with($path, '/api/verifiers')) {
+            return $handler->handle($request);
+        }
+
+        $token = $this->jwt->extractToken($request);
+        if (empty($token)) {
+            return $handler->handle($request);
+        }
+
+        $payload = $this->jwt->decode($token);
+        if (!$payload || empty($payload['sub'])) {
             return $handler->handle($request);
         }
 
         // Fetch user and role
-        $user = $this->em->getRepository(User::class)->find((int) $this->session->get('user'));
+        $user = $this->em->getRepository(User::class)->find((int) $payload['sub']);
         if (!$user) {
-            return $this->responseFactory
-                ->createResponse(403)
-                ->withHeader('Content-Type', 'application/json')
-                ->withBody($this->streamFactory->createStream(json_encode([
-                    'message' => 'Forbidden',
-                    'status' => false,
-                ])));
+            return $handler->handle($request);
         }
 
         $userRole = $user->getRole()->value;

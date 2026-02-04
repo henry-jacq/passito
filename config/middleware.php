@@ -6,6 +6,8 @@ use App\Core\Config;
 use App\Middleware\MaintenanceMiddleware;
 use Slim\Psr7\Request;
 use App\Middleware\SessionStartMiddleware;
+use App\Middleware\CsrfMiddleware;
+use App\Middleware\TrailingSlashMiddleware;
 use App\Middleware\SetupMiddleware;
 
 return function (App $app) {
@@ -51,6 +53,8 @@ return function (App $app) {
     $app->add(SetupMiddleware::class);
     $app->add(MaintenanceMiddleware::class);
     $app->add(SessionStartMiddleware::class);
+    $app->add(CsrfMiddleware::class);
+    $app->add(TrailingSlashMiddleware::class);
     $app->addRoutingMiddleware();
     $app->addBodyParsingMiddleware();
     $errorMiddleware = $app->addErrorMiddleware(

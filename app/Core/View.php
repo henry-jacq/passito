@@ -5,6 +5,7 @@ namespace App\Core;
 use App\Enum\UserRole;
 use Slim\Routing\RouteParser;
 use App\Core\Storage;
+use App\Services\JwtService;
 
 class View
 {
@@ -24,6 +25,7 @@ class View
         private readonly Config $config,
         private readonly Storage $storage,
         private readonly Session $session,
+        private readonly JwtService $jwt,
         RouteParser $router
     ) {
         $this->router = $router;
@@ -155,8 +157,8 @@ class View
         // Clear previous resultView to avoid multiple render cycles
         $this->resultView = null;
 
-        // Get the user role
-        $role = $this->session->get('role') ?? UserRole::USER->value;
+        // Get the user role from JWT cookie (fallback to session if needed)
+        $role = $this->resolveRoleFromJwt() ?? $this->session->get('role') ?? UserRole::USER->value;
         // Get the layout config
         $layoutConfig = $this->config->get('view.layouts');
 
@@ -244,15 +246,33 @@ class View
 
     public function isAuthenticated($key = 'user', $role = null): bool
     {
-        if (empty($_SESSION[$key])) {
-            return false;
+        $cookieName = $this->config->get('jwt.cookie.name', 'passito_token');
+        if (!empty($_COOKIE[$cookieName])) {
+            return true;
         }
 
-        if ($role && $_SESSION[$key]['role'] !== $role) {
-            return false;
+        return false;
+    }
+
+    private function resolveRoleFromJwt(): ?string
+    {
+        $cookieName = $this->config->get('jwt.cookie.name', 'passito_token');
+        $token = $_COOKIE[$cookieName] ?? null;
+        if (empty($token)) {
+            return null;
         }
 
-        return true;
+        $payload = $this->jwt->decode($token);
+        if (!$payload) {
+            return null;
+        }
+
+        $role = $payload['role'] ?? null;
+        if (!$role || !UserRole::isValidRole($role)) {
+            return null;
+        }
+
+        return $role;
     }
 
     /**

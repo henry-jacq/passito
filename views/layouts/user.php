@@ -24,6 +24,8 @@
     <meta name="twitter:title" content="<?= $this->config->get('app.name') ?> - <?= $this->config->get('app.desc') ?>">
     <meta name="twitter:description" content="Easily manage your gatepasses with Passito. Sign up today for a seamless experience.">
     <meta name="twitter:image" content="/assets/brand/passito-icon.png">
+    <meta name="csrf-cookie-name" content="<?= $this->config->get('csrf.cookie.name') ?>">
+    <meta name="csrf-header-name" content="<?= $this->config->get('csrf.header') ?>">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">

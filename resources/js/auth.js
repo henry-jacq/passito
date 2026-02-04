@@ -1,4 +1,5 @@
 import Ajax from "./libs/ajax";
+import Auth from "./libs/auth";
 
 document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById('login_form');
@@ -8,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const loginButton = document.getElementById('login_button');
     const loginText = document.getElementById('login_text');
     let isLoginSuccessful = false;
+    let didRetryCsrf = false;
 
     form.addEventListener('submit', async function (event) {
         event.preventDefault();
@@ -27,11 +29,36 @@ document.addEventListener('DOMContentLoaded', function () {
                 // console.log('Login successful:', response.data);
                 loginText.textContent = 'Logging in...';
                 isLoginSuccessful = true;
+                if (response.data?.token) {
+                    Auth.setToken(response.data.token);
+                }
                 setTimeout(() => {
                     window.location = response.data.redirect;
                 }, 1000);
             } else {
-                handleError(response.status);
+                if (response.status === 403 && !didRetryCsrf) {
+                    didRetryCsrf = true;
+                    const retryResponse = await Ajax.post('/api/web/auth/login', {
+                        email: email.value,
+                        password: password.value,
+                    });
+
+                    if (retryResponse.ok) {
+                        loginText.textContent = 'Logging in...';
+                        isLoginSuccessful = true;
+                        if (retryResponse.data?.token) {
+                            Auth.setToken(retryResponse.data.token);
+                        }
+                        setTimeout(() => {
+                            window.location = retryResponse.data.redirect;
+                        }, 1000);
+                        return;
+                    }
+
+                    handleError(retryResponse.status);
+                } else {
+                    handleError(response.status);
+                }
             }
         } catch (error) {
             console.error('Unexpected error:', error.message);

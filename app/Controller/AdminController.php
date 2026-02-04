@@ -201,12 +201,29 @@ class AdminController extends BaseController
         $this->view->clearCacheIfDev();
 
         $userData = $request->getAttribute('user');
-        $students = $this->userService->getStudentsByGender($userData);
+        $page = max(1, (int) ($request->getQueryParams()['page'] ?? 1));
+        $limit = (int) ($request->getQueryParams()['limit'] ?? 10);
+        $allowedLimits = [10, 25, 50, 100];
+        if (!in_array($limit, $allowedLimits, true)) {
+            $limit = 10;
+        }
+
+        $paginationData = $this->userService->getStudentsByGenderPaginated($userData, $page, $limit);
+
+        if ($paginationData['totalPages'] > 1 && $page > $paginationData['totalPages']) {
+            return $response->withHeader('Location', '?page=' . $paginationData['totalPages'])->withStatus(302);
+        }
 
         $args = [
             'title' => 'Manage Students',
             'user' => $userData,
-            'students' => $students,
+            'students' => $paginationData['data'],
+            'records' => [
+                'currentPage' => $paginationData['currentPage'],
+                'totalPages' => $paginationData['totalPages'],
+                'totalRecords' => $paginationData['total'],
+                'limit' => $limit,
+            ],
             'routeName' => $this->getRouteName($request),
         ];
 

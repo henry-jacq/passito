@@ -40,7 +40,23 @@ $errorMessage = $this->session->getFlash('error')[$flashKey] ?? null;
                 <input type="text" placeholder="Search students..." class="w-full py-2 transition duration-200 border border-gray-300 rounded-md bg-gray-50 text-md ps-12 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400" />
             </div>
 
-            <div class="flex space-x-2">
+            <div class="flex items-center space-x-2">
+                <!-- Page Size -->
+                <div class="flex items-center space-x-2">
+                    <label for="students-limit" class="text-sm text-gray-600">Rows</label>
+                    <select
+                        id="students-limit"
+                        class="px-2 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+                        data-current-limit="<?= $records['limit'] ?? 10 ?>"
+                    >
+                        <?php foreach ([10, 25, 50, 100] as $limitOption): ?>
+                            <option value="<?= $limitOption ?>" <?= (int)($records['limit'] ?? 10) === $limitOption ? 'selected' : '' ?>>
+                                <?= $limitOption ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
                 <!-- Add Student Button -->
                 <button class="px-3 py-2 text-white transition duration-200 bg-blue-600 rounded-md hover:bg-blue-700 add-student-modal focus:outline-none focus:ring-0 focus:border-transparent">
                     <i class="mr-2 fa-solid fa-user-plus fa-sm"></i>
@@ -157,13 +173,60 @@ $errorMessage = $this->session->getFlash('error')[$flashKey] ?? null;
                     <?php endforeach; ?>
                 </tbody>
             </table>
-            <div class="flex items-center justify-between px-4 py-2 bg-gray-100 border-t">
-                <p class="text-sm text-gray-600">Showing 1-10 of 50 students</p>
-                <div class="flex justify-end space-x-2">
-                    <button class="px-3 py-1 text-sm bg-gray-200 rounded-md hover:bg-gray-300">Previous</button>
-                    <button class="px-3 py-1 text-sm text-white bg-blue-600 rounded-md hover:bg-blue-700">Next</button>
+
+            <?php if (($records['totalPages'] ?? 1) > 1): ?>
+                <!-- Pagination Section -->
+                <div class="flex items-center justify-between px-4 py-3 border-t border-gray-200 bg-gray-50 sm:px-6">
+                    <div class="flex justify-between sm:hidden">
+                        <?php if ($records['currentPage'] > 1): ?>
+                            <button
+                                class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+                                onclick="location.href='?page=<?= $records['currentPage'] - 1 ?>&limit=<?= $records['limit'] ?>'">Previous</button>
+                        <?php endif; ?>
+                        <?php if ($records['currentPage'] < $records['totalPages']): ?>
+                            <button
+                                class="relative inline-flex items-center px-4 py-2 ml-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+                                onclick="location.href='?page=<?= $records['currentPage'] + 1 ?>&limit=<?= $records['limit'] ?>'">Next</button>
+                        <?php endif; ?>
+                    </div>
+                    <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+                        <div>
+                            <p class="text-sm text-gray-700">
+                                Showing <span class="font-medium"><?= ($records['currentPage'] - 1) * $records['limit'] + 1 ?></span>
+                                to <span class="font-medium"><?= min($records['currentPage'] * $records['limit'], $records['totalRecords']) ?></span>
+                                of <span class="font-medium"><?= $records['totalRecords'] ?></span> results
+                            </p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <?php if ($records['currentPage'] > 1): ?>
+                                <button
+                                    class="px-3 py-1 text-sm text-gray-600 bg-gray-200 border rounded-md hover:bg-gray-300 focus:ring focus:ring-blue-300 focus:outline-none"
+                                    onclick="location.href='?page=<?= $records['currentPage'] - 1 ?>&limit=<?= $records['limit'] ?>'">Previous</button>
+                            <?php endif; ?>
+                            <?php if ($records['currentPage'] < $records['totalPages']): ?>
+                                <button
+                                    class="px-3 py-1 text-sm text-white bg-blue-600 border rounded-md hover:bg-blue-700 focus:ring focus:ring-blue-300 focus:outline-none"
+                                    onclick="location.href='?page=<?= $records['currentPage'] + 1 ?>&limit=<?= $records['limit'] ?>'">Next</button>
+                            <?php endif; ?>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            <?php endif; ?>
         </section>
     <?php endif; ?>
 </main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const limitSelect = document.getElementById('students-limit');
+        if (!limitSelect) return;
+
+        limitSelect.addEventListener('change', function() {
+            const limit = limitSelect.value;
+            const params = new URLSearchParams(window.location.search);
+            params.set('limit', limit);
+            params.set('page', 1);
+            window.location.search = params.toString();
+        });
+    });
+</script>

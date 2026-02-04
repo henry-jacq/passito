@@ -15,6 +15,7 @@ use App\Entity\Logbook;
 use App\Entity\WardenAssignment;
 use App\Services\OutpassService;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class UserService
 {
@@ -241,6 +242,28 @@ class UserService
             ->setParameter('gender', $user->getGender())
             ->getQuery()
             ->getResult();
+    }
+
+    public function getStudentsByGenderPaginated(User $user, int $page = 1, int $limit = 10): array
+    {
+        $offset = ($page - 1) * $limit;
+
+        $queryBuilder = $this->em->getRepository(Student::class)->createQueryBuilder('s')
+            ->innerJoin('s.user', 'u')
+            ->where('u.gender = :gender')
+            ->setParameter('gender', $user->getGender())
+            ->orderBy('u.name', 'ASC')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit);
+
+        $paginator = new Paginator($queryBuilder->getQuery(), true);
+
+        return [
+            'data' => iterator_to_array($paginator),
+            'total' => count($paginator),
+            'currentPage' => $page,
+            'totalPages' => (int) ceil(count($paginator) / $limit),
+        ];
     }
     
     /**

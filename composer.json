@@ -16,6 +16,7 @@
         "doctrine/orm": "^3.2",
         "dompdf/dompdf": "^3.0",
         "endroid/qr-code": "^6.0",
+        "firebase/php-jwt": "^6.10",
         "league/flysystem": "^3.29",
         "league/flysystem-local": "^3.29",
         "nesbot/carbon": "^2.68",

@@ -103,7 +103,6 @@ module.exports = {
 		require('@tailwindcss/forms'),          // Forms plugin
 		require('@tailwindcss/typography'),     // Typography plugin
 		require('@tailwindcss/aspect-ratio'),   // Aspect-ratio plugin
-		require('@tailwindcss/line-clamp'),     // Line clamp plugin for text truncation
 		require('tailwind-scrollbar')({ nocompatible: true }), // Ensure compatibility mode is off
 		require('tailwind-scrollbar-hide'),
 	],

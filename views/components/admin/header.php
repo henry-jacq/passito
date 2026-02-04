@@ -3,7 +3,8 @@
     <nav class="flex items-center space-x-2 text-gray-600">
         <a href="<?= $this->urlFor('admin.dashboard')?>" class="hover:text-gray-500">Admin</a>
         <span>/</span>
-        <a href="<?= $this->urlFor($routeName, get_defined_vars())?>" class="hover:text-gray-500"><?= ucwords(str_replace('.', ' ', str_replace('admin.', '', $routeName))) ?></a>
+        <?php $breadcrumbParams = $routeParams ?? []; ?>
+        <a href="<?= $this->urlFor($routeName, $breadcrumbParams)?>" class="hover:text-gray-500"><?= ucwords(str_replace('.', ' ', str_replace('admin.', '', $routeName))) ?></a>
     </nav>
 
     <!-- Actions -->

@@ -123,7 +123,10 @@ $errorMessage = $this->session->getFlash('error')[$flashKey] ?? null;
                 </thead>
                 <tbody>
                     <?php foreach ($students as $student): ?>
-                        <tr class="border-t hover:bg-gray-50">
+                        <tr
+                            class="border-t transition cursor-pointer hover:bg-blue-50"
+                            data-href="<?= $this->urlFor('admin.manage.students.details', ['student_id' => $student->getId()]) ?>"
+                        >
                             <td class="px-4 py-3 text-sm text-gray-700"><?= $student->getUser()->getName() ?></td>
                             <td class="px-4 py-3 text-sm text-center text-gray-700"><?= $student->getProgram()->getProgramName() . ' ' . $student->getProgram()->getShortCode() ?></td>
                             <td class="px-4 py-3 text-sm text-center text-gray-700"><?= formatStudentYear($student->getYear()) ?></td>
@@ -158,6 +161,7 @@ $errorMessage = $this->session->getFlash('error')[$flashKey] ?? null;
                                     data-program-id="<?= $student->getProgram()->getId() ?>"
                                     data-academic-year-id="<?= $student->getAcademicYear()?->getId() ?>"
                                     data-status="<?= $student->getStatus() ? 1 : 0 ?>"
+                                    data-no-row-click="true"
                                 >
                                     <i class="fas fa-edit"></i>
                                 </button>
@@ -165,6 +169,7 @@ $errorMessage = $this->session->getFlash('error')[$flashKey] ?? null;
                                     class="text-red-600 transition duration-200 hover:text-red-800 remove-student-modal"
                                     data-id="<?= $student->getId() ?>"
                                     data-name="<?= $student->getUser()->getName() ?>"
+                                    data-no-row-click="true"
                                 >
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
@@ -227,6 +232,22 @@ $errorMessage = $this->session->getFlash('error')[$flashKey] ?? null;
             params.set('limit', limit);
             params.set('page', 1);
             window.location.search = params.toString();
+        });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('tr[data-href]').forEach((row) => {
+            row.addEventListener('click', (event) => {
+                const interactive = event.target.closest('button, a, input, select, textarea, [data-no-row-click]');
+                if (interactive) {
+                    return;
+                }
+                const href = row.dataset.href;
+                if (href) {
+                    window.location.href = href;
+                }
+            });
         });
     });
 </script>

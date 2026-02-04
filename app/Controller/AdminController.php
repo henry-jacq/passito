@@ -230,6 +230,40 @@ class AdminController extends BaseController
         $args = array_merge($args, $this->view->getGlobals());
         return parent::render($request, $response, 'admin/students', $args);
     }
+
+    public function studentDetails(Request $request, Response $response, array $args): Response
+    {
+        $this->view->clearCacheIfDev();
+
+        $userData = $request->getAttribute('user');
+        $studentId = (int) ($args['student_id'] ?? 0);
+
+        if ($studentId <= 0) {
+            return parent::renderErrorPage($response, ['code' => 400, 'message' => 'Invalid student id']);
+        }
+
+        $student = $this->userService->getStudentById($studentId);
+        if (!$student) {
+            return parent::renderErrorPage($response, ['code' => 404, 'message' => 'Student not found']);
+        }
+
+        if ($student->getUser()->getGender() !== $userData->getGender()) {
+            return parent::renderErrorPage($response, ['code' => 403, 'message' => 'Unauthorized access']);
+        }
+
+        $viewArgs = [
+            'title' => 'Student Details',
+            'user' => $userData,
+            'student' => $student,
+            'routeParams' => [
+                'student_id' => $studentId,
+            ],
+            'routeName' => $this->getRouteName($request),
+        ];
+
+        $viewArgs = array_merge($viewArgs, $this->view->getGlobals());
+        return parent::render($request, $response, 'admin/student_details', $viewArgs);
+    }
     
     public function manageResidence(Request $request, Response $response): Response
     {

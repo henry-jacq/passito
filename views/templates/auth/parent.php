@@ -55,6 +55,7 @@ use App\Enum\OutpassStatus;
                                                 'token' => $verification->getVerificationToken(),
                                                 'response' => OutpassStatus::PARENT_APPROVED->value,
                                             ]) ?>" class="w-full sm:w-auto">
+                    <input type="hidden" name="<?= $this->csrfFieldName() ?>" value="<?= $this->csrfToken() ?>">
                     <button type="submit"
                         class="w-full px-4 py-2 text-sm font-medium tracking-wide text-white transition-all duration-200 ease-in-out bg-green-600 rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
                         Allow
@@ -64,6 +65,7 @@ use App\Enum\OutpassStatus;
                                                 'token' => $verification->getVerificationToken(),
                                                 'response' => OutpassStatus::PARENT_DENIED->value,
                                             ]) ?>" class="w-full sm:w-auto">
+                    <input type="hidden" name="<?= $this->csrfFieldName() ?>" value="<?= $this->csrfToken() ?>">
                     <button type="submit"
                         class="w-full px-4 py-2 text-sm font-medium tracking-wide text-white transition-all duration-200 ease-in-out bg-red-600 rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
                         Deny

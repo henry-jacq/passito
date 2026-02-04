@@ -254,6 +254,17 @@ class View
         return false;
     }
 
+    public function csrfToken(): string
+    {
+        $cookieName = $this->config->get('csrf.cookie.name', 'passito_csrf');
+        return $_COOKIE[$cookieName] ?? '';
+    }
+
+    public function csrfFieldName(): string
+    {
+        return $this->config->get('csrf.field', '_csrf');
+    }
+
     private function resolveRoleFromJwt(): ?string
     {
         $cookieName = $this->config->get('jwt.cookie.name', 'passito_token');

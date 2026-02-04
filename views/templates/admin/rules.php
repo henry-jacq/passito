@@ -10,6 +10,7 @@ use App\Enum\Gender;
     </p>
 
     <form action="<?= $this->urlFor('admin.outpass.settings') ?>" method="POST">
+        <input type="hidden" name="<?= $this->csrfFieldName() ?>" value="<?= $this->csrfToken() ?>">
 
         <!-- General Settings Section -->
         <section class="mb-8 bg-white rounded-lg shadow-lg">

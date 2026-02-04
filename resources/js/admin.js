@@ -514,20 +514,17 @@ document.addEventListener('DOMContentLoaded', () => {
                                     formData.append('file', file);
 
                                     // Make an Ajax request to upload the data
-                                    const response = await fetch('/api/web/admin/students/import', {
-                                        method: 'POST',
-                                        body: formData,
-                                    });
+                                    const response = await Ajax.post('/api/web/admin/students/import', formData);
 
                                     if (response.ok) {
-                                        const data = await readJson(response);
+                                        const data = response.data ?? (await readJson(response));
                                         if (data.status) {
                                             location.reload();
                                         } else {
                                             toastMessage = data?.errors?.bulk_upload || data?.message || 'Students could not be created.';
                                         }
                                     } else {
-                                        const errorData = await readJson(response);
+                                        const errorData = response.data ?? (await readJson(response));
                                         toastMessage = errorData?.errors?.bulk_upload || errorData?.message || `An error occurred while importing students. (HTTP ${response.status})`;
                                     }
                                 } catch (error) {

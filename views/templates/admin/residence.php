@@ -21,6 +21,7 @@
         </div>
 
         <form class="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <input type="hidden" name="<?= $this->csrfFieldName() ?>" value="<?= $this->csrfToken() ?>">
             <!-- Warden Selection -->
             <div>
                 <label for="warden" class="block mb-2 text-sm font-medium text-gray-700">Select Warden</label>

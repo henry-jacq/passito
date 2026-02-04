@@ -23,6 +23,7 @@
 
         <!-- Login Form -->
         <form id="login_form" method="POST" class="space-y-4">
+            <input type="hidden" name="<?= $this->csrfFieldName() ?>" value="<?= $this->csrfToken() ?>">
             <div>
                 <label for="email_address" class="block mb-1 text-sm font-medium text-gray-600">Email</label>
                 <div class="relative">

@@ -110,12 +110,22 @@ const Ajax = (function () {
 
     // Download (handles blob response and filename)
     const download = async (url, method = 'GET', headers = {}) => {
+        const csrfCookieName = getMeta('csrf-cookie-name') || 'passito_csrf';
+        const csrfHeaderName = getMeta('csrf-header-name') || 'X-CSRF-Token';
+        const csrfToken = getCookie(csrfCookieName);
+        const mergedHeaders = {
+            'Accept': 'application/octet-stream',
+            ...headers,
+        };
+
+        if (csrfToken && !mergedHeaders[csrfHeaderName]) {
+            mergedHeaders[csrfHeaderName] = decodeURIComponent(csrfToken);
+        }
+
         const response = await fetch(url, {
             method,
-            headers: {
-                'Accept': 'application/octet-stream',
-                ...headers,
-            },
+            credentials: 'same-origin',
+            headers: mergedHeaders,
         });
 
         if (!response.ok) {

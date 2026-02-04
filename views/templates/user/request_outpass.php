@@ -112,6 +112,7 @@
 
             <?php if (!empty($templates) && !empty($passType)): ?>
                 <form id="outpassRequestForm" action="#" method="POST" enctype="multipart/form-data" class="space-y-6">
+                    <input type="hidden" name="<?= $this->csrfFieldName() ?>" value="<?= $this->csrfToken() ?>">
                     <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                         <?php
                         $systemFields = array_filter($templates->getFields()->toArray(), fn($f) => $f->isSystemField());

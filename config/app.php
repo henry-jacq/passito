@@ -90,6 +90,7 @@ return [
             'path' => '/',
         ],
         'header' => $_ENV['CSRF_HEADER_NAME'] ?? 'X-CSRF-Token',
+        'field' => $_ENV['CSRF_FIELD_NAME'] ?? '_csrf',
     ],
     'view' => [
         'layouts' => [

@@ -74,16 +74,30 @@ class CsrfMiddleware implements MiddlewareInterface
     {
         $cookieName = $this->config->get('csrf.cookie.name', 'passito_csrf');
         $headerName = $this->config->get('csrf.header', 'X-CSRF-Token');
+        $fieldName = $this->config->get('csrf.field', '_csrf');
 
         $cookies = $request->getCookieParams();
         $cookieToken = $cookies[$cookieName] ?? null;
         $headerToken = $request->getHeaderLine($headerName);
+        $bodyToken = null;
+        $parsedBody = $request->getParsedBody();
+        if (is_array($parsedBody)) {
+            $bodyToken = $parsedBody[$fieldName] ?? null;
+        }
 
-        if (empty($cookieToken) || empty($headerToken)) {
+        if (empty($cookieToken) || (empty($headerToken) && empty($bodyToken))) {
             return false;
         }
 
-        return hash_equals($cookieToken, $headerToken);
+        if (!empty($headerToken) && hash_equals($cookieToken, $headerToken)) {
+            return true;
+        }
+
+        if (!empty($bodyToken) && hash_equals($cookieToken, $bodyToken)) {
+            return true;
+        }
+
+        return false;
     }
 
     private function ensureCsrfCookie(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface

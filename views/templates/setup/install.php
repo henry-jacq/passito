@@ -82,6 +82,7 @@
                         <p class="text-gray-500 text-sm">Enter the details for the first chief warden of the
                             application.</p>
                         <form onsubmit="goToStep(2); return false;" class="space-y-6">
+                            <input type="hidden" name="<?= $this->csrfFieldName() ?>" value="<?= $this->csrfToken() ?>">
                             <input type="email" placeholder="Email" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 overflow-hidden">
                             <input type="password" placeholder="Password" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 overflow-hidden">
                             <div class="grid grid-cols-2 gap-6">
@@ -104,6 +105,7 @@
                         <h2 class="text-3xl font-medium text-gray-800">2. Create Institution</h2>
                         <p class="text-gray-500 text-sm">Enter the institution details to proceed.</p>
                         <form onsubmit="goToStep(3); return false;" class="space-y-6">
+                            <input type="hidden" name="<?= $this->csrfFieldName() ?>" value="<?= $this->csrfToken() ?>">
                             <input type="text" placeholder="Institution Name" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 overflow-hidden">
                             <input type="text" placeholder="Institution Address" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 overflow-hidden">
                             <select class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 overflow-hidden">
@@ -121,6 +123,7 @@
                         <h2 class="text-3xl font-medium text-gray-800">3. Create Wardens</h2>
                         <p class="text-gray-500 text-sm">Add wardens and their details.</p>
                         <form onsubmit="goToStep(4); return false;" class="space-y-6">
+                            <input type="hidden" name="<?= $this->csrfFieldName() ?>" value="<?= $this->csrfToken() ?>">
                             <input type="text" placeholder="Warden Name" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 overflow-hidden">
                             <input type="email" placeholder="Warden Email" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 overflow-hidden">
                             <input type="text" placeholder="Phone Number" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 overflow-hidden">
@@ -135,6 +138,7 @@
                         <h2 class="text-3xl font-medium text-gray-800">4. Create Hostels</h2>
                         <p class="text-gray-500 text-sm">Add hostel details and assign wardens.</p>
                         <form onsubmit="finishSetup(); return false;" class="space-y-6">
+                            <input type="hidden" name="<?= $this->csrfFieldName() ?>" value="<?= $this->csrfToken() ?>">
                             <input type="text" placeholder="Hostel Name" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 overflow-hidden">
                             <select class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 overflow-hidden">
                                 <option value="" disabled selected>Hostel Type</option>

@@ -203,7 +203,7 @@ class AdminController extends BaseController
         $userData = $request->getAttribute('user');
         $args = [
             'user' => $userData,
-            'title' => 'Firewall Rules',
+            'title' => 'System Settings',
             'routeName' => $this->getRouteName($request),
             'breadcrumbs' => [
                 [

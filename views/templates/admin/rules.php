@@ -213,6 +213,46 @@ use App\Enum\Gender;
             </section>
         <?php endif; ?>
 
+        <!-- Verification Mode -->
+        <section class="mb-8 bg-white rounded-lg shadow-lg">
+            <div class="p-6">
+                <h3 class="mb-2 text-lg font-semibold text-gray-800">Verification Mode</h3>
+                <p class="mb-6 text-sm text-gray-500">
+                    Choose how outpass check-in/out is verified across the campus.
+                </p>
+                <?php $verifierMode = $settings->getVerifierMode() ?: 'manual'; ?>
+                <div class="space-y-4">
+                    <label for="verifier-mode-automated" class="flex items-start space-x-3">
+                        <input type="radio" id="verifier-mode-automated" name="verifier_mode" value="automated"
+                            class="w-4 h-4 mt-1 text-blue-600 border-gray-300 focus:ring-blue-500"
+                            <?= $verifierMode === 'automated' ? 'checked' : '' ?>>
+                        <span>
+                            <span class="text-sm font-medium text-gray-700">Automated Verifiers</span>
+                            <span class="block text-sm text-gray-500">Gate devices scan student QR codes and provide sound feedback automatically.</span>
+                        </span>
+                    </label>
+                    <label for="verifier-mode-manual" class="flex items-start space-x-3">
+                        <input type="radio" id="verifier-mode-manual" name="verifier_mode" value="manual"
+                            class="w-4 h-4 mt-1 text-blue-600 border-gray-300 focus:ring-blue-500"
+                            <?= $verifierMode === 'manual' ? 'checked' : '' ?>>
+                        <span>
+                            <span class="text-sm font-medium text-gray-700">Manual Verification</span>
+                            <span class="block text-sm text-gray-500">Gate security uses their logins to verify check-in/out instead of devices.</span>
+                        </span>
+                    </label>
+                    <label for="verifier-mode-both" class="flex items-start space-x-3">
+                        <input type="radio" id="verifier-mode-both" name="verifier_mode" value="both"
+                            class="w-4 h-4 mt-1 text-blue-600 border-gray-300 focus:ring-blue-500"
+                            <?= $verifierMode === 'both' ? 'checked' : '' ?>>
+                        <span>
+                            <span class="text-sm font-medium text-gray-700">Both (Automated + Manual)</span>
+                            <span class="block text-sm text-gray-500">Both can be used at the same time, or either one can be used alone; if one fails, the other works as a backup.</span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+        </section>
+
         <!-- Notification Preferences -->
         <section class="mb-8 bg-white rounded-lg shadow-lg">
             <div class="p-6">

@@ -8,8 +8,8 @@ use App\Enum\Gender;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[ORM\Table(name: 'outpass_settings')]
-class OutpassSettings
+#[ORM\Table(name: 'system_settings')]
+class SystemSettings
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -18,6 +18,9 @@ class OutpassSettings
 
     #[ORM\Column(type: 'string', enumType: Gender::class)]
     private Gender $type;
+
+    #[ORM\Column(type: 'string', length: 20)]
+    private string $verifierMode = 'manual';
 
     #[ORM\Column(type: 'boolean')]
     private bool $parentApproval;
@@ -69,6 +72,17 @@ class OutpassSettings
     public function setType(Gender $gender): self
     {
         $this->type = $gender;
+        return $this;
+    }
+
+    public function getVerifierMode(): string
+    {
+        return $this->verifierMode;
+    }
+
+    public function setVerifierMode(string $verifierMode): self
+    {
+        $this->verifierMode = $verifierMode;
         return $this;
     }
 

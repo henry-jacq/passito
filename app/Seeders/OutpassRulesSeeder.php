@@ -3,7 +3,7 @@
 namespace App\Seeders;
 
 use DateTime;
-use App\Entity\OutpassSettings;
+use App\Entity\SystemSettings;
 use App\Enum\Gender;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -16,6 +16,7 @@ class OutpassRulesSeeder
         $settings = [
             [
                 'type' => 'male',
+                'verifierMode' => 'manual',
                 'parentApproval' => false,
                 'companionVerification' => false,
                 'emergencyContactNotification' => false,
@@ -31,6 +32,7 @@ class OutpassRulesSeeder
             ],
             [
                 'type' => 'female',
+                'verifierMode' => 'manual',
                 'parentApproval' => true,
                 'companionVerification' => false,
                 'emergencyContactNotification' => false, // Different for female
@@ -47,12 +49,13 @@ class OutpassRulesSeeder
         ];
 
         foreach ($settings as $setting) {
-            $existingSetting = $this->em->getRepository(OutpassSettings::class)
+            $existingSetting = $this->em->getRepository(SystemSettings::class)
                 ->findOneBy(['type' => $setting['type']]);
 
             if (!$existingSetting) {
-                $newSetting = new OutpassSettings();
+                $newSetting = new SystemSettings();
                 $newSetting->setType(Gender::from($setting['type']));
+                $newSetting->setVerifierMode($setting['verifierMode']);
                 $newSetting->setParentApproval($setting['parentApproval']);
                 $newSetting->setCompanionVerification($setting['companionVerification']);
                 $newSetting->setEmergencyContactNotification($setting['emergencyContactNotification']);

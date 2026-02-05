@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20260203224022 extends AbstractMigration
+final class Version20260205183909 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -27,7 +27,6 @@ final class Version20260203224022 extends AbstractMigration
         $this->addSql('CREATE TABLE jobs (id BIGINT AUTO_INCREMENT NOT NULL, type VARCHAR(100) NOT NULL, payload JSON NOT NULL, availableAt DATETIME NOT NULL, attempts INT NOT NULL, maxAttempts INT NOT NULL, status VARCHAR(20) NOT NULL, dependencies JSON NOT NULL, result JSON DEFAULT NULL, createdAt DATETIME NOT NULL, lastError VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE logbook (verifier_id INT NOT NULL, outpass_id BIGINT NOT NULL, logId INT AUTO_INCREMENT NOT NULL, inTime DATETIME DEFAULT NULL, outTime DATETIME DEFAULT NULL, INDEX IDX_E96B931095561DEE (verifier_id), INDEX IDX_E96B93102070ABE0 (outpass_id), PRIMARY KEY(logId)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE outpass_requests (id BIGINT AUTO_INCREMENT NOT NULL, template_id INT NOT NULL, student_id INT NOT NULL, approved_by INT DEFAULT NULL, fromDate DATE NOT NULL, toDate DATE NOT NULL, fromTime TIME NOT NULL, toTime TIME NOT NULL, destination VARCHAR(255) NOT NULL, reason VARCHAR(255) NOT NULL, status VARCHAR(255) NOT NULL, customValues JSON DEFAULT NULL, attachments JSON DEFAULT NULL, remarks VARCHAR(255) DEFAULT NULL, document VARCHAR(255) DEFAULT NULL, qrCode VARCHAR(255) DEFAULT NULL, approvedTime DATETIME DEFAULT NULL, createdAt DATETIME NOT NULL, INDEX IDX_5DF928845DA0FB8 (template_id), INDEX IDX_5DF92884CB944F1A (student_id), INDEX IDX_5DF928844EA3CB3D (approved_by), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE outpass_settings (id INT AUTO_INCREMENT NOT NULL, type VARCHAR(255) NOT NULL, parentApproval TINYINT(1) NOT NULL, companionVerification TINYINT(1) NOT NULL, emergencyContactNotification TINYINT(1) NOT NULL, weekdayCollegeHoursStart TIME DEFAULT NULL, weekdayCollegeHoursEnd TIME DEFAULT NULL, weekdayOvernightStart TIME DEFAULT NULL, weekdayOvernightEnd TIME DEFAULT NULL, weekendStartTime TIME DEFAULT NULL, weekendEndTime TIME DEFAULT NULL, emailNotification TINYINT(1) NOT NULL, smsNotification TINYINT(1) NOT NULL, appNotification TINYINT(1) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE outpass_template_fields (id INT AUTO_INCREMENT NOT NULL, template_id INT NOT NULL, fieldName VARCHAR(100) NOT NULL, fieldType VARCHAR(20) NOT NULL, isSystemField TINYINT(1) NOT NULL, isRequired TINYINT(1) NOT NULL, INDEX IDX_1A1543DD5DA0FB8 (template_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE outpass_templates (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(100) NOT NULL, description LONGTEXT NOT NULL, isSystemTemplate TINYINT(1) NOT NULL, gender VARCHAR(255) NOT NULL, allowAttachments TINYINT(1) NOT NULL, isActive TINYINT(1) NOT NULL, createdAt DATETIME NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE parent_verifications (id INT AUTO_INCREMENT NOT NULL, outpass_id BIGINT NOT NULL, verificationToken VARCHAR(255) NOT NULL, isUsed TINYINT(1) NOT NULL, decision VARCHAR(255) DEFAULT NULL, verifiedAt DATETIME DEFAULT NULL, createdAt DATETIME NOT NULL, UNIQUE INDEX UNIQ_500084D45CE70D23 (verificationToken), INDEX IDX_500084D42070ABE0 (outpass_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB');
@@ -35,6 +34,7 @@ final class Version20260203224022 extends AbstractMigration
         $this->addSql('CREATE TABLE report_config_recipients (report_config_id INT NOT NULL, user_id INT NOT NULL, INDEX IDX_F6FA6F5FA6F6B9B (report_config_id), INDEX IDX_F6FA6F5FA76ED395 (user_id), PRIMARY KEY(report_config_id, user_id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE settings (id INT AUTO_INCREMENT NOT NULL, keyName VARCHAR(255) NOT NULL, value VARCHAR(255) NOT NULL, updatedAt DATETIME NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE students (id INT AUTO_INCREMENT NOT NULL, user_id INT NOT NULL, hostel_id INT NOT NULL, program_id INT NOT NULL, academic_year_id INT DEFAULT NULL, digitalId INT NOT NULL, year INT NOT NULL, roomNo VARCHAR(255) NOT NULL, parentNo VARCHAR(15) NOT NULL, status TINYINT(1) NOT NULL, updatedAt DATETIME NOT NULL, UNIQUE INDEX UNIQ_A4698DB2ECA9E64F (digitalId), INDEX IDX_A4698DB2A76ED395 (user_id), INDEX IDX_A4698DB2FC68ACC0 (hostel_id), INDEX IDX_A4698DB23EB8070A (program_id), INDEX IDX_A4698DB2C54F3401 (academic_year_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE system_settings (id INT AUTO_INCREMENT NOT NULL, type VARCHAR(255) NOT NULL, verifierMode VARCHAR(20) NOT NULL, parentApproval TINYINT(1) NOT NULL, companionVerification TINYINT(1) NOT NULL, emergencyContactNotification TINYINT(1) NOT NULL, weekdayCollegeHoursStart TIME DEFAULT NULL, weekdayCollegeHoursEnd TIME DEFAULT NULL, weekdayOvernightStart TIME DEFAULT NULL, weekdayOvernightEnd TIME DEFAULT NULL, weekendStartTime TIME DEFAULT NULL, weekendEndTime TIME DEFAULT NULL, emailNotification TINYINT(1) NOT NULL, smsNotification TINYINT(1) NOT NULL, appNotification TINYINT(1) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE users (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, role VARCHAR(255) NOT NULL, gender VARCHAR(255) NOT NULL, contactNo VARCHAR(32) NOT NULL, createdAt DATETIME NOT NULL, UNIQUE INDEX UNIQ_1483A5E9E7927C74 (email), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE verifiers (id INT AUTO_INCREMENT NOT NULL, verifierName VARCHAR(255) NOT NULL, location VARCHAR(255) NOT NULL, status VARCHAR(255) NOT NULL, ipAddress VARCHAR(255) DEFAULT NULL, machineId VARCHAR(255) DEFAULT NULL, authToken VARCHAR(255) NOT NULL, lastSync DATETIME DEFAULT NULL, createdAt DATETIME NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE warden_assignments (id INT AUTO_INCREMENT NOT NULL, assigned_to INT NOT NULL, assigned_by INT NOT NULL, hostel_id INT NOT NULL, createdAt DATETIME NOT NULL, INDEX IDX_C213683089EEAF91 (assigned_to), INDEX IDX_C213683061A2AF17 (assigned_by), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB');
@@ -82,7 +82,6 @@ final class Version20260203224022 extends AbstractMigration
         $this->addSql('DROP TABLE jobs');
         $this->addSql('DROP TABLE logbook');
         $this->addSql('DROP TABLE outpass_requests');
-        $this->addSql('DROP TABLE outpass_settings');
         $this->addSql('DROP TABLE outpass_template_fields');
         $this->addSql('DROP TABLE outpass_templates');
         $this->addSql('DROP TABLE parent_verifications');
@@ -90,6 +89,7 @@ final class Version20260203224022 extends AbstractMigration
         $this->addSql('DROP TABLE report_config_recipients');
         $this->addSql('DROP TABLE settings');
         $this->addSql('DROP TABLE students');
+        $this->addSql('DROP TABLE system_settings');
         $this->addSql('DROP TABLE users');
         $this->addSql('DROP TABLE verifiers');
         $this->addSql('DROP TABLE warden_assignments');

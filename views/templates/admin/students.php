@@ -10,7 +10,7 @@ $errorMessage = $this->session->getFlash('error')[$flashKey] ?? null;
         Manage student details, including their hostel details, academic information, and contact details.
     </p>
 
-    <?php if (empty($students)): ?>
+    <?php if (empty($students) && empty($search)): ?>
         <div class="flex flex-col gap-6 p-6 mb-4 leading-relaxed text-blue-800 border-l-4 rounded-lg shadow-md bg-blue-200/60 border-blue-800/80" role="alert">
             <div class="flex items-center justify-between gap-4">
                 <div>
@@ -31,14 +31,30 @@ $errorMessage = $this->session->getFlash('error')[$flashKey] ?? null;
     <?php else: ?>
         <div class="flex flex-wrap items-center justify-between mb-6 space-x-8 space-y-4 md:space-y-0">
             <!-- Search Bar -->
-            <div class="relative flex-grow">
+            <form class="relative flex-grow" method="get" action="">
                 <span class="absolute inset-y-0 flex items-center text-gray-400 left-3">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 ms-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
                 </span>
-                <input type="text" placeholder="Search students..." class="w-full py-2 transition duration-200 border border-gray-300 rounded-md bg-gray-50 text-md ps-12 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400" />
-            </div>
+                <input
+                    type="text"
+                    name="q"
+                    value="<?= $search ?? '' ?>"
+                    placeholder="Search students by name or digital ID..."
+                    class="w-full py-2 transition duration-200 border border-gray-300 rounded-md bg-gray-50 text-md ps-12 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
+                />
+                <input type="hidden" name="limit" value="<?= $records['limit'] ?? 10 ?>">
+                <?php if (!empty($search)): ?>
+                    <button
+                        type="button"
+                        class="absolute inset-y-0 right-2 flex items-center px-2 text-sm text-gray-500 hover:text-gray-700"
+                        onclick="window.location.href='?limit=<?= $records['limit'] ?? 10 ?>'"
+                    >
+                        Clear
+                    </button>
+                <?php endif; ?>
+            </form>
 
             <div class="flex items-center space-x-2">
                 <!-- Page Size -->
@@ -72,26 +88,28 @@ $errorMessage = $this->session->getFlash('error')[$flashKey] ?? null;
         </div>
     <?php endif; ?>
 
-    <div class="flex flex-col gap-6 px-6 py-5 mb-4 leading-relaxed text-gray-800 border-l-4 rounded-lg shadow-md bg-gray-200/60 border-gray-800/80">
-        <div class="flex items-center justify-between">
-            <div class="space-y-2">
-                <h3 class="text-base font-semibold">Import Students Records</h3>
-                <p class="mt-1 text-sm">
-                    Upload a CSV file to import student data.
-                    <a href="#" class="text-blue-700 underline hover:text-blue-900">Download the template</a> for the correct format.
-                </p>
-            </div>
-            <button id="import-btn" class="inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-white transition duration-200 bg-gray-500 rounded-lg shadow hover:bg-gray-600 focus:outline-none focus:ring-0 focus:border-transparent">
-                <div class="flex items-center space-x-3">
-                    <i class="fa-solid fa-file-import"></i>
-                    <span>Upload File</span>
+    <?php if (empty($search)): ?>
+        <div class="flex flex-col gap-6 px-6 py-5 mb-4 leading-relaxed text-gray-800 border-l-4 rounded-lg shadow-md bg-gray-200/60 border-gray-800/80">
+            <div class="flex items-center justify-between">
+                <div class="space-y-2">
+                    <h3 class="text-base font-semibold">Import Students Records</h3>
+                    <p class="mt-1 text-sm">
+                        Upload a CSV file to import student data.
+                        <a href="#" class="text-blue-700 underline hover:text-blue-900">Download the template</a> for the correct format.
+                    </p>
                 </div>
-            </button>
-        </div>
+                <button id="import-btn" class="inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-white transition duration-200 bg-gray-500 rounded-lg shadow hover:bg-gray-600 focus:outline-none focus:ring-0 focus:border-transparent">
+                    <div class="flex items-center space-x-3">
+                        <i class="fa-solid fa-file-import"></i>
+                        <span>Upload File</span>
+                    </div>
+                </button>
+            </div>
 
-        <input id="import-file" type="file" class="hidden w-full p-2 mt-3 text-sm border border-gray-300 rounded-md" accept=".csv">
-        <div id="import-feedback" class="hidden mt-2 text-sm text-blue-700">Import in progress...</div>
-    </div>
+            <input id="import-file" type="file" class="hidden w-full p-2 mt-3 text-sm border border-gray-300 rounded-md" accept=".csv">
+            <div id="import-feedback" class="hidden mt-2 text-sm text-blue-700">Import in progress...</div>
+        </div>
+    <?php endif; ?>
 
     <?php if ($successMessage): ?>
         <div class="p-4 mb-3 text-green-800 bg-green-100 rounded-lg" role="alert">
@@ -124,7 +142,7 @@ $errorMessage = $this->session->getFlash('error')[$flashKey] ?? null;
                 <tbody>
                     <?php foreach ($students as $student): ?>
                         <tr
-                            class="border-t transition cursor-pointer hover:bg-blue-50"
+                            class="transition border-t cursor-pointer hover:bg-blue-50"
                             data-href="<?= $this->urlFor('admin.manage.students.details', ['student_id' => $student->getId()]) ?>"
                         >
                             <td class="px-4 py-3 text-sm text-gray-700"><?= $student->getUser()->getName() ?></td>
@@ -186,12 +204,12 @@ $errorMessage = $this->session->getFlash('error')[$flashKey] ?? null;
                         <?php if ($records['currentPage'] > 1): ?>
                             <button
                                 class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
-                                onclick="location.href='?page=<?= $records['currentPage'] - 1 ?>&limit=<?= $records['limit'] ?>'">Previous</button>
+                                onclick="location.href='?page=<?= $records['currentPage'] - 1 ?>&limit=<?= $records['limit'] ?>&q=<?= urlencode($search ?? '') ?>'">Previous</button>
                         <?php endif; ?>
                         <?php if ($records['currentPage'] < $records['totalPages']): ?>
                             <button
                                 class="relative inline-flex items-center px-4 py-2 ml-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
-                                onclick="location.href='?page=<?= $records['currentPage'] + 1 ?>&limit=<?= $records['limit'] ?>'">Next</button>
+                                onclick="location.href='?page=<?= $records['currentPage'] + 1 ?>&limit=<?= $records['limit'] ?>&q=<?= urlencode($search ?? '') ?>'">Next</button>
                         <?php endif; ?>
                     </div>
                     <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
@@ -206,18 +224,29 @@ $errorMessage = $this->session->getFlash('error')[$flashKey] ?? null;
                             <?php if ($records['currentPage'] > 1): ?>
                                 <button
                                     class="px-3 py-1 text-sm text-gray-600 bg-gray-200 border rounded-md hover:bg-gray-300 focus:ring focus:ring-blue-300 focus:outline-none"
-                                    onclick="location.href='?page=<?= $records['currentPage'] - 1 ?>&limit=<?= $records['limit'] ?>'">Previous</button>
+                                    onclick="location.href='?page=<?= $records['currentPage'] - 1 ?>&limit=<?= $records['limit'] ?>&q=<?= urlencode($search ?? '') ?>'">Previous</button>
                             <?php endif; ?>
                             <?php if ($records['currentPage'] < $records['totalPages']): ?>
                                 <button
                                     class="px-3 py-1 text-sm text-white bg-blue-600 border rounded-md hover:bg-blue-700 focus:ring focus:ring-blue-300 focus:outline-none"
-                                    onclick="location.href='?page=<?= $records['currentPage'] + 1 ?>&limit=<?= $records['limit'] ?>'">Next</button>
+                                    onclick="location.href='?page=<?= $records['currentPage'] + 1 ?>&limit=<?= $records['limit'] ?>&q=<?= urlencode($search ?? '') ?>'">Next</button>
                             <?php endif; ?>
                         </div>
                     </div>
                 </div>
             <?php endif; ?>
         </section>
+    <?php elseif (!empty($search)): ?>
+        <div class="flex flex-col gap-3 p-6 mb-4 leading-relaxed border-l-4 rounded-lg shadow-md text-amber-800 bg-amber-100/80 border-amber-700/80" role="status">
+            <div class="flex items-center justify-between gap-4">
+                <div>
+                    <h3 class="text-base font-semibold">No results for “<?= $search ?>”</h3>
+                    <p class="mt-1 text-sm">
+                        Try a different name or digital ID or clear the search to view all students.
+                    </p>
+                </div>
+            </div>
+        </div>
     <?php endif; ?>
 </main>
 

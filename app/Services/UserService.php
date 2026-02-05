@@ -244,7 +244,7 @@ class UserService
             ->getResult();
     }
 
-    public function getStudentsByGenderPaginated(User $user, int $page = 1, int $limit = 10): array
+    public function getStudentsByGenderPaginated(User $user, int $page = 1, int $limit = 10, ?string $search = null): array
     {
         $offset = ($page - 1) * $limit;
 
@@ -255,6 +255,27 @@ class UserService
             ->orderBy('u.name', 'ASC')
             ->setFirstResult($offset)
             ->setMaxResults($limit);
+
+        if (!empty($search)) {
+            $isNumeric = ctype_digit($search);
+            if ($isNumeric) {
+                $queryBuilder
+                    ->andWhere(
+                        $queryBuilder->expr()->orX(
+                            $queryBuilder->expr()->like('u.name', ':search'),
+                            $queryBuilder->expr()->eq('s.digitalId', ':digitalId')
+                        )
+                    )
+                    ->setParameter('search', '%' . $search . '%')
+                    ->setParameter('digitalId', (int) $search);
+            } else {
+                $queryBuilder
+                    ->andWhere(
+                        $queryBuilder->expr()->like('u.name', ':search')
+                    )
+                    ->setParameter('search', '%' . $search . '%');
+            }
+        }
 
         $paginator = new Paginator($queryBuilder->getQuery(), true);
 

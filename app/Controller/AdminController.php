@@ -267,12 +267,13 @@ class AdminController extends BaseController
         $userData = $request->getAttribute('user');
         $page = max(1, (int) ($request->getQueryParams()['page'] ?? 1));
         $limit = (int) ($request->getQueryParams()['limit'] ?? 10);
+        $search = trim((string) ($request->getQueryParams()['q'] ?? ''));
         $allowedLimits = [10, 25, 50, 100];
         if (!in_array($limit, $allowedLimits, true)) {
             $limit = 10;
         }
 
-        $paginationData = $this->userService->getStudentsByGenderPaginated($userData, $page, $limit);
+        $paginationData = $this->userService->getStudentsByGenderPaginated($userData, $page, $limit, $search);
 
         if ($paginationData['totalPages'] > 1 && $page > $paginationData['totalPages']) {
             return $response->withHeader('Location', '?page=' . $paginationData['totalPages'])->withStatus(302);
@@ -288,6 +289,7 @@ class AdminController extends BaseController
                 'totalRecords' => $paginationData['total'],
                 'limit' => $limit,
             ],
+            'search' => $search,
             'routeName' => $this->getRouteName($request),
             'breadcrumbs' => [
                 [

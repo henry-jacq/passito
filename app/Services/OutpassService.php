@@ -312,8 +312,6 @@ class OutpassService
             // Reset to default values based on gender
             $defaultValues = $this->getDefaultValues($user->getGender()->value);
 
-            $settings->setDailyLimit($defaultValues['dailyLimit']);
-            $settings->setWeeklyLimit($defaultValues['weeklyLimit']);
             $settings->setWeekdayCollegeHoursStart($defaultValues['weekdayCollegeHoursStart']);
             $settings->setWeekdayCollegeHoursEnd($defaultValues['weekdayCollegeHoursEnd']);
             $settings->setWeekdayOvernightStart($defaultValues['weekdayOvernightStart']);
@@ -333,8 +331,6 @@ class OutpassService
             };
 
             // Update settings fields with appropriate conversions
-            $settings->setDailyLimit(!empty($data['daily_limit']) ? (int) $data['daily_limit'] : null);
-            $settings->setWeeklyLimit(!empty($data['weekly_limit']) ? (int) $data['weekly_limit'] : null);
             $settings->setWeekdayCollegeHoursStart($convertToTime($data['weekday_college_hours_start'] ?? null));
             $settings->setWeekdayCollegeHoursEnd($convertToTime($data['weekday_college_hours_end'] ?? null));
             $settings->setWeekdayOvernightStart($convertToTime($data['weekday_overnight_start'] ?? null));
@@ -360,8 +356,6 @@ class OutpassService
     {
         if ($gender === 'male') {
             return [
-                'dailyLimit' => null,
-                'weeklyLimit' => null,
                 'weekdayCollegeHoursStart' => new \DateTime('09:00'),
                 'weekdayCollegeHoursEnd' => new \DateTime('17:00'),
                 'weekdayOvernightStart' => new \DateTime('22:00'),
@@ -377,8 +371,6 @@ class OutpassService
 
         // Default values for female
         return [
-            'dailyLimit' => null,
-            'weeklyLimit' => null,
             'weekdayCollegeHoursStart' => new \DateTime('09:00'),
             'weekdayCollegeHoursEnd' => new \DateTime('17:00'),
             'weekdayOvernightStart' => new \DateTime('20:00'),

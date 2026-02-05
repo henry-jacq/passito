@@ -16,12 +16,6 @@ class OutpassSettings
     #[ORM\Column(type: 'integer')]
     private int $id;
 
-    #[ORM\Column(type: 'integer', nullable: true)]
-    private ?int $dailyLimit = null;
-
-    #[ORM\Column(type: 'integer', nullable: true)]
-    private ?int $weeklyLimit = null;
-
     #[ORM\Column(type: 'string', enumType: Gender::class)]
     private Gender $type;
 
@@ -66,16 +60,6 @@ class OutpassSettings
         return $this->id;
     }
 
-    public function getDailyLimit(): ?int
-    {
-        return $this->dailyLimit;
-    }
-
-    public function setDailyLimit(?int $dailyLimit): self
-    {
-        $this->dailyLimit = $dailyLimit;
-        return $this;
-    }
 
     public function getType(): Gender
     {
@@ -85,17 +69,6 @@ class OutpassSettings
     public function setType(Gender $gender): self
     {
         $this->type = $gender;
-        return $this;
-    }
-
-    public function getWeeklyLimit(): ?int
-    {
-        return $this->weeklyLimit;
-    }
-
-    public function setWeeklyLimit(?int $weeklyLimit): self
-    {
-        $this->weeklyLimit = $weeklyLimit;
         return $this;
     }
 

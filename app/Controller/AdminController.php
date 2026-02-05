@@ -58,11 +58,6 @@ class AdminController extends BaseController
             ],
         ];
 
-        if ($userData->getRole() == UserRole::SUPER_ADMIN) {
-            $reportSettings = $this->reportService->getAllReportSettings($userData);
-            $args['reportSettings'] = $reportSettings;
-        }
-
         $args = array_merge($args, $this->view->getGlobals());
         return parent::render($request, $response, 'admin/dashboard', $args);
     }
@@ -228,6 +223,11 @@ class AdminController extends BaseController
         } else {
             $settings = $this->outpassService->getSettings($userData->getGender());
             $args['settings'] = $settings;
+        }
+
+        if ($userData->getRole() == UserRole::SUPER_ADMIN) {
+            $reportSettings = $this->reportService->getAllReportSettings($userData);
+            $args['reportSettings'] = $reportSettings;
         }
         
         return parent::render($request, $response, 'admin/rules', $args);

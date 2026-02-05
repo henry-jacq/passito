@@ -16,8 +16,6 @@ class OutpassRulesSeeder
         $settings = [
             [
                 'type' => 'male',
-                'dailyLimit' => null,
-                'weeklyLimit' => null,
                 'parentApproval' => false,
                 'companionVerification' => false,
                 'emergencyContactNotification' => false,
@@ -33,8 +31,6 @@ class OutpassRulesSeeder
             ],
             [
                 'type' => 'female',
-                'dailyLimit' => null,
-                'weeklyLimit' => null,
                 'parentApproval' => true,
                 'companionVerification' => false,
                 'emergencyContactNotification' => false, // Different for female
@@ -57,8 +53,6 @@ class OutpassRulesSeeder
             if (!$existingSetting) {
                 $newSetting = new OutpassSettings();
                 $newSetting->setType(Gender::from($setting['type']));
-                $newSetting->setDailyLimit($setting['dailyLimit']);
-                $newSetting->setWeeklyLimit($setting['weeklyLimit']);
                 $newSetting->setParentApproval($setting['parentApproval']);
                 $newSetting->setCompanionVerification($setting['companionVerification']);
                 $newSetting->setEmergencyContactNotification($setting['emergencyContactNotification']);

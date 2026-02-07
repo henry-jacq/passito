@@ -47,8 +47,9 @@ class AdminService
     public function getDashboardDetails(User $adminUser): array
     {
         $counts = $this->outpass->getOutpassStats($adminUser);
-        $checkedOut = $this->verifierService->fetchCheckedOutLogs($adminUser);
-        $checkedIn = $this->verifierService->fetchCheckedInLogs($adminUser);
+        $today = new DateTime('today');
+        $checkedOut = $this->verifierService->fetchCheckedOutLogs($adminUser, $today);
+        $checkedIn = $this->verifierService->fetchCheckedInLogs($adminUser, $today);
         $lockStatus = $this->em->getRepository(Settings::class)->findOneBy([
             'keyName' => 'lock_requests_' . strtolower($adminUser->getGender()->value)
         ]);

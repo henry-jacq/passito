@@ -49,11 +49,12 @@ class ReportService
     /**
      * Generate Daily Movement Report
      */
-    private function generateDailyMovementReport(User $user, ReportConfig $config): string
+    private function generateDailyMovementReport(User $user, ReportConfig $config): ?string
     {
         // Fetch logs
-        $checkedIn = $this->verifierService->fetchCheckedInLogs($user);
-        $checkedOut = $this->verifierService->fetchCheckedOutLogs($user);
+        $today = new DateTime('today');
+        $checkedIn = $this->verifierService->fetchCheckedInLogs($user, $today);
+        $checkedOut = $this->verifierService->fetchCheckedOutLogs($user, $today);
 
         // Define headers for CSV
         $headers = ['Name', 'Digital ID', 'Email', 'Date', 'Time', 'Action'];
@@ -63,6 +64,7 @@ class ReportService
         // Map checked-in logs
         foreach ($checkedIn as $log) {
             $rows[] = [
+                '_sort' => $log->getInTime()?->getTimestamp() ?? 0,
                 $log->getOutpass()->getStudent()->getUser()->getName() ?? null,
                 $log->getOutpass()->getStudent()->getDigitalId() ?? null,
                 $log->getOutpass()->getStudent()->getUser()->getEmail() ?? null,
@@ -75,6 +77,7 @@ class ReportService
         // Map checked-out logs
         foreach ($checkedOut as $log) {
             $rows[] = [
+                '_sort' => $log->getOutTime()?->getTimestamp() ?? 0,
                 $log->getOutpass()->getStudent()->getUser()->getName() ?? null,
                 $log->getOutpass()->getStudent()->getDigitalId() ?? null,
                 $log->getOutpass()->getStudent()->getUser()->getEmail() ?? null,
@@ -82,6 +85,18 @@ class ReportService
                 $log->getOutTime()->format('h:i:s A') ?? null,
                 'CHECKED_OUT',
             ];
+        }
+
+        if (empty($rows)) {
+            return null;
+        }
+
+        if (!empty($rows)) {
+            usort($rows, fn ($a, $b) => $a['_sort'] <=> $b['_sort']);
+            $rows = array_map(function ($row) {
+                unset($row['_sort']);
+                return $row;
+            }, $rows);
         }
 
         // Save into storage
@@ -93,9 +108,10 @@ class ReportService
     /**
      * Generate Late Arrivals Report
      */
-    private function generateLateArrivalsReport(User $user, ReportConfig $config): string
+    private function generateLateArrivalsReport(User $user, ReportConfig $config): ?string
     {
-        $lateArrivals = $this->verifierService->fetchLateArrivals($user);
+        $today = new DateTime('today');
+        $lateArrivals = $this->verifierService->fetchLateArrivals($user, $today);
 
         $headers = [
             'Student Name',
@@ -107,6 +123,10 @@ class ReportService
             'Check-Out',
             'Late Duration'
         ];
+        if (empty($lateArrivals)) {
+            return null;
+        }
+
         $rows = $this->csvProcessor->mapDataToRows($lateArrivals, function ($log) {
             $fromTime = $log->getOutpass()->getFromTime()->format('h:i:s A') ?? null;
             $fromDate = $log->getOutpass()->getFromDate()->format('d-m-Y') ?? null;

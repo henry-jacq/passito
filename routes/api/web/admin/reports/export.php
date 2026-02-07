@@ -39,9 +39,9 @@ ${basename(__FILE__, '.php')} = function () {
 
         if (!$csvPath) {
             return $this->response([
-                'message' => 'Failed to generate report',
+                'message' => 'No data available for export',
                 'status'  => false
-            ], 500);
+            ], 422);
         }
 
         $fullPath = $this->storage->getFullPath($csvPath, true);

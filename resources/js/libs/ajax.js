@@ -129,10 +129,25 @@ const Ajax = (function () {
         });
 
         if (!response.ok) {
+            let message = null;
+            try {
+                const contentType = response.headers.get('Content-Type');
+                if (contentType && contentType.includes('application/json')) {
+                    const errorJson = await response.json();
+                    message = errorJson?.message || null;
+                } else {
+                    const errorText = await response.text();
+                    message = errorText || null;
+                }
+            } catch (error) {
+                message = null;
+            }
+
             return {
                 ok: false,
                 status: response.status,
                 statusText: response.statusText,
+                message,
                 data: null,
             };
         }

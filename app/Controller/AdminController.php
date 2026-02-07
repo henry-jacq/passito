@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use DateTime;
 use App\Core\View;
 use App\Core\Config;
 use App\Enum\UserRole;
@@ -39,7 +40,7 @@ class AdminController extends BaseController
         $this->view->clearCacheIfDev();
         $userData = $request->getAttribute('user');
         $dashboardData = $this->adminService->getDashboardDetails($userData);
-        $lateArrivalsReport = $this->verifierService->fetchLateArrivals($userData);
+        $lateArrivalsReport = $this->verifierService->fetchLateArrivals($userData, new DateTime('today'));
 
         $args = [
             'title' => 'Dashboard',

@@ -384,14 +384,22 @@ class VerifierService
     /**
      * Fetch checked-out logs
      */
-    public function fetchCheckedOutLogs(User $user): array
+    public function fetchCheckedOutLogs(User $user, ?\DateTimeInterface $forDate = null): array
     {
         $allLogs = $this->fetchLogsByGender(user: $user, paginate: false);
         $userGender = $user->getGender()?->value;
+        $targetDate = $forDate?->format('Y-m-d');
 
-        return array_filter($allLogs, function ($log) use ($userGender) {
+        return array_filter($allLogs, function ($log) use ($userGender, $targetDate) {
             if ($log->getInTime() !== null) {
                 return false;
+            }
+
+            if ($targetDate !== null) {
+                $outTime = $log->getOutTime();
+                if ($outTime === null || $outTime->format('Y-m-d') !== $targetDate) {
+                    return false;
+                }
             }
 
             $logGender = $log->getOutpass()?->getStudent()?->getUser()?->getGender()?->value;
@@ -403,13 +411,19 @@ class VerifierService
     /**
      * Fetch checked-in logs
      */
-    public function fetchCheckedInLogs(User $user): array
+    public function fetchCheckedInLogs(User $user, ?\DateTimeInterface $forDate = null): array
     {
         $allLogs = $this->fetchLogsByGender(user: $user, paginate: false);
         $userGender = $user->getGender()?->value;
+        $targetDate = $forDate?->format('Y-m-d');
 
-        return array_filter($allLogs, function ($log) use ($userGender) {
-            if ($log->getInTime() === null) {
+        return array_filter($allLogs, function ($log) use ($userGender, $targetDate) {
+            $inTime = $log->getInTime();
+            if ($inTime === null) {
+                return false;
+            }
+
+            if ($targetDate !== null && $inTime->format('Y-m-d') !== $targetDate) {
                 return false;
             }
 
@@ -423,36 +437,43 @@ class VerifierService
      * Fetch late arrivals (more than 30 minutes late)
      * Fetch all late arrivals for a given user.
      */
-    public function fetchLateArrivals(User $user): array
+    public function fetchLateArrivals(User $user, ?\DateTimeInterface $forDate = null): array
     {
         $allLogs = $this->fetchLogsByGender(user: $user, paginate: false);
         $userGender = $user->getGender()?->value;
+        $targetDate = $forDate?->format('Y-m-d');
         $lateArrivals = [];
 
         foreach ($allLogs as $log) {
             $outpass = $log->getOutpass();
             $actualInTime = $log->getInTime();
 
-            if ($outpass && $actualInTime !== null) {
-                $expectedReturnDate = $outpass->getToDate();
-                $expectedReturnTime = $outpass->getToTime();
+            if (!$outpass || $actualInTime === null) {
+                continue;
+            }
 
-                if ($expectedReturnDate && $expectedReturnTime) {
-                    // Merge expected return date + time into one DateTime
-                    $expectedReturn = \DateTime::createFromFormat(
-                        'Y-m-d H:i:s',
-                        $expectedReturnDate->format('Y-m-d') . ' ' . $expectedReturnTime->format('H:i:s')
-                    );
+            if ($targetDate !== null && $actualInTime->format('Y-m-d') !== $targetDate) {
+                continue;
+            }
 
-                    if ($expectedReturn) {
-                        $diff = $expectedReturn->diff($actualInTime);
-                        $minutesLate = ($diff->days * 24 * 60) + ($diff->h * 60) + $diff->i;
+            $expectedReturnDate = $outpass->getToDate();
+            $expectedReturnTime = $outpass->getToTime();
 
-                        if ($actualInTime > $expectedReturn && $minutesLate > 30) {
-                            $logGender = $outpass->getStudent()?->getUser()?->getGender()?->value;
-                            if ($logGender === $userGender) {
-                                $lateArrivals[] = $log;
-                            }
+            if ($expectedReturnDate && $expectedReturnTime) {
+                // Merge expected return date + time into one DateTime
+                $expectedReturn = \DateTime::createFromFormat(
+                    'Y-m-d H:i:s',
+                    $expectedReturnDate->format('Y-m-d') . ' ' . $expectedReturnTime->format('H:i:s')
+                );
+
+                if ($expectedReturn) {
+                    $diff = $expectedReturn->diff($actualInTime);
+                    $minutesLate = ($diff->days * 24 * 60) + ($diff->h * 60) + $diff->i;
+
+                    if ($actualInTime > $expectedReturn && $minutesLate > 30) {
+                        $logGender = $outpass->getStudent()?->getUser()?->getGender()?->value;
+                        if ($logGender === $userGender) {
+                            $lateArrivals[] = $log;
                         }
                     }
                 }

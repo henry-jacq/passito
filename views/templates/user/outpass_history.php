@@ -83,7 +83,7 @@ use App\Enum\OutpassStatus; ?>
                                         <span class="px-3 py-1 text-sm font-medium <?= $badgeClass ?> rounded-full"><?= ucwords($outpass->getStatus()->value) ?></span>
                                     </td>
                                     <td class="px-4 py-3">
-                                        <a href="#" class="text-blue-600 hover:underline">View Details</a>
+                                        <a href="<?= $this->urlFor('student.outpass.details', ['outpass_id' => $outpass->getId()]) ?>" class="text-blue-600 hover:underline">View Details</a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -92,14 +92,31 @@ use App\Enum\OutpassStatus; ?>
                 </div>
 
                 <!-- Pagination -->
-                <div class="flex justify-center mt-6 space-x-4">
-                    <button class="px-4 py-2 text-gray-600 bg-gray-200 rounded-lg hover:bg-gray-300">
-                        Previous
-                    </button>
-                    <button class="px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700">
-                        Next
-                    </button>
-                </div>
+                <?php if (($totalPages ?? 1) > 1): ?>
+                    <div class="flex flex-wrap items-center justify-center gap-2 mt-6">
+                        <?php
+                        $current = $currentPage ?? 1;
+                        $prevPage = max(1, $current - 1);
+                        $nextPage = min($totalPages, $current + 1);
+                        ?>
+                        <a href="<?= $this->urlFor('student.outpass.history', [], ['page' => $prevPage]) ?>"
+                            class="px-4 py-2 text-gray-600 bg-gray-200 rounded-lg hover:bg-gray-300 <?= $current <= 1 ? 'pointer-events-none opacity-50' : '' ?>">
+                            Previous
+                        </a>
+
+                        <?php for ($page = 1; $page <= $totalPages; $page++): ?>
+                            <a href="<?= $this->urlFor('student.outpass.history', [], ['page' => $page]) ?>"
+                                class="px-4 py-2 rounded-lg <?= $page === $current ? 'text-white bg-blue-600' : 'text-gray-700 bg-gray-100 hover:bg-gray-200' ?>">
+                                <?= $page ?>
+                            </a>
+                        <?php endfor; ?>
+
+                        <a href="<?= $this->urlFor('student.outpass.history', [], ['page' => $nextPage]) ?>"
+                            class="px-4 py-2 text-gray-600 bg-gray-200 rounded-lg hover:bg-gray-300 <?= $current >= $totalPages ? 'pointer-events-none opacity-50' : '' ?>">
+                            Next
+                        </a>
+                    </div>
+                <?php endif; ?>
             </section>
         <?php endif; ?>
     </main>

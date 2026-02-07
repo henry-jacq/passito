@@ -76,6 +76,10 @@ ${basename(__FILE__, '.php')} = function () {
         // Filter out custom parameters
         $customParams = array_values(array_diff(array_keys($this->data), $expectedParams));
         $customParams = array_intersect_key($this->data, array_flip($customParams));
+        $csrfField = $this->view->csrfFieldName();
+        if (array_key_exists($csrfField, $customParams)) {
+            unset($customParams[$csrfField]);
+        }
 
         $outpassData = [
             'from_date' => $fromDate,

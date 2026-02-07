@@ -95,11 +95,14 @@ class StudentController extends BaseController
         $this->view->clearCacheIfDev();
 
         $student = $request->getAttribute('student');
-        $outpasses = $this->outpassService->getOutpassByStudent($student);
+        $page = (int)($request->getQueryParams()['page'] ?? 1);
+        $outpassHistory = $this->outpassService->getOutpassHistoryByStudent($student, $page, 10);
 
         $args = [
             'title' => 'Outpass History',
-            'outpasses' => $outpasses,
+            'outpasses' => $outpassHistory['data'],
+            'currentPage' => $outpassHistory['currentPage'],
+            'totalPages' => $outpassHistory['totalPages'],
             'routeName' => $this->getRouteName($request),
         ];
         return parent::render($request, $response, 'user/outpass_history', $args);

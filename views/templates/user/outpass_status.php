@@ -13,9 +13,13 @@ use App\Enum\OutpassStatus;
                 <h1 class="text-3xl font-bold text-gray-800">Outpass Status</h1>
                 <p class="mt-1 text-base text-gray-500">View your current and recent outpass status</p>
             </div>
-            <div class="mt-4 md:mt-0">
+            <div class="flex flex-col gap-3 mt-4 sm:flex-row sm:items-center md:mt-0">
+                <a href="<?= $this->urlFor('student.outpass.history') ?>"
+                    class="inline-flex items-center justify-center px-3 py-3 font-medium text-blue-700 transition-colors duration-150 bg-blue-50 border border-blue-200 rounded-lg text-md hover:bg-blue-100">
+                    View All History
+                </a>
                 <button onclick="window.location.href='<?= $this->urlFor('student.outpass.request') ?>'"
-                    class="inline-flex items-center px-3 py-3 font-medium text-white transition-colors duration-150 bg-blue-600 border border-transparent rounded-lg shadow-sm text-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    class="inline-flex items-center justify-center px-3 py-3 font-medium text-white transition-colors duration-150 bg-blue-600 border border-transparent rounded-lg shadow-sm text-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                     </svg>
@@ -129,8 +133,7 @@ use App\Enum\OutpassStatus;
                     <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
                         <div class="flex items-center justify-between">
                             <h2 class="text-xl font-semibold text-gray-900">Recent Outpass</h2>
-                            <a href
-                                <?= $this->urlFor('student.outpass.history') ?>"
+                            <a href="<?= $this->urlFor('student.outpass.history') ?>"
                                 class="inline-flex items-center text-base font-medium text-blue-600 transition-colors duration-150 hover:text-blue-700">
                                 View All History
                                 <svg class="w-5 h-5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

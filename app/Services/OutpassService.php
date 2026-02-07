@@ -48,6 +48,34 @@ class OutpassService
 
         return $outpasses;
     }
+
+    public function getOutpassHistoryByStudent(Student $student, int $page = 1, int $limit = 10): array
+    {
+        $page = max(1, $page);
+        $limit = max(1, $limit);
+        $offset = ($page - 1) * $limit;
+
+        $queryBuilder = $this->em->createQueryBuilder();
+        $queryBuilder->select('o')
+            ->from(OutpassRequest::class, 'o')
+            ->where('o.student = :student')
+            ->setParameter('student', $student)
+            ->orderBy('o.createdAt', 'DESC')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit);
+
+        $query = $queryBuilder->getQuery();
+        $paginator = new Paginator($query, true);
+        $total = count($paginator);
+        $totalPages = (int) ceil($total / $limit);
+
+        return [
+            'data' => iterator_to_array($paginator),
+            'total' => $total,
+            'currentPage' => $page,
+            'totalPages' => max(1, $totalPages),
+        ];
+    }
     
     public function createOutpass(array $data): OutpassRequest
     {

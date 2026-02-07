@@ -49,6 +49,42 @@ class OutpassService
         return $outpasses;
     }
 
+    public function getStudentOutpassStats(Student $student): array
+    {
+        $qb = $this->em->createQueryBuilder();
+
+        $qb->select('o.status AS status', 'COUNT(o.id) AS count')
+            ->from(OutpassRequest::class, 'o')
+            ->where('o.student = :student')
+            ->setParameter('student', $student)
+            ->groupBy('o.status');
+
+        $results = $qb->getQuery()->getArrayResult();
+
+        $counts = [
+            'total' => 0,
+            'approved' => 0,
+            'pending' => 0,
+            'rejected' => 0,
+        ];
+
+        foreach ($results as $row) {
+            $status = $row['status']->value;
+            $count = (int) $row['count'];
+            $counts['total'] += $count;
+
+            if ($status === 'approved' || $status === 'expired') {
+                $counts['approved'] += $count;
+            } elseif ($status === 'pending' || $status === 'parent_pending' || $status === 'parent_approved') {
+                $counts['pending'] += $count;
+            } elseif ($status === 'rejected' || $status === 'parent_denied') {
+                $counts['rejected'] += $count;
+            }
+        }
+
+        return $counts;
+    }
+
     public function getOutpassHistoryByStudent(Student $student, int $page = 1, int $limit = 10): array
     {
         $page = max(1, $page);

@@ -25,10 +25,14 @@ class StudentController extends BaseController
     {
         $this->view->clearCacheIfDev();
         $userData = $request->getAttribute('student');
+        $recentOutpasses = $this->outpassService->getRecentStudentOutpass($userData, 3);
+        $outpassStats = $this->outpassService->getStudentOutpassStats($userData);
 
         $args = [
             'title' => 'Dashboard',
             'userData' => $userData,
+            'recentOutpasses' => $recentOutpasses,
+            'outpassStats' => $outpassStats,
             'routeName' => $this->getRouteName($request),
         ];
         return parent::render($request, $response, 'user/dashboard', $args);

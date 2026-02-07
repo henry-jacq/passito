@@ -21,28 +21,28 @@
 					<i class="text-3xl text-blue-600 fas fa-file-alt"></i>
 					<h3 class="text-xl font-medium">Total Requests</h3>
 				</div>
-				<p class="mt-4 text-4xl font-medium">25</p>
+				<p class="mt-4 text-4xl font-medium"><?= $outpassStats['total'] ?? 0 ?></p>
 			</div>
 			<div class="p-6 transition-all transform rounded-lg shadow-lg hover:shadow-xl">
 				<div class="flex items-center gap-4">
 					<i class="text-3xl text-blue-600 fas fa-check-circle"></i>
 					<h3 class="text-xl font-medium">Accepted</h3>
 				</div>
-				<p class="mt-4 text-4xl font-medium">15</p>
+				<p class="mt-4 text-4xl font-medium"><?= $outpassStats['approved'] ?? 0 ?></p>
 			</div>
 			<div class="p-6 transition-all transform rounded-lg shadow-lg hover:shadow-xl">
 				<div class="flex items-center gap-4">
 					<i class="text-3xl text-blue-600 fas fa-clock"></i>
 					<h3 class="text-xl font-medium">Pending</h3>
 				</div>
-				<p class="mt-4 text-4xl font-medium">5</p>
+				<p class="mt-4 text-4xl font-medium"><?= $outpassStats['pending'] ?? 0 ?></p>
 			</div>
 			<div class="p-6 transition-all transform rounded-lg shadow-lg hover:shadow-xl">
 				<div class="flex items-center gap-4">
 					<i class="text-3xl text-blue-600 fas fa-times-circle"></i>
 					<h3 class="text-xl font-medium">Rejected</h3>
 				</div>
-				<p class="mt-4 text-4xl font-medium">5</p>
+				<p class="mt-4 text-4xl font-medium"><?= $outpassStats['rejected'] ?? 0 ?></p>
 			</div>
 		</section>
 	</main>

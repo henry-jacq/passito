@@ -6,6 +6,7 @@ use DateTime;
 use App\Entity\User;
 use App\Core\Session;
 use App\Enum\UserRole;
+use App\Enum\UserStatus;
 use App\Entity\Student;
 use App\Entity\Hostel;
 use App\Entity\AcademicYear;
@@ -52,6 +53,7 @@ class UserService
         $user->setContactNo($data['contact']);
         $user->setGender($data['gender']);
         $user->setRole($data['role'] ?? UserRole::USER);
+        $user->setStatus(UserStatus::INACTIVE);
         $user->setCreatedAt(new DateTime());
         
         $this->em->persist($user);
@@ -154,7 +156,7 @@ class UserService
         $student->setProgram($program);
         $student->setRoomNo($data['room_no']);
         $student->setParentNo($data['parent_no']);
-        $student->setStatus(true);
+        $user->setStatus(UserStatus::ACTIVE);
         $student->setUpdatedAt(new DateTime());
         
         $this->em->persist($student);
@@ -223,7 +225,10 @@ class UserService
         $student->setYear($givenYear);
         $student->setRoomNo($data['room_no']);
         $student->setParentNo($data['parent_no']);
-        $student->setStatus((bool) ($data['status'] ?? true));
+        $statusFlag = isset($data['status']) ? (bool) $data['status'] : null;
+        if ($statusFlag !== null) {
+            $user->setStatus($statusFlag ? UserStatus::ACTIVE : UserStatus::INACTIVE);
+        }
         $student->setUpdatedAt(new DateTime());
 
         $this->em->flush();

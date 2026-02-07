@@ -153,7 +153,7 @@ $errorMessage = $this->session->getFlash('error')[$flashKey] ?? null;
                             <td class="px-4 py-3 text-sm text-center text-gray-700"><?= $student->getRoomNo() ?></td>
                             <td class="px-4 py-3 text-sm text-center text-gray-700"><?= $student->getParentNo() ?></td>
                             <td class="px-4 py-3 text-sm text-center">
-                                <?php if ($student->getStatus()): ?>
+                                <?php if ($student->getUser()->getStatus() === \App\Enum\UserStatus::ACTIVE): ?>
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                         Active
                                     </span>
@@ -178,7 +178,7 @@ $errorMessage = $this->session->getFlash('error')[$flashKey] ?? null;
                                     data-parent-no="<?= $student->getParentNo() ?>"
                                     data-program-id="<?= $student->getProgram()->getId() ?>"
                                     data-academic-year-id="<?= $student->getAcademicYear()?->getId() ?>"
-                                    data-status="<?= $student->getStatus() ? 1 : 0 ?>"
+                                    data-status="<?= $student->getUser()->getStatus() === \App\Enum\UserStatus::ACTIVE ? 1 : 0 ?>"
                                     data-no-row-click="true"
                                 >
                                     <i class="fas fa-edit"></i>

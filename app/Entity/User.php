@@ -7,6 +7,7 @@ namespace App\Entity;
 use DateTime;
 use App\Enum\Gender;
 use App\Enum\UserRole;
+use App\Enum\UserStatus;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
@@ -38,6 +39,9 @@ class User
 
     #[ORM\Column(type: 'string', length: 32)]
     private string $contactNo;
+
+    #[ORM\Column(type: 'string', enumType: UserStatus::class)]
+    private UserStatus $status = UserStatus::INACTIVE;
 
     #[ORM\Column(type: 'datetime')]
     private DateTime $createdAt;
@@ -111,6 +115,16 @@ class User
         $this->contactNo = $contactNo;
     }
 
+    public function getStatus(): UserStatus
+    {
+        return $this->status;
+    }
+
+    public function setStatus(UserStatus $status): void
+    {
+        $this->status = $status;
+    }
+
     public function getCreatedAt(): DateTime
     {
         return $this->createdAt;
@@ -130,6 +144,7 @@ class User
             'role' => $this->getRole(),
             'gender' => $this->getGender(),
             'contact_no' => $this->getContactNo(),
+            'status' => $this->getStatus(),
             'created_at' => $this->getCreatedAt()->format('Y-m-d H:i:s')
         ];
     }

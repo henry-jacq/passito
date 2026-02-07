@@ -6,6 +6,7 @@ use App\Core\View;
 use App\Core\Request;
 use App\Core\Session;
 use App\Entity\Student;
+use App\Enum\UserStatus;
 use App\Services\JwtService;
 use Psr\Http\Message\ResponseInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -57,6 +58,12 @@ class StudentMiddleware implements MiddlewareInterface
             return $this->responseFactory
                 ->createResponse(302)
                 ->withHeader('Location', $this->view->urlFor('auth.login'));              
+        }
+
+        if ($student->getUser()->getStatus() !== UserStatus::ACTIVE) {
+            return $this->responseFactory
+                ->createResponse(302)
+                ->withHeader('Location', $this->view->urlFor('auth.login'));
         }
 
         // Set the user data and role in the request

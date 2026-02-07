@@ -6,8 +6,11 @@
                     <h2 class="text-2xl font-semibold text-gray-800">Manual Verification</h2>
                     <p class="mt-1 text-sm text-gray-500">Enter the outpass ID to check out or check in.</p>
                 </div>
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <?= $verifier && $verifier->getStatus()->value === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' ?>">
-                    <?= $verifier && $verifier->getStatus()->value === 'active' ? 'Active' : 'Inactive' ?>
+                <?php
+                $isActive = $user && $user->getStatus() === \App\Enum\UserStatus::ACTIVE;
+                ?>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <?= $isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' ?>">
+                    <?= $isActive ? 'Active' : 'Inactive' ?>
                 </span>
             </div>
 

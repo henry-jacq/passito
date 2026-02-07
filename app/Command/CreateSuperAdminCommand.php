@@ -7,6 +7,7 @@ namespace App\Command;
 use App\Entity\User;
 use App\Enum\Gender;
 use App\Enum\UserRole;
+use App\Enum\UserStatus;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -80,6 +81,7 @@ class CreateSuperAdminCommand extends Command
         $user->setRole(UserRole::SUPER_ADMIN);
         $user->setName('Super Admin'); // Default name
         $user->setContactNo(''); // Empty contact number
+        $user->setStatus(UserStatus::ACTIVE);
         $user->setCreatedAt(new \DateTime());
 
         $this->entityManager->persist($user);

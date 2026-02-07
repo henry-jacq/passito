@@ -48,9 +48,6 @@ class Student
     #[ORM\Column(type: 'string', length: 15)]
     private string $parentNo;
 
-    #[ORM\Column(type: 'boolean')]
-    private bool $status;
-
     #[ORM\Column(type: 'datetime')]
     private DateTime $updatedAt;
 
@@ -140,16 +137,6 @@ class Student
         $this->parentNo = $parentNo;
     }
 
-    public function getStatus(): bool
-    {
-        return $this->status;
-    }
-
-    public function setStatus(bool $status): void
-    {
-        $this->status = $status;
-    }
-
     public function getUpdatedAt(): DateTime
     {
         return $this->updatedAt;
@@ -172,7 +159,6 @@ class Student
             'program' => $this->getProgram()->toArray(),
             'room_no' => $this->getRoomNo(),
             'parent_no' => $this->getParentNo(),
-            'status' => $this->getStatus(),
             'updated_at' => $this->getUpdatedAt()->format('Y-m-d H:i:s')
         ];
     }

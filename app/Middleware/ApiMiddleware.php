@@ -6,6 +6,7 @@ use App\Core\View;
 use App\Entity\User;
 use App\Core\Request;
 use App\Enum\UserRole;
+use App\Enum\UserStatus;
 use App\Services\JwtService;
 use Psr\Http\Message\ResponseInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -49,6 +50,15 @@ class ApiMiddleware implements MiddlewareInterface
         $user = $this->em->getRepository(User::class)->find((int) $payload['sub']);
         if (!$user) {
             return $handler->handle($request);
+        }
+        if ($user->getStatus() !== UserStatus::ACTIVE) {
+            return $this->responseFactory
+                ->createResponse(403)
+                ->withHeader('Content-Type', 'application/json')
+                ->withBody($this->streamFactory->createStream(json_encode([
+                    'message' => 'Account inactive',
+                    'status' => false,
+                ])));
         }
 
         $userRole = $user->getRole()->value;

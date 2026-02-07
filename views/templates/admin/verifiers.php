@@ -1,6 +1,6 @@
 <?php
 
-use App\Enum\VerifierStatus; ?>
+use App\Enum\UserStatus; ?>
 <main class="flex-1 p-6 mt-20 overflow-y-auto">
     <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
         <div class="space-y-1">
@@ -59,7 +59,7 @@ use App\Enum\VerifierStatus; ?>
                         <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Device Name</th>
                         <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Location</th>
                         <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">IP Address</th>
-                        <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Status</th>
+                        <th class="px-4 py-3 text-sm font-semibold text-center text-gray-600">Status</th>
                         <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Last Sync</th>
                         <th class="px-4 py-3 text-sm font-semibold text-center text-gray-600">Auth Token</th>
                         <th class="px-4 py-3 text-sm font-semibold text-center text-gray-600">Actions</th>
@@ -71,17 +71,12 @@ use App\Enum\VerifierStatus; ?>
                             <td class="px-4 py-3 text-sm text-gray-700"><?= $verifier->getName() ?></td>
                             <td class="px-4 py-3 text-sm text-gray-700"><?= $verifier->getLocation() ?></td>
                             <td class="px-4 py-3 text-sm text-gray-700"><?= $verifier->getIpAddress() !== null ? $verifier->getIpAddress() : 'N/A' ?></td>
-                            <td class="px-4 py-3 text-sm text-gray-700">
+                            <td class="px-4 py-3 text-sm text-center text-gray-700">
                                 <?php
-                                $statusValue = ucfirst($verifier->getStatus()->value);
-
-                                if (VerifierStatus::isInactive($verifier->getStatus()->value)) {
-                                    echo "<span class=\"inline-block px-2 py-1 text-xs font-medium bg-red-100 text-red-700 rounded-full\">$statusValue</span>";
-                                } elseif (VerifierStatus::isActive($verifier->getStatus()->value)) {
-                                    echo "<span class=\"inline-block px-2 py-1 text-xs font-medium bg-green-100 text-green-700 rounded-full\">$statusValue</span>";
-                                } else {
-                                    echo "<span class=\"inline-block px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-700 rounded-full\">$statusValue</span>";
-                                }
+                                $isRegistered = $verifier->getMachineId() !== null;
+                                $badgeClass = $isRegistered ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600';
+                                $badgeLabel = $isRegistered ? 'Registered' : 'Unregistered';
+                                echo "<span class=\"inline-block px-2 py-1 text-xs font-medium {$badgeClass} rounded-full\">{$badgeLabel}</span>";
                                 ?>
                             </td>
                             <td class="px-4 py-3">
@@ -107,15 +102,6 @@ use App\Enum\VerifierStatus; ?>
                             </td>
                             <td class="px-4 py-3 text-sm text-gray-700">
                                 <div class="flex items-center justify-center space-x-2">
-                                    <?php if (VerifierStatus::isActive($verifier->getStatus()->value)): ?>
-                                        <button class="px-3 py-1 text-sm text-white transition duration-200 bg-yellow-600 rounded-lg hover:bg-yellow-700 focus:ring focus:ring-yellow-400 deactivate-verifier-modal" data-id="<?= $verifier->getId() ?>">
-                                            Deactivate
-                                        </button>
-                                    <?php elseif (VerifierStatus::isInactive($verifier->getStatus()->value)): ?>
-                                        <button class="px-3 py-1 text-sm text-white transition duration-200 bg-green-600 rounded-lg hover:bg-green-700 focus:ring focus:ring-green-400 activate-verifier-modal" data-id="<?= $verifier->getId() ?>">
-                                            Activate
-                                        </button>
-                                    <?php endif; ?>
                                     <button class="px-3 py-1 text-sm text-white transition duration-200 bg-red-600 rounded-lg hover:bg-red-700 focus:ring focus:ring-red-400 delete-verifier-modal" data-id="<?= $verifier->getId() ?>" data-name="<?= $verifier->getName() ?>">
                                         Delete
                                     </button>
@@ -158,14 +144,12 @@ use App\Enum\VerifierStatus; ?>
                             <td class="px-4 py-3 text-sm text-gray-700"><?= $verifier->getLocation() ?></td>
                             <td class="px-4 py-3 text-sm text-gray-700">
                                 <?php
-                                $statusValue = ucfirst($verifier->getStatus()->value);
-                                if (VerifierStatus::isInactive($verifier->getStatus()->value)) {
-                                    echo "<span class=\"inline-block px-2 py-1 text-xs font-medium bg-red-100 text-red-700 rounded-full\">$statusValue</span>";
-                                } elseif (VerifierStatus::isActive($verifier->getStatus()->value)) {
-                                    echo "<span class=\"inline-block px-2 py-1 text-xs font-medium bg-green-100 text-green-700 rounded-full\">$statusValue</span>";
-                                } else {
-                                    echo "<span class=\"inline-block px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-700 rounded-full\">$statusValue</span>";
-                                }
+                                $isManualActive = $manualUser && $manualUser->getStatus() === UserStatus::ACTIVE;
+                                $statusValue = $isManualActive ? 'Active' : 'Inactive';
+                                $statusClass = $isManualActive
+                                    ? 'bg-green-100 text-green-700'
+                                    : 'bg-red-100 text-red-700';
+                                echo "<span class=\"inline-block px-2 py-1 text-xs font-medium {$statusClass} rounded-full\">{$statusValue}</span>";
                                 ?>
                             </td>
                             <td class="px-4 py-3">
@@ -181,11 +165,11 @@ use App\Enum\VerifierStatus; ?>
                             </td>
                             <td class="px-4 py-3 text-sm text-gray-700">
                                 <div class="flex items-center justify-center space-x-2">
-                                    <?php if (VerifierStatus::isActive($verifier->getStatus()->value)): ?>
+                                    <?php if ($isManualActive): ?>
                                         <button class="px-3 py-1 text-sm text-white transition duration-200 bg-yellow-600 rounded-lg hover:bg-yellow-700 focus:ring focus:ring-yellow-400 deactivate-manual-verifier-modal" data-id="<?= $verifier->getId() ?>">
                                             Deactivate
                                         </button>
-                                    <?php elseif (VerifierStatus::isInactive($verifier->getStatus()->value)): ?>
+                                    <?php else: ?>
                                         <button class="px-3 py-1 text-sm text-white transition duration-200 bg-green-600 rounded-lg hover:bg-green-700 focus:ring focus:ring-green-400 activate-manual-verifier-modal" data-id="<?= $verifier->getId() ?>">
                                             Activate
                                         </button>

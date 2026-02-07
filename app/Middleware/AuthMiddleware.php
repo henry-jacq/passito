@@ -8,7 +8,7 @@ use App\Entity\Verifier;
 use App\Entity\SystemSettings;
 use App\Enum\UserRole;
 use App\Enum\VerifierMode;
-use App\Enum\VerifierStatus;
+use App\Enum\UserStatus;
 use App\Services\JwtService;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -36,6 +36,12 @@ class AuthMiddleware implements MiddlewareInterface
             if ($payload && !empty($payload['sub'])) {
                 $user = $this->em->getRepository(User::class)->find((int) $payload['sub']);
                 if ($user) {
+                    if ($user->getStatus() !== UserStatus::ACTIVE) {
+                        return $this->responseFactory
+                            ->createResponse(302)
+                            ->withHeader('Set-Cookie', $this->jwt->buildLogoutCookieHeader())
+                            ->withHeader('Location', $this->view->urlFor('auth.login'));
+                    }
                     $location = $this->view->urlFor('student.dashboard');
 
                     if (UserRole::isAdministrator($user->getRole()->value)) {
@@ -50,7 +56,7 @@ class AuthMiddleware implements MiddlewareInterface
                             'type' => VerifierMode::MANUAL,
                         ]);
 
-                        $isActiveVerifier = $verifier && $verifier->getStatus() === VerifierStatus::ACTIVE;
+                        $isActiveVerifier = $verifier && $user->getStatus() === UserStatus::ACTIVE;
                         $manualDisabled = $verifierMode === VerifierMode::AUTOMATED;
 
                         if (!$isActiveVerifier || $manualDisabled) {

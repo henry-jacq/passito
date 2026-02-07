@@ -28,7 +28,7 @@ $student = $student ?? null;
                     data-parent-no="<?= $student->getParentNo() ?>"
                     data-program-id="<?= $student->getProgram()->getId() ?>"
                     data-academic-year-id="<?= $student->getAcademicYear()?->getId() ?>"
-                    data-status="<?= $student->getStatus() ? 1 : 0 ?>">
+                    data-status="<?= $student->getUser()->getStatus() === \App\Enum\UserStatus::ACTIVE ? 1 : 0 ?>">
                     Edit
                 </button>
                 <button
@@ -55,8 +55,8 @@ $student = $student ?? null;
                     </div>
                 </div>
                 <div class="flex flex-wrap items-center gap-3 ml-auto">
-                    <span class="inline-flex items-center px-3 py-1 text-xs font-medium rounded-full <?= $student->getStatus() ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' ?>">
-                        <?= $student->getStatus() ? 'Active' : 'Inactive' ?>
+                    <span class="inline-flex items-center px-3 py-1 text-xs font-medium rounded-full <?= $student->getUser()->getStatus() === \App\Enum\UserStatus::ACTIVE ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' ?>">
+                        <?= $student->getUser()->getStatus() === \App\Enum\UserStatus::ACTIVE ? 'Active' : 'Inactive' ?>
                     </span>
                     <span class="px-3 py-1 text-xs text-gray-700 bg-gray-100 rounded-full">
                         <?= $student->getDigitalId() ?>

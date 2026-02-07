@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Entity\Settings;
 use App\Enum\Gender;
 use App\Enum\UserRole;
+use App\Enum\UserStatus;
 use App\Enum\HostelType;
 use App\Enum\InstitutionType;
 use App\Services\AdminService;
@@ -258,6 +259,7 @@ class SetupController extends BaseController
             $user->setGender(Gender::from((string)($admin['gender'] ?? '')));
             $user->setRole(UserRole::SUPER_ADMIN);
             $user->setContactNo(trim((string)($admin['phone'] ?? '')));
+            $user->setStatus(UserStatus::ACTIVE);
             $user->setCreatedAt(new \DateTime());
 
             $this->em->persist($user);
@@ -283,12 +285,15 @@ class SetupController extends BaseController
                 'email' => $email,
                 'contact' => trim((string)($warden['phone'] ?? '')),
                 'gender' => Gender::from((string)($warden['gender'] ?? '')),
-                'role' => UserRole::ADMIN
+                'role' => UserRole::ADMIN,
             ]);
 
             if (!$user instanceof User) {
                 throw new \RuntimeException('Failed to create warden: ' . $email);
             }
+
+            $user->setStatus(UserStatus::ACTIVE);
+            $this->em->flush();
 
             $created[] = $user;
         }

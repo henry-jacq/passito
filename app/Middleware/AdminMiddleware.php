@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Core\Request;
 use App\Core\Session;
 use App\Enum\UserRole;
+use App\Enum\UserStatus;
 use App\Services\JwtService;
 use Psr\Http\Message\ResponseInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -52,6 +53,12 @@ class AdminMiddleware implements MiddlewareInterface
         // Get the user by id
         $user = $this->em->getRepository(User::class)->find((int) $payload['sub']);
         if (is_null($user)) {
+            return $this->responseFactory
+                ->createResponse(302)
+                ->withHeader('Location', $this->view->urlFor('auth.login'));
+        }
+
+        if ($user->getStatus() !== UserStatus::ACTIVE) {
             return $this->responseFactory
                 ->createResponse(302)
                 ->withHeader('Location', $this->view->urlFor('auth.login'));

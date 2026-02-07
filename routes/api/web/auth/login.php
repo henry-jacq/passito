@@ -2,7 +2,7 @@
 
 use App\Enum\UserRole;
 use App\Enum\VerifierMode;
-use App\Enum\VerifierStatus;
+use App\Enum\UserStatus;
 
 ${basename(__FILE__, '.php')} = function () {
     if ($this->isAuthenticated()) {
@@ -20,6 +20,13 @@ ${basename(__FILE__, '.php')} = function () {
             $token = $authResult['token'];
             $path = $this->view->urlFor('student.dashboard');
 
+            if ($user->getStatus() !== UserStatus::ACTIVE) {
+                usleep(mt_rand(400000, 1300000));
+                return $this->response([
+                    'message' => 'Account is inactive. Please contact support.',
+                ], 403);
+            }
+
             if (UserRole::isAdministrator($user->getRole()->value)) {
                 $path = $this->view->urlFor('admin.dashboard');
             } elseif (UserRole::isVerifier($user->getRole()->value)) {
@@ -27,7 +34,7 @@ ${basename(__FILE__, '.php')} = function () {
                 $verifierMode = $settings?->getVerifierMode();
                 $verifier = $this->verifierService->getVerifierByUser($user);
 
-                $isActiveVerifier = $verifier && $verifier->getStatus() === VerifierStatus::ACTIVE;
+                $isActiveVerifier = $verifier && $user->getStatus() === UserStatus::ACTIVE;
                 $manualDisabled = $verifierMode === VerifierMode::AUTOMATED;
 
                 if (!$isActiveVerifier || $manualDisabled) {

@@ -9,7 +9,7 @@ use App\Entity\Verifier;
 use App\Entity\Logbook;
 use App\Enum\OutpassStatus;
 use App\Enum\VerifierMode;
-use App\Enum\VerifierStatus;
+use App\Enum\UserStatus;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
@@ -34,7 +34,6 @@ class VerifierService
             $verifier->setName($name);
             $verifier->setLocation($location);
             $verifier->setCreatedAt(new DateTime());
-            $verifier->setStatus(VerifierStatus::PENDING);
             $verifier->setAuthToken($this->generateAuthToken());
             $verifier->setType(VerifierMode::AUTOMATED);
 
@@ -84,7 +83,6 @@ class VerifierService
             $verifier->setName($user->getName());
             $verifier->setLocation($location);
             $verifier->setCreatedAt(new DateTime());
-            $verifier->setStatus(VerifierStatus::INACTIVE);
             $verifier->setAuthToken($this->generateAuthToken());
             $verifier->setType(VerifierMode::MANUAL);
             $verifier->setUser($user);
@@ -113,7 +111,12 @@ class VerifierService
 
     public function isActiveVerifier(Verifier $verifier): bool
     {
-        return $verifier->getStatus() === VerifierStatus::ACTIVE;
+        if ($verifier->getType() === VerifierMode::MANUAL) {
+            $user = $verifier->getUser();
+            return $user && $user->getStatus() === UserStatus::ACTIVE;
+        }
+
+        return $verifier->getMachineId() !== null;
     }
 
     /**
@@ -145,8 +148,11 @@ class VerifierService
      */
     public function isActive(string $authToken, string $machineId): bool
     {
-        $verifier = $this->em->getRepository(Verifier::class)->findOneBy(['authToken' => $authToken, 'machineId' => $machineId]);
-        return $verifier && $verifier->getStatus() === VerifierStatus::ACTIVE;
+        $verifier = $this->em->getRepository(Verifier::class)->findOneBy([
+            'authToken' => $authToken,
+            'machineId' => $machineId,
+        ]);
+        return (bool) $verifier;
     }
 
     /**
@@ -159,7 +165,6 @@ class VerifierService
         if ($verifier) {
             $verifier->setMachineId($machine_id);
             $verifier->setIpAddress($host);
-            $verifier->setStatus(VerifierStatus::INACTIVE);
 
             $this->em->persist($verifier);
             $this->em->flush();
@@ -190,9 +195,21 @@ class VerifierService
     public function activate(int $verifier_id)
     {
         $verifier = $this->getVerifier($verifier_id);
-        $verifier->setStatus(VerifierStatus::ACTIVE);
-        $this->em->persist($verifier);
-        $this->em->flush();
+        if (!$verifier instanceof Verifier) {
+            return false;
+        }
+        if ($verifier->getType() === VerifierMode::MANUAL) {
+            $user = $verifier->getUser();
+            if ($user) {
+                $user->setStatus(UserStatus::ACTIVE);
+                $this->em->flush();
+                return $verifier;
+            }
+            return false;
+        }
+        if ($verifier->getMachineId() === null) {
+            return false;
+        }
         return $verifier;
     }
 
@@ -202,9 +219,21 @@ class VerifierService
     public function deactivate(int $verifier_id)
     {
         $verifier = $this->getVerifier($verifier_id);
-        $verifier->setStatus(VerifierStatus::INACTIVE);
-        $this->em->persist($verifier);
-        $this->em->flush();
+        if ($verifier instanceof Verifier) {
+            if ($verifier->getType() === VerifierMode::MANUAL) {
+                $user = $verifier->getUser();
+                if ($user) {
+                    $user->setStatus(UserStatus::INACTIVE);
+                    $this->em->flush();
+                }
+            } else {
+                $verifier->setMachineId(null);
+                $verifier->setIpAddress(null);
+                $verifier->setLastSync(new DateTime());
+                $this->em->persist($verifier);
+                $this->em->flush();
+            }
+        }
         return $verifier;
     }
 

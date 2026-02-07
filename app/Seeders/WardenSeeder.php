@@ -6,6 +6,7 @@ use DateTime;
 use App\Entity\User;
 use App\Enum\Gender;
 use App\Enum\UserRole;
+use App\Enum\UserStatus;
 use Doctrine\ORM\EntityManagerInterface;
 
 class WardenSeeder
@@ -33,6 +34,7 @@ class WardenSeeder
                 $warden->setPassword(password_hash($wardenData['contact'], PASSWORD_DEFAULT, ['cost' => 10]));
                 $warden->setGender($wardenData['gender']);
                 $warden->setRole(UserRole::ADMIN);
+                $warden->setStatus(UserStatus::ACTIVE);
                 $warden->setCreatedAt(new DateTime());
                 $this->em->persist($warden);
             }

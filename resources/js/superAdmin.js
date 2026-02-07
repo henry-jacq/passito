@@ -1597,68 +1597,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Activate verifer buttons
-    const activateVerifierButtons = document.querySelectorAll('.activate-verifier-modal');
-
-    // Iterate over each button and attach an event listener
-    activateVerifierButtons.forEach((button) => {
-        button.addEventListener('click', async (event) => {
-            const activateId = event.target.dataset.id;
-
-            try {
-                const response = await Ajax.post(`/api/web/admin/verifiers/activate`, {
-                    verifier_id: activateId
-                });
-
-                if (response.ok) {
-                    const data = response.data;
-
-                    if (data.status) {
-                        location.reload();
-                    } else {
-                        alert(data.message);
-                    }
-                } else {
-                    handleError(response.status);
-                }
-            } catch (error) {
-                console.error(error);
-            } finally {
-                Modal.close();
-            }
-        });
-    });
-
-    // Activate verifer buttons
-    const deactivateVerifierButtons = document.querySelectorAll('.deactivate-verifier-modal');
-    deactivateVerifierButtons.forEach((button) => {
-        button.addEventListener('click', async (event) => {
-            const activateId = event.target.dataset.id;
-
-            try {
-                const response = await Ajax.post(`/api/web/admin/verifiers/deactivate`, {
-                    verifier_id: activateId
-                });
-
-                if (response.ok) {
-                    const data = response.data;
-
-                    if (data.status) {
-                        location.reload();
-                    } else {
-                        alert(data.message);
-                    }
-                } else {
-                    handleError(response.status);
-                }
-            } catch (error) {
-                console.error(error);
-            } finally {
-                Modal.close();
-            }
-        });
-    });
-
+    // Automated verifier activation/deactivation removed (devices are active when registered)
     // Delete verifier modal
     const deleteVerifierModal = document.querySelectorAll('.delete-verifier-modal');
     deleteVerifierModal.forEach((button) => {

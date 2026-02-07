@@ -69,17 +69,17 @@
                         <?php foreach ($assignmentsView as $key => $view): ?>
                             <tr class="hover:bg-gray-50">
                                 <td class="px-6 py-3 text-sm text-gray-700"><?= $key + 1; ?></td>
-                                <td class="px-4 py-3 text-sm text-gray-700"><?= htmlspecialchars($view->assignment->getAssignedTo()->getName()); ?></td>
+                                <td class="px-4 py-3 text-sm text-gray-700"><?= htmlspecialchars($view['assignment']->getAssignedTo()->getName()); ?></td>
                                 <td class="px-4 py-3 text-sm text-center text-gray-700">
-                                    <?= $view->resolvedTarget->getName() ?>
+                                    <?= $view['resolvedTarget']?->getName() ?? 'N/A' ?>
                                 </td>
-                                <td class="px-4 py-3 text-sm text-gray-700"><?= htmlspecialchars($view->assignment->getAssignedBy()->getName()); ?></td>
+                                <td class="px-4 py-3 text-sm text-gray-700"><?= htmlspecialchars($view['assignment']->getAssignedBy()->getName()); ?></td>
                                 <td class="px-6 py-3 text-sm text-center">
                                     <button
                                         class="text-red-600 transition duration-200 hover:text-red-800 remove-assignment-modal"
-                                        data-id="<?= $view->assignment->getId(); ?>"
-                                        data-wardenname="<?= htmlspecialchars($view->assignment->getAssignedTo()->getName()); ?>"
-                                        data-hostelname="<?= htmlspecialchars($view->resolvedTarget->getName()); ?>">
+                                        data-id="<?= $view['assignment']->getId(); ?>"
+                                        data-wardenname="<?= htmlspecialchars($view['assignment']->getAssignedTo()->getName()); ?>"
+                                        data-hostelname="<?= htmlspecialchars($view['resolvedTarget']?->getName() ?? ''); ?>">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
                                 </td>

@@ -23,7 +23,6 @@ use App\Jobs\SendOutpassEmail;
 use App\Core\JobPayloadBuilder;
 use App\Entity\WardenAssignment;
 use App\Jobs\GenerateOutpassPdf;
-use App\DTO\WardenAssignmentView;
 use App\Services\AcademicService;
 use App\Entity\InstitutionProgram;
 use Doctrine\ORM\EntityManagerInterface;
@@ -94,7 +93,7 @@ class AdminService
 
     /**
      * Get Warden Assignments based on gender
-     * @return WardenAssignmentView[]
+     * @return array<int, array{assignment: WardenAssignment, resolvedTarget: ?object}>
      */
     public function getAssignmentsByGender(User $user): array
     {
@@ -111,7 +110,10 @@ class AdminService
         $views = [];
         foreach ($assignments as $wa) {
             $hostel = $this->em->getRepository(Hostel::class)->find($wa->getHostelId());
-            $views[] = new WardenAssignmentView($wa, $hostel);
+            $views[] = [
+                'assignment' => $wa,
+                'resolvedTarget' => $hostel,
+            ];
         }
         return $views;
     }

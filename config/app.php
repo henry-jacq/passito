@@ -96,6 +96,7 @@ return [
         'layouts' => [
             UserRole::USER->value => 'user.php',
             UserRole::ADMIN->value => 'admin.php',
+            UserRole::VERIFIER->value => 'verifier.php',
             UserRole::SUPER_ADMIN->value => [
                 'admin' => 'admin.php',
                 'setup' => 'setup.php'

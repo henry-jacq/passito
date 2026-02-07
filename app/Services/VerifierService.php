@@ -8,6 +8,7 @@ use App\Core\Session;
 use App\Entity\Verifier;
 use App\Entity\Logbook;
 use App\Enum\OutpassStatus;
+use App\Enum\VerifierMode;
 use App\Enum\VerifierStatus;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -35,6 +36,7 @@ class VerifierService
             $verifier->setCreatedAt(new DateTime());
             $verifier->setStatus(VerifierStatus::PENDING);
             $verifier->setAuthToken($this->generateAuthToken());
+            $verifier->setType(VerifierMode::AUTOMATED);
 
             $this->em->persist($verifier);
             $this->em->flush();
@@ -73,6 +75,45 @@ class VerifierService
     public function getVerifiers(): array
     {
         return $this->em->getRepository(Verifier::class)->findAll();
+    }
+
+    public function createManualVerifier(User $user, string $location): Verifier|bool
+    {
+        try {
+            $verifier = new Verifier();
+            $verifier->setName($user->getName());
+            $verifier->setLocation($location);
+            $verifier->setCreatedAt(new DateTime());
+            $verifier->setStatus(VerifierStatus::INACTIVE);
+            $verifier->setAuthToken($this->generateAuthToken());
+            $verifier->setType(VerifierMode::MANUAL);
+            $verifier->setUser($user);
+
+            $this->em->persist($verifier);
+            $this->em->flush();
+
+            return $verifier;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getVerifiersByType(VerifierMode $type): array
+    {
+        return $this->em->getRepository(Verifier::class)->findBy(['type' => $type]);
+    }
+
+    public function getVerifierByUser(User $user): ?Verifier
+    {
+        return $this->em->getRepository(Verifier::class)->findOneBy([
+            'user' => $user,
+            'type' => VerifierMode::MANUAL,
+        ]);
+    }
+
+    public function isActiveVerifier(Verifier $verifier): bool
+    {
+        return $verifier->getStatus() === VerifierStatus::ACTIVE;
     }
 
     /**
@@ -165,6 +206,22 @@ class VerifierService
         $this->em->persist($verifier);
         $this->em->flush();
         return $verifier;
+    }
+
+    public function deleteManualVerifier(int $verifier_id): bool
+    {
+        $verifier = $this->getVerifier($verifier_id);
+        if (!$verifier) {
+            return false;
+        }
+
+        $user = $verifier->getUser();
+        $this->em->remove($verifier);
+        if ($user) {
+            $this->em->remove($user);
+        }
+        $this->em->flush();
+        return true;
     }
 
     /**

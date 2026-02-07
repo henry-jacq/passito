@@ -95,6 +95,77 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Add Manual Verifier Modal
+    const openAddManualVerifierButton = document.getElementById('open-add-manual-verifier-modal');
+    if (openAddManualVerifierButton) {
+        openAddManualVerifierButton.addEventListener('click', async () => {
+            try {
+                const response = await Ajax.get('/api/web/admin/modal?template=add_manual_verifier');
+
+                if (response.ok && response.data) {
+                    Modal.open({
+                        content: response.data,
+                        actions: [
+                            {
+                                label: 'Add Manual Verifier',
+                                class: `inline-flex justify-center rounded-lg bg-indigo-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-indigo-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50`,
+                                onClick: async () => {
+                                    const name = document.getElementById('manual-verifier-name')?.value;
+                                    const email = document.getElementById('manual-verifier-email')?.value;
+                                    const contact = document.getElementById('manual-verifier-contact')?.value;
+                                    const verifierLocation = document.getElementById('manual-verifier-location')?.value;
+
+                                    if (!name || !email || !contact || !verifierLocation) {
+                                        alert('Please fill in all the fields.');
+                                        return;
+                                    }
+
+                                    if (!isValidEmail(email)) {
+                                        alert('Please enter a valid email address.');
+                                        return;
+                                    }
+
+                                    try {
+                                        const createResponse = await Ajax.post('/api/web/admin/manual_verifiers/create', {
+                                            name,
+                                            email,
+                                            contact,
+                                            location: verifierLocation,
+                                        });
+
+                                        if (createResponse.ok && createResponse.data?.status) {
+                                            location.reload();
+                                        } else {
+                                            alert(createResponse.data?.message || 'Failed to add manual verifier.');
+                                        }
+                                    } catch (err) {
+                                        console.error(err);
+                                    }
+
+                                    Modal.close();
+                                },
+                            },
+                            {
+                                label: 'Cancel',
+                                class: `inline-flex justify-center rounded-lg bg-gray-100 px-6 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`,
+                                onClick: Modal.close,
+                            },
+                        ],
+                        size: 'sm:max-w-xl',
+                        classes: 'custom-modal-class',
+                        closeOnBackdropClick: false,
+                    });
+                } else {
+                    console.error('Error loading modal template:', response.data.message || 'Unknown error');
+                    alert(response.data.message || 'Failed to load modal template');
+                }
+            } catch (error) {
+                console.error('Failed to load modal content:', error);
+                alert('Failed to load modal content. Please try again later.');
+            }
+        });
+    }
+
     // Add Warden Modal example usage
     const openAddWardenModalButton = document.getElementById('add-warden-modal');
     if (openAddWardenModalButton) {
@@ -1611,6 +1682,130 @@ document.addEventListener('DOMContentLoaded', () => {
                                 onClick: async () => {
                                     try {
                                         const response = await Ajax.post(`/api/web/admin/verifiers/delete`, {
+                                            verifier_id: verifierId
+                                        });
+
+                                        if (response.ok) {
+                                            const data = response.data;
+                                            if (data.status) {
+                                                location.reload();
+                                            } else {
+                                                alert(data.message);
+                                            }
+                                        } else {
+                                            handleError(response.status);
+                                        }
+                                    } catch (error) {
+                                        console.error(error);
+                                    } finally {
+                                        Modal.close();
+                                    }
+                                },
+                            },
+                            {
+                                label: 'Cancel',
+                                class: `inline-flex justify-center rounded-lg bg-gray-100 px-6 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`,
+                                onClick: Modal.close,
+                            },
+                        ],
+                        size: 'sm:max-w-xl',
+                        classes: 'custom-modal-class',
+                        closeOnBackdropClick: false,
+                    });
+                } else {
+                    console.error('Error loading modal template:', response.data.message || 'Unknown error');
+                    alert(response.data.message || 'Failed to load modal template');
+                }
+            } catch (error) {
+                console.error('Failed to load modal content:', error);
+                alert('Failed to load modal content. Please try again later.');
+            }
+        });
+    });
+
+    // Activate manual verifier buttons
+    const activateManualVerifierButtons = document.querySelectorAll('.activate-manual-verifier-modal');
+    activateManualVerifierButtons.forEach((button) => {
+        button.addEventListener('click', async (event) => {
+            const activateId = event.target.dataset.id;
+
+            try {
+                const response = await Ajax.post(`/api/web/admin/manual_verifiers/activate`, {
+                    verifier_id: activateId
+                });
+
+                if (response.ok) {
+                    const data = response.data;
+
+                    if (data.status) {
+                        location.reload();
+                    } else {
+                        alert(data.message);
+                    }
+                } else {
+                    handleError(response.status);
+                }
+            } catch (error) {
+                console.error(error);
+            } finally {
+                Modal.close();
+            }
+        });
+    });
+
+    // Deactivate manual verifier buttons
+    const deactivateManualVerifierButtons = document.querySelectorAll('.deactivate-manual-verifier-modal');
+    deactivateManualVerifierButtons.forEach((button) => {
+        button.addEventListener('click', async (event) => {
+            const activateId = event.target.dataset.id;
+
+            try {
+                const response = await Ajax.post(`/api/web/admin/manual_verifiers/deactivate`, {
+                    verifier_id: activateId
+                });
+
+                if (response.ok) {
+                    const data = response.data;
+
+                    if (data.status) {
+                        location.reload();
+                    } else {
+                        alert(data.message);
+                    }
+                } else {
+                    handleError(response.status);
+                }
+            } catch (error) {
+                console.error(error);
+            } finally {
+                Modal.close();
+            }
+        });
+    });
+
+    // Delete manual verifier modal
+    const deleteManualVerifierModal = document.querySelectorAll('.delete-manual-verifier-modal');
+    deleteManualVerifierModal.forEach((button) => {
+        button.addEventListener('click', async (event) => {
+            const verifierId = event.target.dataset.id;
+            const verifierName = event.target.dataset.name;
+
+            try {
+                const response = await Ajax.post('/api/web/admin/modal', {
+                    template: "delete_manual_verifier",
+                    verifierId, verifierName
+                });
+
+                if (response.ok && response.data) {
+                    Modal.open({
+                        content: response.data,
+                        actions: [
+                            {
+                                label: 'Delete Manual Verifier',
+                                class: `inline-flex justify-center rounded-lg bg-red-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-red-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2`,
+                                onClick: async () => {
+                                    try {
+                                        const response = await Ajax.post(`/api/web/admin/manual_verifiers/delete`, {
                                             verifier_id: verifierId
                                         });
 

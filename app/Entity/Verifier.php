@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use DateTime;
+use App\Enum\VerifierMode;
 use App\Enum\VerifierStatus;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\User;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'verifiers')]
@@ -34,6 +36,13 @@ class Verifier
 
     #[ORM\Column(type: 'string', length: 255)]
     private string $authToken;
+
+    #[ORM\Column(type: 'string', enumType: VerifierMode::class)]
+    private VerifierMode $type = VerifierMode::AUTOMATED;
+
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    private ?User $user = null;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
     private ?DateTime $lastSync;
@@ -76,6 +85,16 @@ class Verifier
         return $this->authToken;
     }
 
+    public function getType(): VerifierMode
+    {
+        return $this->type;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
     public function getLastSync(): ?DateTime
     {
         return $this->lastSync ?? null;
@@ -114,6 +133,16 @@ class Verifier
     public function setAuthToken(string $authToken): void
     {
         $this->authToken = $authToken;
+    }
+
+    public function setType(VerifierMode $type): void
+    {
+        $this->type = $type;
+    }
+
+    public function setUser(?User $user): void
+    {
+        $this->user = $user;
     }
 
     public function setLastSync(DateTime $lastSync): void

@@ -5,11 +5,12 @@ namespace App\Controller;
 use App\Core\View;
 use App\Core\Config;
 use App\Enum\UserRole;
-use App\Services\AcademicService;
+use App\Enum\VerifierMode;
 use App\Services\UserService;
 use App\Services\AdminService;
-use App\Services\OutpassService;
 use App\Services\ReportService;
+use App\Services\OutpassService;
+use App\Services\AcademicService;
 use App\Services\VerifierService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -392,12 +393,17 @@ class AdminController extends BaseController
         $this->view->clearCacheIfDev();
 
         $userData = $request->getAttribute('user');
-        $verifiers = $this->verifierService->getVerifiers();
+        $verifierSettings = $this->outpassService->getSettings($userData->getGender());
+        $verifierMode = $verifierSettings?->getVerifierMode();
+        $automatedVerifiers = $this->verifierService->getVerifiersByType(VerifierMode::AUTOMATED);
+        $manualVerifiers = $this->verifierService->getVerifiersByType(VerifierMode::MANUAL);
 
         $args = [
             'title' => 'Verifier Control',
             'user' => $userData,
-            'verifiers' => $verifiers,
+            'verifiers' => $automatedVerifiers,
+            'manualVerifiers' => $manualVerifiers,
+            'verifierMode' => $verifierMode,
             'routeName' => $this->getRouteName($request),
             'breadcrumbs' => [
                 [

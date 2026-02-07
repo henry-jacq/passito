@@ -67,6 +67,7 @@ class ApiController
         private readonly JobDispatcher $queue,
         private readonly ParentVerificationService $verificationService,
         private readonly JwtService $jwt,
+        private readonly \Doctrine\ORM\EntityManagerInterface $em,
     )
     {
     }

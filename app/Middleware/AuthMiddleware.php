@@ -4,7 +4,11 @@ namespace App\Middleware;
 
 use App\Core\View;
 use App\Entity\User;
+use App\Entity\Verifier;
+use App\Entity\SystemSettings;
 use App\Enum\UserRole;
+use App\Enum\VerifierMode;
+use App\Enum\VerifierStatus;
 use App\Services\JwtService;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -36,6 +40,29 @@ class AuthMiddleware implements MiddlewareInterface
 
                     if (UserRole::isAdministrator($user->getRole()->value)) {
                         $location = $this->view->urlFor('admin.dashboard');
+                    }
+                    if (UserRole::isVerifier($user->getRole()->value)) {
+                        $settings = $this->em->getRepository(SystemSettings::class)
+                            ->findOneBy(['type' => $user->getGender()]);
+                        $verifierMode = $settings?->getVerifierMode();
+                        $verifier = $this->em->getRepository(Verifier::class)->findOneBy([
+                            'user' => $user,
+                            'type' => VerifierMode::MANUAL,
+                        ]);
+
+                        $isActiveVerifier = $verifier && $verifier->getStatus() === VerifierStatus::ACTIVE;
+                        $manualDisabled = $verifierMode === VerifierMode::AUTOMATED;
+
+                        if (!$isActiveVerifier || $manualDisabled) {
+                            return $this->responseFactory
+                                ->createResponse(302)
+                                ->withHeader('Set-Cookie', $this->jwt->buildLogoutCookieHeader())
+                                ->withHeader('Location', $this->view->urlFor('auth.login', [], [
+                                    'error' => 'verifier_inactive',
+                                ]));
+                        }
+
+                        $location = $this->view->urlFor('verifier.dashboard');
                     }
 
                     return $this->responseFactory

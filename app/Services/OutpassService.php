@@ -12,6 +12,7 @@ use App\Entity\Student;
 use App\Enum\OutpassStatus;
 use App\Entity\OutpassRequest;
 use App\Entity\SystemSettings;
+use App\Enum\VerifierMode;
 use App\Entity\OutpassTemplate;
 use App\Entity\OutpassTemplateField;
 use Doctrine\ORM\EntityManagerInterface;
@@ -338,7 +339,8 @@ class OutpassService
             $settings->setWeekdayOvernightEnd($convertToTime($data['weekday_overnight_end'] ?? null));
             $settings->setWeekendStartTime($convertToTime($data['weekend_start_time'] ?? null));
             $settings->setWeekendEndTime($convertToTime($data['weekend_end_time'] ?? null));
-            $settings->setVerifierMode($data['verifier_mode'] ?? 'manual');
+            $verifierMode = VerifierMode::tryFrom($data['verifier_mode'] ?? '') ?? VerifierMode::MANUAL;
+            $settings->setVerifierMode($verifierMode);
             $settings->setParentApproval(!empty($data['parent_approval']));
             $settings->setCompanionVerification(!empty($data['companion_verification']));
             $settings->setEmergencyContactNotification(!empty($data['emergency_contact_notification']));
@@ -364,7 +366,7 @@ class OutpassService
                 'weekdayOvernightEnd' => new \DateTime('06:00'),
                 'weekendStartTime' => new \DateTime('09:00'),
                 'weekendEndTime' => new \DateTime('23:59:59'),
-                'verifierMode' => 'manual',
+                'verifierMode' => VerifierMode::MANUAL,
                 'emergencyContactNotification' => false,
                 'appNotification' => true,
                 'emailNotification' => true,
@@ -380,7 +382,7 @@ class OutpassService
             'weekdayOvernightEnd' => new \DateTime('06:00'),
             'weekendStartTime' => new \DateTime('09:00'),
             'weekendEndTime' => new \DateTime('22:00'),
-            'verifierMode' => 'manual',
+            'verifierMode' => VerifierMode::MANUAL,
             'parentApproval' => true,
             'companionVerification' => false,
             'emergencyContactNotification' => false,

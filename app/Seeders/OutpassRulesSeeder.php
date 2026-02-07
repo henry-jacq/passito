@@ -5,6 +5,7 @@ namespace App\Seeders;
 use DateTime;
 use App\Entity\SystemSettings;
 use App\Enum\Gender;
+use App\Enum\VerifierMode;
 use Doctrine\ORM\EntityManagerInterface;
 
 class OutpassRulesSeeder
@@ -16,7 +17,7 @@ class OutpassRulesSeeder
         $settings = [
             [
                 'type' => 'male',
-                'verifierMode' => 'manual',
+                'verifierMode' => VerifierMode::MANUAL,
                 'parentApproval' => false,
                 'companionVerification' => false,
                 'emergencyContactNotification' => false,
@@ -32,7 +33,7 @@ class OutpassRulesSeeder
             ],
             [
                 'type' => 'female',
-                'verifierMode' => 'manual',
+                'verifierMode' => VerifierMode::MANUAL,
                 'parentApproval' => true,
                 'companionVerification' => false,
                 'emergencyContactNotification' => false, // Different for female

@@ -1,6 +1,8 @@
 <?php
 
 use App\Enum\UserRole;
+use App\Enum\VerifierMode;
+use App\Enum\VerifierStatus;
 
 ${basename(__FILE__, '.php')} = function () {
     if ($this->isAuthenticated()) {
@@ -20,6 +22,22 @@ ${basename(__FILE__, '.php')} = function () {
 
             if (UserRole::isAdministrator($user->getRole()->value)) {
                 $path = $this->view->urlFor('admin.dashboard');
+            } elseif (UserRole::isVerifier($user->getRole()->value)) {
+                $settings = $this->outpassService->getSettings($user->getGender());
+                $verifierMode = $settings?->getVerifierMode();
+                $verifier = $this->verifierService->getVerifierByUser($user);
+
+                $isActiveVerifier = $verifier && $verifier->getStatus() === VerifierStatus::ACTIVE;
+                $manualDisabled = $verifierMode === VerifierMode::AUTOMATED;
+
+                if (!$isActiveVerifier || $manualDisabled) {
+                    usleep(mt_rand(400000, 1300000));
+                    return $this->response([
+                        'message' => 'Verifier account is not active.',
+                    ], 403);
+                }
+
+                $path = $this->view->urlFor('verifier.dashboard');
             }
             
             usleep(mt_rand(400000, 1300000));

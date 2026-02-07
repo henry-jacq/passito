@@ -64,6 +64,17 @@ class ApiMiddleware implements MiddlewareInterface
                 ])));
         }
 
+        // Prevent unauthorized access to verifier routes
+        if (str_contains($request->getUri()->getPath(), '/api/web/verifier') && !UserRole::isVerifier($userRole)) {
+            return $this->responseFactory
+                ->createResponse(403)
+                ->withHeader('Content-Type', 'application/json')
+                ->withBody($this->streamFactory->createStream(json_encode([
+                    'message' => 'Forbidden',
+                    'status' => false,
+                ])));
+        }
+
         // Set user in request
         $request = $request->withAttribute('user', $user);
 

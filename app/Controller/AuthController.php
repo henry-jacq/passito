@@ -23,9 +23,16 @@ class AuthController extends BaseController
     
     public function login(Request $request, Response $response): Response
     {
+        $errorCode = $request->getQueryParams()['error'] ?? null;
+        $error = null;
+        if ($errorCode === 'verifier_inactive') {
+            $error = 'Verifier account is not active. Please contact the administrator.';
+        }
+
         $args = [
             'title' => 'Login',
-            'brandLogo' => $this->config->get('app.logo')
+            'brandLogo' => $this->config->get('app.logo'),
+            'error' => $error,
         ];
         return parent::render($request, $response, 'auth/login', $args);
     }

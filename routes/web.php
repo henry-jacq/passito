@@ -11,9 +11,11 @@ use App\Middleware\AdminMiddleware;
 use App\Controller\ParentController;
 use App\Controller\StorageController;
 use App\Controller\StudentController;
+use App\Controller\VerifierController;
 use App\Middleware\StudentMiddleware;
 use Slim\Routing\RouteCollectorProxy;
 use App\Middleware\SuperAdminMiddleware;
+use App\Middleware\VerifierMiddleware;
 
 return function (App $app) {
     $app->get('/', [AuthController::class, 'landing'])->setName('landing')->add(AuthMiddleware::class);
@@ -48,6 +50,11 @@ return function (App $app) {
     $app->group('/parent', function (RouteCollectorProxy $group) {
         $group->any('/verify', [ParentController::class, 'verify'])->setName('parent.verify');
     });
+
+    // Manual Verifier Routes
+    $app->group('/verifier', function (RouteCollectorProxy $group) {
+        $group->any('/dashboard', [VerifierController::class, 'dashboard'])->setName('verifier.dashboard');
+    })->add(VerifierMiddleware::class);
     
     // Admin Routes
     $app->group('/admin', function (RouteCollectorProxy $group) {

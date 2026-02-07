@@ -6,6 +6,7 @@ enum UserRole: string {
     case USER = 'student';
     case ADMIN = 'warden';
     case SUPER_ADMIN = 'chief_warden';
+    case VERIFIER = 'verifier';
 
     public static function isStudent(string $role): bool {
         return self::tryFrom($role) === self::USER;
@@ -23,7 +24,11 @@ enum UserRole: string {
         return in_array($role, [self::ADMIN->value, self::SUPER_ADMIN->value]);
     }
 
+    public static function isVerifier(string $role): bool {
+        return self::tryFrom($role) === self::VERIFIER;
+    }
+
     public static function isValidRole(string $role): bool {
-        return in_array($role, [self::USER->value, self::ADMIN->value, self::SUPER_ADMIN->value]);
+        return in_array($role, [self::USER->value, self::ADMIN->value, self::SUPER_ADMIN->value, self::VERIFIER->value]);
     }
 }

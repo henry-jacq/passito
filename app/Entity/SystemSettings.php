@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Enum\Gender;
+use App\Enum\VerifierMode;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
@@ -19,8 +20,8 @@ class SystemSettings
     #[ORM\Column(type: 'string', enumType: Gender::class)]
     private Gender $type;
 
-    #[ORM\Column(type: 'string', length: 20)]
-    private string $verifierMode = 'manual';
+    #[ORM\Column(type: 'string', enumType: VerifierMode::class)]
+    private VerifierMode $verifierMode = VerifierMode::MANUAL;
 
     #[ORM\Column(type: 'boolean')]
     private bool $parentApproval;
@@ -75,12 +76,12 @@ class SystemSettings
         return $this;
     }
 
-    public function getVerifierMode(): string
+    public function getVerifierMode(): VerifierMode
     {
         return $this->verifierMode;
     }
 
-    public function setVerifierMode(string $verifierMode): self
+    public function setVerifierMode(VerifierMode $verifierMode): self
     {
         $this->verifierMode = $verifierMode;
         return $this;

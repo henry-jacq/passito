@@ -9,9 +9,18 @@ use App\Enum\VerifierStatus; ?>
                 Deploy and manage your verifier devices to ensure secure and efficient verification processes.
             </p>
         </div>
-        <button id="open-add-device-modal" class="inline-flex items-center px-5 py-2 text-sm font-medium text-white transition-all duration-200 ease-in-out bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 focus:ring focus:ring-blue-400">
-            <i class="mr-2 fa-solid fa-plus"></i> Add New Device
-        </button>
+        <div class="flex items-center gap-2">
+            <?php if (($verifierMode ?? \App\Enum\VerifierMode::MANUAL) !== \App\Enum\VerifierMode::MANUAL): ?>
+                <button id="open-add-device-modal" class="inline-flex items-center px-5 py-2 text-sm font-medium text-white transition-all duration-200 ease-in-out bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 focus:ring focus:ring-blue-400">
+                    <i class="mr-2 fa-solid fa-plus"></i> Add Device
+                </button>
+            <?php endif; ?>
+            <?php if (($verifierMode ?? \App\Enum\VerifierMode::MANUAL) !== \App\Enum\VerifierMode::AUTOMATED): ?>
+                <button id="open-add-manual-verifier-modal" class="inline-flex items-center px-5 py-2 text-sm font-medium text-white transition-all duration-200 ease-in-out bg-indigo-600 rounded-lg shadow-md hover:bg-indigo-700 focus:ring focus:ring-indigo-400">
+                    <i class="mr-2 fa-solid fa-user-check"></i> Add Staff
+                </button>
+            <?php endif; ?>
+        </div>
     </div>
 
     <div class="p-4 mb-8 border-l-4 rounded-lg bg-blue-500/20 border-blue-800/80">
@@ -19,18 +28,31 @@ use App\Enum\VerifierStatus; ?>
             Important Notes
         </h3>
         <ul class="pl-4 space-y-1 text-sm text-blue-800 list-disc">
-            <li>Install the <strong>Verifier Tool</strong> on a Raspberry Pi to activate the device.</li>
             <li>
-                Download from the
-                <a href="https://github.com/henry-jacq/passito-verifier" target="_blank" class="text-blue-600 underline hover:text-blue-800">GitHub repository</a>. Follow the README to complete setup.
+                Switch verifier modes in <strong>System Settings > Verification Mode</strong>.
             </li>
-            <li>Ensure QR scanning and internet connectivity are tested before deployment.</li>
-            <li>Auth token is required for verifier authentication and secure communication, and cannot be regenerated.</li>
+            <?php if (($verifierMode ?? \App\Enum\VerifierMode::MANUAL) !== \App\Enum\VerifierMode::MANUAL): ?>
+                <li>Install the <strong>Verifier Tool</strong> on a Raspberry Pi to activate the device.</li>
+                <li>
+                    Download from the
+                    <a href="https://github.com/henry-jacq/passito-verifier" target="_blank" class="text-blue-600 underline hover:text-blue-800">GitHub repository</a>. Follow the README to complete setup.
+                </li>
+                <li>Ensure QR scanning and internet connectivity are tested before deployment.</li>
+                <li>Auth token is required for <strong>automated verifier</strong> authentication and cannot be regenerated.</li>
+            <?php endif; ?>
+            <?php if (($verifierMode ?? \App\Enum\VerifierMode::MANUAL) !== \App\Enum\VerifierMode::AUTOMATED): ?>
+                <li>Manual verifiers log in with their email and contact number as the initial password.</li>
+                <li>Activate manual verifiers to allow access to the verification console.</li>
+            <?php endif; ?>
         </ul>
     </div>
 
-    <?php if (!empty($verifiers)): ?>
-        <section class="overflow-auto bg-white rounded-lg shadow-md select-none">
+    <?php if (!empty($verifiers) && ($verifierMode ?? \App\Enum\VerifierMode::MANUAL) !== \App\Enum\VerifierMode::MANUAL): ?>
+        <section class="overflow-auto bg-white rounded-lg shadow-md select-none verifier-panel" data-panel="automated">
+            <div class="px-4 py-3 border-b">
+                <h3 class="text-lg font-semibold text-gray-800">Automated Verifiers</h3>
+                <p class="text-sm text-gray-500">Devices that sync check-in/out automatically.</p>
+            </div>
             <table class="w-full border-collapse table-auto">
                 <thead class="bg-gray-100">
                     <tr>
@@ -104,6 +126,84 @@ use App\Enum\VerifierStatus; ?>
                 </tbody>
             </table>
         </section>
+    <?php elseif (($verifierMode ?? \App\Enum\VerifierMode::MANUAL) !== \App\Enum\VerifierMode::MANUAL): ?>
+        <div class="p-4 mb-4 text-sm text-blue-800 border border-blue-200 rounded-lg bg-blue-50 verifier-panel" data-panel="automated">
+            No automated verifiers found yet.
+        </div>
+    <?php endif; ?>
+
+    <?php if (!empty($manualVerifiers) && ($verifierMode ?? \App\Enum\VerifierMode::MANUAL) !== \App\Enum\VerifierMode::AUTOMATED): ?>
+        <section class="mt-6 overflow-auto bg-white rounded-lg shadow-md select-none verifier-panel" data-panel="manual">
+            <div class="px-4 py-3 border-b">
+                <h3 class="text-lg font-semibold text-gray-800">Manual Verifiers</h3>
+                <p class="text-sm text-gray-500">Staff logins used to verify check-in/out manually.</p>
+            </div>
+            <table class="w-full border-collapse table-auto">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Name</th>
+                        <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Email</th>
+                        <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Location</th>
+                        <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Status</th>
+                        <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Last Sync</th>
+                        <th class="px-4 py-3 text-sm font-semibold text-center text-gray-600">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    <?php foreach ($manualVerifiers as $verifier): ?>
+                        <?php $manualUser = $verifier->getUser(); ?>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-3 text-sm text-gray-700"><?= $manualUser?->getName() ?? $verifier->getName() ?></td>
+                            <td class="px-4 py-3 text-sm text-gray-700"><?= $manualUser?->getEmail() ?? 'N/A' ?></td>
+                            <td class="px-4 py-3 text-sm text-gray-700"><?= $verifier->getLocation() ?></td>
+                            <td class="px-4 py-3 text-sm text-gray-700">
+                                <?php
+                                $statusValue = ucfirst($verifier->getStatus()->value);
+                                if (VerifierStatus::isInactive($verifier->getStatus()->value)) {
+                                    echo "<span class=\"inline-block px-2 py-1 text-xs font-medium bg-red-100 text-red-700 rounded-full\">$statusValue</span>";
+                                } elseif (VerifierStatus::isActive($verifier->getStatus()->value)) {
+                                    echo "<span class=\"inline-block px-2 py-1 text-xs font-medium bg-green-100 text-green-700 rounded-full\">$statusValue</span>";
+                                } else {
+                                    echo "<span class=\"inline-block px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-700 rounded-full\">$statusValue</span>";
+                                }
+                                ?>
+                            </td>
+                            <td class="px-4 py-3">
+                                <?php
+                                if (is_null($verifier->getLastSync())) {
+                                    echo '<span class="text-sm text-gray-400">N/A</span>';
+                                } else {
+                                    $date = $verifier->getLastSync()->format('M d, Y');
+                                    $time = $verifier->getLastSync()->format('h:i A');
+
+                                    echo '<div class="text-sm"><span class="block text-gray-700">' . $date . '</span><span class="text-xs text-gray-500">' . $time . '</span></div>';
+                                } ?>
+                            </td>
+                            <td class="px-4 py-3 text-sm text-gray-700">
+                                <div class="flex items-center justify-center space-x-2">
+                                    <?php if (VerifierStatus::isActive($verifier->getStatus()->value)): ?>
+                                        <button class="px-3 py-1 text-sm text-white transition duration-200 bg-yellow-600 rounded-lg hover:bg-yellow-700 focus:ring focus:ring-yellow-400 deactivate-manual-verifier-modal" data-id="<?= $verifier->getId() ?>">
+                                            Deactivate
+                                        </button>
+                                    <?php elseif (VerifierStatus::isInactive($verifier->getStatus()->value)): ?>
+                                        <button class="px-3 py-1 text-sm text-white transition duration-200 bg-green-600 rounded-lg hover:bg-green-700 focus:ring focus:ring-green-400 activate-manual-verifier-modal" data-id="<?= $verifier->getId() ?>">
+                                            Activate
+                                        </button>
+                                    <?php endif; ?>
+                                    <button class="px-3 py-1 text-sm text-white transition duration-200 bg-red-600 rounded-lg hover:bg-red-700 focus:ring focus:ring-red-400 delete-manual-verifier-modal" data-id="<?= $verifier->getId() ?>" data-name="<?= $manualUser?->getName() ?? $verifier->getName() ?>">
+                                        Delete
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </section>
+    <?php elseif (($verifierMode ?? \App\Enum\VerifierMode::MANUAL) !== \App\Enum\VerifierMode::AUTOMATED): ?>
+        <div class="p-4 mt-4 text-sm text-indigo-800 border border-indigo-200 rounded-lg bg-indigo-50 verifier-panel" data-panel="manual">
+            No manual verifiers found yet.
+        </div>
     <?php endif; ?>
 </main>
 

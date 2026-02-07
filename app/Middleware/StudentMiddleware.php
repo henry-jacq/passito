@@ -44,6 +44,9 @@ class StudentMiddleware implements MiddlewareInterface
 
         $payload = $this->jwt->decode($token);
         if (!$payload || empty($payload['sub'])) {
+            if ($request->getMethod() === 'GET' && !$this->requestService->isXhr($request)) {
+                $this->session->put('_redirect', (string) $request->getUri());
+            }
             return $this->responseFactory
                 ->createResponse(302)
                 ->withHeader('Location', $this->view->urlFor('auth.login'));
@@ -55,6 +58,9 @@ class StudentMiddleware implements MiddlewareInterface
         );
 
         if (is_null($student)) {
+            if ($request->getMethod() === 'GET' && !$this->requestService->isXhr($request)) {
+                $this->session->put('_redirect', (string) $request->getUri());
+            }
             return $this->responseFactory
                 ->createResponse(302)
                 ->withHeader('Location', $this->view->urlFor('auth.login'));              

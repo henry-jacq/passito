@@ -49,6 +49,9 @@ class VerifierMiddleware implements MiddlewareInterface
 
         $payload = $this->jwt->decode($token);
         if (!$payload || empty($payload['sub'])) {
+            if ($request->getMethod() === 'GET' && !$this->requestService->isXhr($request)) {
+                $this->session->put('_redirect', (string) $request->getUri());
+            }
             return $this->responseFactory
                 ->createResponse(302)
                 ->withHeader('Location', $this->view->urlFor('auth.login'));
@@ -56,6 +59,9 @@ class VerifierMiddleware implements MiddlewareInterface
 
         $user = $this->em->getRepository(User::class)->find((int) $payload['sub']);
         if (is_null($user) || !UserRole::isVerifier($user->getRole()->value)) {
+            if ($request->getMethod() === 'GET' && !$this->requestService->isXhr($request)) {
+                $this->session->put('_redirect', (string) $request->getUri());
+            }
             return $this->responseFactory
                 ->createResponse(302)
                 ->withHeader('Location', $this->view->urlFor('auth.login'));
@@ -63,6 +69,9 @@ class VerifierMiddleware implements MiddlewareInterface
 
         $verifier = $this->verifierService->getVerifierByUser($user);
         if (!$verifier || !$this->verifierService->isActiveVerifier($verifier)) {
+            if ($request->getMethod() === 'GET' && !$this->requestService->isXhr($request)) {
+                $this->session->put('_redirect', (string) $request->getUri());
+            }
             return $this->responseFactory
                 ->createResponse(302)
                 ->withHeader('Location', $this->view->urlFor('auth.login'));
@@ -71,6 +80,9 @@ class VerifierMiddleware implements MiddlewareInterface
         $settings = $this->outpassService->getSettings($user->getGender());
         $verifierMode = $settings?->getVerifierMode();
         if ($verifierMode === VerifierMode::AUTOMATED) {
+            if ($request->getMethod() === 'GET' && !$this->requestService->isXhr($request)) {
+                $this->session->put('_redirect', (string) $request->getUri());
+            }
             return $this->responseFactory
                 ->createResponse(302)
                 ->withHeader('Location', $this->view->urlFor('auth.login'));

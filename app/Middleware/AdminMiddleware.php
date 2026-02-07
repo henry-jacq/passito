@@ -45,6 +45,9 @@ class AdminMiddleware implements MiddlewareInterface
 
         $payload = $this->jwt->decode($token);
         if (!$payload || empty($payload['sub'])) {
+            if ($request->getMethod() === 'GET' && !$this->requestService->isXhr($request)) {
+                $this->session->put('_redirect', (string) $request->getUri());
+            }
             return $this->responseFactory
                 ->createResponse(302)
                 ->withHeader('Location', $this->view->urlFor('auth.login'));
@@ -53,6 +56,9 @@ class AdminMiddleware implements MiddlewareInterface
         // Get the user by id
         $user = $this->em->getRepository(User::class)->find((int) $payload['sub']);
         if (is_null($user)) {
+            if ($request->getMethod() === 'GET' && !$this->requestService->isXhr($request)) {
+                $this->session->put('_redirect', (string) $request->getUri());
+            }
             return $this->responseFactory
                 ->createResponse(302)
                 ->withHeader('Location', $this->view->urlFor('auth.login'));

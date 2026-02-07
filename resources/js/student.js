@@ -99,3 +99,15 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 	});
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+	document.querySelectorAll('.outpass-radio').forEach((radio) => {
+		radio.addEventListener('change', function () {
+			const type = this.dataset.name;
+			if (!type) return;
+			const url = new URL(window.location.href);
+			url.searchParams.set('type', type);
+			window.location.href = url.toString();
+		});
+	});
+});

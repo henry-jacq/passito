@@ -816,6 +816,218 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+    const filterButton = document.getElementById('filter-button');
+    const filterArea = document.getElementById('filter-area');
+    if (filterButton && filterArea) {
+        filterButton.addEventListener('click', () => {
+            const isHidden = filterArea.classList.contains('hidden');
+            filterArea.classList.toggle('hidden', !isHidden);
+            filterButton.setAttribute('aria-expanded', String(isHidden));
+        });
+    }
+
+    const searchInput = document.getElementById('search-records');
+    const tableBody = document.getElementById('records-table-body');
+    if (searchInput && tableBody) {
+        let timeout = null;
+        const originalRows = Array.from(tableBody.children).map(row => row.cloneNode(true));
+
+        searchInput.addEventListener('input', () => {
+            const query = searchInput.value.trim();
+
+            clearTimeout(timeout);
+            timeout = setTimeout(async () => {
+                if (query === '') {
+                    tableBody.innerHTML = '';
+                    originalRows.forEach(row => tableBody.appendChild(row.cloneNode(true)));
+                    return;
+                }
+
+                try {
+                    const response = await Ajax.get('/api/web/admin/outpass/search', { query });
+                    if (response.ok && response.data?.status && Array.isArray(response.data.data?.data) && response.data.data.data.length > 0) {
+                        renderRecordsTable(tableBody, response.data.data.data);
+                    } else {
+                        tableBody.innerHTML = `
+                            <tr>
+                                <td colspan="9" class="px-6 py-4 text-center text-gray-500">No results found.</td>
+                            </tr>`;
+                    }
+                } catch (error) {
+                    console.error('Error during search:', error);
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="9" class="px-6 py-4 text-center text-red-500">Search failed. Please try again.</td>
+                        </tr>`;
+                }
+            }, 400);
+        });
+    }
+
+    const limitSelect = document.getElementById('students-limit');
+    if (limitSelect) {
+        limitSelect.addEventListener('change', () => {
+            const limit = limitSelect.value;
+            const params = new URLSearchParams(window.location.search);
+            params.set('limit', limit);
+            params.set('page', 1);
+            window.location.search = params.toString();
+        });
+    }
+
+    document.querySelectorAll('tr[data-href]').forEach((row) => {
+        row.addEventListener('click', (event) => {
+            const interactive = event.target.closest('button, a, input, select, textarea, [data-no-row-click]');
+            if (interactive) {
+                return;
+            }
+            const href = row.dataset.href;
+            if (href) {
+                window.location.href = href;
+            }
+        });
+    });
+
+    document.querySelectorAll('.copy-token-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            const token = btn.dataset.token;
+            if (!token) return;
+            copyToClipboard(token);
+        });
+    });
+});
+
+function renderRecordsTable(tableBody, outpasses) {
+    tableBody.innerHTML = '';
+
+    outpasses.forEach(outpass => {
+        const row = document.createElement('tr');
+        row.className = 'cursor-pointer hover:bg-gray-50';
+        row.onclick = () => {
+            window.location.href = `/admin/outpass/records/${outpass.id}`;
+        };
+
+        const statusColor = {
+            approved: 'green',
+            rejected: 'red',
+            expired: 'yellow',
+            pending: 'blue',
+        }[outpass.status?.toLowerCase?.()] || 'gray';
+
+        const statusBadge = `
+            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-${statusColor}-100 text-${statusColor}-800">
+                ${capitalize(outpass.status)}
+            </span>`;
+
+        row.innerHTML = `
+            <td class="px-6 py-4 text-sm text-gray-900"># ${outpass.id}</td>
+            <td class="px-6 py-4 text-sm text-gray-900">${outpass.student_name}</td>
+            <td class="px-6 py-4 text-sm text-gray-900">${formatStudentYear(outpass.year)}</td>
+            <td class="px-6 py-4 text-sm text-gray-900">${outpass.course} ${outpass.branch}</td>
+            <td class="px-6 py-4 text-sm text-gray-900">${outpass.type}</td>
+            <td class="px-6 py-4 text-sm text-gray-900">${outpass.destination}</td>
+            <td class="px-6 py-4 text-sm text-center text-gray-900">${statusBadge}</td>
+            <td class="px-6 py-4">
+                <span class="block text-sm text-gray-900">${outpass.depart_date}</span>
+                <span class="block text-xs text-gray-600">${outpass.depart_time}</span>
+            </td>
+            <td class="px-6 py-4">
+                <span class="block text-sm text-gray-900">${outpass.return_date}</span>
+                <span class="block text-xs text-gray-600">${outpass.return_time}</span>
+            </td>
+        `;
+        tableBody.appendChild(row);
+    });
+}
+
+function capitalize(str) {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+
+function formatStudentYear(year) {
+    const lastDigit = year % 10;
+    const lastTwoDigits = year % 100;
+    let suffix;
+    if (lastTwoDigits === 11 || lastTwoDigits === 12 || lastTwoDigits === 13) {
+        suffix = 'th';
+    } else {
+        switch (lastDigit) {
+            case 1:
+                suffix = 'st';
+                break;
+            case 2:
+                suffix = 'nd';
+                break;
+            case 3:
+                suffix = 'rd';
+                break;
+            default:
+                suffix = 'th';
+        }
+    }
+    return year + suffix;
+}
+
+function copyToClipboard(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+            alert('Token copied to clipboard!');
+        }).catch((err) => {
+            console.error('Clipboard API failed:', err);
+            fallbackCopyToClipboard(text);
+        });
+    } else {
+        fallbackCopyToClipboard(text);
+    }
+}
+
+function fallbackCopyToClipboard(text) {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    document.body.appendChild(textarea);
+    textarea.select();
+    try {
+        document.execCommand('copy');
+        alert('Token copied to clipboard!');
+    } catch (err) {
+        console.error('Fallback copy failed:', err);
+        alert('Failed to copy token.');
+    }
+    document.body.removeChild(textarea);
+}
+
+window.toggleDropdown = function toggleDropdown(button) {
+    const originalDropdown = button.parentElement?.querySelector('.dropdown-menu');
+    if (!originalDropdown) return;
+    if (originalDropdown.classList.contains('hidden')) {
+        document.body.appendChild(originalDropdown);
+        const rect = button.getBoundingClientRect();
+        originalDropdown.style.width = '16rem';
+        originalDropdown.style.position = 'absolute';
+        originalDropdown.style.top = `${rect.bottom + window.scrollY + 8}px`;
+        originalDropdown.style.left = `${rect.left + window.scrollX + rect.width / 2 - originalDropdown.offsetWidth / 2}px`;
+        originalDropdown.classList.remove('hidden');
+    } else {
+        originalDropdown.classList.add('hidden');
+    }
+};
+
+document.addEventListener('click', (e) => {
+    document.querySelectorAll('.dropdown-menu').forEach((menu) => {
+        if (!menu.contains(e.target) && !e.target.closest('[onclick="toggleDropdown(this)"]')) {
+            menu.classList.add('hidden');
+        }
+    });
+});
+
+window.handleHostelFilterChange = function handleHostelFilterChange(value) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('hostel', value);
+    window.location.href = url.toString();
+};
+
 document.addEventListener("DOMContentLoaded", () => {
     const performBulkApproval = document.getElementById('bulkApproval');
     performBulkApproval.addEventListener('click', async (event) => {

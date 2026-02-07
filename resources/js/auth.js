@@ -86,3 +86,22 @@ document.addEventListener('DOMContentLoaded', function () {
         errorMessage.classList.add('opacity-100');
     }
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+    const inputs = document.querySelectorAll('input[type="email"], input[type="password"]');
+    inputs.forEach((input) => {
+        input.addEventListener('focus', function () {
+            const icon = this.parentNode?.querySelector('svg');
+            if (!icon) return;
+            icon.classList.add('text-blue-500');
+            icon.classList.remove('text-gray-400');
+        });
+
+        input.addEventListener('blur', function () {
+            const icon = this.parentNode?.querySelector('svg');
+            if (!icon) return;
+            icon.classList.remove('text-blue-500');
+            icon.classList.add('text-gray-400');
+        });
+    });
+});

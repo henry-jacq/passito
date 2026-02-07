@@ -74,16 +74,6 @@
                     <?php endforeach; ?>
                 </div>
 
-                <script>
-                    document.querySelectorAll('.outpass-radio').forEach(radio => {
-                        radio.addEventListener('change', function() {
-                            const type = this.dataset.name;
-                            const url = new URL(window.location.href);
-                            url.searchParams.set('type', type);
-                            window.location.href = url.toString();
-                        });
-                    });
-                </script>
             <?php elseif (!empty($templates)): ?>
                 <!-- Form display code remains unchanged -->
                 <div class="flex flex-col mb-4 md:flex-row md:items-center md:justify-between">

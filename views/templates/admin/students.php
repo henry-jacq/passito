@@ -249,34 +249,3 @@ $errorMessage = $this->session->getFlash('error')[$flashKey] ?? null;
         </div>
     <?php endif; ?>
 </main>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const limitSelect = document.getElementById('students-limit');
-        if (!limitSelect) return;
-
-        limitSelect.addEventListener('change', function() {
-            const limit = limitSelect.value;
-            const params = new URLSearchParams(window.location.search);
-            params.set('limit', limit);
-            params.set('page', 1);
-            window.location.search = params.toString();
-        });
-    });
-</script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('tr[data-href]').forEach((row) => {
-            row.addEventListener('click', (event) => {
-                const interactive = event.target.closest('button, a, input, select, textarea, [data-no-row-click]');
-                if (interactive) {
-                    return;
-                }
-                const href = row.dataset.href;
-                if (href) {
-                    window.location.href = href;
-                }
-            });
-        });
-    });
-</script>

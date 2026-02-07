@@ -74,23 +74,3 @@
         </div>
     </div>
 </div>
-
-
-<!-- Enhanced JavaScript -->
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Enhanced input focus effects
-        const inputs = document.querySelectorAll('input[type="email"], input[type="password"]');
-        inputs.forEach(input => {
-            input.addEventListener('focus', function() {
-                this.parentNode.querySelector('svg').classList.add('text-blue-500');
-                this.parentNode.querySelector('svg').classList.remove('text-gray-400');
-            });
-
-            input.addEventListener('blur', function() {
-                this.parentNode.querySelector('svg').classList.remove('text-blue-500');
-                this.parentNode.querySelector('svg').classList.add('text-gray-400');
-            });
-        });
-    });
-</script>

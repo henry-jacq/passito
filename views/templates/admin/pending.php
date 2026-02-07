@@ -178,33 +178,3 @@ use App\Enum\UserRole; ?>
         <?php endif; ?>
     <?php endif; ?>
 </main>
-<script>
-    function toggleDropdown(button) {
-        const originalDropdown = button.parentElement.querySelector('.dropdown-menu');
-        if (originalDropdown.classList.contains('hidden')) {
-            document.body.appendChild(originalDropdown);
-            const rect = button.getBoundingClientRect();
-            originalDropdown.style.width = '16rem';
-            originalDropdown.style.position = 'absolute';
-            originalDropdown.style.top = (rect.bottom + window.scrollY + 8) + 'px';
-            originalDropdown.style.left = (rect.left + window.scrollX + rect.width / 2 - originalDropdown.offsetWidth / 2) + 'px';
-            originalDropdown.classList.remove('hidden');
-        } else {
-            originalDropdown.classList.add('hidden');
-        }
-    }
-
-    document.addEventListener('click', function(e) {
-        document.querySelectorAll('.dropdown-menu').forEach(function(menu) {
-            if (!menu.contains(e.target) && !e.target.closest('[onclick="toggleDropdown(this)"]')) {
-                menu.classList.add('hidden');
-            }
-        });
-    });
-
-    function handleHostelFilterChange(value) {
-        const url = new URL(window.location.href);
-        url.searchParams.set('hostel', value);
-        window.location.href = url.toString();
-    }
-</script>

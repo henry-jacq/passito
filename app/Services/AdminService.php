@@ -132,6 +132,16 @@ class AdminService
         return true;
     }
 
+    public function getAssignedWardenForHostel(int $hostelId): ?User
+    {
+        $assignment = $this->em->getRepository(WardenAssignment::class)->findOneBy(
+            ['hostelId' => $hostelId],
+            ['createdAt' => 'DESC']
+        );
+
+        return $assignment?->getAssignedTo();
+    }
+
 
     /**
      * Set Outpass Request Lock for Students

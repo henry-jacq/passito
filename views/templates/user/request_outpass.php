@@ -50,14 +50,14 @@
                     <?php foreach ($templates as $template):
                         $template_name = strtolower(str_replace(' ', '_', $template->getName())); ?>
 
-                        <label for="<?= $template_name ?>_pass" class="flex items-start p-4 border border-gray-200 rounded-md hover:bg-gray-50 transition-all duration-200 cursor-pointer bg-white gap-4 <?= $passType == $template->getId() ? 'ring-2 ring-blue-500' : '' ?>">
+                        <label for="<?= $template_name ?>_pass" class="flex items-start p-4 border border-gray-200 rounded-md hover:bg-gray-50 transition-all duration-200 cursor-pointer bg-white gap-4 <?= $passType === $template_name ? 'ring-2 ring-blue-500' : '' ?>">
                             <input type="radio"
                                 name="outpass_type"
                                 id="<?= $template_name ?>_pass"
-                                value="<?= $template->getId() ?>"
+                                value="<?= $template_name ?>"
                                 data-name="<?= $template_name ?>"
                                 class="w-5 h-5 mt-1 text-blue-600 border-gray-300 focus:ring-blue-500 outpass-radio"
-                                <?= $passType == strtolower(str_replace(' ', '_', $template->getName())) ? 'checked' : '' ?>>
+                                <?= $passType === $template_name ? 'checked' : '' ?>>
 
                             <div class="flex flex-col">
                                 <span class="font-normal text-gray-800 text-md">

@@ -109,9 +109,15 @@ class StudentController extends BaseController
     {
         $this->view->clearCacheIfDev();
         $userData = $request->getAttribute('student');
+        $assignedWarden = null;
+        $hostel = $userData?->getHostel();
+        if ($hostel) {
+            $assignedWarden = $this->adminService->getAssignedWardenForHostel($hostel->getId());
+        }
         $args = [
             'title' => 'Profile',
             'userData' => $userData,
+            'assignedWarden' => $assignedWarden,
             'routeName' => $this->getRouteName($request),
         ];
         return parent::render($request, $response, 'user/profile', $args);

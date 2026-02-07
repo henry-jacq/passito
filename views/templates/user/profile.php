@@ -73,9 +73,16 @@
 
                         use App\Enum\Gender;
 
-                        if ($userData->getHostel()->getWarden()->getGender() === Gender::MALE): ?>
-                            Mr. <?php else: ?> Ms. <?php endif; ?>
-                        <?= $userData->getHostel()->getWarden()->getName() ?>
+                        if ($assignedWarden): ?>
+                            <?php if ($assignedWarden->getGender() === Gender::MALE): ?>
+                                Mr.
+                            <?php else: ?>
+                                Ms.
+                            <?php endif; ?>
+                            <?= $assignedWarden->getName() ?>
+                        <?php else: ?>
+                            Not assigned
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>

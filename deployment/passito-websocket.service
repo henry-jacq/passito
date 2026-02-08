@@ -1,0 +1,17 @@
+[Unit]
+Description=Passito WebSocket Server
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/var/www/passito/scripts/start_websocket_server.sh
+Restart=always
+RestartSec=5
+User=www-data
+WorkingDirectory=/var/www/passito
+StandardOutput=append:/var/log/passito_websocket.log
+StandardError=append:/var/log/passito_websocket_error.log
+Environment=APP_ENV=prod
+
+[Install]
+WantedBy=multi-user.target

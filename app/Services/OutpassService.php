@@ -289,6 +289,7 @@ class OutpassService
             ->from(OutpassRequest::class, 'o')
             ->join('o.student', 's')
             ->join('s.user', 'u')
+            ->join('o.template', 't')
             ->where($queryBuilder->expr()->in('o.status', ':statuses'))
             ->andWhere('u.gender = :gender')
             ->orderBy('o.createdAt', 'DESC')
@@ -298,11 +299,55 @@ class OutpassService
         return $queryBuilder;
     }
 
-    public function getOutpassRecords(int $page = 1, int $limit = 10, ?User $warden = null)
+    public function getOutpassRecords(int $page = 1, int $limit = 10, ?User $warden = null, ?string $search = null, ?string $filter = null)
     {
         $offset = ($page - 1) * $limit;
 
-        $queryBuilder = $this->buildBaseOutpassQuery($warden)
+        $queryBuilder = $this->buildBaseOutpassQuery($warden);
+
+        if (!empty($search)) {
+            $normalizedFilter = $filter ?? '';
+            switch ($normalizedFilter) {
+                case 'outpass_id':
+                    if (ctype_digit($search)) {
+                        $queryBuilder->andWhere('o.id = :outpassId')
+                            ->setParameter('outpassId', (int) $search);
+                    } else {
+                        $queryBuilder->andWhere('1 = 0');
+                    }
+                    break;
+                case 'student_name':
+                    $queryBuilder->andWhere('u.name LIKE :search')
+                        ->setParameter('search', '%' . $search . '%');
+                    break;
+                case 'outpass_type':
+                    $queryBuilder->andWhere('t.name LIKE :search')
+                        ->setParameter('search', '%' . $search . '%');
+                    break;
+                case 'outpass_status':
+                    if (OutpassStatus::tryFrom(strtolower($search))) {
+                        $queryBuilder->andWhere('o.status = :status')
+                            ->setParameter('status', strtolower($search));
+                    } else {
+                        $queryBuilder->andWhere('1 = 0');
+                    }
+                    break;
+                default:
+                    $queryBuilder->andWhere(
+                        $queryBuilder->expr()->orX(
+                            $queryBuilder->expr()->like('u.name', ':search'),
+                            $queryBuilder->expr()->like('s.digitalId', ':search'),
+                            $queryBuilder->expr()->like('t.name', ':search'),
+                            $queryBuilder->expr()->like('o.destination', ':search'),
+                            $queryBuilder->expr()->like('o.id', ':search')
+                        )
+                    )
+                        ->setParameter('search', '%' . $search . '%');
+                    break;
+            }
+        }
+
+        $queryBuilder
             ->setFirstResult($offset)
             ->setMaxResults($limit);
 

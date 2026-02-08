@@ -10,7 +10,7 @@ use App\Enum\OutpassStatus;
         </div>
     </div>
 
-    <?php if (empty($outpasses)): ?>
+    <?php if (empty($outpasses) && empty($search)): ?>
         <section class="flex flex-col items-center my-4 space-y-6 bg-white rounded-lg shadow-lg py-22">
             <div class="flex items-center justify-center w-16 h-16 text-blue-800 bg-blue-200 rounded-full shadow-inner">
                 <i class="text-4xl fas fa-circle-info"></i>
@@ -25,30 +25,36 @@ use App\Enum\OutpassStatus;
             </div>
         </section>
     <?php else: ?>
-        <div class="mb-8 rounded-lg ">
-            <div class="flex flex-wrap items-center justify-between gap-4">
+        <div class="mb-8 rounded-lg">
+            <form class="flex flex-wrap items-center justify-between gap-4" method="get" action="">
                 <div class="relative flex-grow">
-                    <input id="search-records" type="text" placeholder="Search records..."
+                    <input id="search-records" name="q" type="text" placeholder="Search records..."
+                        value="<?= $search ?? '' ?>"
                         class="w-full py-2 transition duration-200 border border-gray-300 rounded-md bg-gray-50 text-md ps-12 focus:outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600/50"
-                        aria-label="Search by digital ID">
+                        aria-label="Search records">
                     <span class="absolute text-gray-500 left-3 top-2">
                         <i class="fas fa-search"></i>
                     </span>
+                    <?php if (!empty($search)): ?>
+                        <button
+                            type="button"
+                            class="absolute inset-y-0 right-2 flex items-center px-2 text-sm text-gray-500 hover:text-gray-700"
+                            onclick="window.location.href='?filter=<?= urlencode($filter ?? '') ?>'"
+                        >
+                            Clear
+                        </button>
+                    <?php endif; ?>
                 </div>
                 <div>
-                    <select class="flex-grow p-2 text-gray-600 transition duration-200 border border-gray-300 rounded-lg bg-gray-50 w-36 focus:border-blue-600/50 focus:ring-2 focus:ring-blue-600/50" aria-label="Outpass Type">
-                        <option value="" disabled selected>
-                            <i class="fa fa-filter"></i>
-                            Filter By
-                        </option>
-                        <option value="home">Outpass ID</option>
-                        <option value="emergency">Name</option>
-                        <option value="medical">Course</option>
-                        <option value="medical">Type</option>
-                        <option value="medical">Status</option>
+                    <select id="filter-records" name="filter" class="flex-grow p-2 text-gray-600 transition duration-200 border border-gray-300 rounded-lg bg-gray-50 w-44 focus:border-blue-600/50 focus:ring-2 focus:ring-blue-600/50" aria-label="Filter records">
+                        <option value="" <?= empty($filter) ? 'selected' : '' ?>>Filter By</option>
+                        <option value="outpass_id" <?= ($filter ?? '') === 'outpass_id' ? 'selected' : '' ?>>Outpass ID</option>
+                        <option value="student_name" <?= ($filter ?? '') === 'student_name' ? 'selected' : '' ?>>Student Name</option>
+                        <option value="outpass_type" <?= ($filter ?? '') === 'outpass_type' ? 'selected' : '' ?>>Outpass Type</option>
+                        <option value="outpass_status" <?= ($filter ?? '') === 'outpass_status' ? 'selected' : '' ?>>Outpass Status</option>
                     </select>
                 </div>
-            </div>
+            </form>
         </div>
         <section class="overflow-hidden bg-white rounded-lg shadow-md">
             <table class="min-w-full table-auto">
@@ -66,37 +72,47 @@ use App\Enum\OutpassStatus;
                     </tr>
                 </thead>
                 <tbody id="records-table-body" class="divide-y divide-gray-200">
-                    <?php foreach ($outpasses as $outpass): ?>
-                        <tr onclick="location.href='<?= $this->urlFor('admin.outpass.records.details', ['outpass_id' => $outpass->getId()]) ?>'" class="cursor-pointer hover:bg-gray-50">
-                            <td class="px-6 py-4 text-sm text-gray-900"># <?= $outpass->getID() ?></td>
-                            <td class="px-6 py-4 text-sm text-gray-900"><?= $outpass->getStudent()->getUser()->getName() ?></td>
-                            <td class="px-6 py-4 text-sm text-gray-900"><?= formatStudentYear($outpass->getStudent()->getYear()) ?></td>
-                            <td class="px-6 py-4 text-sm text-gray-900"><?= $outpass->getStudent()->getProgram()->getProgramName() . ' ' . $outpass->getStudent()->getProgram()->getShortCode() ?></td>
-                            <td class="px-6 py-4 text-sm text-gray-900"><?= ucwords($outpass->getTemplate()->getName()) ?></td>
-                            <td class="px-6 py-4 text-sm text-gray-900"><?= $outpass->getDestination() ?></td>
-                            <td class="px-6 py-4 text-sm text-center text-gray-900">
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-<?= $outpass->getStatus() === OutpassStatus::APPROVED ? 'green' : 'yellow' ?>-100 text-<?= $outpass->getStatus() === OutpassStatus::APPROVED ? 'green' : 'yellow' ?>-800">
-                                    <?= ucwords(str_replace('_', ' ', $outpass->getStatus()->value)) ?>
-                                </span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="block text-sm text-gray-900">
-                                    <?= $outpass->getFromDate()->format('d M, Y') ?>
-                                </span>
-                                <span class="block text-xs text-gray-600">
-                                    <?= $outpass->getFromTime()->format('h:i A') ?>
-                                </span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="block text-sm text-gray-900">
-                                    <?= $outpass->getToDate()->format('d M, Y') ?>
-                                </span>
-                                <span class="block text-xs text-gray-600">
-                                    <?= $outpass->getToTime()->format('h:i A') ?>
-                                </span>
+                    <?php if (empty($outpasses) && !empty($search)): ?>
+                        <tr>
+                            <td colspan="9" class="px-6 py-6 text-sm text-gray-600">
+                                <div class="flex flex-col items-center space-y-1 text-center">
+                                    <span class="font-medium">No results found.</span>
+                                </div>
                             </td>
                         </tr>
-                    <?php endforeach; ?>
+                    <?php else: ?>
+                        <?php foreach ($outpasses as $outpass): ?>
+                            <tr onclick="location.href='<?= $this->urlFor('admin.outpass.records.details', ['outpass_id' => $outpass->getId()]) ?>'" class="cursor-pointer hover:bg-gray-50">
+                                <td class="px-6 py-4 text-sm text-gray-900"># <?= $outpass->getID() ?></td>
+                                <td class="px-6 py-4 text-sm text-gray-900"><?= $outpass->getStudent()->getUser()->getName() ?></td>
+                                <td class="px-6 py-4 text-sm text-gray-900"><?= formatStudentYear($outpass->getStudent()->getYear()) ?></td>
+                                <td class="px-6 py-4 text-sm text-gray-900"><?= $outpass->getStudent()->getProgram()->getProgramName() . ' ' . $outpass->getStudent()->getProgram()->getShortCode() ?></td>
+                                <td class="px-6 py-4 text-sm text-gray-900"><?= ucwords($outpass->getTemplate()->getName()) ?></td>
+                                <td class="px-6 py-4 text-sm text-gray-900"><?= $outpass->getDestination() ?></td>
+                                <td class="px-6 py-4 text-sm text-center text-gray-900">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-<?= $outpass->getStatus() === OutpassStatus::APPROVED ? 'green' : 'yellow' ?>-100 text-<?= $outpass->getStatus() === OutpassStatus::APPROVED ? 'green' : 'yellow' ?>-800">
+                                        <?= ucwords(str_replace('_', ' ', $outpass->getStatus()->value)) ?>
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="block text-sm text-gray-900">
+                                        <?= $outpass->getFromDate()->format('d M, Y') ?>
+                                    </span>
+                                    <span class="block text-xs text-gray-600">
+                                        <?= $outpass->getFromTime()->format('h:i A') ?>
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="block text-sm text-gray-900">
+                                        <?= $outpass->getToDate()->format('d M, Y') ?>
+                                    </span>
+                                    <span class="block text-xs text-gray-600">
+                                        <?= $outpass->getToTime()->format('h:i A') ?>
+                                    </span>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </tbody>
             </table>
 
@@ -107,12 +123,12 @@ use App\Enum\OutpassStatus;
                         <?php if ($records['currentPage'] > 1): ?>
                             <button
                                 class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
-                                onclick="location.href='?page=<?= $records['currentPage'] - 1 ?>'">Previous</button>
+                                onclick="location.href='?page=<?= $records['currentPage'] - 1 ?>&q=<?= urlencode($search ?? '') ?>&filter=<?= urlencode($filter ?? '') ?>'">Previous</button>
                         <?php endif; ?>
                         <?php if ($records['currentPage'] < $records['totalPages']): ?>
                             <button
                                 class="relative inline-flex items-center px-4 py-2 ml-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
-                                onclick="location.href='?page=<?= $records['currentPage'] + 1 ?>'">Next</button>
+                                onclick="location.href='?page=<?= $records['currentPage'] + 1 ?>&q=<?= urlencode($search ?? '') ?>&filter=<?= urlencode($filter ?? '') ?>'">Next</button>
                         <?php endif; ?>
                     </div>
                     <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
@@ -127,12 +143,12 @@ use App\Enum\OutpassStatus;
                             <?php if ($records['currentPage'] > 1): ?>
                                 <button
                                     class="px-3 py-1 text-sm text-gray-600 bg-gray-200 border rounded-md hover:bg-gray-300 focus:ring focus:ring-blue-300 focus:outline-none"
-                                    onclick="location.href='?page=<?= $records['currentPage'] - 1 ?>'">Previous</button>
+                                    onclick="location.href='?page=<?= $records['currentPage'] - 1 ?>&q=<?= urlencode($search ?? '') ?>&filter=<?= urlencode($filter ?? '') ?>'">Previous</button>
                             <?php endif; ?>
                             <?php if ($records['currentPage'] < $records['totalPages']): ?>
                                 <button
                                     class="px-3 py-1 text-sm text-white bg-blue-600 border rounded-md hover:bg-blue-700 focus:ring focus:ring-blue-300 focus:outline-none"
-                                    onclick="location.href='?page=<?= $records['currentPage'] + 1 ?>'">Next</button>
+                                    onclick="location.href='?page=<?= $records['currentPage'] + 1 ?>&q=<?= urlencode($search ?? '') ?>&filter=<?= urlencode($filter ?? '') ?>'">Next</button>
                             <?php endif; ?>
                         </div>
                     </div>

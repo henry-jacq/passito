@@ -1148,6 +1148,21 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    // Records filter change handler
+    const recordsSearchInput = document.getElementById('search-records');
+    const recordsFilterSelect = document.getElementById('filter-records');
+    if (recordsFilterSelect) {
+        recordsFilterSelect.addEventListener('change', () => {
+            const params = new URLSearchParams(window.location.search);
+            params.set('filter', recordsFilterSelect.value);
+            params.set('page', 1);
+            if (recordsSearchInput && recordsSearchInput.value) {
+                params.set('q', recordsSearchInput.value);
+            }
+            window.location.search = params.toString();
+        });
+    }
+
     // Unlock Requests
     const unlockBtn = document.getElementById('unlockRequests');
 

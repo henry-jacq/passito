@@ -129,9 +129,11 @@ class AdminController extends BaseController
         $userData = $request->getAttribute('user');
         $page = max(1, (int) ($request->getQueryParams()['page'] ?? 1));
         $limit = 10;
+        $search = trim((string) ($request->getQueryParams()['q'] ?? ''));
+        $filter = trim((string) ($request->getQueryParams()['filter'] ?? ''));
 
         // Fetch the pagination data
-        $paginationData = $this->outpassService->getOutpassRecords($page, $limit, $userData);
+        $paginationData = $this->outpassService->getOutpassRecords($page, $limit, $userData, $search, $filter);
 
         // Redirect to the last page if the requested page exceeds available pages
         if ($paginationData['totalPages'] > 1 && $page > $paginationData['totalPages']) {
@@ -147,6 +149,8 @@ class AdminController extends BaseController
                 'totalPages' => $paginationData['totalPages'],
                 'totalRecords' => $paginationData['total'],
             ],
+            'search' => $search,
+            'filter' => $filter,
             'routeName' => $this->getRouteName($request),
             'breadcrumbs' => [
                 [

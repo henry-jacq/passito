@@ -5,6 +5,7 @@ namespace App\Services;
 use DateTime;
 use Exception;
 use App\Entity\User;
+use App\Core\Session;
 use App\Entity\Hostel;
 use App\Enum\UserRole;
 use App\Entity\Student;
@@ -27,6 +28,7 @@ use Doctrine\ORM\EntityManagerInterface;
 class AdminService
 {
     public function __construct(
+        private readonly Session $session,
         private readonly UserService $userService,
         private readonly OutpassService $outpass,
         private readonly AcademicService $academicService,

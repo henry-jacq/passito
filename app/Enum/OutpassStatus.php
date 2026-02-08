@@ -51,4 +51,24 @@ enum OutpassStatus: string
     {
         return in_array($status, array_column(self::cases(), 'value'));
     }
+
+    public function label()
+    {
+        return match ($this) {
+            self::PENDING => 'Pending', self::PARENT_PENDING => 'Parent Pending',
+            self::PARENT_APPROVED => 'Parent Approved',
+            self::PARENT_DENIED => 'Parent Denied', self::APPROVED => 'Approved', 
+            self::REJECTED => 'Rejected', self::EXPIRED => 'Expired'
+        };
+    }
+
+    public function color(): string
+    {
+        return match ($this) {
+            self::PENDING, self::PARENT_PENDING => 'yellow',
+            self::PARENT_APPROVED, self::APPROVED => 'green',
+            self::PARENT_DENIED, self::REJECTED => 'red',
+            self::EXPIRED => 'gray',
+        };
+    }
 }

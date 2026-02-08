@@ -20,12 +20,10 @@
         <header class="sticky top-0 z-30 bg-white border-b">
             <div class="flex items-center justify-between px-6 py-4">
                 <div class="flex items-center space-x-3">
-                    <span class="inline-flex items-center justify-center w-9 h-9 text-sm font-semibold text-blue-700 bg-blue-100 rounded-full">
-                        <?= strtoupper(substr($user->getName(), 0, 1)) ?>
-                    </span>
+                    <img src="/assets/brand/passito-icon.png" alt="Passito" class="w-9 h-9">
                     <div>
-                        <p class="text-sm font-semibold text-gray-800">Verifier Console</p>
-                        <p class="text-xs text-gray-500"><?= $user->getEmail() ?></p>
+                        <p class="text-sm font-semibold text-gray-800">Passito</p>
+                        <p class="text-xs text-gray-500">Verifier Portal</p>
                     </div>
                 </div>
                 <a href="<?= $this->urlFor('auth.logout') ?>" class="inline-flex items-center px-3 py-2 text-sm text-gray-700 transition bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50">

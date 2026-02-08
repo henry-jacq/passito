@@ -61,6 +61,7 @@ use App\Enum\OutpassStatus;
             <?php $customValues = $outpass->getCustomValues(); ?>
             <?php if (!empty($customValues)): ?>
                 <?php foreach ($customValues as $key => $value): ?>
+                    <?php if ($key === $this->csrfFieldName()) continue; ?>
                     <div>
                         <label class="block text-sm font-medium text-gray-500"><?= ucwords(str_replace('_', ' ', $key)) ?></label>
                         <p class="text-base text-gray-900"><?= htmlspecialchars($value) ?></p>

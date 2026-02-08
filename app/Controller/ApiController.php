@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Core\JobDispatcher;
 use Closure;
 use App\Core\View;
+use App\Core\Config;
 use App\Entity\User;
 use App\Core\Session;
 use App\Core\Storage;
@@ -53,6 +54,7 @@ class ApiController
 
     public function __construct(
         private readonly View $view,
+        private readonly Config $config,
         private readonly Session $session,
         private readonly AuthService $auth,
         private readonly MailService $mail,

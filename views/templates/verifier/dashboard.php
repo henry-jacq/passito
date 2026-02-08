@@ -3,37 +3,89 @@
         <div class="p-6 bg-white rounded-lg shadow-md">
             <div class="flex items-center justify-between">
                 <div>
-                    <h2 class="text-2xl font-semibold text-gray-800">Manual Verification</h2>
-                    <p class="mt-1 text-sm text-gray-500">Enter the outpass ID to check out or check in.</p>
+                    <h2 class="text-2xl font-semibold text-gray-800">Verifier Console</h2>
+                    <p class="mt-1 text-sm text-gray-500">Security desk tools for validating student outpasses quickly.</p>
                 </div>
-                <?php
-                $isActive = $user && $user->getStatus() === \App\Enum\UserStatus::ACTIVE;
-                ?>
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <?= $isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' ?>">
-                    <?= $isActive ? 'Active' : 'Inactive' ?>
-                </span>
             </div>
 
             <form id="manual-verifier-form" class="mt-6 space-y-4">
-                <div>
-                    <label for="outpass-id" class="block text-sm font-medium text-gray-700">Outpass ID</label>
-                    <input id="outpass-id" name="outpass_id" type="number" min="1" placeholder="e.g., 1024"
-                        class="w-full px-3 py-2 mt-1 text-sm text-gray-800 transition border border-gray-300 rounded-md bg-gray-50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500">
-                </div>
                 <div class="flex flex-wrap items-center gap-3">
-                    <button type="button" data-action="checkout"
-                        class="px-4 py-2 text-sm text-white transition bg-blue-600 rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300">
-                        Check Out
+                    <div class="flex items-center gap-2">
+                        <input id="manual-outpass-id" type="number" min="1" placeholder="Outpass ID"
+                            class="w-40 px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-200" />
+                        <button type="button" id="manual-use-id"
+                            class="px-3 py-2 text-sm text-gray-700 transition bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-200">
+                            Use ID
+                        </button>
+                    </div>
+                </div>
+                <div>
+                    <button type="button" id="start-qr-scan"
+                        class="px-4 py-2 text-sm text-white transition bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-300">
+                        Scan QR
                     </button>
-                    <button type="button" data-action="checkin"
-                        class="px-4 py-2 text-sm text-white transition bg-green-600 rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-300">
-                        Check In
-                    </button>
+                </div>
+                <div id="qr-scan-panel" class="hidden p-3 border border-gray-200 rounded-md bg-gray-50">
+                    <p class="mb-2 text-xs text-gray-600">Point the camera at the QR code.</p>
+                    <video id="qr-video" class="w-full rounded-md" playsinline muted></video>
+                    <button id="qr-stop" type="button" class="mt-2 text-xs text-gray-600 underline">Stop camera</button>
+                </div>
+                <div id="qr-result" class="hidden p-4 bg-white border border-gray-200 rounded-md">
+                    <div class="flex items-start justify-between gap-4">
+                        <div>
+                            <p class="text-sm font-semibold text-gray-800" id="qr-student-name"></p>
+                            <p class="text-xs text-gray-500" id="qr-type"></p>
+                            <p class="text-xs text-gray-500" id="qr-destination"></p>
+                        </div>
+                        <span class="px-2 py-1 text-xs font-medium text-gray-600 bg-gray-100 rounded-full" id="qr-status"></span>
+                    </div>
+                    <div class="grid grid-cols-1 gap-2 mt-3 text-xs text-gray-600 md:grid-cols-2">
+                        <div>
+                            <p class="font-medium text-gray-700">Depart</p>
+                            <p id="qr-depart"></p>
+                        </div>
+                        <div>
+                            <p class="font-medium text-gray-700">Return</p>
+                            <p id="qr-return"></p>
+                        </div>
+                        <div>
+                            <p class="font-medium text-gray-700">Check-Out</p>
+                            <p id="qr-checkout-status"></p>
+                        </div>
+                        <div>
+                            <p class="font-medium text-gray-700">Check-In</p>
+                            <p id="qr-checkin-status"></p>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-3 mt-4">
+                        <button type="button" id="qr-checkout"
+                            class="px-4 py-2 text-sm text-white transition bg-blue-600 rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                            Check Out
+                        </button>
+                        <button type="button" id="qr-checkin"
+                            class="px-4 py-2 text-sm text-white transition bg-green-600 rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-300">
+                            Check In
+                        </button>
+                    </div>
                 </div>
                 <p class="text-xs text-gray-500">Make sure the outpass is approved before checking out.</p>
             </form>
         </div>
     </div>
+
+    <aside class="space-y-6">
+        <div class="p-6 bg-white border border-gray-200 rounded-md shadow-md">
+            <div class="flex items-center gap-3">
+                <span class="inline-flex items-center justify-center w-10 h-10 text-sm font-semibold text-blue-700 bg-blue-100 rounded-full">
+                    <?= strtoupper(substr($user->getName(), 0, 1)) ?>
+                </span>
+                <div>
+                    <p class="text-sm font-semibold text-gray-800"><?= $user->getName() ?></p>
+                    <p class="text-xs text-gray-500"><?= $user->getEmail() ?></p>
+                </div>
+            </div>
+        </div>
+    </aside>
 
     <aside class="space-y-6">
         <div class="p-6 bg-white rounded-lg shadow-md">

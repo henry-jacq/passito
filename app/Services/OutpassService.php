@@ -569,6 +569,25 @@ class OutpassService
         return base64_encode($iv . $tag . $cipherText);
     }
 
+    /**
+     * Decrypt the QR data using AES-256-GCM
+     */
+    public function decryptQrData(string $payload, string $sharedSecret): ?string
+    {
+        $raw = base64_decode($payload, true);
+        if ($raw === false || strlen($raw) < 28) {
+            return null;
+        }
+
+        $key = hash('sha256', $sharedSecret, true);
+        $iv = substr($raw, 0, 12);
+        $tag = substr($raw, 12, 16);
+        $cipherText = substr($raw, 28);
+
+        $plain = openssl_decrypt($cipherText, 'aes-256-gcm', $key, OPENSSL_RAW_DATA, $iv, $tag);
+        return $plain !== false ? $plain : null;
+    }
+
     public function createTemplate(Gender $gender, array $templateData, array $fields, bool $isSystemTemplate = false): void
     {
         $template = new OutpassTemplate();

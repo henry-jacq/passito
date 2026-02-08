@@ -4,7 +4,7 @@ use App\Enum\UserRole;
 use App\Enum\VerifierMode;
 
 ${basename(__FILE__, '.php')} = function () {
-    if ($this->isAuthenticated() && $this->paramsExists(['outpass_id', 'action']) && UserRole::isVerifier($this->getRole())) {
+    if ($this->isAuthenticated() && $this->paramsExists(['action']) && UserRole::isVerifier($this->getRole())) {
         $user = $this->getUser();
         $verifier = $this->verifierService->getVerifierByUser($user);
 
@@ -19,12 +19,18 @@ ${basename(__FILE__, '.php')} = function () {
         $verifierMode = $settings?->getVerifierMode();
         if ($verifierMode === VerifierMode::AUTOMATED) {
             return $this->response([
-                'message' => 'Manual verification is disabled.',
+                'message' => 'Verifier access is disabled.',
                 'status' => false
             ], 403);
         }
 
-        $outpassId = (int) $this->data['outpass_id'];
+        $outpassId = (int) ($this->data['outpass_id'] ?? 0);
+        if ($outpassId <= 0 && !empty($this->data['qr_payload'])) {
+            $secret = $this->config->get('app.qr_secret');
+            $decrypted = $this->outpassService->decryptQrData((string) $this->data['qr_payload'], $secret);
+            $decoded = $decrypted ? json_decode($decrypted, true) : null;
+            $outpassId = (int) ($decoded['id'] ?? 0);
+        }
         $action = $this->data['action'];
 
         if ($outpassId <= 0 || !in_array($action, ['checkout', 'checkin'], true)) {

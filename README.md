@@ -7,6 +7,7 @@
 - [Passito](#passito)
   - [Table of Contents](#table-of-contents)
   - [Features](#features)
+  - [Job System](#job-system)
   - [Dependencies](#dependencies)
   - [Installation](#installation)
     - [Ensure Group Ownership is Correct](#ensure-group-ownership-is-correct)
@@ -27,6 +28,34 @@
 - View history of entries and exits.
 - Notifications for upcoming passes.
 - Role-based access control.
+- **Asynchronous job processing** with dynamic worker scaling.
+- **Health monitoring** with email alerts.
+- **Auto-recovery** via systemd integration.
+
+## Job System
+
+Passito includes an enterprise-grade asynchronous job processing system with:
+
+- ✅ **Dynamic Worker Scaling** - Automatically adjusts workers based on queue load
+- ✅ **Health Monitoring** - Detects and alerts when workers are down
+- ✅ **Auto-Recovery** - Systemd automatically restarts crashed workers
+- ✅ **Email Alerts** - Admin notifications for system issues
+- ✅ **Retry Logic** - Failed jobs automatically retry
+- ✅ **Job Dependencies** - Chain jobs with dependency management
+
+**📚 [Complete Job System Documentation →](docs/JOBS.md)**
+
+Quick commands:
+```bash
+# Start job supervisor (production)
+php passito.php jobs:supervisor
+
+# Check queue health
+php passito.php jobs:health
+
+# View supervisor status
+systemctl status passito-supervisor
+```
 
 ## Dependencies
 

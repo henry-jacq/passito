@@ -9,5 +9,6 @@ return [
     \App\Command\WebSocketServerCommand::class,
     \App\Command\MaintenanceModeCommand::class,
     \App\Command\JobWorkerCommand::class,
-    \App\Command\JobSupervisorCommand::class
+    \App\Command\JobSupervisorCommand::class,
+    \App\Command\JobHealthCheckCommand::class,
 ];

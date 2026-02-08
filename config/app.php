@@ -43,6 +43,7 @@ return [
         ]
     ],
     'notification' => [
+        'admin_email' => $_ENV['ADMIN_EMAIL'] ?? null,
         'mail' => [
             'host' => $_ENV['SMTP_HOST'],
             'user' => $_ENV['SMTP_USER'],

@@ -205,17 +205,35 @@ Follow these steps to set up Passito on your local machine:
    ```
    
 8. **Setup Crontab for Scheduled Tasks**:
-   - Open crontab and add the following line to send emails:
+   - Open crontab and add scheduled job dispatchers:
    - To open crontab, run:
      ```bash
      crontab -e
      ```
-   - Add the following line to the crontab file:
+   - Add the following lines to the crontab file:
       ```bash
-      * * * * * /usr/bin/php /path/to/passito/passito.php app:cleanup-expired-files
+      # Cleanup expired outpass files daily at 2 AM
+      0 2 * * * /usr/bin/php /path/to/passito/passito.php app:cleanup-expired-files
+      
+      # Health check every 5 minutes with email alerts (optional but recommended for production)
+      */5 * * * * /usr/bin/php /path/to/passito/passito.php jobs:health --send-email --exit-code-on-failure
       ```
+   
+   **Note:** Set `ADMIN_EMAIL` in your `.env` file to receive health alerts.
 
-9. **Start the Development Server**:
+9. **Start the Job Supervisor** (Required for processing jobs):
+   ```bash
+   php passito.php jobs:supervisor
+   ```
+   
+   For production, use systemd or supervisor to keep it running:
+   ```bash
+   sudo cp deployment/passito-supervisor.service /etc/systemd/system/
+   sudo systemctl enable passito-supervisor
+   sudo systemctl start passito-supervisor
+   ```
+
+10. **Start the Development Server**:
    - Make sure Apache is running and configured to serve from the `public` directory.
    - Alternatively, you can use Vite for the front-end development:
      ```bash

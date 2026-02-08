@@ -204,7 +204,7 @@ Follow these steps to set up Passito on your local machine:
    php passito.php app:seed outpass_rules
    ```
    
-8. **Setup Crontab for Sending Email**:
+8. **Setup Crontab for Scheduled Tasks**:
    - Open crontab and add the following line to send emails:
    - To open crontab, run:
      ```bash
@@ -212,8 +212,7 @@ Follow these steps to set up Passito on your local machine:
      ```
    - Add the following line to the crontab file:
       ```bash
-      * * * * * /usr/bin/php /path/to/passito/passito.php app:process-email-queue
-      * * * * * /usr/bin/php /path/to/passito/passito.php app:remove-expired-outpass
+      * * * * * /usr/bin/php /path/to/passito/passito.php app:cleanup-expired-files
       ```
 
 9. **Start the Development Server**:

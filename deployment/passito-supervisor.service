@@ -1,0 +1,34 @@
+[Unit]
+Description=Passito Job Queue Supervisor
+After=network.target mysql.service
+Wants=mysql.service
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/passito
+
+# Adjust these parameters based on your load requirements
+ExecStart=/usr/bin/php /var/www/passito/passito.php jobs:supervisor \
+  --min-workers=2 \
+  --max-workers=20 \
+  --scale-up-threshold=10 \
+  --scale-down-threshold=3 \
+  --check-interval=10
+
+# Restart policy
+Restart=always
+RestartSec=10
+
+# Resource limits (optional)
+# LimitNOFILE=65536
+# MemoryLimit=2G
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=passito-supervisor
+
+[Install]
+WantedBy=multi-user.target

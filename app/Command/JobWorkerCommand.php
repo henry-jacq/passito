@@ -16,7 +16,7 @@ use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 
 class JobWorkerCommand extends Command
 {
-    protected static $defaultName = 'jobs:work';
+    protected static $defaultName = 'jobs:worker';
     protected static $defaultDescription = 'Start Job Worker for dispatched jobs.';
 
     public function __construct(
@@ -148,8 +148,9 @@ class JobWorkerCommand extends Command
         $job->setStatus('processing');
         $this->em->flush();
 
+        $workerPid = getmypid();
         $startTime = (new \DateTimeImmutable())->format('H:i:s');
-        $this->printLine($output, 'INFO', "Processing Job #{$job->getId()} ({$job->getType()})", $startTime);
+        $this->printLine($output, 'INFO', "[Worker $workerPid] Processing Job #{$job->getId()} ({$job->getType()})", $startTime);
 
         try {
             // Base payload
@@ -179,10 +180,12 @@ class JobWorkerCommand extends Command
             $job->setStatus('done');
             $this->em->flush();
 
+            $workerPid = getmypid();
             $endTime = (new \DateTimeImmutable())->format('H:i:s');
-            $this->printLine($output, 'DONE', "Completed Job #{$job->getId()} ({$job->getType()})", $endTime);
+            $this->printLine($output, 'DONE', "[Worker $workerPid] Completed Job #{$job->getId()} ({$job->getType()})", $endTime);
         } catch (\Throwable $e) {
             $job->incrementAttempts();
+            $workerPid = getmypid();
             $endTime = (new \DateTimeImmutable())->format('H:i:s');
 
             if ($job->getAttempts() >= $job->getMaxAttempts()) {
@@ -191,7 +194,7 @@ class JobWorkerCommand extends Command
                 $this->printLine(
                     $output,
                     'FAIL',
-                    "Job Failed #{$job->getId()} ({$job->getType()}): {$e->getMessage()}",
+                    "[Worker $workerPid] Job Failed #{$job->getId()} ({$job->getType()}): {$e->getMessage()}",
                     $endTime
                 );
             } else {
@@ -200,7 +203,7 @@ class JobWorkerCommand extends Command
                 $this->printLine(
                     $output,
                     'WARN',
-                    "Job Failed #{$job->getId()}, will retry. Error: {$e->getMessage()}",
+                    "[Worker $workerPid] Job Failed #{$job->getId()}, will retry. Error: {$e->getMessage()}",
                     $endTime
                 );
             }

@@ -593,33 +593,21 @@ class OutpassService
     }
 
     /**
-     * Check and expire outpasses that have passed their expiry date
+     * Remove documents and attachments for expired outpasses.
      */
-    public function checkAndExpireOutpass(int $batchSize = 20): void
+    public function removeExpireOutpassFiles(int $batchSize = 20): void
     {
-        $now = new \DateTimeImmutable();
-
-        // Fetch all approved outpasses in one query
-        // NOTE: Ensure the CONCAT function is supported by the database
-        // Periodically Remove the outpass set as expired after check in
-        // Also do the same as before periodical check expired outpasses and remove
+        // Periodically remove documents for outpasses already marked as expired.
         $outpasses = $this->em->getRepository(OutpassRequest::class)
         ->createQueryBuilder('o')
         ->where('o.status IN (:status)')
-        ->andWhere("CONCAT(o.toDate, ' ', o.toTime) <= :now")
-        ->setParameter('status', [OutpassStatus::APPROVED->value, OutpassStatus::EXPIRED->value])
-        ->setParameter('now', $now->format('Y-m-d H:i:s'))
+        ->setParameter('status', [OutpassStatus::EXPIRED->value])
         ->getQuery()
         ->getResult();
 
         $count = 0;
 
         foreach ($outpasses as $outpass) {
-            // Mark as expired
-            if ($outpass->getStatus() === OutpassStatus::APPROVED) {
-                $outpass->setStatus(OutpassStatus::EXPIRED);
-            }
-
             // Remove the attachments
             if (!empty($outpass->getAttachments())) {
                 $this->removeAttachments($outpass);

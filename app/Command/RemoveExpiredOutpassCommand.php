@@ -22,19 +22,19 @@ class RemoveExpiredOutpassCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription('Removes expired outpass requests and attachments.')
+            ->setDescription('Removes documents and attachments for expired outpasses.')
             ->setHelp('');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln('Removing expired outpass requests...');
+        $output->writeln('Removing documents for expired outpasses...');
 
         try {
-            // Remove expired outpass requests
-            $this->outpassService->checkAndExpireOutpass();
+            // Remove documents and attachments for expired outpasses
+            $this->outpassService->removeExpireOutpassFiles();
 
-            $output->writeln('Expired outpass requests removed successfully.');
+            $output->writeln('Expired outpass documents removed successfully.');
             return Command::SUCCESS;
         } catch (\Exception $e) {
             $output->writeln('<error>Error occurred while removing expired outpass requests: ' . $e->getMessage() . '</error>');

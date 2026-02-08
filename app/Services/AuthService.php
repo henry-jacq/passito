@@ -44,6 +44,34 @@ class AuthService
     }
 
     /**
+     * Authenticate user with LoginDto
+     */
+    public function loginWithDto(\App\Dto\LoginDto $dto): bool|array
+    {
+        // Fetch user by email
+        $user = $this->em->getRepository(User::class)->findOneBy(['email' => $dto->getEmail()]);
+
+        // Validate user existence and password
+        if (!$user || !password_verify($dto->getPassword(), $user->getPassword())) {
+            return false; // Authentication failed
+        }
+
+        $userRole = $user->getRole()->value;
+
+        // Check if the user's role is valid
+        if (!UserRole::isValidRole($userRole)) {
+            return false; // Invalid role
+        }
+
+        $token = $this->jwt->createToken($user);
+
+        return [
+            'user' => $user,
+            'token' => $token,
+        ];
+    }
+
+    /**
      * Logout user from the session
      */
     public function logout()

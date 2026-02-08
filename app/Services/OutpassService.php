@@ -11,6 +11,7 @@ use App\Entity\Student;
 use App\Enum\OutpassStatus;
 use App\Entity\OutpassRequest;
 use App\Dto\OutpassSettings;
+use App\Dto\CreateOutpassDto;
 use App\Entity\WardenAssignment;
 use App\Enum\VerifierMode;
 use App\Entity\OutpassTemplate;
@@ -126,22 +127,22 @@ class OutpassService
         ];
     }
     
-    public function createOutpass(array $data): OutpassRequest
+    public function createOutpass(CreateOutpassDto $dto): OutpassRequest
     {
         $outpass = new OutpassRequest();
         
-        $outpass->setStudent($data['student']);
-        $outpass->setTemplate($data['template']);
-        $outpass->setFromDate($data['from_date']);
-        $outpass->setToDate($data['to_date']);
-        $outpass->setFromTime($data['from_time']);
-        $outpass->setToTime($data['to_time']);
+        $outpass->setStudent($dto->getStudent());
+        $outpass->setTemplate($dto->getTemplate());
+        $outpass->setFromDate($dto->getFromDate());
+        $outpass->setToDate($dto->getToDate());
+        $outpass->setFromTime($dto->getFromTime());
+        $outpass->setToTime($dto->getToTime());
         $outpass->setStatus(OutpassStatus::PENDING);
-        $outpass->setDestination($data['destination']);
-        $outpass->setReason($data['reason'] ?? 'N/A');
-        $outpass->setCustomValues($data['custom_values'] ?? null);
+        $outpass->setDestination($dto->getDestination());
+        $outpass->setReason($dto->getReason());
+        $outpass->setCustomValues($dto->getCustomValues());
         $outpass->setCreatedAt(new DateTime());
-        $outpass->setAttachments($data['attachments']);
+        $outpass->setAttachments($dto->getAttachments());
 
         return $this->updateOutpass($outpass);
     }

@@ -114,7 +114,7 @@ class DatabaseSeederCommand extends Command
 
         try {
             $seeder = match ($seederClass) {
-                OutpassDataSeeder::class => new OutpassDataSeeder($this->entityManager, $values['studentId']),
+                OutpassDataSeeder::class => new OutpassDataSeeder($this->entityManager, $this->outpassService, $values['studentId']),
                 OutpassTemplateSeeder::class => new OutpassTemplateSeeder($this->entityManager, $this->outpassService),
                 default => new $seederClass($this->entityManager),
             };

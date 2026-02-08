@@ -163,6 +163,29 @@ class UserService
         return $student;
     }
 
+    /**
+     * Create student from DTO
+     */
+    public function createStudentFromDto(\App\Dto\CreateStudentDto $dto, User $user): Student
+    {
+        $student = new Student();
+        $student->setUser($user);
+        $student->setHostel($dto->getHostel());
+        $student->setDigitalId($dto->getDigitalId());
+        $student->setYear($dto->getYear());
+        $student->setAcademicYear($dto->getAcademicYear());
+        $student->setProgram($dto->getProgram());
+        $student->setRoomNo($dto->getRoomNo());
+        $student->setParentNo($dto->getParentNo());
+        $user->setStatus(UserStatus::ACTIVE);
+        $student->setUpdatedAt(new DateTime());
+        
+        $this->em->persist($student);
+        $this->em->flush();
+        
+        return $student;
+    }
+
     public function updateStudent(int $studentId, array $data): Student|bool
     {
         $student = $this->em->getRepository(Student::class)->find($studentId);
@@ -227,6 +250,52 @@ class UserService
         if ($statusFlag !== null) {
             $user->setStatus($statusFlag ? UserStatus::ACTIVE : UserStatus::INACTIVE);
         }
+        $student->setUpdatedAt(new DateTime());
+
+        $this->em->flush();
+
+        return $student;
+    }
+
+    /**
+     * Update student from DTO
+     */
+    public function updateStudentFromDto(int $studentId, \App\Dto\UpdateStudentDto $dto): Student|bool
+    {
+        $student = $this->em->getRepository(Student::class)->find($studentId);
+        if (!$student) {
+            return false;
+        }
+
+        // Check email uniqueness
+        $existingUser = $this->em->getRepository(User::class)->findOneBy(['email' => $dto->getEmail()]);
+        if ($existingUser && $existingUser->getId() !== $student->getUser()->getId()) {
+            return false;
+        }
+
+        // Check digital ID uniqueness
+        $existingStudent = $this->em->getRepository(Student::class)->findOneBy(['digitalId' => $dto->getDigitalId()]);
+        if ($existingStudent && $existingStudent->getId() !== $student->getId()) {
+            return false;
+        }
+
+        $user = $student->getUser();
+        $user->setName($dto->getName());
+        $user->setEmail($dto->getEmail());
+        $user->setContactNo($dto->getContact());
+
+        $student->setHostel($dto->getHostel());
+        $student->setProgram($dto->getProgram());
+        $student->setAcademicYear($dto->getAcademicYear());
+        $student->setDigitalId($dto->getDigitalId());
+        $student->setYear($dto->getYear());
+        $student->setRoomNo($dto->getRoomNo());
+        $student->setParentNo($dto->getParentNo());
+        
+        if ($dto->getStatus() !== null) {
+            $user->setStatus($dto->getStatus() ? UserStatus::ACTIVE : UserStatus::INACTIVE);
+        }
+        
         $student->setUpdatedAt(new DateTime());
 
         $this->em->flush();

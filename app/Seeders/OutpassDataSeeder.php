@@ -3,16 +3,17 @@
 namespace App\Seeders;
 
 use DateTime;
-use App\Entity\OutpassRequest;
 use App\Entity\OutpassTemplate;
 use App\Entity\Student;
-use App\Enum\OutpassStatus;
+use App\Dto\CreateOutpassDto;
+use App\Services\OutpassService;
 use Doctrine\ORM\EntityManagerInterface;
 
 class OutpassDataSeeder
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
+        private readonly OutpassService $outpassService,
         private readonly int $studentId
     )
     {
@@ -29,30 +30,39 @@ class OutpassDataSeeder
             'name' => 'Home Pass'
         ]);
 
+        $student = $this->em->getRepository(Student::class)->find($this->studentId);
+
+        if (!$student || !$passType) {
+            echo "Student or template not found!\n";
+            return;
+        }
+
         for ($i = 1; $i <= 20; $i++) {
             $fromDate = new DateTime();
             $toDate = (clone $fromDate)->modify('+' . rand(1, 3) . ' days');
             $fromTime = new DateTime(sprintf('%02d:%02d:00', rand(6, 18), rand(0, 59)));
             $toTime = new DateTime(sprintf('%02d:%02d:00', rand(19, 23), rand(0, 59)));
 
-            $student = $this->em->getRepository(Student::class)->find($this->studentId);
+            try {
+                $outpassDto = CreateOutpassDto::create(
+                    student: $student,
+                    template: $passType,
+                    fromDate: $fromDate,
+                    toDate: $toDate,
+                    fromTime: $fromTime,
+                    toTime: $toTime,
+                    destination: $destinations[array_rand($destinations)],
+                    reason: 'Personal visit',
+                    attachments: [],
+                    customValues: null
+                );
 
-            $outpass = new OutpassRequest();
-            $outpass->setStudent($student);
-            $outpass->setFromDate($fromDate);
-            $outpass->setToDate($toDate);
-            $outpass->setFromTime($fromTime);
-            $outpass->setToTime($toTime);
-            $outpass->setTemplate($passType);
-            $outpass->setDestination($destinations[array_rand($destinations)]);
-            $outpass->setReason('Personal visit');
-            $outpass->setStatus(OutpassStatus::PENDING);
-            $outpass->setCreatedAt(new DateTime());
-
-            $this->em->persist($outpass);
+                $this->outpassService->createOutpass($outpassDto);
+            } catch (\InvalidArgumentException $e) {
+                echo "Failed to create outpass: " . $e->getMessage() . "\n";
+                continue;
+            }
         }
-
-        $this->em->flush();
 
         echo "Outpass data seeded successfully!\n";
     }

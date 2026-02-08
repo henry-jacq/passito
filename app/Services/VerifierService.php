@@ -349,7 +349,7 @@ class VerifierService
     /**
      * Fetch Gender-wise logs with or without pagination
      */
-    public function fetchLogsByGender(User $user, int $page = 1, int $limit = 10, bool $paginate = true): array
+    public function fetchLogsByGender(User $user, int $page = 1, int $limit = 10, bool $paginate = true, ?string $search = null, ?string $date = null, ?string $action = null): array
     {
         $queryBuilder = $this->em->createQueryBuilder();
         $queryBuilder->select('log')
@@ -357,9 +357,49 @@ class VerifierService
             ->join('log.outpass', 'outpass')
             ->join('outpass.student', 'student')
             ->join('student.user', 'user')
+            ->join('log.verifier', 'verifier')
             ->where('user.gender = :gender')
             ->orderBy('log.outTime', 'DESC')
             ->setParameter('gender', $user->getGender()->value);
+
+        if (!empty($search)) {
+            $isNumeric = ctype_digit($search);
+            if ($isNumeric) {
+                $queryBuilder->andWhere(
+                    $queryBuilder->expr()->eq('student.digitalId', ':digitalId')
+                )
+                    ->setParameter('digitalId', (int) $search);
+            } else {
+                $queryBuilder->andWhere(
+                    $queryBuilder->expr()->like('user.name', ':search')
+                )
+                    ->setParameter('search', '%' . $search . '%');
+            }
+        }
+
+        if (!empty($action)) {
+            if ($action === 'checkout') {
+                $queryBuilder->andWhere('log.inTime IS NULL');
+            } elseif ($action === 'checkin') {
+                $queryBuilder->andWhere('log.inTime IS NOT NULL');
+            }
+        }
+
+        if (!empty($date)) {
+            $start = \DateTime::createFromFormat('Y-m-d', $date);
+            if ($start) {
+                $end = (clone $start)->setTime(23, 59, 59);
+                $start->setTime(0, 0, 0);
+
+                if ($action === 'checkin') {
+                    $queryBuilder->andWhere('log.inTime BETWEEN :start AND :end');
+                } else {
+                    $queryBuilder->andWhere('log.outTime BETWEEN :start AND :end');
+                }
+                $queryBuilder->setParameter('start', $start);
+                $queryBuilder->setParameter('end', $end);
+            }
+        }
 
         if (!$paginate) {
             return $queryBuilder->getQuery()->getResult();

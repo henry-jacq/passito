@@ -73,6 +73,9 @@ class AdminController extends BaseController
 
         $page = max(1, (int) ($request->getQueryParams()['page'] ?? 1));
         $limit = 10;
+        $search = trim((string) ($request->getQueryParams()['q'] ?? ''));
+        $filterDate = trim((string) ($request->getQueryParams()['date'] ?? ''));
+        $filterAction = trim((string) ($request->getQueryParams()['action'] ?? ''));
 
         // Fetch the pagination data
         $paginationData = $this->outpassService->getPendingOutpass(
@@ -131,9 +134,10 @@ class AdminController extends BaseController
         $limit = 10;
         $search = trim((string) ($request->getQueryParams()['q'] ?? ''));
         $filter = trim((string) ($request->getQueryParams()['filter'] ?? ''));
+        $filterDate = trim((string) ($request->getQueryParams()['date'] ?? ''));
 
         // Fetch the pagination data
-        $paginationData = $this->outpassService->getOutpassRecords($page, $limit, $userData, $search, $filter);
+        $paginationData = $this->outpassService->getOutpassRecords($page, $limit, $userData, $search, $filter, $filterDate);
 
         // Redirect to the last page if the requested page exceeds available pages
         if ($paginationData['totalPages'] > 1 && $page > $paginationData['totalPages']) {
@@ -151,6 +155,7 @@ class AdminController extends BaseController
             ],
             'search' => $search,
             'filter' => $filter,
+            'filterDate' => $filterDate,
             'routeName' => $this->getRouteName($request),
             'breadcrumbs' => [
                 [
@@ -433,13 +438,19 @@ class AdminController extends BaseController
         $userData = $request->getAttribute('user');
         $page = max(1, (int) ($request->getQueryParams()['page'] ?? 1));
         $limit = 10;
+        $search = trim((string) ($request->getQueryParams()['q'] ?? ''));
+        $filterDate = trim((string) ($request->getQueryParams()['date'] ?? ''));
+        $filterAction = trim((string) ($request->getQueryParams()['action'] ?? ''));
 
         // Fetch the pagination data
         $paginationData = $this->verifierService->fetchLogsByGender(
             user: $userData,
             page: $page,
             limit: $limit,
-            paginate: true
+            paginate: true,
+            search: $search,
+            date: $filterDate,
+            action: $filterAction
         );
 
         // Redirect to the last page if the requested page exceeds available pages
@@ -456,6 +467,9 @@ class AdminController extends BaseController
                 'totalPages' => $paginationData['totalPages'],
                 'totalRecords' => $paginationData['total'],
             ],
+            'search' => $search,
+            'filterDate' => $filterDate,
+            'filterAction' => $filterAction,
             'routeName' => $this->getRouteName($request),
             'breadcrumbs' => [
                 [

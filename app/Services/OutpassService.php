@@ -280,6 +280,8 @@ class OutpassService
         $statuses = [
             OutpassStatus::APPROVED->value,
             OutpassStatus::EXPIRED->value,
+            OutpassStatus::REJECTED->value,
+            OutpassStatus::PARENT_DENIED->value,
         ];
 
         $wardenGender = $warden->getGender()->value;
@@ -299,51 +301,39 @@ class OutpassService
         return $queryBuilder;
     }
 
-    public function getOutpassRecords(int $page = 1, int $limit = 10, ?User $warden = null, ?string $search = null, ?string $filter = null)
+    public function getOutpassRecords(int $page = 1, int $limit = 10, ?User $warden = null, ?string $search = null, ?string $filter = null, ?string $date = null)
     {
         $offset = ($page - 1) * $limit;
 
         $queryBuilder = $this->buildBaseOutpassQuery($warden);
 
         if (!empty($search)) {
-            $normalizedFilter = $filter ?? '';
-            switch ($normalizedFilter) {
-                case 'outpass_id':
-                    if (ctype_digit($search)) {
-                        $queryBuilder->andWhere('o.id = :outpassId')
-                            ->setParameter('outpassId', (int) $search);
-                    } else {
-                        $queryBuilder->andWhere('1 = 0');
-                    }
-                    break;
-                case 'student_name':
-                    $queryBuilder->andWhere('u.name LIKE :search')
-                        ->setParameter('search', '%' . $search . '%');
-                    break;
-                case 'outpass_type':
-                    $queryBuilder->andWhere('t.name LIKE :search')
-                        ->setParameter('search', '%' . $search . '%');
-                    break;
-                case 'outpass_status':
-                    if (OutpassStatus::tryFrom(strtolower($search))) {
-                        $queryBuilder->andWhere('o.status = :status')
-                            ->setParameter('status', strtolower($search));
-                    } else {
-                        $queryBuilder->andWhere('1 = 0');
-                    }
-                    break;
-                default:
-                    $queryBuilder->andWhere(
-                        $queryBuilder->expr()->orX(
-                            $queryBuilder->expr()->like('u.name', ':search'),
-                            $queryBuilder->expr()->like('s.digitalId', ':search'),
-                            $queryBuilder->expr()->like('t.name', ':search'),
-                            $queryBuilder->expr()->like('o.destination', ':search'),
-                            $queryBuilder->expr()->like('o.id', ':search')
-                        )
-                    )
-                        ->setParameter('search', '%' . $search . '%');
-                    break;
+            $isNumeric = ctype_digit($search);
+            if ($isNumeric) {
+                $queryBuilder->andWhere('s.digitalId = :digitalId')
+                    ->setParameter('digitalId', (int) $search);
+            } else {
+                $queryBuilder->andWhere('u.name LIKE :search')
+                    ->setParameter('search', '%' . $search . '%');
+            }
+        }
+
+        if (!empty($filter)) {
+            $status = OutpassStatus::tryFrom(strtolower($filter));
+            if ($status) {
+                $queryBuilder->andWhere('o.status = :status')
+                    ->setParameter('status', $status->value);
+            }
+        }
+
+        if (!empty($date)) {
+            $start = \DateTime::createFromFormat('Y-m-d', $date);
+            if ($start) {
+                $end = (clone $start)->setTime(23, 59, 59);
+                $start->setTime(0, 0, 0);
+                $queryBuilder->andWhere('o.createdAt BETWEEN :startDate AND :endDate')
+                    ->setParameter('startDate', $start)
+                    ->setParameter('endDate', $end);
             }
         }
 

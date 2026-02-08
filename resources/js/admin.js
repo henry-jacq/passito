@@ -1148,19 +1148,78 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Records filter change handler
+    // Records filters/search handlers
     const recordsSearchInput = document.getElementById('search-records');
     const recordsFilterSelect = document.getElementById('filter-records');
-    if (recordsFilterSelect) {
-        recordsFilterSelect.addEventListener('change', () => {
-            const params = new URLSearchParams(window.location.search);
+    const recordsDateInput = document.getElementById('filter-records-date');
+
+    const applyRecordsFilters = () => {
+        const params = new URLSearchParams(window.location.search);
+        params.set('page', 1);
+
+        if (recordsSearchInput && recordsSearchInput.value) {
+            params.set('q', recordsSearchInput.value);
+        } else {
+            params.delete('q');
+        }
+
+        if (recordsFilterSelect && recordsFilterSelect.value) {
             params.set('filter', recordsFilterSelect.value);
-            params.set('page', 1);
-            if (recordsSearchInput && recordsSearchInput.value) {
-                params.set('q', recordsSearchInput.value);
-            }
-            window.location.search = params.toString();
-        });
+        } else {
+            params.delete('filter');
+        }
+
+        if (recordsDateInput && recordsDateInput.value) {
+            params.set('date', recordsDateInput.value);
+        } else {
+            params.delete('date');
+        }
+
+        window.location.search = params.toString();
+    };
+
+    if (recordsFilterSelect) {
+        recordsFilterSelect.addEventListener('change', applyRecordsFilters);
+    }
+    if (recordsDateInput) {
+        recordsDateInput.addEventListener('change', applyRecordsFilters);
+    }
+    const recordsSearchButton = document.getElementById('search-records-button');
+    if (recordsSearchButton) {
+        recordsSearchButton.addEventListener('click', applyRecordsFilters);
+    }
+
+    // Logbook filter change handler
+    const logbookSearchInput = document.getElementById('search-logbook');
+    const logbookDateInput = document.getElementById('filter-logbook-date');
+    const logbookActionSelect = document.getElementById('filter-logbook-action');
+
+    const updateLogbookFilters = () => {
+        const params = new URLSearchParams(window.location.search);
+        params.set('page', 1);
+        if (logbookSearchInput && logbookSearchInput.value) {
+            params.set('q', logbookSearchInput.value);
+        } else {
+            params.delete('q');
+        }
+        if (logbookDateInput && logbookDateInput.value) {
+            params.set('date', logbookDateInput.value);
+        } else {
+            params.delete('date');
+        }
+        if (logbookActionSelect && logbookActionSelect.value) {
+            params.set('action', logbookActionSelect.value);
+        } else {
+            params.delete('action');
+        }
+        window.location.search = params.toString();
+    };
+
+    if (logbookDateInput) {
+        logbookDateInput.addEventListener('change', updateLogbookFilters);
+    }
+    if (logbookActionSelect) {
+        logbookActionSelect.addEventListener('change', updateLogbookFilters);
     }
 
     // Unlock Requests

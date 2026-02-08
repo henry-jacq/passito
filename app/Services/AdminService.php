@@ -11,7 +11,6 @@ use App\Core\Storage;
 use App\Entity\Hostel;
 use App\Enum\UserRole;
 use App\Entity\Student;
-use App\Entity\Settings;
 use App\Core\JobDispatcher;
 use App\Enum\OutpassStatus;
 use App\Utils\CsvProcessor;
@@ -25,6 +24,7 @@ use App\Entity\WardenAssignment;
 use App\Jobs\GenerateOutpassPdf;
 use App\Services\AcademicService;
 use App\Entity\InstitutionProgram;
+use App\Services\SystemSettingsService;
 use Doctrine\ORM\EntityManagerInterface;
 
 class AdminService
@@ -39,7 +39,8 @@ class AdminService
         private readonly AcademicService $academicService,
         private readonly VerifierService $verifierService,
         private readonly EntityManagerInterface $em,
-        private readonly JobDispatcher $queue
+        private readonly JobDispatcher $queue,
+        private readonly SystemSettingsService $settingsService
     )
     {
     }
@@ -50,9 +51,8 @@ class AdminService
         $today = new DateTime('today');
         $checkedOut = $this->verifierService->fetchCheckedOutLogs($adminUser, $today);
         $checkedIn = $this->verifierService->fetchCheckedInLogs($adminUser, $today);
-        $lockStatus = $this->em->getRepository(Settings::class)->findOneBy([
-            'keyName' => 'lock_requests_' . strtolower($adminUser->getGender()->value)
-        ]);
+        $lockRequests = $this->getLockRequests();
+        $genderKey = strtolower($adminUser->getGender()->value);
 
         return [
             'pending' => $counts['pending'] ?? 0,
@@ -60,7 +60,7 @@ class AdminService
             'rejected' => $counts['rejected'] ?? 0,
             'checkedOut' => count($checkedOut),
             'checkedIn' => count($checkedIn),
-            'lockRequests' => $lockStatus ? filter_var($lockStatus->getValue(), FILTER_VALIDATE_BOOLEAN) : false,
+            'lockRequests' => (bool) ($lockRequests[$genderKey] ?? false),
         ];
     }
 
@@ -150,25 +150,13 @@ class AdminService
      */
     public function setLockRequests(string $lockStatus, string $userGender): bool
     {
-        $settings = $this->em->getRepository(Settings::class)->findOneBy([
-            'keyName' => 'lock_requests_' . strtolower($userGender)
-        ]);
+        $lockRequests = $this->getLockRequests();
+        $genderKey = strtolower($userGender);
+        $newValue = strtolower($lockStatus) === 'true';
+        $lockRequests[$genderKey] = $newValue;
+        $this->settingsService->set('lock_requests', $lockRequests);
 
-        if (!$settings) {
-            // Initialize if not present
-            $settings = new Settings();
-            $settings->setKeyName('lock_requests_' . strtolower($userGender));
-            $settings->setValue('false');
-            $this->em->persist($settings);
-        }
-
-        $newValue = strtolower($lockStatus) === 'true' ? 'true' : 'false';
-        $settings->setValue($newValue);
-
-        $this->em->persist($settings);
-        $this->em->flush();
-
-        return $newValue === 'true';
+        return $newValue;
     }
 
     /**
@@ -176,15 +164,26 @@ class AdminService
      *
      * @return bool
      */
-    public function isRequestLock(string $userGender, ?Settings $settings = null): bool
+    public function isRequestLock(string $userGender): bool
     {
-        if ($settings === null) {
-            $settings = $this->em->getRepository(Settings::class)->findOneBy([
-                'keyName' => 'lock_requests_' . strtolower($userGender)
-            ]);
+        $lockRequests = $this->getLockRequests();
+        $genderKey = strtolower($userGender);
+        return (bool) ($lockRequests[$genderKey] ?? false);
+    }
+
+    private function getLockRequests(): array
+    {
+        $defaults = [
+            'male' => false,
+            'female' => false,
+        ];
+
+        $lockRequests = $this->settingsService->get('lock_requests', $defaults);
+        if (!is_array($lockRequests)) {
+            return $defaults;
         }
 
-        return $settings && $settings->getValue() === 'true';
+        return array_merge($defaults, $lockRequests);
     }
 
     public function approveAllPending(User $approvedBy)

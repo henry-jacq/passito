@@ -238,6 +238,7 @@ class AdminController extends BaseController
             $settings = $this->outpassService->getSettings($userData->getGender());
             $args['settings'] = $settings;
         }
+        $args['verifierMode'] = $this->outpassService->getVerifierMode();
 
         if ($userData->getRole() == UserRole::SUPER_ADMIN) {
             $reportSettings = $this->reportService->getAllReportSettings($userData);
@@ -406,8 +407,7 @@ class AdminController extends BaseController
         $this->view->clearCacheIfDev();
 
         $userData = $request->getAttribute('user');
-        $verifierSettings = $this->outpassService->getSettings($userData->getGender());
-        $verifierMode = $verifierSettings?->getVerifierMode();
+        $verifierMode = $this->outpassService->getVerifierMode();
         $automatedVerifiers = $this->verifierService->getVerifiersByType(VerifierMode::AUTOMATED);
         $manualVerifiers = $this->verifierService->getVerifiersByType(VerifierMode::MANUAL);
 

@@ -5,9 +5,8 @@ namespace App\Middleware;
 use App\Core\View;
 use App\Core\Request;
 use App\Core\Session;
-use App\Entity\Settings;
+use App\Services\SystemSettingsService;
 use Psr\Http\Message\ResponseInterface;
-use Doctrine\ORM\EntityManagerInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -19,17 +18,13 @@ class MaintenanceMiddleware implements MiddlewareInterface
         private readonly View $view,
         private readonly Session $session,
         private readonly Request $requestService,
-        private readonly EntityManagerInterface $em,
-        private readonly ResponseFactoryInterface $responseFactory
+        private readonly ResponseFactoryInterface $responseFactory,
+        private readonly SystemSettingsService $settingsService
     ) {}
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $setting = $this->em->getRepository(Settings::class)->findOneBy([
-            'keyName' => 'maintenance_mode'
-        ]);
-
-        $isMaintenance = filter_var($setting?->getValue(), FILTER_VALIDATE_BOOLEAN);
+        $isMaintenance = (bool) $this->settingsService->get('maintenance_mode', false);
 
         if ($isMaintenance) {
             //$this->session->destroy();

@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Entity\Settings;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Services\SystemSettingsService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\InputOption;
@@ -16,12 +15,12 @@ class MaintenanceModeCommand extends Command
 {
     protected static $defaultName = 'app:maintenance';
 
-    private EntityManagerInterface $entityManager;
+    private SystemSettingsService $settingsService;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(SystemSettingsService $settingsService)
     {
         parent::__construct(self::$defaultName);
-        $this->entityManager = $entityManager;
+        $this->settingsService = $settingsService;
     }
 
     protected function configure(): void
@@ -38,19 +37,7 @@ class MaintenanceModeCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $key = 'maintenance_mode';
 
-        $settings = $this->entityManager
-            ->getRepository(Settings::class)
-            ->findOneBy(['keyName' => $key]);
-
-        if (!$settings) {
-            $settings = new Settings();
-            $settings->setKeyName($key);
-            $settings->setValue('false');
-            $this->entityManager->persist($settings);
-            $this->entityManager->flush();
-        }
-
-        $currentMode = $settings->getValue();
+        $currentMode = $this->settingsService->get($key, false) === true ? 'true' : 'false';
 
         if ($input->getOption('status')) {
             $io->info('Need to inform the users about the maintenance mode status by sending email');
@@ -61,8 +48,7 @@ class MaintenanceModeCommand extends Command
 
         if ($input->getOption('toggle')) {
             $newValue = $currentMode === 'true' ? 'false' : 'true';
-            $settings->setValue($newValue);
-            $this->entityManager->flush();
+            $this->settingsService->set($key, $newValue === 'true');
 
             if ($newValue == 'true') {
                 $io->success('Enabled Maintenance mode!');

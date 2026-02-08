@@ -11,11 +11,12 @@ use App\Enum\UserRole;
 use App\Entity\Student;
 use App\Enum\OutpassStatus;
 use App\Entity\OutpassRequest;
-use App\Entity\SystemSettings;
+use App\Dto\OutpassSettings;
 use App\Entity\WardenAssignment;
 use App\Enum\VerifierMode;
 use App\Entity\OutpassTemplate;
 use App\Entity\OutpassTemplateField;
+use App\Services\SystemSettingsService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
@@ -24,10 +25,23 @@ class OutpassService
     public function __construct(
         private readonly View $view,
         private readonly Storage $storage,
-        private readonly EntityManagerInterface $em
+        private readonly EntityManagerInterface $em,
+        private readonly SystemSettingsService $settingsService
     )
     {
     }
+
+    private const OUTPASS_SETTING_KEYS = [
+        'parentApproval' => 'outpass_parent_approval',
+        'weekdayCollegeHoursStart' => 'outpass_weekday_college_hours_start',
+        'weekdayCollegeHoursEnd' => 'outpass_weekday_college_hours_end',
+        'weekdayOvernightStart' => 'outpass_weekday_overnight_start',
+        'weekdayOvernightEnd' => 'outpass_weekday_overnight_end',
+        'weekendStartTime' => 'outpass_weekend_start_time',
+        'weekendEndTime' => 'outpass_weekend_end_time',
+        'lateArrivalGraceMinutes' => 'outpass_late_arrival_grace_minutes',
+    ];
+    private const VERIFIER_MODE_KEY = 'verifier_mode';
 
     // Student methods
     public function getRecentStudentOutpass(Student $student, int $limit = 5)
@@ -464,101 +478,126 @@ class OutpassService
     }
 
 
-    public function getSettings(Gender $gender)
+    public function getSettings(Gender $gender): OutpassSettings
     {
-        $settings = $this->em->getRepository(SystemSettings::class)
-            ->findBy(['type' => $gender]);
+        $genderKey = $gender->value;
+        $defaults = $this->getDefaultValues();
+        $merged = [];
 
-        // Return the first element if there's only one, otherwise return the array
-        return count($settings) === 1 ? $settings[0] : $settings;
+        foreach (self::OUTPASS_SETTING_KEYS as $field => $key) {
+            $defaultValue = $defaults[$genderKey][$field] ?? null;
+            $perGender = $this->settingsService->get($key, [
+                'male' => $defaults['male'][$field] ?? null,
+                'female' => $defaults['female'][$field] ?? null,
+            ]);
+            if (!is_array($perGender)) {
+                $perGender = [
+                    'male' => $defaults['male'][$field] ?? null,
+                    'female' => $defaults['female'][$field] ?? null,
+                ];
+            }
+            $merged[$field] = $perGender[$genderKey] ?? $defaultValue;
+        }
+
+        return new OutpassSettings($gender, $merged);
     }
 
-    public function updateSettings(User $user, array $data)
+    public function getVerifierMode(): VerifierMode
     {
-        $settings = $this->em->getRepository(SystemSettings::class)
-            ->findOneBy(['type' => $user->getGender()]);
+        $mode = $this->settingsService->get(self::VERIFIER_MODE_KEY, null);
+        if (is_string($mode)) {
+            return VerifierMode::tryFrom($mode) ?? VerifierMode::MANUAL;
+        }
+
+        return VerifierMode::MANUAL;
+    }
+
+    public function updateSettings(User $user, array $data): OutpassSettings
+    {
+        $defaults = $this->getDefaultValues();
+        $genderKey = $user->getGender()->value;
+        $current = $defaults[$genderKey] ?? [];
 
         // Check if "reset_defaults" is set to "true"
         if (!empty($data['reset_defaults']) && $data['reset_defaults'] === 'true') {
-            // Reset to default values based on gender
-            $defaultValues = $this->getDefaultValues($user->getGender()->value);
-
-            $settings->setWeekdayCollegeHoursStart($defaultValues['weekdayCollegeHoursStart']);
-            $settings->setWeekdayCollegeHoursEnd($defaultValues['weekdayCollegeHoursEnd']);
-            $settings->setWeekdayOvernightStart($defaultValues['weekdayOvernightStart']);
-            $settings->setWeekdayOvernightEnd($defaultValues['weekdayOvernightEnd']);
-            $settings->setWeekendStartTime($defaultValues['weekendStartTime']);
-            $settings->setWeekendEndTime($defaultValues['weekendEndTime']);
-            $settings->setVerifierMode($defaultValues['verifierMode']);
-            $settings->setParentApproval($defaultValues['parentApproval'] ?? false);
-            $settings->setCompanionVerification($defaultValues['companionVerification'] ?? false);
-            $settings->setEmergencyContactNotification($defaultValues['emergencyContactNotification']);
-            $settings->setAppNotification($defaultValues['appNotification']);
-            $settings->setEmailNotification($defaultValues['emailNotification']);
-            $settings->setSmsNotification($defaultValues['smsNotification']);
+            $current = $defaults[$genderKey] ?? [];
+            $this->settingsService->set(self::VERIFIER_MODE_KEY, VerifierMode::MANUAL->value);
         } else {
-            // Helper function to convert time strings to DateTime or null
-            $convertToTime = function (?string $timeString): ?\DateTime {
-                return $timeString ? \DateTime::createFromFormat('H:i', $timeString) : null;
+            $normalizeTime = function (?string $timeString): ?string {
+                $timeString = $timeString !== null ? trim($timeString) : '';
+                if ($timeString === '') {
+                    return null;
+                }
+                $parsed = \DateTime::createFromFormat('H:i', $timeString);
+                if ($parsed) {
+                    return $parsed->format('H:i');
+                }
+                $parsedWithSeconds = \DateTime::createFromFormat('H:i:s', $timeString);
+                return $parsedWithSeconds ? $parsedWithSeconds->format('H:i') : null;
             };
 
-            // Update settings fields with appropriate conversions
-            $settings->setWeekdayCollegeHoursStart($convertToTime($data['weekday_college_hours_start'] ?? null));
-            $settings->setWeekdayCollegeHoursEnd($convertToTime($data['weekday_college_hours_end'] ?? null));
-            $settings->setWeekdayOvernightStart($convertToTime($data['weekday_overnight_start'] ?? null));
-            $settings->setWeekdayOvernightEnd($convertToTime($data['weekday_overnight_end'] ?? null));
-            $settings->setWeekendStartTime($convertToTime($data['weekend_start_time'] ?? null));
-            $settings->setWeekendEndTime($convertToTime($data['weekend_end_time'] ?? null));
-            $verifierMode = VerifierMode::tryFrom($data['verifier_mode'] ?? '') ?? VerifierMode::MANUAL;
-            $settings->setVerifierMode($verifierMode);
-            $settings->setParentApproval(!empty($data['parent_approval']));
-            $settings->setCompanionVerification(!empty($data['companion_verification']));
-            $settings->setEmergencyContactNotification(!empty($data['emergency_contact_notification']));
-            $settings->setAppNotification(!empty($data['app_notification']));
-            $settings->setEmailNotification(!empty($data['email_notification']));
-            $settings->setSmsNotification(!empty($data['sms_notification']));
+            $current['weekdayCollegeHoursStart'] = $normalizeTime($data['weekday_college_hours_start'] ?? null);
+            $current['weekdayCollegeHoursEnd'] = $normalizeTime($data['weekday_college_hours_end'] ?? null);
+            $current['weekdayOvernightStart'] = $normalizeTime($data['weekday_overnight_start'] ?? null);
+            $current['weekdayOvernightEnd'] = $normalizeTime($data['weekday_overnight_end'] ?? null);
+            $current['weekendStartTime'] = $normalizeTime($data['weekend_start_time'] ?? null);
+            $current['weekendEndTime'] = $normalizeTime($data['weekend_end_time'] ?? null);
+            $current['parentApproval'] = !empty($data['parent_approval']);
+            $lateArrivalGrace = isset($data['late_arrival_grace_minutes']) ? (int) $data['late_arrival_grace_minutes'] : 30;
+            $current['lateArrivalGraceMinutes'] = max(0, $lateArrivalGrace);
+
+            if (isset($data['verifier_mode'])) {
+                $verifierMode = VerifierMode::tryFrom($data['verifier_mode']) ?? VerifierMode::MANUAL;
+                $this->settingsService->set(self::VERIFIER_MODE_KEY, $verifierMode->value);
+            }
         }
 
-        // Persist and flush changes to database
-        $this->em->persist($settings);
-        $this->em->flush();
+        foreach (self::OUTPASS_SETTING_KEYS as $field => $key) {
+            $perGender = $this->settingsService->get($key, [
+                'male' => $defaults['male'][$field] ?? null,
+                'female' => $defaults['female'][$field] ?? null,
+            ]);
+            if (!is_array($perGender)) {
+                $perGender = [
+                    'male' => $defaults['male'][$field] ?? null,
+                    'female' => $defaults['female'][$field] ?? null,
+                ];
+            }
 
-        return $settings;
+            if (!array_key_exists($genderKey, $perGender)) {
+                $perGender[$genderKey] = $defaults[$genderKey][$field] ?? null;
+            }
+
+            $perGender[$genderKey] = $current[$field] ?? ($defaults[$genderKey][$field] ?? null);
+            $this->settingsService->set($key, $perGender);
+        }
+
+        return new OutpassSettings($user->getGender(), $current);
     }
 
-    private function getDefaultValues(string $gender): array
+    private function getDefaultValues(): array
     {
-        if ($gender === 'male') {
-            return [
-                'weekdayCollegeHoursStart' => new \DateTime('09:00'),
-                'weekdayCollegeHoursEnd' => new \DateTime('17:00'),
-                'weekdayOvernightStart' => new \DateTime('22:00'),
-                'weekdayOvernightEnd' => new \DateTime('06:00'),
-                'weekendStartTime' => new \DateTime('09:00'),
-                'weekendEndTime' => new \DateTime('23:59:59'),
-                'verifierMode' => VerifierMode::MANUAL,
-                'emergencyContactNotification' => false,
-                'appNotification' => true,
-                'emailNotification' => true,
-                'smsNotification' => false,
-            ];
-        }
-
-        // Default values for female
         return [
-            'weekdayCollegeHoursStart' => new \DateTime('09:00'),
-            'weekdayCollegeHoursEnd' => new \DateTime('17:00'),
-            'weekdayOvernightStart' => new \DateTime('20:00'),
-            'weekdayOvernightEnd' => new \DateTime('06:00'),
-            'weekendStartTime' => new \DateTime('09:00'),
-            'weekendEndTime' => new \DateTime('22:00'),
-            'verifierMode' => VerifierMode::MANUAL,
-            'parentApproval' => true,
-            'companionVerification' => false,
-            'emergencyContactNotification' => false,
-            'appNotification' => true,
-            'emailNotification' => true,
-            'smsNotification' => true,
+            'male' => [
+                'weekdayCollegeHoursStart' => '09:00',
+                'weekdayCollegeHoursEnd' => '17:00',
+                'weekdayOvernightStart' => '22:00',
+                'weekdayOvernightEnd' => '06:00',
+                'weekendStartTime' => '09:00',
+                'weekendEndTime' => '23:59',
+                'parentApproval' => false,
+                'lateArrivalGraceMinutes' => 30,
+            ],
+            'female' => [
+                'weekdayCollegeHoursStart' => '09:00',
+                'weekdayCollegeHoursEnd' => '17:00',
+                'weekdayOvernightStart' => '20:00',
+                'weekdayOvernightEnd' => '06:00',
+                'weekendStartTime' => '09:00',
+                'weekendEndTime' => '22:00',
+                'parentApproval' => true,
+                'lateArrivalGraceMinutes' => 30,
+            ],
         ];
     }
 

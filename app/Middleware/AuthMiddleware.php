@@ -5,10 +5,10 @@ namespace App\Middleware;
 use App\Core\View;
 use App\Entity\User;
 use App\Entity\Verifier;
-use App\Entity\SystemSettings;
 use App\Enum\UserRole;
 use App\Enum\VerifierMode;
 use App\Enum\UserStatus;
+use App\Services\OutpassService;
 use App\Services\JwtService;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -23,7 +23,8 @@ class AuthMiddleware implements MiddlewareInterface
         private readonly View $view,
         private readonly JwtService $jwt,
         private readonly EntityManagerInterface $em,
-        private readonly ResponseFactoryInterface $responseFactory
+        private readonly ResponseFactoryInterface $responseFactory,
+        private readonly OutpassService $outpassService
     )
     {
     }
@@ -48,9 +49,7 @@ class AuthMiddleware implements MiddlewareInterface
                         $location = $this->view->urlFor('admin.dashboard');
                     }
                     if (UserRole::isVerifier($user->getRole()->value)) {
-                        $settings = $this->em->getRepository(SystemSettings::class)
-                            ->findOneBy(['type' => $user->getGender()]);
-                        $verifierMode = $settings?->getVerifierMode();
+                        $verifierMode = $this->outpassService->getVerifierMode();
                         $verifier = $this->em->getRepository(Verifier::class)->findOneBy([
                             'user' => $user,
                             'type' => VerifierMode::MANUAL,

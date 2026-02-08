@@ -77,8 +77,7 @@ class VerifierMiddleware implements MiddlewareInterface
                 ->withHeader('Location', $this->view->urlFor('auth.login'));
         }
 
-        $settings = $this->outpassService->getSettings($user->getGender());
-        $verifierMode = $settings?->getVerifierMode();
+        $verifierMode = $this->outpassService->getVerifierMode();
         if ($verifierMode === VerifierMode::AUTOMATED) {
             if ($request->getMethod() === 'GET' && !$this->requestService->isXhr($request)) {
                 $this->session->put('_redirect', (string) $request->getUri());

@@ -4,8 +4,6 @@ namespace App\Seeders;
 
 use DateTime;
 use App\Entity\SystemSettings;
-use App\Enum\Gender;
-use App\Enum\VerifierMode;
 use Doctrine\ORM\EntityManagerInterface;
 
 class OutpassRulesSeeder
@@ -15,61 +13,49 @@ class OutpassRulesSeeder
     public function run()
     {
         $settings = [
-            [
-                'type' => 'male',
-                'verifierMode' => VerifierMode::MANUAL,
-                'parentApproval' => false,
-                'companionVerification' => false,
-                'emergencyContactNotification' => false,
-                'weekdayCollegeHoursStart' => '08:00:00',
-                'weekdayCollegeHoursEnd' => '15:30:00',
-                'weekdayOvernightStart' => '22:00:00',
-                'weekdayOvernightEnd' => '04:00:00',
-                'weekendStartTime' => '05:00:00',
-                'weekendEndTime' => '22:00:00',
-                'emailNotification' => true,
-                'smsNotification' => false,
-                'appNotification' => false,
+            'outpass_parent_approval' => [
+                'male' => false,
+                'female' => true,
             ],
-            [
-                'type' => 'female',
-                'verifierMode' => VerifierMode::MANUAL,
-                'parentApproval' => true,
-                'companionVerification' => false,
-                'emergencyContactNotification' => false, // Different for female
-                'weekdayCollegeHoursStart' => '08:00:00',
-                'weekdayCollegeHoursEnd' => '15:30:00',
-                'weekdayOvernightStart' => '20:30:00', // Different for female
-                'weekdayOvernightEnd' => '06:00:00',
-                'weekendStartTime' => '06:00:00',
-                'weekendEndTime' => '20:30:00', // Different for female
-                'emailNotification' => true,
-                'smsNotification' => true, // Different for female
-                'appNotification' => false,
+            'outpass_weekday_college_hours_start' => [
+                'male' => '08:00',
+                'female' => '08:00',
+            ],
+            'outpass_weekday_college_hours_end' => [
+                'male' => '15:30',
+                'female' => '15:30',
+            ],
+            'outpass_weekday_overnight_start' => [
+                'male' => '22:00',
+                'female' => '20:30',
+            ],
+            'outpass_weekday_overnight_end' => [
+                'male' => '04:00',
+                'female' => '06:00',
+            ],
+            'outpass_weekend_start_time' => [
+                'male' => '05:00',
+                'female' => '06:00',
+            ],
+            'outpass_weekend_end_time' => [
+                'male' => '22:00',
+                'female' => '20:30',
+            ],
+            'outpass_late_arrival_grace_minutes' => [
+                'male' => 30,
+                'female' => 30,
             ],
         ];
 
-        foreach ($settings as $setting) {
+        foreach ($settings as $keyName => $value) {
             $existingSetting = $this->em->getRepository(SystemSettings::class)
-                ->findOneBy(['type' => $setting['type']]);
+                ->findOneBy(['keyName' => $keyName]);
 
             if (!$existingSetting) {
                 $newSetting = new SystemSettings();
-                $newSetting->setType(Gender::from($setting['type']));
-                $newSetting->setVerifierMode($setting['verifierMode']);
-                $newSetting->setParentApproval($setting['parentApproval']);
-                $newSetting->setCompanionVerification($setting['companionVerification']);
-                $newSetting->setEmergencyContactNotification($setting['emergencyContactNotification']);
-                $newSetting->setWeekdayCollegeHoursStart(new \DateTime($setting['weekdayCollegeHoursStart']));
-                $newSetting->setWeekdayCollegeHoursEnd(new \DateTime($setting['weekdayCollegeHoursEnd']));
-                $newSetting->setWeekdayOvernightStart(new \DateTime($setting['weekdayOvernightStart']));
-                $newSetting->setWeekdayOvernightEnd(new \DateTime($setting['weekdayOvernightEnd']));
-                $newSetting->setWeekendStartTime(new \DateTime($setting['weekendStartTime']));
-                $newSetting->setWeekendEndTime(new \DateTime($setting['weekendEndTime']));
-                $newSetting->setEmailNotification($setting['emailNotification']);
-                $newSetting->setSmsNotification($setting['smsNotification']);
-                $newSetting->setAppNotification($setting['appNotification']);
-
+                $newSetting->setKeyName($keyName);
+                $newSetting->setValue(json_encode($value, JSON_UNESCAPED_SLASHES));
+                $newSetting->setUpdatedAt(new DateTime());
                 $this->em->persist($newSetting);
             }
         }

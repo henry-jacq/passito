@@ -474,7 +474,7 @@ class VerifierService
     }
 
     /**
-     * Fetch late arrivals (more than 30 minutes late)
+     * Fetch late arrivals beyond the configured grace period.
      * Fetch all late arrivals for a given user.
      */
     public function fetchLateArrivals(User $user, ?\DateTimeInterface $forDate = null): array
@@ -483,6 +483,8 @@ class VerifierService
         $userGender = $user->getGender()?->value;
         $targetDate = $forDate?->format('Y-m-d');
         $lateArrivals = [];
+        $settings = $this->outpassService->getSettings($user->getGender());
+        $graceMinutes = $settings?->getLateArrivalGraceMinutes() ?? 30;
 
         foreach ($allLogs as $log) {
             $outpass = $log->getOutpass();
@@ -510,7 +512,7 @@ class VerifierService
                     $diff = $expectedReturn->diff($actualInTime);
                     $minutesLate = ($diff->days * 24 * 60) + ($diff->h * 60) + $diff->i;
 
-                    if ($actualInTime > $expectedReturn && $minutesLate > 30) {
+                    if ($actualInTime > $expectedReturn && $minutesLate > $graceMinutes) {
                         $logGender = $outpass->getStudent()?->getUser()?->getGender()?->value;
                         if ($logGender === $userGender) {
                             $lateArrivals[] = $log;

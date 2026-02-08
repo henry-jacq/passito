@@ -15,8 +15,7 @@ ${basename(__FILE__, '.php')} = function () {
             ], 403);
         }
 
-        $settings = $this->outpassService->getSettings($user->getGender());
-        $verifierMode = $settings?->getVerifierMode();
+        $verifierMode = $this->outpassService->getVerifierMode();
         if ($verifierMode === VerifierMode::AUTOMATED) {
             return $this->response([
                 'message' => 'Verifier access is disabled.',

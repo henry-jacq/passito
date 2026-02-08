@@ -15,8 +15,7 @@ ${basename(__FILE__, '.php')} = function () {
             ], 403);
         }
 
-        $settings = $this->outpassService->getSettings($user->getGender());
-        $verifierMode = $settings?->getVerifierMode();
+        $verifierMode = $this->outpassService->getVerifierMode();
         if ($verifierMode === \App\Enum\VerifierMode::AUTOMATED) {
             return $this->response([
                 'message' => 'Verifier access is disabled.',
@@ -44,24 +43,6 @@ ${basename(__FILE__, '.php')} = function () {
                 'message' => 'Outpass not found.',
                 'status' => false
             ], 404);
-        }
-
-        $fromDate = $outpass->getFromDate();
-        $fromTime = $outpass->getFromTime();
-        $toDate = $outpass->getToDate();
-        $toTime = $outpass->getToTime();
-
-        if ($fromDate && $fromTime && $toDate && $toTime) {
-            $start = new \DateTime($fromDate->format('Y-m-d') . ' ' . $fromTime->format('H:i:s'));
-            $end = new \DateTime($toDate->format('Y-m-d') . ' ' . $toTime->format('H:i:s'));
-            $now = new \DateTime();
-
-            if ($now < $start || $now > $end) {
-                return $this->response([
-                    'message' => 'Outpass is not valid for this time window.',
-                    'status' => false,
-                ], 403);
-            }
         }
 
         $log = $this->em->getRepository(Logbook::class)->findOneBy(['outpass' => $outpass]);

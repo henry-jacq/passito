@@ -186,28 +186,6 @@ use App\Enum\Gender;
                             </div>
                             <p class="mt-2 text-sm text-gray-500">Allows parents to approve requests via SMS.</p>
                         </div>
-
-                        <!-- Companion Verification -->
-                        <div>
-                            <div class="flex items-center space-x-2">
-                                <input type="checkbox" id="companion-verification" name="companion_verification"
-                                    class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                                    <?= $settings->getCompanionVerification() ? 'checked' : '' ?>>
-                                <label for="companion-verification" class="text-sm font-medium text-gray-700">Companion Verification</label>
-                            </div>
-                            <p class="mt-2 text-sm text-gray-500">Requires users to specify companions for safety.</p>
-                        </div>
-
-                        <!-- Emergency Contact Notification -->
-                        <div>
-                            <div class="flex items-center space-x-2">
-                                <input type="checkbox" id="emergency-contact-notification" name="emergency_contact_notification"
-                                    class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                                    <?= $settings->getEmergencyContactNotification() ? 'checked' : '' ?>>
-                                <label for="emergency-contact-notification" class="text-sm font-medium text-gray-700">Emergency Contact Notification</label>
-                            </div>
-                            <p class="mt-2 text-sm text-gray-500">Notifies emergency contacts during outings.</p>
-                        </div>
                     </div>
                 </div>
             </section>
@@ -220,8 +198,9 @@ use App\Enum\Gender;
                 <p class="mb-6 text-sm text-gray-500">
                     Choose how outpass check-in/out is verified across the campus.
                 </p>
-                <?php $verifierMode = $settings->getVerifierMode(); ?>
+                <?php $verifierMode = $verifierMode ?? \App\Enum\VerifierMode::MANUAL; ?>
                 <div class="space-y-4">
+                    <p class="text-xs text-gray-500">Changes here apply to both genders.</p>
                     <label for="verifier-mode-automated" class="flex items-start space-x-3">
                         <input type="radio" id="verifier-mode-automated" name="verifier_mode" value="automated"
                             class="w-4 h-4 mt-1 text-blue-600 border-gray-300 focus:ring-blue-500"
@@ -253,32 +232,30 @@ use App\Enum\Gender;
             </div>
         </section>
 
-        <!-- Notification Preferences -->
+        <!-- Late Arrival Grace Time -->
         <section class="mb-8 bg-white rounded-lg shadow-lg">
             <div class="p-6">
-                <h3 class="mb-4 text-lg font-semibold text-gray-800">Notification Preferences</h3>
-                <div class="space-y-4">
-                    <div class="flex items-center">
-                        <input type="checkbox" id="app-notification" name="app_notification"
-                            class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                            <?= $settings->getAppNotification() ? 'checked' : '' ?>>
-                        <label for="app-notification" class="ml-3 text-sm font-medium text-gray-700">App Notifications</label>
-                    </div>
-                    <div class="flex items-center">
-                        <input type="checkbox" id="email-notification" name="email_notification"
-                            class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                            <?= $settings->getEmailNotification() ? 'checked' : '' ?>>
-                        <label for="email-notification" class="ml-3 text-sm font-medium text-gray-700">Email Notifications</label>
-                    </div>
-                    <div class="flex items-center">
-                        <input type="checkbox" id="sms-notification" name="sms_notification"
-                            class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                            <?= $settings->getSmsNotification() ? 'checked' : '' ?>>
-                        <label for="sms-notification" class="ml-3 text-sm font-medium text-gray-700">SMS Notifications</label>
-                    </div>
+                <h3 class="mb-2 text-lg font-semibold text-gray-800">Grace Time for Late Arrivals</h3>
+                <p class="mb-6 text-sm text-gray-500">
+                    Set the number of minutes after the expected return time before a student is marked late.
+                </p>
+                <div class="max-w-xs">
+                    <label for="late-arrival-grace-minutes" class="block text-sm font-medium text-gray-700">
+                        Grace Time (minutes)
+                    </label>
+                    <input
+                        type="number"
+                        id="late-arrival-grace-minutes"
+                        name="late_arrival_grace_minutes"
+                        min="0"
+                        step="1"
+                        class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                        value="<?= (int) $settings->getLateArrivalGraceMinutes() ?>">
                 </div>
             </div>
         </section>
+
+        <!-- Notification Preferences -->
 
         <!-- Save and Reset Buttons -->
         <div class="flex justify-end mt-6 space-x-4">

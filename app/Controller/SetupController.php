@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Core\View;
 use App\Controller\BaseController;
 use App\Entity\User;
-use App\Entity\Settings;
 use App\Enum\Gender;
 use App\Enum\UserRole;
 use App\Enum\UserStatus;
@@ -14,6 +13,7 @@ use App\Enum\InstitutionType;
 use App\Services\AdminService;
 use App\Services\UserService;
 use App\Services\AcademicService;
+use App\Services\SystemSettingsService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -25,7 +25,8 @@ class SetupController extends BaseController
         private readonly EntityManagerInterface $em,
         private readonly UserService $userService,
         private readonly AcademicService $academicService,
-        private readonly AdminService $adminService
+        private readonly AdminService $adminService,
+        private readonly SystemSettingsService $settingsService
     )
     {
     }
@@ -55,8 +56,8 @@ class SetupController extends BaseController
             ], 422);
         }
 
-        $existingSetup = $this->em->getRepository(Settings::class)->findOneBy(['keyName' => 'setup_complete']);
-        if ($existingSetup && $existingSetup->getValue() === 'true') {
+        $existingSetup = $this->settingsService->get('setup_complete', false);
+        if ($existingSetup === true) {
             return $this->json($response, [
                 'status' => false,
                 'message' => 'Setup already completed'
@@ -327,25 +328,7 @@ class SetupController extends BaseController
 
     private function markSetupComplete(): void
     {
-        $settingsRepo = $this->em->getRepository(Settings::class);
-        $setupSetting = $settingsRepo->findOneBy(['keyName' => 'setup_complete']);
-        if (!$setupSetting) {
-            $setupSetting = new Settings();
-            $setupSetting->setKeyName('setup_complete');
-        }
-        $setupSetting->setValue('true');
-        $setupSetting->setUpdatedAt(new \DateTime());
-        $this->em->persist($setupSetting);
-
-        $adminCreated = $settingsRepo->findOneBy(['keyName' => 'admin_created']);
-        if (!$adminCreated) {
-            $adminCreated = new Settings();
-            $adminCreated->setKeyName('admin_created');
-        }
-        $adminCreated->setValue('true');
-        $adminCreated->setUpdatedAt(new \DateTime());
-        $this->em->persist($adminCreated);
-
-        $this->em->flush();
+        $this->settingsService->set('setup_complete', true);
+        $this->settingsService->set('admin_created', true);
     }
 }

@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Enum\Gender;
-use App\Enum\VerifierMode;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
@@ -17,205 +16,50 @@ class SystemSettings
     #[ORM\Column(type: 'integer')]
     private int $id;
 
-    #[ORM\Column(type: 'string', enumType: Gender::class)]
-    private Gender $type;
+    #[ORM\Column(type: 'string', length: 255, unique: true)]
+    private string $keyName;
 
-    #[ORM\Column(type: 'string', enumType: VerifierMode::class)]
-    private VerifierMode $verifierMode = VerifierMode::MANUAL;
+    #[ORM\Column(type: 'text')]
+    private string $value;
 
-    #[ORM\Column(type: 'boolean')]
-    private bool $parentApproval;
-
-    #[ORM\Column(type: 'boolean')]
-    private bool $companionVerification;
-
-    #[ORM\Column(type: 'boolean')]
-    private bool $emergencyContactNotification;
-
-    #[ORM\Column(type: 'time', nullable: true)]
-    private ?\DateTime $weekdayCollegeHoursStart = null;
-
-    #[ORM\Column(type: 'time', nullable: true)]
-    private ?\DateTime $weekdayCollegeHoursEnd = null;
-
-    #[ORM\Column(type: 'time', nullable: true)]
-    private ?\DateTime $weekdayOvernightStart = null;
-
-    #[ORM\Column(type: 'time', nullable: true)]
-    private ?\DateTime $weekdayOvernightEnd = null;
-
-    #[ORM\Column(type: 'time', nullable: true)]
-    private ?\DateTime $weekendStartTime = null;
-
-    #[ORM\Column(type: 'time', nullable: true)]
-    private ?\DateTime $weekendEndTime = null;
-
-    #[ORM\Column(type: 'boolean')]
-    private bool $emailNotification;
-
-    #[ORM\Column(type: 'boolean')]
-    private bool $smsNotification;
-
-    #[ORM\Column(type: 'boolean')]
-    private bool $appNotification;
+    #[ORM\Column(type: 'datetime')]
+    private DateTime $updatedAt;
 
     public function getId(): int
     {
         return $this->id;
     }
 
-
-    public function getType(): Gender
+    public function getKeyName(): string
     {
-        return $this->type;
+        return $this->keyName;
     }
 
-    public function setType(Gender $gender): self
+    public function setKeyName(string $keyName): self
     {
-        $this->type = $gender;
+        $this->keyName = $keyName;
         return $this;
     }
 
-    public function getVerifierMode(): VerifierMode
+    public function getValue(): string
     {
-        return $this->verifierMode;
+        return $this->value;
     }
 
-    public function setVerifierMode(VerifierMode $verifierMode): self
+    public function setValue(string $value): self
     {
-        $this->verifierMode = $verifierMode;
+        $this->value = $value;
         return $this;
     }
 
-    public function getParentApproval(): bool
+    public function getUpdatedAt(): DateTime
     {
-        return $this->parentApproval;
+        return $this->updatedAt;
     }
 
-    public function setParentApproval(bool $parentApproval): self
+    public function setUpdatedAt(DateTime $updatedAt): self
     {
-        $this->parentApproval = $parentApproval;
-        return $this;
-    }
-
-    public function getCompanionVerification(): bool
-    {
-        return $this->companionVerification;
-    }
-
-    public function setCompanionVerification(bool $companionVerification): self
-    {
-        $this->companionVerification = $companionVerification;
-        return $this;
-    }
-
-    public function getEmergencyContactNotification(): bool
-    {
-        return $this->emergencyContactNotification;
-    }
-
-    public function setEmergencyContactNotification(bool $emergencyContactNotification): self
-    {
-        $this->emergencyContactNotification = $emergencyContactNotification;
-        return $this;
-    }
-
-    public function getWeekdayCollegeHoursStart(): ?\DateTime
-    {
-        return $this->weekdayCollegeHoursStart;
-    }
-
-    public function setWeekdayCollegeHoursStart(?\DateTime $weekdayCollegeHoursStart): self
-    {
-        $this->weekdayCollegeHoursStart = $weekdayCollegeHoursStart;
-        return $this;
-    }
-
-    public function getWeekdayCollegeHoursEnd(): ?\DateTime
-    {
-        return $this->weekdayCollegeHoursEnd;
-    }
-
-    public function setWeekdayCollegeHoursEnd(?\DateTime $weekdayCollegeHoursEnd): self
-    {
-        $this->weekdayCollegeHoursEnd = $weekdayCollegeHoursEnd;
-        return $this;
-    }
-
-    public function getWeekdayOvernightStart(): ?\DateTime
-    {
-        return $this->weekdayOvernightStart;
-    }
-
-    public function setWeekdayOvernightStart(?\DateTime $weekdayOvernightStart): self
-    {
-        $this->weekdayOvernightStart = $weekdayOvernightStart;
-        return $this;
-    }
-
-    public function getWeekdayOvernightEnd(): ?\DateTime
-    {
-        return $this->weekdayOvernightEnd;
-    }
-
-    public function setWeekdayOvernightEnd(?\DateTime $weekdayOvernightEnd): self
-    {
-        $this->weekdayOvernightEnd = $weekdayOvernightEnd;
-        return $this;
-    }
-
-    public function getWeekendStartTime(): ?\DateTime
-    {
-        return $this->weekendStartTime;
-    }
-
-    public function setWeekendStartTime(?\DateTime $weekendStartTime): self
-    {
-        $this->weekendStartTime = $weekendStartTime;
-        return $this;
-    }
-
-    public function getWeekendEndTime(): ?\DateTime
-    {
-        return $this->weekendEndTime;
-    }
-
-    public function setWeekendEndTime(?\DateTime $weekendEndTime): self
-    {
-        $this->weekendEndTime = $weekendEndTime;
-        return $this;
-    }
-
-    public function getEmailNotification(): bool
-    {
-        return $this->emailNotification;
-    }
-
-    public function setEmailNotification(bool $emailNotification): self
-    {
-        $this->emailNotification = $emailNotification;
-        return $this;
-    }
-
-    public function getSmsNotification(): bool
-    {
-        return $this->smsNotification;
-    }
-
-    public function setSmsNotification(bool $smsNotification): self
-    {
-        $this->smsNotification = $smsNotification;
-        return $this;
-    }
-
-    public function getAppNotification(): bool
-    {
-        return $this->appNotification;
-    }
-
-    public function setAppNotification(bool $appNotification): self
-    {
-        $this->appNotification = $appNotification;
+        $this->updatedAt = $updatedAt;
         return $this;
     }
 }

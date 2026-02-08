@@ -43,7 +43,22 @@ class AppSettingsSeeder
                 $newSetting = new SystemSettings();
                 $newSetting->setKeyName($setting['keyName']);
                 $value = $setting['value'];
-                $newSetting->setValue(is_string($value) ? $value : json_encode($value, JSON_UNESCAPED_SLASHES));
+                
+                // Store value based on type
+                if (is_string($value)) {
+                    // Store strings as-is without JSON encoding
+                    $newSetting->setValue($value);
+                } elseif (is_bool($value)) {
+                    // Store booleans as 'true' or 'false' strings
+                    $newSetting->setValue($value ? 'true' : 'false');
+                } elseif (is_int($value)) {
+                    // Store integers as strings
+                    $newSetting->setValue((string) $value);
+                } else {
+                    // Store arrays/objects as JSON
+                    $newSetting->setValue(json_encode($value, JSON_UNESCAPED_SLASHES));
+                }
+                
                 $newSetting->setUpdatedAt(new DateTime());
 
                 $this->em->persist($newSetting);

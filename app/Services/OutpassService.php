@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use DateTime;
-use App\Core\View;
 use App\Entity\User;
 use App\Enum\Gender;
 use App\Core\Storage;
@@ -23,7 +22,6 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 class OutpassService
 {
     public function __construct(
-        private readonly View $view,
         private readonly Storage $storage,
         private readonly EntityManagerInterface $em,
         private readonly SystemSettingsService $settingsService

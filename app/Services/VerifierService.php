@@ -4,7 +4,6 @@ namespace App\Services;
 
 use DateTime;
 use App\Entity\User;
-use App\Core\Session;
 use App\Entity\Verifier;
 use App\Entity\Logbook;
 use App\Enum\OutpassStatus;
@@ -17,7 +16,6 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 class VerifierService
 {
     public function __construct(
-        private readonly Session $session,
         private readonly EntityManagerInterface $em,
         private readonly OutpassService $outpassService
     )

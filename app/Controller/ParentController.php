@@ -6,14 +6,12 @@ use App\Core\View;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 use App\Controller\BaseController;
-use Doctrine\ORM\EntityManagerInterface;
 use App\Services\ParentVerificationService;
 
 class ParentController extends BaseController
 {
     public function __construct(
         protected readonly View $view,
-        private readonly EntityManagerInterface $em,
         private readonly ParentVerificationService $verificationService
     ) {}
 

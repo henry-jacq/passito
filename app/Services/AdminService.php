@@ -4,10 +4,7 @@ namespace App\Services;
 
 use DateTime;
 use Exception;
-use App\Core\View;
 use App\Entity\User;
-use App\Core\Session;
-use App\Core\Storage;
 use App\Entity\Hostel;
 use App\Enum\UserRole;
 use App\Entity\Student;
@@ -30,10 +27,6 @@ use Doctrine\ORM\EntityManagerInterface;
 class AdminService
 {
     public function __construct(
-        private readonly View $view,
-        private readonly Session $session,
-        private readonly Storage $storage,
-        private readonly MailService $mail,
         private readonly UserService $userService,
         private readonly OutpassService $outpass,
         private readonly AcademicService $academicService,

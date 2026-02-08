@@ -17,7 +17,6 @@ use App\Services\UserService;
 use InvalidArgumentException;
 use App\Services\AdminService;
 use App\Services\OutpassService;
-use App\Services\FacilityService;
 use App\Services\VerifierService;
 use App\Services\ParentVerificationService;
 use App\Services\ReportService;

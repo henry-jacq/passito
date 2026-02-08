@@ -4,7 +4,6 @@ namespace App\Services;
 
 use DateTime;
 use App\Entity\User;
-use App\Core\Session;
 use App\Enum\UserRole;
 use App\Enum\UserStatus;
 use App\Entity\Student;
@@ -21,7 +20,6 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 class UserService
 {
     public function __construct(
-        private readonly Session $session,
         private readonly EntityManagerInterface $em,
         private readonly OutpassService $outpassService
     )

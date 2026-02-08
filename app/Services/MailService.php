@@ -7,15 +7,13 @@ use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
 use App\Core\Config;
 use App\Core\Storage;
-use Doctrine\ORM\EntityManagerInterface;
 
 class MailService
 {
     public function __construct(
         protected readonly Config $config,
         protected readonly Storage $storage,
-        protected readonly PHPMailer $mailer,
-        protected readonly EntityManagerInterface $entityManager
+        protected readonly PHPMailer $mailer
     ) {
         $this->initServer();
     }

@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Entity\User;
 use App\Enum\Gender;
-use App\Core\Session;
 use App\Entity\AcademicYear;
 use App\Entity\Hostel;
 use App\Enum\HostelType;
@@ -16,7 +15,6 @@ use Doctrine\ORM\EntityManagerInterface;
 class AcademicService
 {
     public function __construct(
-        private readonly Session $session,
         private readonly EntityManagerInterface $em
     )
     {

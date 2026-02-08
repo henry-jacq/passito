@@ -13,9 +13,11 @@ export default defineConfig({
         // Set the entry points for the application
         style: path.resolve(__dirname, 'resources/css/style.css'),
         student: path.resolve(__dirname, 'resources/js/student.js'),
+        verifier: path.resolve(__dirname, 'resources/js/verifier.js'),
         admin: path.resolve(__dirname, 'resources/js/admin.js'),
         superAdmin: path.resolve(__dirname, 'resources/js/superAdmin.js'),
         auth: path.resolve(__dirname, 'resources/js/auth.js'),
+        setup: path.resolve(__dirname, 'resources/js/setup.js'),
       },
     },
   },
@@ -33,10 +35,7 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',  // Allows access to the Vite server externally
     port: 5173,       // Vite port
-    cors: {
-      origin: 'http://passito.local', // allow your site
-      credentials: true
-    },
+    cors: true,
     watch: {
       // Watch the PHP views folder for changes
       usePolling: true, // Necessary for Docker environments

@@ -11,7 +11,6 @@ use App\Seeders\AcademicYearSeeder;
 use App\Seeders\HostelSeeder;
 use App\Seeders\InstitutionSeeder;
 use App\Seeders\OutpassDataSeeder;
-use App\Seeders\OutpassRulesSeeder;
 use App\Seeders\ReportConfigSeeder;
 use App\Seeders\OutpassTemplateSeeder;
 use App\Seeders\WardenSeeder;
@@ -31,7 +30,6 @@ class DatabaseSeederCommand extends Command
         'academic_years' => AcademicYearSeeder::class,
         'institutions' => InstitutionSeeder::class,
         'hostels' => HostelSeeder::class,
-        'outpass_rules' => OutpassRulesSeeder::class,
         'outpass_data' => OutpassDataSeeder::class,
         'outpass_templates' => OutpassTemplateSeeder::class,
         'programs' => ProgramSeeder::class,

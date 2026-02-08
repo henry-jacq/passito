@@ -39,7 +39,7 @@
                     <?php if (!empty($search)): ?>
                         <button
                             type="button"
-                            class="absolute inset-y-0 right-2 flex items-center px-2 text-sm text-gray-500 hover:text-gray-700"
+                            class="absolute inset-y-0 flex items-center px-2 text-sm text-gray-500 right-2 hover:text-gray-700"
                             onclick="window.location.href='?date=<?= urlencode($filterDate ?? '') ?>&action=<?= urlencode($filterAction ?? '') ?>'"
                         >
                             Clear
@@ -76,7 +76,7 @@
                         <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Status</th>
                         <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Check-Out</th>
                         <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Check-In</th>
-                        <th class="px-2 py-3 text-sm font-semibold text-center text-gray-600">Verified Device</th>
+                        <th class="px-2 py-3 text-sm font-semibold text-center text-gray-600">Verified By</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">

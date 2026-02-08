@@ -12,6 +12,7 @@ use App\Entity\Student;
 use App\Enum\OutpassStatus;
 use App\Entity\OutpassRequest;
 use App\Entity\SystemSettings;
+use App\Entity\WardenAssignment;
 use App\Enum\VerifierMode;
 use App\Entity\OutpassTemplate;
 use App\Entity\OutpassTemplateField;
@@ -146,7 +147,7 @@ class OutpassService
         return $outpass;
     }
 
-    public function getPendingOutpass(int $page = 1, int $limit = 10, bool $paginate = true, ?User $warden = null, ?string $hostelFilter = null)
+    public function getPendingOutpass(int $page = 1, int $limit = 10, bool $paginate = true, ?User $warden = null, ?string $hostelFilter = null, ?string $search = null, ?string $date = null)
     {
         $statuses = [OutpassStatus::PENDING->value];
         $wardenGender = $warden->getGender()->value;
@@ -168,21 +169,49 @@ class OutpassService
                 ->setParameter('statuses', $statuses)
                 ->setParameter('gender', $wardenGender);
 
+            if (!empty($search)) {
+                $isNumeric = ctype_digit($search);
+                if ($isNumeric) {
+                    $queryBuilder->andWhere('s.digitalId = :digitalId')
+                        ->setParameter('digitalId', (int) $search);
+                } else {
+                    $queryBuilder->andWhere('u.name LIKE :search')
+                        ->setParameter('search', '%' . $search . '%');
+                }
+            }
+
+            if (!empty($date)) {
+                $start = \DateTime::createFromFormat('Y-m-d', $date);
+                if ($start) {
+                    $end = (clone $start)->setTime(23, 59, 59);
+                    $start->setTime(0, 0, 0);
+                    $queryBuilder->andWhere('o.createdAt BETWEEN :startDate AND :endDate')
+                        ->setParameter('startDate', $start)
+                        ->setParameter('endDate', $end);
+                }
+            }
+
             // Optional hostel filtering for wardens
             if (UserRole::isAdmin($warden->getRole()->value)) {
-                $hostels = $warden->getHostels();
-                $ids = [];
+                $ids = $this->getAssignedHostelIds($warden);
 
-                foreach ($hostels as $hostel) {
-                    $ids[] = $hostel->getId();
-                }
-
-                if ($hostelFilter && $hostelFilter !== 'default') {
+                if (!empty($ids)) {
+                    if ($hostelFilter && $hostelFilter !== 'default') {
+                        $hostelId = (int) $hostelFilter;
+                        if (in_array($hostelId, $ids, true)) {
+                            $queryBuilder->andWhere('h.id = :id')
+                                ->setParameter('id', $hostelId);
+                        } else {
+                            $queryBuilder->andWhere($queryBuilder->expr()->in('h.id', ':ids'))
+                                ->setParameter('ids', $ids);
+                        }
+                    } else {
+                        $queryBuilder->andWhere($queryBuilder->expr()->in('h.id', ':ids'))
+                            ->setParameter('ids', $ids);
+                    }
+                } elseif ($hostelFilter && $hostelFilter !== 'default') {
                     $queryBuilder->andWhere('h.id = :id')
                         ->setParameter('id', (int) $hostelFilter);
-                } else {
-                    $queryBuilder->andWhere($queryBuilder->expr()->in('h.id', ':ids'))
-                        ->setParameter('ids', $ids);
                 }
             }
 
@@ -205,20 +234,48 @@ class OutpassService
             ->setFirstResult($offset)
             ->setMaxResults($limit);
 
-        if (UserRole::isAdmin($warden->getRole()->value)) {
-            $hostels = $warden->getHostels();
-            $ids = [];
-
-            foreach ($hostels as $hostel) {
-                $ids[] = $hostel->getId();
+        if (!empty($search)) {
+            $isNumeric = ctype_digit($search);
+            if ($isNumeric) {
+                $queryBuilder->andWhere('s.digitalId = :digitalId')
+                    ->setParameter('digitalId', (int) $search);
+            } else {
+                $queryBuilder->andWhere('u.name LIKE :search')
+                    ->setParameter('search', '%' . $search . '%');
             }
+        }
 
-            if ($hostelFilter && $hostelFilter !== 'default') {
+        if (!empty($date)) {
+            $start = \DateTime::createFromFormat('Y-m-d', $date);
+            if ($start) {
+                $end = (clone $start)->setTime(23, 59, 59);
+                $start->setTime(0, 0, 0);
+                $queryBuilder->andWhere('o.createdAt BETWEEN :startDate AND :endDate')
+                    ->setParameter('startDate', $start)
+                    ->setParameter('endDate', $end);
+            }
+        }
+
+        if (UserRole::isAdmin($warden->getRole()->value)) {
+            $ids = $this->getAssignedHostelIds($warden);
+
+            if (!empty($ids)) {
+                if ($hostelFilter && $hostelFilter !== 'default') {
+                    $hostelId = (int) $hostelFilter;
+                    if (in_array($hostelId, $ids, true)) {
+                        $queryBuilder->andWhere('h.id = :id')
+                            ->setParameter('id', $hostelId);
+                    } else {
+                        $queryBuilder->andWhere($queryBuilder->expr()->in('h.id', ':ids'))
+                            ->setParameter('ids', $ids);
+                    }
+                } else {
+                    $queryBuilder->andWhere($queryBuilder->expr()->in('h.id', ':ids'))
+                        ->setParameter('ids', $ids);
+                }
+            } elseif ($hostelFilter && $hostelFilter !== 'default') {
                 $queryBuilder->andWhere('h.id = :id')
                     ->setParameter('id', (int) $hostelFilter);
-            } else {
-                $queryBuilder->andWhere($queryBuilder->expr()->in('h.id', ':ids'))
-                    ->setParameter('ids', $ids);
             }
         }
 
@@ -234,6 +291,20 @@ class OutpassService
     }
 
     // Admin methods
+
+    private function getAssignedHostelIds(User $warden): array
+    {
+        $assignments = $this->em->getRepository(WardenAssignment::class)->findBy([
+            'assignedTo' => $warden
+        ]);
+
+        $ids = [];
+        foreach ($assignments as $assignment) {
+            $ids[] = $assignment->getHostelId();
+        }
+
+        return array_values(array_unique($ids));
+    }
 
     /**
      * Get outpass statistics for the admin dashboard

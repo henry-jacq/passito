@@ -75,7 +75,6 @@ class AdminController extends BaseController
         $limit = 10;
         $search = trim((string) ($request->getQueryParams()['q'] ?? ''));
         $filterDate = trim((string) ($request->getQueryParams()['date'] ?? ''));
-        $filterAction = trim((string) ($request->getQueryParams()['action'] ?? ''));
 
         // Fetch the pagination data
         $paginationData = $this->outpassService->getPendingOutpass(
@@ -83,7 +82,9 @@ class AdminController extends BaseController
             limit: $limit,
             paginate: true,
             warden: $userData,
-            hostelFilter: $hostelFilter
+            hostelFilter: $hostelFilter,
+            search: $search,
+            date: $filterDate
         );
 
         $pendingCount = count($this->outpassService->getPendingOutpass(
@@ -109,6 +110,8 @@ class AdminController extends BaseController
             'pendingCount' => $pendingCount,
             'hostelFilter' => $hostelFilter,
             'unassignedHostels' => [],
+            'search' => $search,
+            'filterDate' => $filterDate,
             'breadcrumbs' => [
                 [
                     'label' => 'Admin',

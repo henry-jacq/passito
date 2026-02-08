@@ -1023,9 +1023,31 @@ document.addEventListener('click', (e) => {
 });
 
 window.handleHostelFilterChange = function handleHostelFilterChange(value) {
-    const url = new URL(window.location.href);
-    url.searchParams.set('hostel', value);
-    window.location.href = url.toString();
+    const params = new URLSearchParams(window.location.search);
+    params.set('page', 1);
+
+    if (value && value !== 'default') {
+        params.set('hostel', value);
+    } else {
+        params.delete('hostel');
+    }
+
+    const pendingSearchInput = document.getElementById('search-pending');
+    const pendingDateInput = document.getElementById('filter-pending-date');
+
+    if (pendingSearchInput && pendingSearchInput.value) {
+        params.set('q', pendingSearchInput.value);
+    } else {
+        params.delete('q');
+    }
+
+    if (pendingDateInput && pendingDateInput.value) {
+        params.set('date', pendingDateInput.value);
+    } else {
+        params.delete('date');
+    }
+
+    window.location.search = params.toString();
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -1187,6 +1209,27 @@ document.addEventListener("DOMContentLoaded", () => {
     const recordsSearchButton = document.getElementById('search-records-button');
     if (recordsSearchButton) {
         recordsSearchButton.addEventListener('click', applyRecordsFilters);
+    }
+
+    // Pending filters/search handlers
+    const pendingSearchInput = document.getElementById('search-pending');
+    const pendingDateInput = document.getElementById('filter-pending-date');
+    const pendingHostelSelect = document.getElementById('hostelFilter');
+
+    const applyPendingFilters = () => {
+        const hostelValue = pendingHostelSelect ? pendingHostelSelect.value : 'default';
+        window.handleHostelFilterChange(hostelValue);
+    };
+
+    if (pendingDateInput) {
+        pendingDateInput.addEventListener('change', applyPendingFilters);
+    }
+    if (pendingHostelSelect) {
+        pendingHostelSelect.addEventListener('change', applyPendingFilters);
+    }
+    const pendingSearchButton = document.getElementById('search-pending-button');
+    if (pendingSearchButton) {
+        pendingSearchButton.addEventListener('click', applyPendingFilters);
     }
 
     // Logbook filter change handler

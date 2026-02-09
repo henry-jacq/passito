@@ -13,14 +13,13 @@ use App\Core\JobDispatcher;
 use App\Enum\OutpassStatus;
 use App\Utils\CsvProcessor;
 use App\Entity\AcademicYear;
-use App\Jobs\GenerateQrCode;
 use App\Services\UserService;
 use App\Entity\OutpassRequest;
 use App\Jobs\SendOutpassEmail;
 use App\Core\JobPayloadBuilder;
 use App\Entity\WardenAssignment;
-use App\Jobs\GenerateOutpassPdf;
 use App\Services\AcademicService;
+use App\Jobs\ProcessApprovedOutpass;
 use App\Entity\InstitutionProgram;
 use App\Services\SystemSettingsService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -206,33 +205,14 @@ class AdminService
         // Persist update
         $outpass = $this->outpass->updateOutpass($outpass);
 
-        // --- QR Job ---
-        $qrJobPayload = JobPayloadBuilder::create()
-            ->set('directory', 'qr_codes')
-            ->set('prefix', 'qrcode_')
-            ->set('size', 300)->set('margin', 10)
-            ->set('outpass_id', $outpass->getId());
-
-        $qrJob = $this->queue->dispatch(GenerateQrCode::class, $qrJobPayload);
-
-        // --- PDF Job (depends on QR) ---
-        $pdfJobPayload = JobPayloadBuilder::create()
-            ->addDependency($qrJob->getId())
-            ->set('directory', 'outpasses')
-            ->set('prefix', 'outpass_')
-            ->set('outpass_id', $outpass->getId());
-
-        $pdfJob = $this->queue->dispatch(GenerateOutpassPdf::class, $pdfJobPayload);
-
-        // --- Email Job (depends on PDF) ---
-        $emailJobPayload = JobPayloadBuilder::create()
-            ->addDependencies([$qrJob->getId(), $pdfJob->getId()])
-            ->set('subject', "Your Outpass Request #{$outpass->getId()} Has Been Approved")
-            ->set('to', $outpass->getStudent()->getUser()->getEmail())
+        // Dispatch single job to handle QR generation, PDF creation, and email sending
+        $jobPayload = JobPayloadBuilder::create()
             ->set('outpass_id', $outpass->getId())
+            ->set('email_to', $outpass->getStudent()->getUser()->getEmail())
+            ->set('email_subject', "Your Outpass Request #{$outpass->getId()} Has Been Approved")
             ->set('email_template', 'outpass/accepted');
 
-        $this->queue->dispatch(SendOutpassEmail::class, $emailJobPayload);
+        $this->queue->dispatch(ProcessApprovedOutpass::class, $jobPayload);
 
         return $outpass;
     }

@@ -49,12 +49,14 @@ class JobWorkerCommand extends Command
         $shouldRun = true;
 
         pcntl_signal(SIGINT, function () use (&$shouldRun, $output) {
-            $output->writeln("\n<warn>Keyboard interrupt received. Stopping worker...</warn>");
+            $pid = getmypid();
+            $output->writeln("<warn>[WARN] Worker [$pid] Keyboard interrupt received. Stopping worker...</warn>");
             $shouldRun = false;
         });
 
         pcntl_signal(SIGTERM, function () use (&$shouldRun, $output) {
-            $output->writeln("\n<warn>Termination signal received. Stopping worker...</warn>");
+            $pid = getmypid();
+            $output->writeln("<warn>[WARN] Worker [$pid] Termination signal received. Stopping worker...</warn>");
             $shouldRun = false;
         });
 
@@ -67,7 +69,8 @@ class JobWorkerCommand extends Command
             }
         }
 
-        $output->writeln("<info>Worker stopped gracefully.</info>");
+        $pid = getmypid();
+        $output->writeln("<done>[DONE] Worker [$pid] stopped gracefully.</done>");
         return Command::SUCCESS;
     }
 
@@ -150,39 +153,22 @@ class JobWorkerCommand extends Command
 
         $workerPid = getmypid();
         $startTime = (new \DateTimeImmutable())->format('H:i:s');
-        $this->printLine($output, 'INFO', "[Worker $workerPid] Processing Job #{$job->getId()} ({$job->getType()})", $startTime);
+        $this->printLine($output, "[PID $workerPid]", "INFO", "Worker Processing Job #{$job->getId()} ({$job->getType()})", $startTime);
 
         try {
             // Base payload
             $payload = $job->getPayload();
 
-            // Merge dependency results
-            if (!empty($job->getDependencies())) {
-                foreach ($job->getDependencies() as $depId) {
-                    $dep = $this->em->find(Job::class, $depId);
-
-                    if ($dep && $dep->getStatus() === 'done' && $dep->getResult()) {
-                        // Namespace each dependency by job ID
-                        $payload['dependencies'][(string)$depId] = $dep->getResult();
-                    }
-                }
-            }
-
             /** @var JobInterface $handler */
             $handler = $this->container->get($job->getType());
             $result = $handler->handle($payload);
-
-            // Save result if provided
-            if (is_array($result)) {
-                $job->setResult($result);
-            }
 
             $job->setStatus('done');
             $this->em->flush();
 
             $workerPid = getmypid();
             $endTime = (new \DateTimeImmutable())->format('H:i:s');
-            $this->printLine($output, 'DONE', "[Worker $workerPid] Completed Job #{$job->getId()} ({$job->getType()})", $endTime);
+            $this->printLine($output, "[PID $workerPid]", "DONE", "Worker Completed Job #{$job->getId()} ({$job->getType()})", $endTime);
         } catch (\Throwable $e) {
             $job->incrementAttempts();
             $workerPid = getmypid();
@@ -193,8 +179,9 @@ class JobWorkerCommand extends Command
                 $job->setLastError($e->getMessage());
                 $this->printLine(
                     $output,
-                    'FAIL',
-                    "[Worker $workerPid] Job Failed #{$job->getId()} ({$job->getType()}): {$e->getMessage()}",
+                    "[PID $workerPid]",
+                    "FAIL",
+                    "Worker Job Failed #{$job->getId()} ({$job->getType()}): {$e->getMessage()}",
                     $endTime
                 );
             } else {
@@ -202,8 +189,9 @@ class JobWorkerCommand extends Command
                 $job->setLastError($e->getMessage());
                 $this->printLine(
                     $output,
-                    'WARN',
-                    "[Worker $workerPid] Job Failed #{$job->getId()}, will retry. Error: {$e->getMessage()}",
+                    "[PID $workerPid]",
+                    "WARN",
+                    "Worker Job Failed #{$job->getId()}, will retry. Error: {$e->getMessage()}",
                     $endTime
                 );
             }
@@ -214,24 +202,18 @@ class JobWorkerCommand extends Command
 
     private function canRun(Job $job): bool
     {
-        foreach ($job->getDependencies() as $depId) {
-            $dep = $this->em->getRepository(Job::class)->find($depId);
-            if (!$dep || $dep->getStatus() !== 'done') {
-                return false; // wait until dependency is done
-            }
-        }
         return true;
     }
 
     /**
      * Print a line with dots filling space between message and timestamp
      */
-    private function printLine(OutputInterface $output, string $label, string $message, ?string $time = null): void
+    private function printLine(OutputInterface $output, string $worker, string $label, string $message, ?string $time = null): void
     {
         $width = (int) exec('tput cols') ?: 80;
         $time = $time ?? (new \DateTimeImmutable())->format('H:i:s');
 
-        $text = "[$label] $message";
+        $text = "$worker $message";
         $dotsCount = max(2, $width - strlen(strip_tags($text)) - strlen($time) - 1);
         $dots = str_repeat('.', $dotsCount);
 

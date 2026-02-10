@@ -51,13 +51,13 @@ class JobSupervisorCommand extends Command
         $scaleDownThreshold = (int) $input->getOption('scale-down-threshold');
         $checkInterval = (int) $input->getOption('check-interval');
 
-        $output->writeln("<info>Job Supervisor started</info>");
+        $output->writeln("<info>Background Job Worker Supervisor</info>");
         $output->writeln("<info>Configuration:</info>");
-        $output->writeln("  Min Workers: $minWorkers");
-        $output->writeln("  Max Workers: $maxWorkers");
-        $output->writeln("  Scale Up Threshold: $scaleUpThreshold jobs/worker");
-        $output->writeln("  Scale Down Threshold: $scaleDownThreshold jobs/worker");
-        $output->writeln("  Check Interval: {$checkInterval}s");
+        $output->writeln("Min Workers: $minWorkers");
+        $output->writeln("Max Workers: $maxWorkers");
+        $output->writeln("Scale Up Threshold: $scaleUpThreshold jobs/worker");
+        $output->writeln("Scale Down Threshold: $scaleDownThreshold jobs/worker");
+        $output->writeln("Check Interval: {$checkInterval}s");
         $output->writeln("");
 
         // Handle signals
@@ -66,12 +66,12 @@ class JobSupervisorCommand extends Command
         }
 
         pcntl_signal(SIGINT, function () use ($output) {
-            $output->writeln("\n<warn>Interrupt received. Shutting down supervisor...</warn>");
+            $output->writeln("\n<warn>[WARN] Interrupt received. Shutting down supervisor...</warn>");
             $this->shouldRun = false;
         });
 
         pcntl_signal(SIGTERM, function () use ($output) {
-            $output->writeln("\n<warn>Termination signal received. Shutting down supervisor...</warn>");
+            $output->writeln("\n<warn>[WARN] Termination signal received. Shutting down supervisor...</warn>");
             $this->shouldRun = false;
         });
 
@@ -87,8 +87,7 @@ class JobSupervisorCommand extends Command
             $pendingJobs = $this->getPendingJobCount();
             $activeWorkers = count($this->workers);
 
-            $timestamp = (new \DateTimeImmutable())->format('H:i:s');
-            $output->writeln("<info>[$timestamp] Queue: $pendingJobs jobs | Workers: $activeWorkers</info>");
+            $output->writeln("<info>[STATUS] Queue: $pendingJobs jobs | Workers: $activeWorkers</info>");
 
             // Calculate jobs per worker
             $jobsPerWorker = $activeWorkers > 0 ? $pendingJobs / $activeWorkers : $pendingJobs;
@@ -101,7 +100,7 @@ class JobSupervisorCommand extends Command
                 );
                 
                 if ($workersToSpawn > 0) {
-                    $output->writeln("<success>Scaling UP: Spawning $workersToSpawn worker(s)</success>");
+                    $output->writeln("<success>[DONE] Scaling UP: Spawning $workersToSpawn worker(s)</success>");
                     $this->spawnWorkers($workersToSpawn, $output);
                 }
             }
@@ -114,7 +113,7 @@ class JobSupervisorCommand extends Command
                 );
 
                 if ($workersToStop > 0) {
-                    $output->writeln("<warn>Scaling DOWN: Stopping $workersToStop worker(s)</warn>");
+                    $output->writeln("<warn>[WARN] Scaling DOWN: Stopping $workersToStop worker(s)</warn>");
                     $this->stopWorkers($workersToStop, $output);
                 }
             }
@@ -123,9 +122,9 @@ class JobSupervisorCommand extends Command
         }
 
         // Graceful shutdown
-        $output->writeln("<warn>Shutting down all workers...</warn>");
+        $output->writeln("<warn>[WARN] Shutting down all workers...</warn>");
         $this->stopAllWorkers($output);
-        $output->writeln("<success>Supervisor stopped gracefully.</success>");
+        $output->writeln("<success>[DONE] Supervisor stopped gracefully.</success>");
 
         return Command::SUCCESS;
     }
@@ -136,7 +135,7 @@ class JobSupervisorCommand extends Command
             $pid = pcntl_fork();
 
             if ($pid === -1) {
-                $output->writeln("<error>Failed to fork worker process</error>");
+                $output->writeln("<error>[FAIL] Failed to fork worker process</error>");
                 continue;
             }
 
@@ -152,7 +151,7 @@ class JobSupervisorCommand extends Command
                 'started_at' => time(),
             ];
 
-            $output->writeln("<success>Spawned worker with PID: $pid</success>");
+            $output->writeln("<success>[DONE] Spawned worker with PID: $pid</success>");
         }
     }
 
@@ -176,7 +175,7 @@ class JobSupervisorCommand extends Command
             }
 
             if (posix_kill($pid, SIGTERM)) {
-                $output->writeln("<warn>Sent SIGTERM to worker PID: $pid</warn>");
+                $output->writeln("<warn>[WARN] Sent SIGTERM to worker PID: $pid</warn>");
                 unset($this->workers[$pid]);
                 $stopped++;
             }
@@ -187,7 +186,7 @@ class JobSupervisorCommand extends Command
     {
         foreach ($this->workers as $pid => $info) {
             posix_kill($pid, SIGTERM);
-            $output->writeln("<warn>Stopped worker PID: $pid</warn>");
+            $output->writeln("<warn>[WARN] Stopped worker PID: $pid</warn>");
         }
 
         // Wait for all workers to finish
@@ -210,11 +209,11 @@ class JobSupervisorCommand extends Command
                 if (pcntl_wifexited($status)) {
                     $exitCode = pcntl_wexitstatus($status);
                     if ($exitCode !== 0) {
-                        $output->writeln("<error>Worker PID $pid exited with code: $exitCode</error>");
+                        $output->writeln("<error>[FAIL] Worker PID $pid exited with code: $exitCode</error>");
                     }
                 } elseif (pcntl_wifsignaled($status)) {
                     $signal = pcntl_wtermsig($status);
-                    $output->writeln("<warn>Worker PID $pid terminated by signal: $signal</warn>");
+                    $output->writeln("<warn>[WARN] Worker PID $pid terminated by signal: $signal</warn>");
                 }
             }
         }

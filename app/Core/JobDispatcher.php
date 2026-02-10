@@ -31,14 +31,7 @@ class JobDispatcher
             throw new RuntimeException("Job class {$jobClass} not found");
         }
 
-        // Flatten + sanitize dependencies
-        $dependencies = array_values(array_unique(array_map(
-            fn($id) => (int) $id,
-            $payload->getDependencies()
-        )));
-
         $job = new Job($jobClass, $payload->getPayload());
-        $job->setDependencies($dependencies);
         $job->setStatus('pending');
         $job->setAvailableAt($availableAt ?? new \DateTimeImmutable());
 

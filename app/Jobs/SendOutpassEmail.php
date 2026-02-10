@@ -40,21 +40,6 @@ class SendOutpassEmail implements JobInterface
                 throw new \RuntimeException("Failed rendering email body: " . $e->getMessage(), 0, $e);
             }
 
-            // Build Attachments
-            $attachments = [];
-            try {
-                foreach ($payload['dependencies'] ?? [] as $depResult) {
-                    if (!empty($depResult['pdfPath'])) {
-                        $attachments[] = $depResult['pdfPath'];
-                    }
-                    if (!empty($depResult['qrCodePath'])) {
-                        $attachments[] = $depResult['qrCodePath'];
-                    }
-                }
-            } catch (\Throwable $e) {
-                throw new \RuntimeException("Failed processing attachments: " . $e->getMessage(), 0, $e);
-            }
-
             // Send Email
             try {
                 $this->mailService->notify(
@@ -62,7 +47,7 @@ class SendOutpassEmail implements JobInterface
                     $payload['subject'],
                     $body,
                     true,
-                    empty($attachments) ? null : $attachments
+                    $payload['attachments'] ?? null
                 );
             } catch (\Throwable $e) {
                 throw new \RuntimeException("Failed sending email: " . $e->getMessage(), 0, $e);

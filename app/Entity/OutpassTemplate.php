@@ -40,6 +40,24 @@ class OutpassTemplate
     #[ORM\Column(type: 'boolean')]
     private bool $isActive = true;
 
+    #[ORM\Column(type: 'time', nullable: true)]
+    private ?DateTime $weekdayCollegeHoursStart = null;
+
+    #[ORM\Column(type: 'time', nullable: true)]
+    private ?DateTime $weekdayCollegeHoursEnd = null;
+
+    #[ORM\Column(type: 'time', nullable: true)]
+    private ?DateTime $weekdayOvernightStart = null;
+
+    #[ORM\Column(type: 'time', nullable: true)]
+    private ?DateTime $weekdayOvernightEnd = null;
+
+    #[ORM\Column(type: 'time', nullable: true)]
+    private ?DateTime $weekendStartTime = null;
+
+    #[ORM\Column(type: 'time', nullable: true)]
+    private ?DateTime $weekendEndTime = null;
+
     #[ORM\Column(type: 'datetime')]
     private DateTime $createdAt;
 

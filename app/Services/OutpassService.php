@@ -32,12 +32,6 @@ class OutpassService
 
     private const OUTPASS_SETTING_KEYS = [
         'parentApproval' => 'outpass_parent_approval',
-        'weekdayCollegeHoursStart' => 'outpass_weekday_college_hours_start',
-        'weekdayCollegeHoursEnd' => 'outpass_weekday_college_hours_end',
-        'weekdayOvernightStart' => 'outpass_weekday_overnight_start',
-        'weekdayOvernightEnd' => 'outpass_weekday_overnight_end',
-        'weekendStartTime' => 'outpass_weekend_start_time',
-        'weekendEndTime' => 'outpass_weekend_end_time',
         'lateArrivalGraceMinutes' => 'outpass_late_arrival_grace_minutes',
     ];
     private const VERIFIER_MODE_KEY = 'verifier_mode';
@@ -522,25 +516,6 @@ class OutpassService
             $current = $defaults[$genderKey] ?? [];
             $this->settingsService->set(self::VERIFIER_MODE_KEY, VerifierMode::MANUAL->value);
         } else {
-            $normalizeTime = function (?string $timeString): ?string {
-                $timeString = $timeString !== null ? trim($timeString) : '';
-                if ($timeString === '') {
-                    return null;
-                }
-                $parsed = \DateTime::createFromFormat('H:i', $timeString);
-                if ($parsed) {
-                    return $parsed->format('H:i');
-                }
-                $parsedWithSeconds = \DateTime::createFromFormat('H:i:s', $timeString);
-                return $parsedWithSeconds ? $parsedWithSeconds->format('H:i') : null;
-            };
-
-            $current['weekdayCollegeHoursStart'] = $normalizeTime($data['weekday_college_hours_start'] ?? null);
-            $current['weekdayCollegeHoursEnd'] = $normalizeTime($data['weekday_college_hours_end'] ?? null);
-            $current['weekdayOvernightStart'] = $normalizeTime($data['weekday_overnight_start'] ?? null);
-            $current['weekdayOvernightEnd'] = $normalizeTime($data['weekday_overnight_end'] ?? null);
-            $current['weekendStartTime'] = $normalizeTime($data['weekend_start_time'] ?? null);
-            $current['weekendEndTime'] = $normalizeTime($data['weekend_end_time'] ?? null);
             $current['parentApproval'] = !empty($data['parent_approval']);
             $lateArrivalGrace = isset($data['late_arrival_grace_minutes']) ? (int) $data['late_arrival_grace_minutes'] : 30;
             $current['lateArrivalGraceMinutes'] = max(0, $lateArrivalGrace);
@@ -578,22 +553,10 @@ class OutpassService
     {
         return [
             'male' => [
-                'weekdayCollegeHoursStart' => '09:00',
-                'weekdayCollegeHoursEnd' => '17:00',
-                'weekdayOvernightStart' => '22:00',
-                'weekdayOvernightEnd' => '06:00',
-                'weekendStartTime' => '09:00',
-                'weekendEndTime' => '23:59',
                 'parentApproval' => false,
                 'lateArrivalGraceMinutes' => 30,
             ],
             'female' => [
-                'weekdayCollegeHoursStart' => '09:00',
-                'weekdayCollegeHoursEnd' => '17:00',
-                'weekdayOvernightStart' => '20:00',
-                'weekdayOvernightEnd' => '06:00',
-                'weekendStartTime' => '09:00',
-                'weekendEndTime' => '22:00',
                 'parentApproval' => true,
                 'lateArrivalGraceMinutes' => 30,
             ],
@@ -729,6 +692,12 @@ class OutpassService
         $template->setIsSystemTemplate($isSystemTemplate);
         $template->setAllowAttachments((bool) ($templateData['allowAttachments'] ?? false));
         $template->setIsActive(true);
+        $template->setWeekdayCollegeHoursStart($this->normalizeTimeValue($templateData['weekdayCollegeHoursStart'] ?? null));
+        $template->setWeekdayCollegeHoursEnd($this->normalizeTimeValue($templateData['weekdayCollegeHoursEnd'] ?? null));
+        $template->setWeekdayOvernightStart($this->normalizeTimeValue($templateData['weekdayOvernightStart'] ?? null));
+        $template->setWeekdayOvernightEnd($this->normalizeTimeValue($templateData['weekdayOvernightEnd'] ?? null));
+        $template->setWeekendStartTime($this->normalizeTimeValue($templateData['weekendStartTime'] ?? null));
+        $template->setWeekendEndTime($this->normalizeTimeValue($templateData['weekendEndTime'] ?? null));
 
         // Set fields collection if bidirectional relation is set up
         $fieldCollection = [];
@@ -747,6 +716,26 @@ class OutpassService
 
         $this->em->persist($template);
         $this->em->flush();
+    }
+
+    private function normalizeTimeValue(?string $value): ?\DateTime
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        $trimmed = trim($value);
+        if ($trimmed === '') {
+            return null;
+        }
+
+        $parsed = \DateTime::createFromFormat('H:i', $trimmed);
+        if ($parsed) {
+            return $parsed;
+        }
+
+        $parsedWithSeconds = \DateTime::createFromFormat('H:i:s', $trimmed);
+        return $parsedWithSeconds ?: null;
     }
 
     public function getTemplates(User $warden, ?string $passType): array|OutpassTemplate

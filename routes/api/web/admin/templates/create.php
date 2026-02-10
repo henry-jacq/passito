@@ -8,6 +8,12 @@ ${basename(__FILE__, '.php')} = function () {
         $description = $this->data['description'];
         $visibility = $this->data['visibility'];
         $allowAttachments = filter_var($this->data['allow_attachments'] ?? false, FILTER_VALIDATE_BOOLEAN);
+        $weekdayCollegeHoursStart = $this->data['weekday_college_hours_start'] ?? null;
+        $weekdayCollegeHoursEnd = $this->data['weekday_college_hours_end'] ?? null;
+        $weekdayOvernightStart = $this->data['weekday_overnight_start'] ?? null;
+        $weekdayOvernightEnd = $this->data['weekday_overnight_end'] ?? null;
+        $weekendStartTime = $this->data['weekend_start_time'] ?? null;
+        $weekendEndTime = $this->data['weekend_end_time'] ?? null;
         $fields = $this->data['fields'] ?? [];
         $warden = $this->getAttribute('user');
 
@@ -36,6 +42,12 @@ ${basename(__FILE__, '.php')} = function () {
             'description' => $description,
             // 'visibility' => $visibility,
             'allowAttachments' => $allowAttachments,
+            'weekdayCollegeHoursStart' => $weekdayCollegeHoursStart,
+            'weekdayCollegeHoursEnd' => $weekdayCollegeHoursEnd,
+            'weekdayOvernightStart' => $weekdayOvernightStart,
+            'weekdayOvernightEnd' => $weekdayOvernightEnd,
+            'weekendStartTime' => $weekendStartTime,
+            'weekendEndTime' => $weekendEndTime,
         ];
 
         try {

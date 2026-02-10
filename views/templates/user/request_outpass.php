@@ -88,6 +88,32 @@
                     </div>
                 </div>
                 <hr class="mt-2 mb-6 border-gray-300">
+                <?php
+                $formatTime = fn(?DateTime $time) => $time ? $time->format('H:i') : 'N/A';
+                $weekdayCollegeStart = $templates->getWeekdayCollegeHoursStart();
+                $weekdayCollegeEnd = $templates->getWeekdayCollegeHoursEnd();
+                $weekdayOvernightStart = $templates->getWeekdayOvernightStart();
+                $weekdayOvernightEnd = $templates->getWeekdayOvernightEnd();
+                $weekendStart = $templates->getWeekendStartTime();
+                $weekendEnd = $templates->getWeekendEndTime();
+                ?>
+                <div class="p-4 mb-6 border border-blue-100 rounded-lg bg-blue-50/50">
+                    <div class="mb-2 text-sm font-semibold text-blue-900">Allowed Timings for This Template</div>
+                    <div class="grid grid-cols-1 gap-2 text-sm text-gray-700 md:grid-cols-2">
+                        <div>
+                            <span class="font-medium">Weekday College Hours:</span>
+                            <?= $formatTime($weekdayCollegeStart) ?> - <?= $formatTime($weekdayCollegeEnd) ?>
+                        </div>
+                        <div>
+                            <span class="font-medium">Weekday Overnight:</span>
+                            <?= $formatTime($weekdayOvernightStart) ?> - <?= $formatTime($weekdayOvernightEnd) ?>
+                        </div>
+                        <div>
+                            <span class="font-medium">Weekend Window:</span>
+                            <?= $formatTime($weekendStart) ?> - <?= $formatTime($weekendEnd) ?>
+                        </div>
+                    </div>
+                </div>
             <?php else: ?>
                 <!-- Invalid type display code remains unchanged -->
                 <div class="flex items-center justify-center w-full h-64 bg-gray-100 rounded-lg">

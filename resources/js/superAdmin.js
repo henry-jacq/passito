@@ -1478,6 +1478,12 @@ document.addEventListener('DOMContentLoaded', () => {
                                     const templateDescription = document.getElementById('template-description').value;
                                     const visibility = document.querySelector('select').value;
                                     const allowAttachments = document.getElementById('allow-attachments').checked;
+                                    const weekdayCollegeHoursStart = document.getElementById('weekday-college-hours-start')?.value || null;
+                                    const weekdayCollegeHoursEnd = document.getElementById('weekday-college-hours-end')?.value || null;
+                                    const weekdayOvernightStart = document.getElementById('weekday-overnight-start')?.value || null;
+                                    const weekdayOvernightEnd = document.getElementById('weekday-overnight-end')?.value || null;
+                                    const weekendStartTime = document.getElementById('weekend-start-time')?.value || null;
+                                    const weekendEndTime = document.getElementById('weekend-end-time')?.value || null;
 
                                     // disable the button to prevent multiple clicks
                                     event.target.disabled = true;
@@ -1490,6 +1496,12 @@ document.addEventListener('DOMContentLoaded', () => {
                                                 description: templateDescription,
                                                 visibility: visibility,
                                                 allow_attachments: allowAttachments,
+                                                weekday_college_hours_start: weekdayCollegeHoursStart,
+                                                weekday_college_hours_end: weekdayCollegeHoursEnd,
+                                                weekday_overnight_start: weekdayOvernightStart,
+                                                weekday_overnight_end: weekdayOvernightEnd,
+                                                weekend_start_time: weekendStartTime,
+                                                weekend_end_time: weekendEndTime,
                                                 fields: [
                                                     // User-defined fields
                                                     ...Array.from(document.querySelectorAll('#template-fields .group:not(.hidden)')).map(group => {

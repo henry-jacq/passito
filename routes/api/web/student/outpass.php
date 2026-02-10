@@ -2,6 +2,7 @@
 
 use App\Enum\UserRole;
 use App\Entity\OutpassRequest;
+use App\Entity\OutpassTemplate;
 use App\Core\JobPayloadBuilder;
 use App\Jobs\SendParentApproval;
 use App\Dto\CreateOutpassDto;
@@ -24,6 +25,13 @@ ${basename(__FILE__, '.php')} = function () {
         
         $student = $this->userService->getStudentByUser($user);
         $template = $this->outpassService->getTemplates($user, $this->data['type']);
+        if (!$template instanceof OutpassTemplate) {
+            return $this->response([
+                'message' => 'Invalid outpass template selected.',
+                'type' => 'error',
+                'status' => false
+            ], 400);
+        }
         
         // If requests are disabled, return an error
         if ($this->adminService->isRequestLock($user->getGender()->value)) {
@@ -50,6 +58,64 @@ ${basename(__FILE__, '.php')} = function () {
 
         $destination = trim($this->data['destination_text']);
         $reason = empty($this->data['reason_text']) ? 'N/A' : trim($this->data['reason_text']);
+
+        $formatTime = static fn(?DateTime $time): ?string => $time ? $time->format('H:i') : null;
+        $timeToMinutes = static function (string $time): int {
+            [$h, $m] = array_map('intval', explode(':', $time));
+            return ($h * 60) + $m;
+        };
+        $isTimeInWindow = static function (?string $time, ?string $start, ?string $end) use ($timeToMinutes): bool {
+            if ($time === null || $start === null || $end === null) {
+                return true;
+            }
+            $t = $timeToMinutes($time);
+            $s = $timeToMinutes($start);
+            $e = $timeToMinutes($end);
+            if ($s <= $e) {
+                return $t >= $s && $t <= $e;
+            }
+            return $t >= $s || $t <= $e;
+        };
+
+        $fromTimeStr = $fromTime->format('H:i');
+        $toTimeStr = $toTime->format('H:i');
+        $isWeekend = static function (DateTime $date): bool {
+            $day = (int) $date->format('N'); // 1=Mon .. 7=Sun
+            return $day >= 6;
+        };
+
+        $weekdayCollegeStart = $formatTime($template->getWeekdayCollegeHoursStart());
+        $weekdayCollegeEnd = $formatTime($template->getWeekdayCollegeHoursEnd());
+        $weekdayOvernightStart = $formatTime($template->getWeekdayOvernightStart());
+        $weekdayOvernightEnd = $formatTime($template->getWeekdayOvernightEnd());
+        $weekendStart = $formatTime($template->getWeekendStartTime());
+        $weekendEnd = $formatTime($template->getWeekendEndTime());
+
+        $validateWindow = function (DateTime $date, string $timeStr) use (
+            $isWeekend,
+            $isTimeInWindow,
+            $weekdayCollegeStart,
+            $weekdayCollegeEnd,
+            $weekdayOvernightStart,
+            $weekdayOvernightEnd,
+            $weekendStart,
+            $weekendEnd
+        ): bool {
+            if ($isWeekend($date)) {
+                return $isTimeInWindow($timeStr, $weekendStart, $weekendEnd);
+            }
+            return
+                $isTimeInWindow($timeStr, $weekdayCollegeStart, $weekdayCollegeEnd) ||
+                $isTimeInWindow($timeStr, $weekdayOvernightStart, $weekdayOvernightEnd);
+        };
+
+        if (!$validateWindow($fromDate, $fromTimeStr) || !$validateWindow($toDate, $toTimeStr)) {
+            return $this->response([
+                'message' => 'Requested time does not fit into the selected outpass time window.',
+                'type' => 'error',
+                'status' => false
+            ], 400);
+        }
 
         // Handle file attachments
         $attachments = [];

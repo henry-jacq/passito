@@ -15,6 +15,34 @@
         </div>
     </div>
 
+    <div class="space-y-3">
+        <div class="text-sm font-medium text-gray-700">Outpass Timings</div>
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div>
+                <label for="weekday-college-hours-start" class="block mb-1 text-sm font-medium text-gray-700">Weekday College Hours</label>
+                <div class="flex gap-3">
+                    <input type="time" id="weekday-college-hours-start" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Start">
+                    <input type="time" id="weekday-college-hours-end" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="End">
+                </div>
+            </div>
+            <div>
+                <label for="weekday-overnight-start" class="block mb-1 text-sm font-medium text-gray-700">Weekday Overnight</label>
+                <div class="flex gap-3">
+                    <input type="time" id="weekday-overnight-start" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Start">
+                    <input type="time" id="weekday-overnight-end" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="End">
+                </div>
+            </div>
+            <div>
+                <label for="weekend-start-time" class="block mb-1 text-sm font-medium text-gray-700">Weekend Window</label>
+                <div class="flex gap-3">
+                    <input type="time" id="weekend-start-time" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Start">
+                    <input type="time" id="weekend-end-time" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="End">
+                </div>
+            </div>
+        </div>
+        <p class="text-xs text-gray-500">Leave any field blank to skip that restriction for this template.</p>
+    </div>
+
     <div id="template-fields" class="space-y-4">
         <!-- Template block (hidden for cloning) -->
         <div class="hidden p-4 space-y-4 transition bg-white border border-gray-200 rounded-md shadow-sm group">

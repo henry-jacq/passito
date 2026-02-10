@@ -7,7 +7,7 @@ ${basename(__FILE__, '.php')} = function () {
         $name = $this->data['name'];
         $description = $this->data['description'];
         $visibility = $this->data['visibility'];
-        $allowAttachments = $this->data['allow_attachments'] ?? false;
+        $allowAttachments = filter_var($this->data['allow_attachments'] ?? false, FILTER_VALIDATE_BOOLEAN);
         $fields = $this->data['fields'] ?? [];
         $warden = $this->getAttribute('user');
 
@@ -43,7 +43,7 @@ ${basename(__FILE__, '.php')} = function () {
 
             return $this->response(['status' => true, 'message' => 'Template created successfully.']);
         } catch (\Throwable $th) {
-            return $this->response(['status' => false, 'message' => 'Failed to create template.']);
+            return $this->response(['status' => false, 'message' => 'Failed to create template.', 'error' => $th->getMessage()]);
         }
     }
 

@@ -31,7 +31,7 @@ ${basename(__FILE__, '.php')} = function () {
                 $student->getYear(),
                 $student->getAcademicYear()?->getLabel() ?? '',
                 $student->getRoomNo(),
-                $student->getHostel()->getName(),
+                $student->getHostel()->getHostelName(),
                 $student->getUser()->getContactNo(),
                 $student->getParentNo()
             ];

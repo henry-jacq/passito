@@ -30,7 +30,7 @@ class WardenSeeder
                 $warden = new User();
                 $warden->setName($wardenData['name']);
                 $warden->setEmail($wardenData['email']);
-                $warden->setContactNo($wardenData['contact']);
+                $warden->setContactNo((string) $wardenData['contact']);
                 $warden->setPassword(password_hash($wardenData['contact'], PASSWORD_DEFAULT, ['cost' => 10]));
                 $warden->setGender($wardenData['gender']);
                 $warden->setRole(UserRole::ADMIN);

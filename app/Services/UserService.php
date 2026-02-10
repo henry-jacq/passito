@@ -48,7 +48,7 @@ class UserService
         $user->setName($data['name']);
         $user->setEmail($data['email']);
         $user->setPassword(password_hash($data['contact'], PASSWORD_DEFAULT, ['cost' => 10]));
-        $user->setContactNo($data['contact']);
+        $user->setContactNo((string) $data['contact']);
         $user->setGender($data['gender']);
         $user->setRole($data['role'] ?? UserRole::USER);
         $user->setStatus(UserStatus::INACTIVE);
@@ -117,7 +117,7 @@ class UserService
 
         $warden->setName($data['name']);
         $warden->setEmail($email);
-        $warden->setContactNo($data['contact']);
+        $warden->setContactNo((string) $data['contact']);
 
         $this->em->flush();
 
@@ -148,12 +148,12 @@ class UserService
         $student = new Student();
         $student->setUser($user);
         $student->setHostel($hostel);
-        $student->setDigitalId($data['digital_id']);
+        $student->setDigitalId((int) $data['digital_id']);
         $student->setYear($givenYear);
         $student->setAcademicYear($academicYear);
         $student->setProgram($program);
         $student->setRoomNo($data['room_no']);
-        $student->setParentNo($data['parent_no']);
+        $student->setParentNo((string) $data['parent_no']);
         $user->setStatus(UserStatus::ACTIVE);
         $student->setUpdatedAt(new DateTime());
         
@@ -237,7 +237,7 @@ class UserService
         $user = $student->getUser();
         $user->setName($data['name']);
         $user->setEmail($email);
-        $user->setContactNo($data['contact']);
+        $user->setContactNo((string) $data['contact']);
 
         $student->setHostel($hostel);
         $student->setProgram($program);
@@ -245,7 +245,7 @@ class UserService
         $student->setDigitalId($digitalId);
         $student->setYear($givenYear);
         $student->setRoomNo($data['room_no']);
-        $student->setParentNo($data['parent_no']);
+        $student->setParentNo((string) $data['parent_no']);
         $statusFlag = isset($data['status']) ? (bool) $data['status'] : null;
         if ($statusFlag !== null) {
             $user->setStatus($statusFlag ? UserStatus::ACTIVE : UserStatus::INACTIVE);

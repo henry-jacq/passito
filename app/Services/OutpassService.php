@@ -707,8 +707,8 @@ class OutpassService
             $field->setTemplate($template);
             $field->setFieldName($fieldData['name']);
             $field->setFieldType($fieldData['type']);
-            $field->setIsSystemField($fieldData['system'] ?? false);
-            $field->setIsRequired($fieldData['required'] ?? false);
+            $field->setIsSystemField($this->normalizeBool($fieldData['system'] ?? false));
+            $field->setIsRequired($this->normalizeBool($fieldData['required'] ?? false));
 
             $this->em->persist($field);
             $fieldCollection[] = $field;
@@ -738,16 +738,28 @@ class OutpassService
         return $parsedWithSeconds ?: null;
     }
 
-    public function getTemplates(User $warden, ?string $passType): array|OutpassTemplate
+    private function normalizeBool(mixed $value): bool
+    {
+        if (is_bool($value)) {
+            return $value;
+        }
+
+        return filter_var($value, FILTER_VALIDATE_BOOLEAN);
+    }
+
+    public function getTemplates(User $warden, ?string $passType, bool $includeInactive = false): array|OutpassTemplate
     {
         $qb = $this->em->createQueryBuilder();
         $qb->select('t', 'f')
             ->from(OutpassTemplate::class, 't')
             ->leftJoin('t.fields', 'f') // Assumes a OneToMany relation
-            ->where('t.isActive = :active')
-            ->andWhere('t.gender = :gender')
-            ->setParameter('active', true)
+            ->where('t.gender = :gender')
             ->setParameter('gender', $warden->getGender()->value);
+
+        if (!$includeInactive) {
+            $qb->andWhere('t.isActive = :active')
+                ->setParameter('active', true);
+        }
 
         // If $passType is set, filter by template name
         if ($passType !== null) {
@@ -764,5 +776,51 @@ class OutpassService
         }
 
         return count($results) > 1 ? $results : $results[0];
+    }
+
+    public function getTemplateById(int $templateId): ?OutpassTemplate
+    {
+        return $this->em->getRepository(OutpassTemplate::class)->find($templateId);
+    }
+
+    public function updateTemplate(int $templateId, array $templateData, array $fields): OutpassTemplate|bool
+    {
+        $template = $this->getTemplateById($templateId);
+        if (!$template) {
+            return false;
+        }
+
+        $template->setName($templateData['name']);
+        $template->setDescription($templateData['description']);
+        $template->setAllowAttachments((bool) ($templateData['allowAttachments'] ?? false));
+        if (array_key_exists('isActive', $templateData)) {
+            $template->setIsActive($this->normalizeBool($templateData['isActive']));
+        }
+        $template->setWeekdayCollegeHoursStart($this->normalizeTimeValue($templateData['weekdayCollegeHoursStart'] ?? null));
+        $template->setWeekdayCollegeHoursEnd($this->normalizeTimeValue($templateData['weekdayCollegeHoursEnd'] ?? null));
+        $template->setWeekdayOvernightStart($this->normalizeTimeValue($templateData['weekdayOvernightStart'] ?? null));
+        $template->setWeekdayOvernightEnd($this->normalizeTimeValue($templateData['weekdayOvernightEnd'] ?? null));
+        $template->setWeekendStartTime($this->normalizeTimeValue($templateData['weekendStartTime'] ?? null));
+        $template->setWeekendEndTime($this->normalizeTimeValue($templateData['weekendEndTime'] ?? null));
+
+        foreach ($template->getFields() as $field) {
+            $this->em->remove($field);
+        }
+        $template->getFields()->clear();
+
+        foreach ($fields as $fieldData) {
+            $field = new OutpassTemplateField();
+            $field->setTemplate($template);
+            $field->setFieldName($fieldData['name']);
+            $field->setFieldType($fieldData['type']);
+            $field->setIsSystemField($this->normalizeBool($fieldData['system'] ?? false));
+            $field->setIsRequired($this->normalizeBool($fieldData['required'] ?? false));
+            $this->em->persist($field);
+        }
+
+        $this->em->persist($template);
+        $this->em->flush();
+
+        return $template;
     }
 }

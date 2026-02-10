@@ -1459,153 +1459,173 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    const openTemplateModal = async (templateData = null) => {
+        try {
+            const response = templateData
+                ? await Ajax.post('/api/web/admin/modal?template=outpass_template', {
+                    template: 'outpass_template',
+                    template_data: templateData
+                })
+                : await Ajax.get('/api/web/admin/modal?template=outpass_template');
+
+            if (response.ok && response.data) {
+                Modal.open({
+                    content: response.data,
+                    actions: [
+                        {
+                            label: (templateData && templateData.id) ? 'Update Template' : 'Create Template',
+                            class: `inline-flex justify-center rounded-lg bg-blue-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-blue-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50`,
+                            onClick: async (event) => {
+                                const templateId = document.getElementById('template-id')?.value || null;
+                                const baseLabel = templateId ? 'Update Template' : 'Create Template';
+                                const templateName = document.getElementById('template-name').value;
+                                const templateDescription = document.getElementById('template-description').value;
+                                const visibility = document.querySelector('select')?.value;
+                                const allowAttachments = document.getElementById('allow-attachments').checked;
+                                const isActive = document.getElementById('template-active')?.checked;
+                                const weekdayCollegeHoursStart = document.getElementById('weekday-college-hours-start')?.value || null;
+                                const weekdayCollegeHoursEnd = document.getElementById('weekday-college-hours-end')?.value || null;
+                                const weekdayOvernightStart = document.getElementById('weekday-overnight-start')?.value || null;
+                                const weekdayOvernightEnd = document.getElementById('weekday-overnight-end')?.value || null;
+                                const weekendStartTime = document.getElementById('weekend-start-time')?.value || null;
+                                const weekendEndTime = document.getElementById('weekend-end-time')?.value || null;
+
+                                event.target.disabled = true;
+                                event.target.textContent = templateId ? 'Updating Template...' : 'Creating Template...';
+
+                                if (templateName && templateDescription) {
+                                    try {
+                                        const payload = {
+                                            name: templateName,
+                                            description: templateDescription,
+                                            allow_attachments: allowAttachments,
+                                            is_active: isActive,
+                                            weekday_college_hours_start: weekdayCollegeHoursStart,
+                                            weekday_college_hours_end: weekdayCollegeHoursEnd,
+                                            weekday_overnight_start: weekdayOvernightStart,
+                                            weekday_overnight_end: weekdayOvernightEnd,
+                                            weekend_start_time: weekendStartTime,
+                                            weekend_end_time: weekendEndTime,
+                                            fields: [
+                                                ...Array.from(document.querySelectorAll('#template-fields .group:not(.hidden)')).map(group => {
+                                                    return {
+                                                        name: group.querySelector('.field-name').value.trim(),
+                                                        type: group.querySelector('.field-type').value,
+                                                        required: group.querySelector('.field-required').checked
+                                                    };
+                                                }).filter(f => f.name)
+                                            ]
+                                        };
+
+                                        let endpoint = '/api/web/admin/templates/create';
+                                        if (templateId) {
+                                            endpoint = '/api/web/admin/templates/update';
+                                            payload.template_id = templateId;
+                                        } else if (visibility !== undefined) {
+                                            payload.visibility = visibility;
+                                        }
+
+                                        const submitResponse = await Ajax.post(endpoint, payload);
+
+                                        if (submitResponse.ok) {
+                                            const data = submitResponse.data;
+                                            if (data.status) {
+                                                location.reload();
+                                            } else {
+                                                alert(data.message);
+                                            }
+                                        } else {
+                                            handleError(submitResponse.status);
+                                            event.target.textContent = baseLabel;
+                                            event.target.disabled = false;
+                                        }
+                                    } catch (error) {
+                                        console.error(error);
+                                    } finally {
+                                        Modal.close();
+                                    }
+                                } else {
+                                    alert('Please fill in all the required fields correctly.');
+                                    event.target.textContent = baseLabel;
+                                    event.target.disabled = false;
+                                }
+                            },
+                        },
+                        {
+                            label: 'Cancel',
+                            class: `inline-flex justify-center rounded-lg bg-gray-100 px-6 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`,
+                            onClick: Modal.close,
+                        },
+                    ],
+                    size: 'sm:max-w-2xl',
+                    classes: 'custom-modal-class',
+                    closeOnBackdropClick: false,
+                });
+
+                // Attach event listeners after modal is rendered
+                setTimeout(() => {
+                    const addFieldBtn = document.getElementById("add-field");
+                    const fieldContainer = document.getElementById("template-fields");
+                    const maxFields = 4;  // Set the max fields limit
+
+                    if (addFieldBtn && fieldContainer) {
+                        addFieldBtn.addEventListener("click", () => {
+                            // Count the current visible fields
+                            const currentFields = fieldContainer.querySelectorAll(".group:not(.hidden)").length;
+
+                            if (currentFields < maxFields) {
+                                const template = fieldContainer.querySelector(".group.hidden");
+                                if (template) {
+                                    const clone = template.cloneNode(true);
+                                    clone.classList.remove("hidden");
+
+                                    // Reset input values in the cloned field
+                                    clone.querySelectorAll("input, select, textarea").forEach((el) => {
+                                        if (el.type === "checkbox") {
+                                            el.checked = false;
+                                        } else {
+                                            el.value = "";
+                                        }
+                                    });
+
+                                    // Reattach remove button logic
+                                    const removeBtn = clone.querySelector(".remove-field");
+                                    if (removeBtn) {
+                                        removeBtn.addEventListener("click", () => {
+                                            clone.remove();
+                                        });
+                                    }
+
+                                    fieldContainer.appendChild(clone);
+                                }
+                            } else {
+                                alert(`You can only add up to ${maxFields} fields.`);
+                            }
+                        });
+                    }
+
+                    // Also attach remove logic to any existing visible fields
+                    fieldContainer.querySelectorAll(".group:not(.hidden) .remove-field").forEach(btn => {
+                        btn.addEventListener("click", (e) => {
+                            e.currentTarget.closest(".group")?.remove();
+                        });
+                    });
+                }, 0);
+            } else {
+                console.error('Error loading modal template:', response.data.message || 'Unknown error');
+                alert(response.data.message || 'Failed to load modal template');
+            }
+        } catch (error) {
+            console.error('Failed to load modal content:', error);
+            alert('Failed to load modal content. Please try again later.');
+        }
+    };
+
     // Outpass Template Modal
     const addTemplate = document.getElementById('add-outpass-template');
     if (addTemplate) {
         addTemplate.addEventListener('click', async () => {
-            try {
-                const response = await Ajax.get('/api/web/admin/modal?template=outpass_template');
-
-                if (response.ok && response.data) {
-                    Modal.open({
-                        content: response.data,
-                        actions: [
-                            {
-                                label: 'Create Template',
-                                class: `inline-flex justify-center rounded-lg bg-blue-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-blue-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50`,
-                                onClick: async (event) => {
-                                    const templateName = document.getElementById('template-name').value;
-                                    const templateDescription = document.getElementById('template-description').value;
-                                    const visibility = document.querySelector('select').value;
-                                    const allowAttachments = document.getElementById('allow-attachments').checked;
-                                    const weekdayCollegeHoursStart = document.getElementById('weekday-college-hours-start')?.value || null;
-                                    const weekdayCollegeHoursEnd = document.getElementById('weekday-college-hours-end')?.value || null;
-                                    const weekdayOvernightStart = document.getElementById('weekday-overnight-start')?.value || null;
-                                    const weekdayOvernightEnd = document.getElementById('weekday-overnight-end')?.value || null;
-                                    const weekendStartTime = document.getElementById('weekend-start-time')?.value || null;
-                                    const weekendEndTime = document.getElementById('weekend-end-time')?.value || null;
-
-                                    // disable the button to prevent multiple clicks
-                                    event.target.disabled = true;
-                                    event.target.textContent = 'Creating Template...';
-
-                                    if (templateName && templateDescription) {
-                                        try {
-                                            const response = await Ajax.post('/api/web/admin/templates/create', {
-                                                name: templateName,
-                                                description: templateDescription,
-                                                visibility: visibility,
-                                                allow_attachments: allowAttachments,
-                                                weekday_college_hours_start: weekdayCollegeHoursStart,
-                                                weekday_college_hours_end: weekdayCollegeHoursEnd,
-                                                weekday_overnight_start: weekdayOvernightStart,
-                                                weekday_overnight_end: weekdayOvernightEnd,
-                                                weekend_start_time: weekendStartTime,
-                                                weekend_end_time: weekendEndTime,
-                                                fields: [
-                                                    // User-defined fields
-                                                    ...Array.from(document.querySelectorAll('#template-fields .group:not(.hidden)')).map(group => {
-                                                        return {
-                                                            name: group.querySelector('.field-name').value.trim(),
-                                                            type: group.querySelector('.field-type').value,
-                                                            required: group.querySelector('.field-required').checked
-                                                        };
-                                                    }).filter(f => f.name) // remove empty ones
-                                                ]
-                                            });
-
-                                            if (response.ok) {
-                                                const data = response.data;
-                                                if (data.status) {
-                                                    location.reload();
-                                                } else {
-                                                    alert(data.message);
-                                                }
-                                            } else {
-                                                handleError(response.status);
-                                                event.target.textContent = 'Create Template';
-                                                event.target.disabled = false;
-                                            }
-                                        } catch (error) {
-                                            console.error(error);
-                                        } finally {
-                                            Modal.close();
-                                        }
-                                    } else {
-                                        alert('Please fill in all the required fields correctly.');
-                                        event.target.textContent = 'Create Template';
-                                        event.target.disabled = false;
-                                    }
-                                },
-                            },
-                            {
-                                label: 'Cancel',
-                                class: `inline-flex justify-center rounded-lg bg-gray-100 px-6 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`,
-                                onClick: Modal.close,
-                            },
-                        ],
-                        size: 'sm:max-w-2xl',
-                        classes: 'custom-modal-class',
-                        closeOnBackdropClick: false,
-                    });
-                    
-                    // Attach event listeners after modal is rendered
-                    setTimeout(() => {
-                        const addFieldBtn = document.getElementById("add-field");
-                        const fieldContainer = document.getElementById("template-fields");
-                        const maxFields = 4;  // Set the max fields limit
-
-                        if (addFieldBtn && fieldContainer) {
-                            addFieldBtn.addEventListener("click", () => {
-                                // Count the current visible fields
-                                const currentFields = fieldContainer.querySelectorAll(".group:not(.hidden)").length;
-
-                                if (currentFields < maxFields) {
-                                    const template = fieldContainer.querySelector(".group.hidden");
-                                    if (template) {
-                                        const clone = template.cloneNode(true);
-                                        clone.classList.remove("hidden");
-
-                                        // Reset input values in the cloned field
-                                        clone.querySelectorAll("input, select, textarea").forEach((el) => {
-                                            if (el.type === "checkbox") {
-                                                el.checked = false;
-                                            } else {
-                                                el.value = "";
-                                            }
-                                        });
-
-                                        // Reattach remove button logic
-                                        const removeBtn = clone.querySelector(".remove-field");
-                                        if (removeBtn) {
-                                            removeBtn.addEventListener("click", () => {
-                                                clone.remove();
-                                            });
-                                        }
-
-                                        fieldContainer.appendChild(clone);
-                                    }
-                                } else {
-                                    alert(`You can only add up to ${maxFields} fields.`);
-                                }
-                            });
-                        }
-
-                        // Also attach remove logic to any existing visible fields
-                        fieldContainer.querySelectorAll(".group:not(.hidden) .remove-field").forEach(btn => {
-                            btn.addEventListener("click", (e) => {
-                                e.currentTarget.closest(".group")?.remove();
-                            });
-                        });
-                    }, 0);
-                } else {
-                    console.error('Error loading modal template:', response.data.message || 'Unknown error');
-                    alert(response.data.message || 'Failed to load modal template');
-                }
-            } catch (error) {
-                console.error('Failed to load modal content:', error);
-                alert('Failed to load modal content. Please try again later.');
-            }
+            await openTemplateModal();
         });
     }
 
@@ -1670,6 +1690,30 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (error) {
                 console.error('Failed to load modal content:', error);
                 alert('Failed to load modal content. Please try again later.');
+            }
+        });
+    });
+
+    // Edit Outpass Template
+    document.querySelectorAll('.edit-template-btn').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+            const templateId = btn.dataset.id;
+            if (!templateId) return;
+
+            try {
+                const fetchResponse = await Ajax.post('/api/web/admin/templates/fetch', {
+                    template_id: templateId
+                });
+
+                if (!fetchResponse.ok || !fetchResponse.data?.status) {
+                    alert(fetchResponse.data?.message || 'Failed to fetch template.');
+                    return;
+                }
+
+                await openTemplateModal(fetchResponse.data.data);
+            } catch (error) {
+                console.error('Error loading edit template modal:', error);
+                alert('Failed to load template.');
             }
         });
     });

@@ -91,7 +91,7 @@
                             </td>
                             <td class="px-5 py-4 text-center">
                                 <div class="flex justify-center gap-2">
-                                    <button class="px-3 py-1 text-sm font-normal text-white transition bg-indigo-600 rounded-md hover:bg-indigo-700">
+                                    <button class="px-3 py-1 text-sm font-normal text-white transition bg-indigo-600 rounded-md hover:bg-indigo-700 edit-template-btn" data-id="<?= $template->getId() ?>">
                                         Edit
                                     </button>
                                 </div>

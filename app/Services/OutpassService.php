@@ -726,9 +726,9 @@ class OutpassService
         $template->setName($templateData['name']);
         $template->setDescription($templateData['description']);
         $template->setGender($gender);
-        $template->setSystemTemplate($isSystemTemplate);
-        $template->setAllowAttachments($templateData['allowAttachments']);
-        $template->setActive(true);
+        $template->setIsSystemTemplate($isSystemTemplate);
+        $template->setAllowAttachments((bool) ($templateData['allowAttachments'] ?? false));
+        $template->setIsActive(true);
 
         // Set fields collection if bidirectional relation is set up
         $fieldCollection = [];

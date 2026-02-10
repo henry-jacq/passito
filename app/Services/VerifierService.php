@@ -29,7 +29,7 @@ class VerifierService
     {
         try {
             $verifier = new Verifier();
-            $verifier->setName($name);
+            $verifier->setVerifierName($name);
             $verifier->setLocation($location);
             $verifier->setCreatedAt(new DateTime());
             $verifier->setAuthToken($this->generateAuthToken());
@@ -78,7 +78,7 @@ class VerifierService
     {
         try {
             $verifier = new Verifier();
-            $verifier->setName($user->getName());
+            $verifier->setVerifierName($user->getName());
             $verifier->setLocation($location);
             $verifier->setCreatedAt(new DateTime());
             $verifier->setAuthToken($this->generateAuthToken());

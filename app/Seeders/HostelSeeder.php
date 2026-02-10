@@ -26,7 +26,7 @@ class HostelSeeder
 
             if (!$existing) {
                 $hostel = new Hostel();
-                $hostel->setName($hostelData['name']);
+                $hostel->setHostelName($hostelData['name']);
                 $hostel->setCategory($hostelData['category']);
                 $hostel->setHostelType($hostelData['type']);
                 $this->em->persist($hostel);

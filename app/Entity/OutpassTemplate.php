@@ -9,11 +9,14 @@ use App\Enum\Gender;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use App\Traits\EntityGetSetTrait;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'outpass_templates')]
 class OutpassTemplate
 {
+    use EntityGetSetTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -48,86 +51,6 @@ class OutpassTemplate
     {
         $this->createdAt = new DateTime();
         $this->fields = new ArrayCollection();
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-        return $this;
-    }
-
-    public function getDescription(): string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(string $description): self
-    {
-        $this->description = $description;
-        return $this;
-    }
-
-    public function isSystemTemplate(): bool
-    {
-        return $this->isSystemTemplate;
-    }
-
-    public function setSystemTemplate(bool $isSystemTemplate): self
-    {
-        $this->isSystemTemplate = $isSystemTemplate;
-        return $this;
-    }
-
-    public function getGender(): Gender
-    {
-        return $this->gender;
-    }
-
-    public function setGender(Gender $gender): void
-    {
-        $this->gender = $gender;
-    }
-    
-    public function isAllowAttachments(): bool
-    {
-        return $this->allowAttachments;
-    }
-
-    public function setAllowAttachments(bool $allowAttachments): self
-    {
-        $this->allowAttachments = $allowAttachments;
-        return $this;
-    }
-
-    public function isActive(): bool
-    {
-        return $this->isActive;
-    }
-
-    public function setActive(bool $isActive): self
-    {
-        $this->isActive = $isActive;
-        return $this;
-    }
-
-    public function getCreatedAt(): DateTime
-    {
-        return $this->createdAt;
-    }
-
-    public function getFields(): Collection
-    {
-        return $this->fields;
     }
 
     public function addField(OutpassTemplateField $field): void

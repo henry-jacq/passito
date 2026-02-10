@@ -93,7 +93,7 @@ $student = $student ?? null;
                     <div class="grid grid-cols-1 gap-4 mt-4 text-sm text-gray-700">
                         <div>
                             <p class="text-xs text-gray-500">Hostel</p>
-                            <p class="font-medium text-gray-800"><?= $student->getHostel()->getName() ?></p>
+                            <p class="font-medium text-gray-800"><?= $student->getHostel()->getHostelName() ?></p>
                         </div>
                         <div>
                             <p class="text-xs text-gray-500">Hostel Category</p>

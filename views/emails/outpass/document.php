@@ -120,7 +120,7 @@
             </p>
             <p><strong>Name:</strong> <?= $student?->getUser()?->getName() ?? 'N/A' ?></p>
             <p><strong>Branch:</strong> <?= $student?->getProgram()?->getCourseName() ?? 'N/A' ?></p>
-            <p><strong>Hostel:</strong> <?= $student?->getHostel()?->getName() ?? 'N/A' ?></p>
+            <p><strong>Hostel:</strong> <?= $student?->getHostel()?->getHostelName() ?? 'N/A' ?></p>
             <p><strong>Reason:</strong> <?= $outpass?->getReason() ?? 'N/A' ?></p>
             <p><strong>Student No:</strong> <?= $student?->getUser()?->getContactNo() ?? 'N/A' ?></p>
             <p><strong>Approved On:</strong>

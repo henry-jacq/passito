@@ -8,11 +8,14 @@ use DateTime;
 use App\Enum\VerifierMode;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\User;
+use App\Traits\EntityGetSetTrait;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'verifiers')]
 class Verifier
 {
+    use EntityGetSetTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -45,99 +48,4 @@ class Verifier
 
     #[ORM\Column(type: 'datetime')]
     private DateTime $createdAt;
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function getName(): string
-    {
-        return $this->verifierName;
-    }
-
-    public function getLocation(): string
-    {
-        return $this->location;
-    }
-
-    public function getIpAddress(): ?string
-    {
-        return $this->ipAddress ?? null;
-    }
-
-    public function getMachineId(): ?string
-    {
-        return $this->machineId ?? null;
-    }
-
-    public function getAuthToken(): string
-    {
-        return $this->authToken;
-    }
-
-    public function getType(): VerifierMode
-    {
-        return $this->type;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function getLastSync(): ?DateTime
-    {
-        return $this->lastSync ?? null;
-    }
-
-    public function getCreatedAt(): DateTime
-    {
-        return $this->createdAt;
-    }
-
-    public function setName(string $verifierName): void
-    {
-        $this->verifierName = $verifierName;
-    }
-
-    public function setLocation(string $location): void
-    {
-        $this->location = $location;
-    }
-
-    public function setIpAddress(?string $ipAddress): void
-    {
-        $this->ipAddress = $ipAddress;
-    }
-
-    public function setMachineId(?string $machineId): void
-    {
-        $this->machineId = $machineId;
-    }
-
-    public function setAuthToken(string $authToken): void
-    {
-        $this->authToken = $authToken;
-    }
-
-    public function setType(VerifierMode $type): void
-    {
-        $this->type = $type;
-    }
-
-    public function setUser(?User $user): void
-    {
-        $this->user = $user;
-    }
-
-    public function setLastSync(DateTime $lastSync): void
-    {
-        $this->lastSync = $lastSync;
-    }
-
-    public function setCreatedAt(DateTime $createdAt): void
-    {
-        $this->createdAt = $createdAt;
-    }
 }

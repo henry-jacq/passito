@@ -25,7 +25,7 @@ ${basename(__FILE__, '.php')} = function () {
         return $this->response([
             'message' => 'Report status fetched',
             'status'  => true,
-            'enabled' => $report->isEnabled()
+            'enabled' => $report->getIsEnabled()
         ], 200);
     }
 

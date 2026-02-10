@@ -28,7 +28,7 @@ use App\Enum\Gender;
                                         <?= $setting->getReportKey()->display() ?>
                                     </h4>
 
-                                    <?php if ($setting->isEnabled()): ?>
+                                    <?php if ($setting->getIsEnabled()): ?>
                                         <span class="px-2 py-1 text-xs font-medium text-green-800 bg-green-100 rounded-full">
                                             Active
                                         </span>
@@ -66,7 +66,7 @@ use App\Enum\Gender;
                             </div>
 
                             <div class="flex items-center space-x-2">
-                                <?php if ($setting->isEnabled()): ?>
+                                <?php if ($setting->getIsEnabled()): ?>
                                     <button
                                         type="button"
                                         class="px-3 py-1 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 toggle-report-status"

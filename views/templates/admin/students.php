@@ -149,7 +149,7 @@ $errorMessage = $this->session->getFlash('error')[$flashKey] ?? null;
                             <td class="px-4 py-3 text-sm text-center text-gray-700"><?= $student->getProgram()->getProgramName() . ' ' . $student->getProgram()->getShortCode() ?></td>
                             <td class="px-4 py-3 text-sm text-center text-gray-700"><?= formatStudentYear($student->getYear()) ?></td>
                             <td class="px-4 py-3 text-sm text-center text-gray-700"><?= $student->getAcademicYear()?->getLabel() ?? 'N/A' ?></td>
-                            <td class="px-4 py-3 text-sm text-center text-gray-700"><?= $student->getHostel()->getName() ?></td>
+                            <td class="px-4 py-3 text-sm text-center text-gray-700"><?= $student->getHostel()->getHostelName() ?></td>
                             <td class="px-4 py-3 text-sm text-center text-gray-700"><?= $student->getRoomNo() ?></td>
                             <td class="px-4 py-3 text-sm text-center text-gray-700"><?= $student->getParentNo() ?></td>
                             <td class="px-4 py-3 text-sm text-center">

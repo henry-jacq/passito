@@ -6,6 +6,7 @@ namespace App\Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use App\Traits\EntityGetSetTrait;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'institution_programs', indexes: [
@@ -16,6 +17,8 @@ use Doctrine\ORM\Mapping as ORM;
 ])]
 class InstitutionProgram
 {
+    use EntityGetSetTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -44,71 +47,6 @@ class InstitutionProgram
     public function __construct()
     {
         $this->createdAt = new DateTime();
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function getProvidedBy(): Institution
-    {
-        return $this->providedBy;
-    }
-
-    public function setProvidedBy(Institution $providedBy): void
-    {
-        $this->providedBy = $providedBy;
-    }
-
-    public function getProgramName(): string
-    {
-        return $this->programName;
-    }
-
-    public function setProgramName(string $programName): void
-    {
-        $this->programName = $programName;
-    }
-
-    public function getCourseName(): string
-    {
-        return $this->courseName;
-    }
-
-    public function setCourseName(string $courseName): void
-    {
-        $this->courseName = $courseName;
-    }
-
-    public function getShortCode(): string
-    {
-        return $this->shortCode;
-    }
-
-    public function setShortCode(string $shortCode): void
-    {
-        $this->shortCode = $shortCode;
-    }
-
-    public function getDuration(): int
-    {
-        return $this->duration;
-    }
-
-    public function setDuration(int $duration): void
-    {
-        $this->duration = $duration;
-    }
-
-    public function getCreatedAt(): DateTime
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(DateTime $createdAt): void
-    {
-        $this->createdAt = $createdAt;
     }
 
     public function toArray(): array

@@ -72,7 +72,7 @@ use App\Enum\UserRole; ?>
                             <option value="default" <?= $hostelFilter == 'default' ? 'selected' : '' ?>>My Hostels</option>
                             <?php foreach ($unassignedHostels as $hostel): ?>
                                 <option value="<?= $hostel->getId() ?>" <?= $hostelFilter == $hostel->getId() ? 'selected' : '' ?>>
-                                    <?= htmlspecialchars($hostel->getName(), ENT_QUOTES, 'UTF-8') ?>
+                                    <?= htmlspecialchars($hostel->getHostelName(), ENT_QUOTES, 'UTF-8') ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>

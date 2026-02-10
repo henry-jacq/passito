@@ -8,11 +8,14 @@ use DateTime;
 use App\Enum\OutpassStatus;
 use App\Entity\OutpassRequest;
 use Doctrine\ORM\Mapping as ORM;
+use App\Traits\EntityGetSetTrait;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'parent_verifications')]
 class ParentVerification
 {
+    use EntityGetSetTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -40,65 +43,5 @@ class ParentVerification
     public function __construct()
     {
         $this->createdAt = new DateTime();
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function getOutpassRequest(): OutpassRequest
-    {
-        return $this->outpassRequest;
-    }
-
-    public function setOutpassRequest(?OutpassRequest $outpassRequest): void
-    {
-        $this->outpassRequest = $outpassRequest;
-    }
-
-    public function getVerificationToken(): string
-    {
-        return $this->verificationToken;
-    }
-
-    public function setVerificationToken(string $verificationToken): void
-    {
-        $this->verificationToken = $verificationToken;
-    }
-
-    public function isUsed(): bool
-    {
-        return $this->isUsed;
-    }
-
-    public function setIsUsed(bool $isUsed): void
-    {
-        $this->isUsed = $isUsed;
-    }
-
-    public function getDecision(): ?OutpassStatus
-    {
-        return $this->decision;
-    }
-
-    public function setDecision(OutpassStatus $decision): void
-    {
-        $this->decision = $decision;
-    }
-
-    public function getVerifiedAt(): ?DateTime
-    {
-        return $this->verifiedAt;
-    }
-
-    public function setVerifiedAt(DateTime $verifiedAt): void
-    {
-        $this->verifiedAt = $verifiedAt;
-    }
-
-    public function getCreatedAt(): DateTime
-    {
-        return $this->createdAt;
     }
 }

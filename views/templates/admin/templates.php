@@ -40,7 +40,7 @@
                             <td class="px-5 py-4">
                                 <div class="inline-flex items-center justify-between mb-1">
                                     <div class="font-medium text-gray-800"><?= ucwords($template->getName()) ?></div>
-                                    <?php if ($template->isSystemTemplate()) {
+                                    <?php if ($template->getIsSystemTemplate()) {
                                         $templateType = "System Template";
                                         $templateTypeClass = "bg-gray-200 text-gray-700";
                                     } else {
@@ -60,13 +60,13 @@
 
                                     // display non-system fields
                                     foreach ($template->getFields() as $field) {
-                                        if (!$field->isSystemField()) {
+                                        if (!$field->getIsSystemField()) {
                                             $hasCustomFields = true;
                                             echo '<span class="px-2 py-0.5 text-xs bg-gray-100 text-gray-800 rounded">' . ucwords($field->getFieldName()) . '</span>';
                                         }
                                     }
 
-                                    if ($template->isAllowAttachments()) {
+                                    if ($template->getAllowAttachments()) {
                                         echo '<span class="px-2 py-0.5 text-xs bg-gray-100 text-gray-800 rounded">Attachment</span>';
                                         $hasCustomFields = true;
                                     }
@@ -78,7 +78,7 @@
                                 </div>
                             </td>
                             <td class="px-5 py-4">
-                                <?php if ($template->isActive()) {
+                                <?php if ($template->getIsActive()) {
                                     $statusClass = "bg-green-100 text-green-700";
                                     $statusText = "Active";
                                 } else {

@@ -6,6 +6,7 @@ namespace App\Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use App\Traits\EntityGetSetTrait;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'students', indexes: [
@@ -15,6 +16,8 @@ use Doctrine\ORM\Mapping as ORM;
 ])]
 class Student
 {
+    use EntityGetSetTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -50,102 +53,6 @@ class Student
 
     #[ORM\Column(type: 'datetime')]
     private DateTime $updatedAt;
-
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function getUser(): User
-    {
-        return $this->user;
-    }
-
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-    }
-
-    public function getHostel(): Hostel
-    {
-        return $this->hostel;
-    }
-
-    public function setHostel(Hostel $hostel): void
-    {
-        $this->hostel = $hostel;
-    }
-
-    public function getProgram(): InstitutionProgram
-    {
-        return $this->program;
-    }
-
-    public function setProgram(InstitutionProgram $program): void
-    {
-        $this->program = $program;
-    }
-
-    public function getDigitalId(): int
-    {
-        return $this->digitalId;
-    }
-
-    public function setDigitalId(int $digitalId): void
-    {
-        $this->digitalId = $digitalId;
-    }
-
-    public function getAcademicYear(): ?AcademicYear
-    {
-        return $this->academicYear;
-    }
-
-    public function setAcademicYear(?AcademicYear $academicYear): void
-    {
-        $this->academicYear = $academicYear;
-    }
-
-    public function getYear(): int
-    {
-        return $this->year;
-    }
-
-    public function setYear(int $year): void
-    {
-        $this->year = $year;
-    }
-
-    public function getRoomNo(): string
-    {
-        return $this->roomNo;
-    }
-
-    public function setRoomNo(string $roomNo): void
-    {
-        $this->roomNo = $roomNo;
-    }
-
-    public function getParentNo(): string
-    {
-        return $this->parentNo;
-    }
-
-    public function setParentNo(string $parentNo): void
-    {
-        $this->parentNo = $parentNo;
-    }
-
-    public function getUpdatedAt(): DateTime
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(DateTime $updatedAt): void
-    {
-        $this->updatedAt = $updatedAt;
-    }
 
     public function toArray(): array
     {

@@ -62,7 +62,7 @@
                             <div class="flex flex-col">
                                 <span class="font-normal text-gray-800 text-md">
                                     <?= $template->getName() ?>
-                                    <?php if ($template->isSystemTemplate()): ?>
+                                    <?php if ($template->getIsSystemTemplate()): ?>
                                         <span class="text-red-500">*</span>
                                     <?php endif; ?>
                                 </span>
@@ -105,7 +105,7 @@
                     <input type="hidden" name="<?= $this->csrfFieldName() ?>" value="<?= $this->csrfToken() ?>">
                     <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                         <?php
-                        $systemFields = array_filter($templates->getFields()->toArray(), fn($f) => $f->isSystemField());
+                        $systemFields = array_filter($templates->getFields()->toArray(), fn($f) => $f->getIsSystemField());
                         $fieldCount = count($systemFields);
 
                         foreach (array_values($systemFields) as $index => $field): ?>
@@ -122,7 +122,7 @@
                                     type="<?= $field->getFieldType() ?>"
                                     name="<?= $inputName ?>"
                                     id="<?= $inputName ?>"
-                                    <?= $field->isRequired() ? 'required' : '' ?>
+                                    <?= $field->getIsRequired() ? 'required' : '' ?>
                                     class="w-full mt-1 transition border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200">
                             </div>
                         <?php endforeach; ?>
@@ -130,7 +130,7 @@
 
                     <?php
                     // Loop and render custom fields
-                    $customFields = array_filter($templates->getFields()->toArray(), fn($f) => !$f->isSystemField());
+                    $customFields = array_filter($templates->getFields()->toArray(), fn($f) => !$f->getIsSystemField());
                     $fieldCount = count($customFields);
 
                     foreach (array_values($customFields) as $index => $field):
@@ -139,19 +139,19 @@
                         <div class="<?= $isLastAndOdd ? 'md:col-span-2' : '' ?>">
                             <label for="<?= $inputName ?>" class="block font-medium text-gray-700">
                                 <?= $field->getFieldName() ?>
-                                <?php if ($field->isRequired()): ?>
+                                <?php if ($field->getIsRequired()): ?>
                                     <span class="text-red-500">*</span>
                                 <?php endif; ?>
                             </label>
                             <input type="<?= $field->getFieldType() ?>"
                                 name="<?= strtolower($field->getFieldName()) ?>"
                                 id="<?= $inputName ?>"
-                                <?= $field->isRequired() ? 'required' : '' ?>
+                                <?= $field->getIsRequired() ? 'required' : '' ?>
                                 class="w-full mt-1 transition border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200">
                         </div>
                     <?php endforeach; ?>
 
-                    <?php if ($templates->isAllowAttachments()): ?>
+                    <?php if ($templates->getAllowAttachments()): ?>
                         <div id="attachmentsField">
                             <label for="attachments" class="block font-medium text-gray-700">Attachments</label>
 

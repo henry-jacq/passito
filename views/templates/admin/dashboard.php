@@ -148,7 +148,7 @@ use App\Enum\ReportKey;
                                     <tr class="hover:bg-gray-50">
                                         <td class="px-4 py-3 text-gray-800"><?= $arrival->getOutpass()->getStudent()->getUser()->getName() ?></td>
                                         <td class="px-4 py-3 text-gray-800"><?= $arrival->getOutpass()->getStudent()->getDigitalId() ?></td>
-                                        <td class="px-4 py-3 text-gray-600"><?= $arrival->getOutpass()->getStudent()->getHostel()->getName() ?></td>
+                                        <td class="px-4 py-3 text-gray-600"><?= $arrival->getOutpass()->getStudent()->getHostel()->getHostelName() ?></td>
                                         <td class="px-4 py-3">
                                             <span class="px-2 py-1 text-xs font-medium text-red-800 bg-red-100 rounded-full"><?= $arrival->getLateDuration() ?></span>
                                         </td>

@@ -55,7 +55,7 @@ class ParentVerificationService
     {
         $status = OutpassStatus::from($decision);
 
-        if ($verification->isUsed()) {
+        if ($verification->getIsUsed()) {
             throw new \RuntimeException('This verification entry has already been used.');
         }
 

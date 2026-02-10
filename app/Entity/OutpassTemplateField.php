@@ -6,11 +6,14 @@ namespace App\Entity;
 
 use Symfony\Component\Validator\Constraints\Choice;
 use Doctrine\ORM\Mapping as ORM;
+use App\Traits\EntityGetSetTrait;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'outpass_template_fields')]
 class OutpassTemplateField
 {
+    use EntityGetSetTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -32,71 +35,6 @@ class OutpassTemplateField
     
     #[ORM\Column(type: 'boolean')]
     private bool $isRequired = false;
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function getTemplate(): OutpassTemplate
-    {
-        return $this->template;
-    }
-
-    public function setTemplate(?OutpassTemplate $template): self
-    {
-        $this->template = $template;
-
-        return $this;
-    }
-
-    public function getFieldName(): string
-    {
-        return $this->fieldName;
-    }
-
-    public function setFieldName(string $fieldName): self
-    {
-        $this->fieldName = $fieldName;
-
-        return $this;
-    }
-
-    public function getFieldType(): string
-    {
-        return $this->fieldType;
-    }
-
-    public function setFieldType(string $fieldType): self
-    {
-        $this->fieldType = $fieldType;
-
-        return $this;
-    }
-
-    public function isSystemField(): bool
-    {
-        return $this->isSystemField;
-    }
-
-    public function setIsSystemField(bool $isSystemField): self
-    {
-        $this->isSystemField = $isSystemField;
-
-        return $this;
-    }
-
-    public function isRequired(): bool
-    {
-        return $this->isRequired;
-    }
-
-    public function setIsRequired(bool $isRequired): self
-    {
-        $this->isRequired = $isRequired;
-
-        return $this;
-    }
 
     public function __toString(): string
     {

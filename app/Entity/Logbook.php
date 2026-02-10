@@ -7,11 +7,14 @@ namespace App\Entity;
 use DateTime;
 use Carbon\Carbon;
 use Doctrine\ORM\Mapping as ORM;
+use App\Traits\EntityGetSetTrait;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'logbook')]
 class Logbook
 {
+    use EntityGetSetTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -30,51 +33,6 @@ class Logbook
 
     #[ORM\Column(type: 'datetime', nullable: true)]
     private ?DateTime $outTime;
-
-    public function getLogId(): int
-    {
-        return $this->logId;
-    }
-
-    public function getVerifier(): Verifier
-    {
-        return $this->verifier;
-    }
-
-    public function setVerifier(Verifier $verifier): void
-    {
-        $this->verifier = $verifier;
-    }
-
-    public function getOutpass(): OutpassRequest
-    {
-        return $this->outpass;
-    }
-
-    public function setOutpass(OutpassRequest $outpass): void
-    {
-        $this->outpass = $outpass;
-    }
-
-    public function getInTime(): ?DateTime
-    {
-        return $this->inTime;
-    }
-
-    public function setInTime(?DateTime $inTime): void
-    {
-        $this->inTime = $inTime;
-    }
-
-    public function getOutTime(): ?DateTime
-    {
-        return $this->outTime;
-    }
-
-    public function setOutTime(?DateTime $outTime): void
-    {
-        $this->outTime = $outTime;
-    }
 
     public function getLateDuration(): string
     {

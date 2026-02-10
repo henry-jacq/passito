@@ -9,6 +9,7 @@ use App\Enum\OutpassStatus;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use App\Traits\EntityGetSetTrait;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'outpass_requests', indexes: [
@@ -18,6 +19,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 ])]
 class OutpassRequest
 {
+    use EntityGetSetTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'bigint')]
@@ -84,186 +87,6 @@ class OutpassRequest
     {
         $this->createdAt = new DateTime();
         $this->parentVerifications = new ArrayCollection();
-    }
-    
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function getStudent(): Student
-    {
-        return $this->student;
-    }
-
-    public function getFromDate(): DateTime
-    {
-        return $this->fromDate;
-    }
-
-    public function getToDate(): DateTime
-    {
-        return $this->toDate;
-    }
-
-    public function getFromTime(): DateTime
-    {
-        return $this->fromTime;
-    }
-
-    public function getToTime(): DateTime
-    {
-        return $this->toTime;
-    }
-
-    public function getTemplate(): OutpassTemplate
-    {
-        return $this->template;
-    }
-
-    public function getDestination(): string
-    {
-        return $this->destination;
-    }
-
-    public function getReason(): string
-    {
-        return $this->reason;
-    }
-
-    public function getCustomValues(): ?array
-    {
-        return $this->customValues;
-    }
-
-    public function getAttachments(): ?array
-    {
-        return $this->attachments;
-    }
-
-    public function getStatus(): OutpassStatus
-    {
-        return $this->status;
-    }
-
-    public function getRemarks(): ?string
-    {
-        return $this->remarks;
-    }
-
-    public function getDocument(): ?string
-    {
-        return $this->document;
-    }
-
-    public function getQrCode(): ?string
-    {
-        return $this->qrCode;
-    }
-
-    public function getApprovedBy(): ?User
-    {
-        return $this->approvedBy;
-    }
-
-    public function getApprovedTime(): ?DateTime
-    {
-        return $this->approvedTime;
-    }
-
-    public function getCreatedAt(): DateTime
-    {
-        return $this->createdAt;
-    }
-
-    public function setStudent(Student $student): void
-    {
-        $this->student = $student;
-    }
-
-    public function setFromDate(DateTime $fromDate): void
-    {
-        $this->fromDate = $fromDate;
-    }
-
-    public function setToDate(DateTime $toDate): void
-    {
-        $this->toDate = $toDate;
-    }
-
-    public function setFromTime(DateTime $fromTime): void
-    {
-        $this->fromTime = $fromTime;
-    }
-
-    public function setToTime(DateTime $toTime): void
-    {
-        $this->toTime = $toTime;
-    }
-
-    public function setTemplate(OutpassTemplate $template): void
-    {
-        $this->template = $template;
-    }
-
-    public function setDestination(string $destination): void
-    {
-        $this->destination = $destination;
-    }
-
-    public function setReason(string $reason): void
-    {
-        $this->reason = $reason;
-    }
-
-    public function setCustomValues(?array $customValues): void
-    {
-        $this->customValues = $customValues;
-    }
-
-    public function setAttachments(?array $attachments): void
-    {
-        $this->attachments = $attachments;
-    }
-
-    public function setStatus(OutpassStatus $status): void
-    {
-        $this->status = $status;
-    }
-
-    public function setRemarks(?string $remarks): void
-    {
-        $this->remarks = $remarks;
-    }
-
-    public function setDocument(?string $document): void
-    {
-        $this->document = $document;
-    }
-
-    public function setQrCode(?string $qrCode): void
-    {
-        $this->qrCode = $qrCode;
-    }
-
-    public function setApprovedBy(?User $approvedBy): void
-    {
-        $this->approvedBy = $approvedBy;
-    }
-
-    public function setApprovedTime(?DateTime $approvedTime): void
-    {
-        $this->approvedTime = $approvedTime;
-    }
-
-    public function setCreatedAt(DateTime $createdAt): void
-    {
-        $this->createdAt = $createdAt;
-    }
-
-    public function getParentVerifications(): Collection
-    {
-        return $this->parentVerifications;
     }
 
     public function addParentVerification(ParentVerification $verification): void

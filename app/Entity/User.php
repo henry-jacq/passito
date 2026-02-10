@@ -9,6 +9,7 @@ use App\Enum\Gender;
 use App\Enum\UserRole;
 use App\Enum\UserStatus;
 use Doctrine\ORM\Mapping as ORM;
+use App\Traits\EntityGetSetTrait;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'users', indexes: [
@@ -17,6 +18,8 @@ use Doctrine\ORM\Mapping as ORM;
 ])]
 class User
 {
+    use EntityGetSetTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -48,91 +51,6 @@ class User
 
     public function __construct()
     {
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): void
-    {
-        $this->name = $name;
-    }
-
-    public function getEmail(): string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(string $email): void
-    {
-        $this->email = $email;
-    }
-
-    public function getPassword(): string
-    {
-        return $this->password;
-    }
-
-    public function setPassword(string $password): void
-    {
-        $this->password = $password;
-    }
-
-    public function getRole(): UserRole
-    {
-        return $this->role;
-    }
-
-    public function setRole(UserRole $role): void
-    {
-        $this->role = $role;
-    }
-    
-    public function getGender(): Gender
-    {
-        return $this->gender;
-    }
-
-    public function setGender(Gender $gender): void
-    {
-        $this->gender = $gender;
-    }
-
-    public function getContactNo(): string
-    {
-        return $this->contactNo;
-    }
-
-    public function setContactNo(string $contactNo): void
-    {
-        $this->contactNo = $contactNo;
-    }
-
-    public function getStatus(): UserStatus
-    {
-        return $this->status;
-    }
-
-    public function setStatus(UserStatus $status): void
-    {
-        $this->status = $status;
-    }
-
-    public function getCreatedAt(): DateTime
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(DateTime $createdAt): void
-    {
-        $this->createdAt = $createdAt;
     }
 
     public function toArray(): array

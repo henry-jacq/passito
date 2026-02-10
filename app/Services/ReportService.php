@@ -212,7 +212,7 @@ class ReportService
             return false;
         }
 
-        $report->setIsEnabled(!$report->isEnabled());
+        $report->setIsEnabled(!$report->getIsEnabled());
         $this->em->persist($report);
         $this->em->flush();
 

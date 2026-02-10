@@ -34,7 +34,7 @@ class ParentController extends BaseController
         }
 
         // Don’t allow reprocessing
-        if ($verification->isUsed()) {
+        if ($verification->getIsUsed()) {
             $outpass = $verification->getOutpassRequest();
             return parent::render($request, $response, 'auth/parent', [
                 'title' => 'Parental Verification',

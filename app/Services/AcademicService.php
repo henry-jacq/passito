@@ -96,7 +96,7 @@ class AcademicService
         }
         
         $hostel = new Hostel();
-        $hostel->setName($data['hostel_name']);
+        $hostel->setHostelName($data['hostel_name']);
         $hostel->setCategory($data['category']);
         $hostel->setHostelType($data['hostel_type']);
 
@@ -109,7 +109,7 @@ class AcademicService
     public function updateHostel(int $id, array $data): Hostel
     {
         $hostel = $this->getHostelById($id);
-        $hostel->setName($data['hostel_name']);
+        $hostel->setHostelName($data['hostel_name']);
         if (isset($data['hostel_type'])) {
             $hostel->setHostelType($data['hostel_type']);
         }

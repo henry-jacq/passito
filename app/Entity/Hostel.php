@@ -6,6 +6,7 @@ namespace App\Entity;
 
 use App\Enum\HostelType;
 use Doctrine\ORM\Mapping as ORM;
+use App\Traits\EntityGetSetTrait;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'hostels', indexes: [
@@ -13,6 +14,8 @@ use Doctrine\ORM\Mapping as ORM;
 ])]
 class Hostel
 {
+    use EntityGetSetTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -27,47 +30,12 @@ class Hostel
     #[ORM\Column(type: 'string', length: 255)]
     private string $category;
 
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function getName(): string
-    {
-        return $this->hostelName;
-    }
-
-    public function setName(string $hostelName): void
-    {
-        $this->hostelName = $hostelName;
-    }
-
-    public function getHostelType(): HostelType
-    {
-        return $this->hostelType;
-    }
-
-    public function setHostelType(HostelType $hostelType): void
-    {
-        $this->hostelType = $hostelType;
-    }
-
-    public function getCategory(): string
-    {
-        return $this->category;
-    }
-
-    public function setCategory(string $category): void
-    {
-        $this->category = $category;
-    }
-
     public function toArray(): array
     {
         return [
             'id' => $this->getId(),
             'category' => $this->getCategory(),
-            'hostelName' => $this->getName(),
+            'hostelName' => $this->getHostelName(),
             'hostelType' => $this->getHostelType()->value
         ];
     }

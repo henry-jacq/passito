@@ -94,6 +94,11 @@
                                     <button class="px-3 py-1 text-sm font-normal text-white transition bg-indigo-600 rounded-md hover:bg-indigo-700 edit-template-btn" data-id="<?= $template->getId() ?>">
                                         Edit
                                     </button>
+                                    <?php if (!$template->getIsSystemTemplate()): ?>
+                                        <button class="px-3 py-1 text-sm font-normal text-white transition bg-red-600 rounded-md hover:bg-red-700 delete-template-btn" data-id="<?= $template->getId() ?>" data-name="<?= htmlspecialchars((string) $template->getName()) ?>">
+                                            Delete
+                                        </button>
+                                    <?php endif; ?>
                                 </div>
                             </td>
                         </tr>

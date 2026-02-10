@@ -823,4 +823,23 @@ class OutpassService
 
         return $template;
     }
+
+    public function templateHasRequests(OutpassTemplate $template): bool
+    {
+        $qb = $this->em->createQueryBuilder();
+        $qb->select('COUNT(o.id)')
+            ->from(OutpassRequest::class, 'o')
+            ->where('o.template = :template')
+            ->setParameter('template', $template);
+
+        return (int) $qb->getQuery()->getSingleScalarResult() > 0;
+    }
+
+    public function removeTemplate(OutpassTemplate $template): bool
+    {
+        $this->em->remove($template);
+        $this->em->flush();
+
+        return true;
+    }
 }

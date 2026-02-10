@@ -1718,6 +1718,78 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Delete Outpass Template
+    document.querySelectorAll('.delete-template-btn').forEach((button) => {
+        button.addEventListener('click', async () => {
+            const templateId = button.dataset.id;
+            const templateName = button.dataset.name;
+
+            try {
+                const response = await Ajax.post('/api/web/admin/modal', {
+                    template: "delete_template",
+                    templateName: templateName
+                });
+
+                if (response.ok && response.data) {
+                    Modal.open({
+                        content: response.data,
+                        actions: [
+                            {
+                                label: 'Delete',
+                                class: `inline-flex justify-center rounded-lg bg-red-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-red-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50`,
+                                onClick: async (event) => {
+                                    let toastMessage = null;
+                                    event.target.disabled = true;
+                                    event.target.textContent = 'Deleting...';
+
+                                    try {
+                                        const response = await Ajax.post(`/api/web/admin/templates/remove`, {
+                                            template_id: templateId
+                                        });
+
+                                        if (response.ok) {
+                                            const data = response.data;
+                                            if (data.status) {
+                                                location.reload();
+                                            } else {
+                                                toastMessage = data.message || 'Failed to delete template.';
+                                            }
+                                        } else {
+                                            toastMessage = response.data?.message || `Failed to delete template. (HTTP ${response.status})`;
+                                        }
+                                    } catch (error) {
+                                        console.error(error);
+                                        toastMessage = 'An error occurred while deleting template.';
+                                    } finally {
+                                        Modal.close();
+                                        if (toastMessage) {
+                                            const toast = new Toast();
+                                            toast.create({ message: toastMessage, position: "bottom-right", type: "error", duration: 5000 });
+                                        }
+                                    }
+                                },
+                            },
+                            {
+                                label: 'Cancel',
+                                class: `inline-flex justify-center rounded-lg bg-gray-100 px-6 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`,
+                                onClick: Modal.close,
+                            },
+                        ],
+                        size: 'sm:max-w-md',
+                        classes: 'custom-modal-class',
+                        closeOnBackdropClick: false,
+                    });
+                } else {
+                    console.error('Error loading modal template:', response.data.message || 'Unknown error');
+                    alert(response.data.message || 'Failed to load modal template');
+                }
+            } catch (error) {
+                console.error('Failed to load modal content:', error);
+                alert('Failed to load modal content. Please try again later.');
+            }
+        });
+    });
+
     // Activate manual verifier buttons
     const activateManualVerifierButtons = document.querySelectorAll('.activate-manual-verifier-modal');
     activateManualVerifierButtons.forEach((button) => {

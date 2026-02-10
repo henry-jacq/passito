@@ -102,7 +102,7 @@ use App\Enum\OutpassStatus;
                     <?php else: ?>
                         <?php foreach ($outpasses as $outpass): ?>
                             <tr onclick="location.href='<?= $this->urlFor('admin.outpass.records.details', ['outpass_id' => $outpass->getId()]) ?>'" class="cursor-pointer hover:bg-gray-50">
-                                <td class="px-6 py-4 text-sm text-gray-900"># <?= $outpass->getID() ?></td>
+                                <td class="px-6 py-4 text-sm text-gray-900"># <?= $outpass->getId() ?></td>
                                 <td class="px-6 py-4 text-sm text-gray-900"><?= $outpass->getStudent()->getUser()->getName() ?></td>
                                 <td class="px-6 py-4 text-sm text-gray-900"><?= formatStudentYear($outpass->getStudent()->getYear()) ?></td>
                                 <td class="px-6 py-4 text-sm text-gray-900"><?= $outpass->getStudent()->getProgram()->getProgramName() . ' ' . $outpass->getStudent()->getProgram()->getShortCode() ?></td>

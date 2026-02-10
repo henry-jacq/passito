@@ -68,7 +68,7 @@ use App\Enum\UserStatus; ?>
                 <tbody class="bg-white divide-y divide-gray-200">
                     <?php foreach ($verifiers as $verifier): ?>
                         <tr class="hover:bg-gray-50">
-                            <td class="px-4 py-3 text-sm text-gray-700"><?= $verifier->getName() ?></td>
+                            <td class="px-4 py-3 text-sm text-gray-700"><?= $verifier->getVerifierName() ?></td>
                             <td class="px-4 py-3 text-sm text-gray-700"><?= $verifier->getLocation() ?></td>
                             <td class="px-4 py-3 text-sm text-gray-700"><?= $verifier->getIpAddress() !== null ? $verifier->getIpAddress() : 'N/A' ?></td>
                             <td class="px-4 py-3 text-sm text-center text-gray-700">
@@ -102,7 +102,7 @@ use App\Enum\UserStatus; ?>
                             </td>
                             <td class="px-4 py-3 text-sm text-gray-700">
                                 <div class="flex items-center justify-center space-x-2">
-                                    <button class="px-3 py-1 text-sm text-white transition duration-200 bg-red-600 rounded-lg hover:bg-red-700 focus:ring focus:ring-red-400 delete-verifier-modal" data-id="<?= $verifier->getId() ?>" data-name="<?= $verifier->getName() ?>">
+                                    <button class="px-3 py-1 text-sm text-white transition duration-200 bg-red-600 rounded-lg hover:bg-red-700 focus:ring focus:ring-red-400 delete-verifier-modal" data-id="<?= $verifier->getId() ?>" data-name="<?= $verifier->getVerifierName() ?>">
                                         Delete
                                     </button>
                                 </div>
@@ -139,7 +139,7 @@ use App\Enum\UserStatus; ?>
                     <?php foreach ($manualVerifiers as $verifier): ?>
                         <?php $manualUser = $verifier->getUser(); ?>
                         <tr class="hover:bg-gray-50">
-                            <td class="px-4 py-3 text-sm text-gray-700"><?= $manualUser?->getName() ?? $verifier->getName() ?></td>
+                            <td class="px-4 py-3 text-sm text-gray-700"><?= $manualUser?->getName() ?? $verifier->getVerifierName() ?></td>
                             <td class="px-4 py-3 text-sm text-gray-700"><?= $manualUser?->getEmail() ?? 'N/A' ?></td>
                             <td class="px-4 py-3 text-sm text-gray-700"><?= $verifier->getLocation() ?></td>
                             <td class="px-4 py-3 text-sm text-gray-700">
@@ -174,7 +174,7 @@ use App\Enum\UserStatus; ?>
                                             Activate
                                         </button>
                                     <?php endif; ?>
-                                    <button class="px-3 py-1 text-sm text-white transition duration-200 bg-red-600 rounded-lg hover:bg-red-700 focus:ring focus:ring-red-400 delete-manual-verifier-modal" data-id="<?= $verifier->getId() ?>" data-name="<?= $manualUser?->getName() ?? $verifier->getName() ?>">
+                                    <button class="px-3 py-1 text-sm text-white transition duration-200 bg-red-600 rounded-lg hover:bg-red-700 focus:ring focus:ring-red-400 delete-manual-verifier-modal" data-id="<?= $verifier->getId() ?>" data-name="<?= $manualUser?->getName() ?? $verifier->getVerifierName() ?>">
                                         Delete
                                     </button>
                                 </div>

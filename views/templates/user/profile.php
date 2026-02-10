@@ -45,7 +45,7 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Hostel Number</label>
-                    <div class="mt-1 font-medium text-gray-800"><?= $userData->getHostel()->getName() ?></div>
+                    <div class="mt-1 font-medium text-gray-800"><?= $userData->getHostel()->getHostelName() ?></div>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Room Number</label>

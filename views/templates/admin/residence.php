@@ -39,7 +39,7 @@
                 <select id="hostel" name="hostel" class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Choose Hostel...</option>
                     <?php foreach ($hostels as $hostel): ?>
-                        <option value="<?= $hostel->getId() ?>"><?= htmlspecialchars($hostel->getName()) ?> (<?= htmlspecialchars($hostel->getCategory()) ?>)</option>
+                        <option value="<?= $hostel->getId() ?>"><?= htmlspecialchars($hostel->getHostelName()) ?> (<?= htmlspecialchars($hostel->getCategory()) ?>)</option>
                     <?php endforeach; ?>
                 </select>
             </div>
@@ -71,7 +71,7 @@
                                 <td class="px-6 py-3 text-sm text-gray-700"><?= $key + 1; ?></td>
                                 <td class="px-4 py-3 text-sm text-gray-700"><?= htmlspecialchars($view['assignment']->getAssignedTo()->getName()); ?></td>
                                 <td class="px-4 py-3 text-sm text-center text-gray-700">
-                                    <?= $view['resolvedTarget']?->getName() ?? 'N/A' ?>
+                                    <?= $view['resolvedTarget']?->getHostelName() ?? 'N/A' ?>
                                 </td>
                                 <td class="px-4 py-3 text-sm text-gray-700"><?= htmlspecialchars($view['assignment']->getAssignedBy()->getName()); ?></td>
                                 <td class="px-6 py-3 text-sm text-center">
@@ -79,7 +79,7 @@
                                         class="text-red-600 transition duration-200 hover:text-red-800 remove-assignment-modal"
                                         data-id="<?= $view['assignment']->getId(); ?>"
                                         data-wardenname="<?= htmlspecialchars($view['assignment']->getAssignedTo()->getName()); ?>"
-                                        data-hostelname="<?= htmlspecialchars($view['resolvedTarget']?->getName() ?? ''); ?>">
+                                        data-hostelname="<?= htmlspecialchars($view['resolvedTarget']?->getHostelName() ?? ''); ?>">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
                                 </td>
@@ -187,7 +187,7 @@
                         <?php foreach ($hostels as $key => $hostel): ?>
                             <tr class="hover:bg-gray-50">
                                 <td class="px-6 py-3 text-sm text-gray-800"><?= $key + 1 ?></td>
-                                <td class="px-6 py-3 text-sm text-gray-800"><?= $hostel->getName() ?></td>
+                                <td class="px-6 py-3 text-sm text-gray-800"><?= $hostel->getHostelName() ?></td>
                                 <td class="px-4 py-3 text-sm text-gray-800"><?= $hostel->getCategory() ?></td>
                                 <td class="px-6 py-3 text-right">
                                     <div class="inline-flex items-center space-x-4 text-gray-500">
@@ -195,11 +195,11 @@
                                             title="Edit"
                                             class="text-gray-700 hover:text-gray-800 edit-hostel-modal"
                                             data-id="<?= $hostel->getId() ?>"
-                                            data-name="<?= htmlspecialchars($hostel->getName()) ?>"
+                                            data-name="<?= htmlspecialchars($hostel->getHostelName()) ?>"
                                             data-category="<?= htmlspecialchars($hostel->getCategory()) ?>">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <button title="Delete" class="text-red-700 hover:text-red-800 remove-hostel-modal" data-id="<?= $hostel->getId() ?>" data-name="<?= $hostel->getName() ?>">
+                                        <button title="Delete" class="text-red-700 hover:text-red-800 remove-hostel-modal" data-id="<?= $hostel->getId() ?>" data-name="<?= $hostel->getHostelName() ?>">
                                             <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </div>

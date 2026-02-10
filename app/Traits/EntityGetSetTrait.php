@@ -16,7 +16,12 @@ trait EntityGetSetTrait
         $prefix = substr($method, 0, 3);
         $property = lcfirst(substr($method, 3));
 
-        if (!property_exists($this, $property)) {
+        $refClass = new \ReflectionClass($this);
+        while ($refClass !== false && !$refClass->hasProperty($property)) {
+            $refClass = $refClass->getParentClass();
+        }
+
+        if ($refClass === false) {
             throw new BadMethodCallException(sprintf('Method %s does not exist.', $method));
         }
 
@@ -29,7 +34,7 @@ trait EntityGetSetTrait
         if ($prefix === 'set') {
             $value = $arguments[0] ?? null;
 
-            $ref = new ReflectionProperty($this, $property);
+            $ref = $refClass->getProperty($property);
             $type = $ref->getType();
 
             if ($type !== null) {
@@ -60,6 +65,8 @@ trait EntityGetSetTrait
                             ($expected === 'string' && is_string($value)) ||
                             ($expected === 'bool' && is_bool($value)) ||
                             ($expected === 'float' && is_float($value)) ||
+                            ($expected === 'array' && is_array($value)) ||
+                            ($expected === 'iterable' && is_iterable($value)) ||
                             (class_exists($expected) && $value instanceof $expected) ||
                             (interface_exists($expected) && $value instanceof $expected)
                         ) {

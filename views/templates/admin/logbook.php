@@ -134,7 +134,7 @@
                             <td class="px-2 py-3 text-sm text-center text-gray-700">
                                 <?php
                                 $verifier = $log->getVerifier();
-                                $verifierName = htmlspecialchars($verifier->getName());
+                                $verifierName = htmlspecialchars($verifier->getVerifierName());
                                 $statusClass = $verifierName ? 'bg-green-500' : 'bg-red-500'; ?>
 
                                 <?php if (UserRole::isSuperAdmin($user->getRole()->value)): ?>

@@ -2,6 +2,7 @@
 
 use App\Enum\UserRole;
 use App\Entity\Logbook;
+use App\Enum\OutpassStatus;
 
 ${basename(__FILE__, '.php')} = function () {
     if ($this->isAuthenticated() && ($this->paramsExists(['qr_payload']) || $this->paramsExists(['outpass_id'])) && UserRole::isVerifier($this->getRole())) {
@@ -43,6 +44,12 @@ ${basename(__FILE__, '.php')} = function () {
                 'message' => 'Outpass not found.',
                 'status' => false
             ], 404);
+        }
+        if ($outpass->getStatus() !== OutpassStatus::APPROVED) {
+            return $this->response([
+                'message' => "Outpass is " . $outpass->getStatus()->label(),
+                'status' => false
+            ], 403);
         }
 
         $log = $this->em->getRepository(Logbook::class)->findOneBy(['outpass' => $outpass]);

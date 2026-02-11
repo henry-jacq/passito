@@ -2,6 +2,7 @@
 
 use App\Enum\UserRole;
 use App\Enum\VerifierMode;
+use App\Enum\OutpassStatus;
 
 ${basename(__FILE__, '.php')} = function () {
     if ($this->isAuthenticated() && $this->paramsExists(['action']) && UserRole::isVerifier($this->getRole())) {
@@ -37,6 +38,21 @@ ${basename(__FILE__, '.php')} = function () {
                 'message' => 'Invalid request.',
                 'status' => false
             ], 400);
+        }
+
+        $outpass = $this->outpassService->getOutpassById($outpassId);
+        if (!$outpass) {
+            return $this->response([
+                'message' => 'Outpass not found.',
+                'status' => false
+            ], 404);
+        }
+
+        if ($outpass->getStatus() !== OutpassStatus::APPROVED) {
+            return $this->response([
+                'message' => "Outpass is " . $outpass->getStatus()->label(),
+                'status' => false
+            ], 403);
         }
 
         if ($action === 'checkout') {

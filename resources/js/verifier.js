@@ -31,6 +31,16 @@ document.addEventListener('DOMContentLoaded', () => {
     let actionInFlight = false;
     let lastData = null;
 
+    const hideResultPanel = () => {
+        if (resultPanel) {
+            resultPanel.classList.add('hidden');
+        }
+        lastData = null;
+        setButtonState(checkoutBtn, false);
+        setButtonState(checkinBtn, false);
+        setStatusBadge('', 'neutral');
+    };
+
     const setStatusBadge = (label, variant) => {
         if (!statusBadge) return;
         const variants = {
@@ -45,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
         statusBadge.className = `px-2 py-1 text-xs font-medium rounded-full ${classes}`;
     };
 
+    const isResultVisible = () => resultPanel && !resultPanel.classList.contains('hidden');
     const showResultPanel = () => {
         if (resultPanel && resultPanel.classList.contains('hidden')) {
             resultPanel.classList.remove('hidden');
@@ -69,8 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const setLoadingState = () => {
-        showResultPanel();
-        if (!lastData) {
+        if (isResultVisible() && !lastData) {
             setStatusBadge('Loading...', 'info');
         }
         setButtonState(checkoutBtn, false);
@@ -212,15 +222,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 renderResult(response.data.data);
             } else {
                 toast.create({ message: response.data?.message || 'Invalid QR code.', position: "bottom-right", type: "error", duration: 5000 });
-                if (lastData) {
-                    renderResult(lastData);
-                }
+                hideResultPanel();
             }
         } catch (error) {
             toast.create({ message: 'An error occurred while scanning the QR.', position: "bottom-right", type: "error", duration: 5000 });
-            if (lastData) {
-                renderResult(lastData);
-            }
+            hideResultPanel();
         }
     };
 
@@ -240,15 +246,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 renderResult(response.data.data);
             } else {
                 toast.create({ message: response.data?.message || 'Outpass not found.', position: "bottom-right", type: "error", duration: 5000 });
-                if (lastData) {
-                    renderResult(lastData);
-                }
+                hideResultPanel();
             }
         } catch (error) {
             toast.create({ message: 'Unable to load outpass details.', position: "bottom-right", type: "error", duration: 5000 });
-            if (lastData) {
-                renderResult(lastData);
-            }
+            hideResultPanel();
         }
     };
 
@@ -320,15 +322,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             } else {
                 toast.create({ message: response.data?.message || 'Verification failed.', position: "bottom-right", type: "error", duration: 5000 });
-                if (lastData) {
-                    renderResult(lastData);
-                }
+                hideResultPanel();
             }
         } catch (error) {
             toast.create({ message: 'An error occurred while verifying the outpass.', position: "bottom-right", type: "error", duration: 5000 });
-            if (lastData) {
-                renderResult(lastData);
-            }
+            hideResultPanel();
         } finally {
             actionInFlight = false;
         }

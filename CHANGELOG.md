@@ -1,5 +1,52 @@
 # Changelog
 
+## v0.7.0 (2026-02-11)
+
+### 🚀 Major Features
+- **Resource Management System**: Added secure file access and resource management with proper authentication and authorization
+- **Template Deletion**: Implemented template deletion functionality with proper validation and cleanup
+- **Job Queue Health Monitoring**: Added comprehensive health check command and async cleanup processing
+- **Job Supervisor**: Implemented dynamic worker process management for job queue
+
+### ⚡ Performance Optimizations
+- **Job Processing**: Consolidated outpass generation workflow from 3 sequential jobs into single `ProcessApprovedOutpass` job
+  - Eliminated job dependency overhead and result tracking
+  - Reduced database writes and queue processing time
+  - Streamlined QR code generation, PDF creation, and email sending into one atomic operation
+
+### 🔧 Refactoring
+- **Entity Getters/Setters**: Removed 1,172 lines of boilerplate getter/setter code across 16 entity classes
+  - Implemented magic `__call()` methods in `EntityGetSetTrait` for dynamic property access
+  - Added explicit type casting for data consistency
+  - Maintained backward compatibility while improving code maintainability
+- **Job Dependencies**: Removed job dependencies and result tracking system for simpler architecture
+- **Command Naming**: Renamed `RemoveExpiredOutpassCommand` to `CleanupExpiredFilesCommand` for clarity
+- **Seeders**: Consolidated `OutpassRulesSeeder` into `AppSettingsSeeder` for better organization
+- **Template System**: Moved outpass timing rules from settings to templates for better flexibility
+
+### 📚 Documentation
+- **Comprehensive API Documentation**: Added detailed API endpoint documentation with request/response examples
+- **Job System Documentation**: Created extensive job queue documentation with health monitoring guide
+- **System Architecture**: Added architecture documentation and implementation summaries
+
+### 🏗️ Infrastructure
+- **WebSocket Service**: Added systemd service file for WebSocket server deployment
+- **Deployment Configuration**: Added supervisor configuration for production deployments
+
+### 🐛 Bug Fixes
+- **Session Dependency**: Restored Session dependency in AdminService for bulkUpload method
+- **Type Handling**: Improved type handling in AppSettingsSeeder for better data consistency
+
+### 🎨 UI/UX Improvements
+- **Template Management**: Updated templates with improved API endpoints and UI updates
+- **Admin Interface**: Enhanced admin dashboard and management interfaces
+
+### 📝 Code Quality
+- Improved type safety across entity classes
+- Enhanced error handling and logging
+- Better separation of concerns in job processing
+- Cleaner codebase with reduced redundancy
+
 ## v0.6.0 (2026-02-08)
 
 ### 🎯 Major Features

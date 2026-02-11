@@ -418,6 +418,6 @@ php passito.php app:cleanup-expired-files    # Dispatch cleanup job
 
 ---
 
-**Implementation Date:** February 9, 2026  
-**Version:** 0.6.0  
+**Implementation Date:** February 11, 2026  
+**Version:** 0.7.0  
 **Status:** ✅ Complete and Production-Ready

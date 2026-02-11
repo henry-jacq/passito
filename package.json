@@ -1,6 +1,6 @@
 {
   "name": "Passito",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Hostel Gatepass Management System",
   "main": "index.js",
   "scripts": {

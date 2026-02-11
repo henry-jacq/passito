@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Core\Storage;
 use App\Core\View;
+use App\Core\Config;
 use App\Entity\FileAccessLog;
 use App\Entity\Student;
 use App\Entity\User;
@@ -19,6 +20,7 @@ class ResourceController extends BaseController
 {
     public function __construct(
         View $view,
+        private readonly Config $config,
         private readonly FileService $fileService,
         private readonly SecureLinkService $links,
         private readonly JwtService $jwt,
@@ -43,6 +45,55 @@ class ResourceController extends BaseController
             'report' => $this->redirectReport($request, $response),
             default => $response->withStatus(404, 'Not Found'),
         };
+    }
+
+    public function static(Request $request, Response $response): Response
+    {
+        $relative = (string) $request->getAttribute('path');
+        if ($relative === '') {
+            return $response->withStatus(404, 'Not Found');
+        }
+
+        $assetsPath = (string) $this->config->get('resources.assets_path', '');
+        if ($assetsPath === '') {
+            return $response->withStatus(404, 'Not Found');
+        }
+
+        $base = realpath($assetsPath);
+        if ($base === false) {
+            return $response->withStatus(404, 'Not Found');
+        }
+
+        $candidate = realpath($base . DIRECTORY_SEPARATOR . ltrim($relative, '/'));
+        if ($candidate === false || !str_starts_with($candidate, $base . DIRECTORY_SEPARATOR)) {
+            return $response->withStatus(404, 'Not Found');
+        }
+
+        if (!is_file($candidate) || !is_readable($candidate)) {
+            return $response->withStatus(404, 'Not Found');
+        }
+
+        $ext = strtolower(pathinfo($candidate, PATHINFO_EXTENSION));
+        $mimeMap = (array) $this->config->get('resources.static_mime_types', []);
+
+        if (!array_key_exists($ext, $mimeMap)) {
+            return $response->withStatus(404, 'Not Found');
+        }
+
+        $contents = file_get_contents($candidate);
+        if ($contents === false) {
+            return $response->withStatus(404, 'Not Found');
+        }
+
+        $response->getBody()->write($contents);
+
+        return $response
+            ->withHeader('Content-Type', $mimeMap[$ext])
+            ->withHeader('Content-Length', (string) filesize($candidate))
+            ->withHeader('Cache-Control', 'public, max-age=' . (60 * 60 * 24 * 365))
+            ->withHeader('Expires', gmdate(DATE_RFC1123, time() + 60 * 60 * 24 * 365))
+            ->withHeader('Last-Modified', gmdate(DATE_RFC1123, filemtime($candidate)))
+            ->withHeader('Pragma', '');
     }
 
     private function serveFile(string $uuid, Request $request, Response $response): Response

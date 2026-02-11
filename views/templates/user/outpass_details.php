@@ -18,14 +18,7 @@ use App\Enum\OutpassStatus; ?>
             <!-- Apply outpass button -->
             <div class="mt-4 md:mt-0">
                 <?php $document = $outpass->getDocument();
-                $downloadUrl = $document ? $this->fileUrl(
-                    $document,
-                    'storage.student',
-                    [
-                        'id' => $outpass->getStudent()->getUser()->getId(),
-                        'params' => 'outpasses/' . $document
-                    ]
-                ) : ''; ?>
+                $downloadUrl = $document ? $this->fileUrl($document) : ''; ?>
                 <a <?php if ($document): ?>
                     href="<?= htmlspecialchars($downloadUrl) ?>" download
                     <?php else: ?>
@@ -143,12 +136,7 @@ use App\Enum\OutpassStatus; ?>
                                 </div>
                             <?php else: ?>
                                 <img class="object-contain w-48 h-48 select-none" src="<?= htmlspecialchars($this->fileUrl(
-                                                                                    $outpass->getQrCode(),
-                                                                                    'storage.student',
-                                                                                    [
-                                                                                        'id' => $outpass->getStudent()->getUser()->getId(),
-                                                                                        'params' => 'qr_codes/' . $outpass->getQrCode()
-                                                                                    ]
+                                                                                    $outpass->getQrCode()
                                                                                 )) ?>" alt="Outpass QR Code" oncontextmenu="return false;" draggable="false">
                             <?php endif; ?>
                         </div>
@@ -171,14 +159,7 @@ use App\Enum\OutpassStatus; ?>
                         </div>
                         <?php
                         $qrCode = $outpass->getQrCode();
-                        $qrDownloadUrl = $qrCode ? $this->fileUrl(
-                            $qrCode,
-                            'storage.student',
-                            [
-                                'id' => $outpass->getStudent()->getUser()->getId(),
-                                'params' => 'qr_codes/' . $qrCode
-                            ]
-                        ) : ''; ?>
+                        $qrDownloadUrl = $qrCode ? $this->fileUrl($qrCode) : ''; ?>
                         <a <?php if ($qrCode): ?>
                             href="<?= htmlspecialchars($qrDownloadUrl) ?>" download
                             <?php else: ?>
@@ -199,14 +180,7 @@ use App\Enum\OutpassStatus; ?>
                                 <p class="mt-1 space-x-2 text-base text-gray-800 md:text-lg">
                                     <?php if (count($outpass->getAttachments()) > 0): ?>
                                         <?php foreach ($outpass->getAttachments() as $attachment):
-                                            $url = htmlspecialchars($this->fileUrl(
-                                                $attachment,
-                                                'storage.student',
-                                                [
-                                                    'id' => $outpass->getStudent()->getUser()->getId(),
-                                                    'params' => $attachment
-                                                ]
-                                            ));
+                                            $url = htmlspecialchars($this->fileUrl($attachment));
                                             $label = $this->fileLabel($attachment);
                                         ?>
                                             <a href="<?= $url ?>" download class="text-blue-600 hover:text-blue-700 hover:underline">

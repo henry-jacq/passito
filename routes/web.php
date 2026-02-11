@@ -9,7 +9,6 @@ use App\Controller\AdminController;
 use App\Controller\SetupController;
 use App\Middleware\AdminMiddleware;
 use App\Controller\ParentController;
-use App\Controller\StorageController;
 use App\Controller\ResourceController;
 use App\Controller\StudentController;
 use App\Controller\VerifierController;
@@ -43,10 +42,9 @@ return function (App $app) {
         $group->any('/profile', [StudentController::class, 'profile'])->setName('student.profile');
     })->add(StudentMiddleware::class);
     
-    // Storage Routes
-    $app->any('/storage/admin/{id}[/{params:.*}]', [StorageController::class, 'admin'])->setName('storage.admin')->add(AdminMiddleware::class);
-    $app->any('/storage/student/{id}[/{params:.*}]', [StorageController::class, 'student'])->setName('storage.student')->add(StudentMiddleware::class);
+    // Resource Routes
     $app->get('/resource/{token}', [ResourceController::class, 'access'])->setName('resource.access');
+    $app->get('/resource/static/{path:.*}', [ResourceController::class, 'static'])->setName('resource.static');
 
     // Parent Verification Routes
     $app->group('/parent', function (RouteCollectorProxy $group) {

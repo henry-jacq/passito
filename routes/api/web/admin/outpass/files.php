@@ -15,23 +15,12 @@ ${basename(__FILE__, '.php')} = function () {
                 
                 $files = [];
                 foreach ($attachments as $attachment) {
-                    if ($this->fileService->isUuid($attachment)) {
-                        $url = $this->view->secureResourceUrl('file', $attachment);
-                        $name = $this->fileService->getOriginalNameByUuid($attachment) ?? 'Attachment';
-                        $files[] = [
-                            'url' => $url,
-                            'name' => $name,
-                        ];
-                    } else {
-                        $url = $this->view->urlFor('storage.admin', [
-                            'id' => $admin->getId(),
-                            'params' => $attachment
-                        ]);
-                        $files[] = [
-                            'url' => $url,
-                            'name' => basename($attachment),
-                        ];
-                    }
+                    $url = $this->view->secureResourceUrl('file', $attachment);
+                    $name = $this->fileService->getOriginalNameByUuid($attachment) ?? 'Attachment';
+                    $files[] = [
+                        'url' => $url,
+                        'name' => $name,
+                    ];
                 }
 
                 return $this->response([

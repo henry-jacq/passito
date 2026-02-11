@@ -51,13 +51,9 @@ class View
         return $this->router->urlFor('resource.access', ['token' => $token]);
     }
 
-    public function fileUrl(string $identifier, string $fallbackRoute, array $fallbackParams): string
+    public function fileUrl(string $identifier): string
     {
-        if ($this->fileService->isUuid($identifier)) {
-            return $this->secureResourceUrl('file', $identifier);
-        }
-
-        return $this->router->urlFor($fallbackRoute, $fallbackParams);
+        return $this->secureResourceUrl('file', $identifier);
     }
 
     public function fileLabel(string $identifier): string
@@ -67,6 +63,11 @@ class View
         }
 
         return basename($identifier);
+    }
+
+    public function staticAssetUrl(string $path): string
+    {
+        return $this->router->urlFor('resource.static', ['path' => ltrim($path, '/')]);
     }
 
     /**

@@ -28,6 +28,7 @@ return [
         'log_errors' => true,
         'log_error_details' => true,
         'qr_secret' => $_ENV['QR_SECRET'] ?? 'passito',
+        'link_secret' => $_ENV['LINK_SECRET'] ?? '',
     ],
     'doctrine' => [
         'dev_mode' => AppEnvironment::isDevelopment($appEnv) ?? 'development',

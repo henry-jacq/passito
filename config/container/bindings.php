@@ -67,6 +67,8 @@ return [
             $container->get(Storage::class),
             $container->get(Session::class),
             $container->get(JwtService::class),
+            $container->get(\App\Services\FileService::class),
+            $container->get(\App\Services\SecureLinkService::class),
             $routeParser
         );
     },

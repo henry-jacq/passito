@@ -6,6 +6,8 @@ use App\Entity\OutpassTemplate;
 use App\Core\JobPayloadBuilder;
 use App\Jobs\SendParentApproval;
 use App\Dto\CreateOutpassDto;
+use App\Enum\ResourceType;
+use App\Enum\ResourceVisibility;
 
 ${basename(__FILE__, '.php')} = function () {
 
@@ -119,17 +121,21 @@ ${basename(__FILE__, '.php')} = function () {
 
         // Handle file attachments
         $attachments = [];
+        $storedAttachments = [];
         if (isset($this->files['attachments']) && is_array($this->files['attachments'])) {
             foreach ($this->files['attachments'] as $file) {
                 if ($file->getError() == UPLOAD_ERR_OK) {
-                    $name = $file->getClientFilename();
-                    $fileExtension = pathinfo($name, PATHINFO_EXTENSION);
-                    $filePath = $file->getStream()->getMetadata('uri');
+                    $stored = $this->fileService->createFromUpload(
+                        $file,
+                        'attachments',
+                        ResourceType::OUTPASS_ATTACHMENT,
+                        $student->getUser(),
+                        null,
+                        ResourceVisibility::OWNER
+                    );
 
-                    $name = $this->storage->generateFileName('attachments', $fileExtension);
-                    $this->storage->moveUploadedFile($filePath, $name);
-
-                    $attachments[] = $name;
+                    $attachments[] = $stored->getUuid();
+                    $storedAttachments[] = $stored;
                 }
             }
         }
@@ -178,6 +184,10 @@ ${basename(__FILE__, '.php')} = function () {
         }
 
         if ($outpass instanceof OutpassRequest) {
+            foreach ($storedAttachments as $stored) {
+                $this->fileService->updateResourceId($stored, $outpass->getId());
+            }
+
             return $this->response([
                 'message' => 'Outpass Requested Successfully',
                 'type' => 'success',

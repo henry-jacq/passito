@@ -13,19 +13,31 @@ ${basename(__FILE__, '.php')} = function () {
                 $admin = $this->getAttribute('user');
                 $attachments = $outpass->getAttachments();
                 
-                $urls = [];
+                $files = [];
                 foreach ($attachments as $attachment) {
-                    $url = $this->view->urlFor('storage.admin', [
-                        'id' => $admin->getId(),
-                        'params' => $attachment
-                    ]);
-                    $urls[] = $url;
+                    if ($this->fileService->isUuid($attachment)) {
+                        $url = $this->view->secureResourceUrl('file', $attachment);
+                        $name = $this->fileService->getOriginalNameByUuid($attachment) ?? 'Attachment';
+                        $files[] = [
+                            'url' => $url,
+                            'name' => $name,
+                        ];
+                    } else {
+                        $url = $this->view->urlFor('storage.admin', [
+                            'id' => $admin->getId(),
+                            'params' => $attachment
+                        ]);
+                        $files[] = [
+                            'url' => $url,
+                            'name' => basename($attachment),
+                        ];
+                    }
                 }
 
                 return $this->response([
                     'message' => 'Attachments retrieved successfully',
                     'status' => true,
-                    'data' => $urls
+                    'data' => $files
                 ], 200);
             } else {
                 return $this->response([

@@ -25,7 +25,8 @@ class OutpassService
     public function __construct(
         private readonly Storage $storage,
         private readonly EntityManagerInterface $em,
-        private readonly SystemSettingsService $settingsService
+        private readonly SystemSettingsService $settingsService,
+        private readonly FileService $fileService
     )
     {
     }
@@ -569,6 +570,15 @@ class OutpassService
     public function removeQrCode(OutpassRequest $outpass)
     {
         $qrCode = $outpass->getQrCode();
+        if (!$qrCode) {
+            return false;
+        }
+
+        if ($this->fileService->isUuid($qrCode)) {
+            $file = $this->fileService->getByUuid($qrCode);
+            return $file ? $this->fileService->deleteFile($file) : false;
+        }
+
         return $this->storage->removeFile("qr_codes/{$qrCode}");
     }
 
@@ -578,6 +588,15 @@ class OutpassService
     public function removeOutpassDocument(OutpassRequest $outpass)
     {
         $document = $outpass->getDocument();
+        if (!$document) {
+            return false;
+        }
+
+        if ($this->fileService->isUuid($document)) {
+            $file = $this->fileService->getByUuid($document);
+            return $file ? $this->fileService->deleteFile($file) : false;
+        }
+
         return $this->storage->removeFile("outpasses/{$document}");
     }
 
@@ -587,8 +606,19 @@ class OutpassService
     public function removeAttachments(OutpassRequest $outpass)
     {
         $attachments = $outpass->getAttachments();
+        if (empty($attachments)) {
+            return;
+        }
 
         foreach ($attachments as $attachment) {
+            if ($this->fileService->isUuid($attachment)) {
+                $file = $this->fileService->getByUuid($attachment);
+                if ($file) {
+                    $this->fileService->deleteFile($file);
+                }
+                continue;
+            }
+
             $this->storage->removeFile($attachment);
         }
     }

@@ -2,25 +2,27 @@
 
 namespace App\Controller;
 
-use App\Core\JobDispatcher;
 use Closure;
 use App\Core\View;
 use App\Core\Config;
 use App\Entity\User;
 use App\Core\Session;
 use App\Core\Storage;
-use App\Services\AcademicService;
+use App\Core\JobDispatcher;
 use App\Utils\CsvProcessor;
+use App\Services\JwtService;
 use App\Services\AuthService;
+use App\Services\FileService;
 use App\Services\MailService;
 use App\Services\UserService;
 use InvalidArgumentException;
 use App\Services\AdminService;
-use App\Services\OutpassService;
-use App\Services\VerifierService;
-use App\Services\ParentVerificationService;
 use App\Services\ReportService;
-use App\Services\JwtService;
+use App\Services\OutpassService;
+use App\Services\AcademicService;
+use App\Services\VerifierService;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Services\ParentVerificationService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -68,7 +70,8 @@ class ApiController
         private readonly JobDispatcher $queue,
         private readonly ParentVerificationService $verificationService,
         private readonly JwtService $jwt,
-        private readonly \Doctrine\ORM\EntityManagerInterface $em,
+        private readonly EntityManagerInterface $em,
+        private readonly FileService $fileService,
     )
     {
     }

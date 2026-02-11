@@ -10,6 +10,7 @@ use App\Controller\SetupController;
 use App\Middleware\AdminMiddleware;
 use App\Controller\ParentController;
 use App\Controller\StorageController;
+use App\Controller\ResourceController;
 use App\Controller\StudentController;
 use App\Controller\VerifierController;
 use App\Middleware\StudentMiddleware;
@@ -45,6 +46,7 @@ return function (App $app) {
     // Storage Routes
     $app->any('/storage/admin/{id}[/{params:.*}]', [StorageController::class, 'admin'])->setName('storage.admin')->add(AdminMiddleware::class);
     $app->any('/storage/student/{id}[/{params:.*}]', [StorageController::class, 'student'])->setName('storage.student')->add(StudentMiddleware::class);
+    $app->get('/resource/{token}', [ResourceController::class, 'access'])->setName('resource.access');
 
     // Parent Verification Routes
     $app->group('/parent', function (RouteCollectorProxy $group) {

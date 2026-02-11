@@ -133,10 +133,14 @@ use App\Enum\UserRole; ?>
                                                 <span class="text-gray-500">N/A</span>
                                             <?php elseif ($attachmentCount === 1): ?>
                                                 <?php $attachment = $attachments[0];
-                                                $url = htmlspecialchars($this->urlFor('storage.admin', [
-                                                    'id' => $user->getId(),
-                                                    'params' => $attachment
-                                                ])); ?>
+                                                $url = htmlspecialchars($this->fileUrl(
+                                                    $attachment,
+                                                    'storage.admin',
+                                                    [
+                                                        'id' => $user->getId(),
+                                                        'params' => $attachment
+                                                    ]
+                                                )); ?>
                                                 <a href="<?= $url ?>" target="_blank" class="flex items-center space-x-1 text-indigo-500 stop-bubbling hover:underline">
                                                     <i class="fa-solid fa-link"></i>
                                                     <span>View</span>

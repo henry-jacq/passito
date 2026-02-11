@@ -8,6 +8,9 @@ use App\Core\View;
 use App\Interfaces\JobInterface;
 use App\Services\MailService;
 use App\Services\OutpassService;
+use App\Services\FileService;
+use App\Enum\ResourceType;
+use App\Enum\ResourceVisibility;
 use Doctrine\ORM\EntityManagerInterface;
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -26,7 +29,8 @@ class ProcessApprovedOutpass implements JobInterface
         private readonly View $view,
         private readonly MailService $mailService,
         private readonly EntityManagerInterface $em,
-        private readonly OutpassService $outpassService
+        private readonly OutpassService $outpassService,
+        private readonly FileService $fileService
     ) {}
 
     public function handle(array $payload): void
@@ -104,8 +108,30 @@ class ProcessApprovedOutpass implements JobInterface
             $this->storage->write($pdfPath, $pdfOutput);
 
             // Persist outpass updates
-            $outpass->setQrCode(basename($qrCodePath));
-            $outpass->setDocument(basename($pdfPath));
+            $studentUser = $outpass->getStudent()->getUser();
+            $qrFile = $this->fileService->registerStoredFile(
+                $qrCodePath,
+                "outpass_{$outpassId}_qr.png",
+                'image/png',
+                strlen($qrImageData),
+                ResourceType::OUTPASS_QR,
+                $studentUser,
+                $outpassId,
+                ResourceVisibility::OWNER
+            );
+            $pdfFile = $this->fileService->registerStoredFile(
+                $pdfPath,
+                "outpass_{$outpassId}.pdf",
+                'application/pdf',
+                strlen($pdfOutput),
+                ResourceType::OUTPASS_DOCUMENT,
+                $studentUser,
+                $outpassId,
+                ResourceVisibility::OWNER
+            );
+
+            $outpass->setQrCode($qrFile->getUuid());
+            $outpass->setDocument($pdfFile->getUuid());
             $this->em->persist($outpass);
             $this->em->flush();
 

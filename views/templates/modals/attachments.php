@@ -6,12 +6,16 @@
 
         <ul class="space-y-3 divide-y divide-gray-200">
             <?php foreach ($attachments as $index => $attachment): ?>
+                <?php
+                $url = is_array($attachment) ? ($attachment['url'] ?? '') : $attachment;
+                $name = is_array($attachment) ? ($attachment['name'] ?? basename($url)) : basename($attachment);
+                ?>
                 <li class="pt-3">
-                    <a href="<?= $attachment ?>" target="_blank"
+                    <a href="<?= $url ?>" target="_blank"
                         class="flex items-center justify-between px-4 py-2 transition duration-200 bg-white border border-gray-300 rounded-lg hover:bg-blue-50">
                         <span class="font-medium text-blue-600 truncate">
                             <i class="mr-2 fa-solid fa-link"></i>
-                            Attachment <?= $index + 1 . ' (' . basename($attachment) . ')' ?>
+                            Attachment <?= $index + 1 . ' (' . htmlspecialchars($name) . ')' ?>
                         </span>
                         <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2"
                             viewBox="0 0 24 24">

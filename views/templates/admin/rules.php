@@ -6,7 +6,7 @@ use App\Enum\Gender;
 <main class="flex-1 p-6 mt-20 overflow-y-auto bg-gray-50">
     <h2 class="mb-4 text-2xl font-semibold text-gray-700">System Settings</h2>
     <p class="mb-8 text-base text-gray-700">
-        Set rules and preferences to manage outpass requests, enforce guidelines, and enhance security.
+        Set rules and preferences to manage outpass requests, enforce guidelines and enhance security.
     </p>
 
     <?php if (isset($reportSettings) && !empty($reportSettings)): ?>
@@ -120,16 +120,39 @@ use App\Enum\Gender;
             </section>
         <?php endif; ?>
 
+        <!-- Late Arrival Grace Time -->
+        <section class="mb-8 bg-white rounded-lg shadow-lg">
+            <div class="p-6">
+                <h3 class="mb-2 text-lg font-semibold text-gray-800">Grace Time for Late Arrivals</h3>
+                <p class="mb-6 text-sm text-gray-500">
+                    Set the number of minutes after the expected return time before a student is marked late.
+                </p>
+                <div class="max-w-xs">
+                    <label for="late-arrival-grace-minutes" class="block text-sm font-medium text-gray-700">
+                        Grace Time (minutes)
+                    </label>
+                    <input
+                        type="number"
+                        id="late-arrival-grace-minutes"
+                        name="late_arrival_grace_minutes"
+                        min="0"
+                        step="1"
+                        class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                        value="<?= (int) $settings->getLateArrivalGraceMinutes() ?>">
+                </div>
+            </div>
+        </section>
+
         <!-- Verification Mode -->
         <section class="mb-8 bg-white rounded-lg shadow-lg">
             <div class="p-6">
                 <h3 class="mb-2 text-lg font-semibold text-gray-800">Verification Mode</h3>
-                <p class="mb-6 text-sm text-gray-500">
+                <p class="mb-4 text-sm text-gray-500">
                     Choose how outpass check-in/out is verified across the campus.
                 </p>
                 <?php $verifierMode = $verifierMode ?? \App\Enum\VerifierMode::MANUAL; ?>
                 <div class="space-y-4">
-                    <p class="text-xs text-gray-500">Changes here apply to both genders.</p>
+                    <p class="text-xs text-gray-500 font-display">NOTE: Changes here apply to both genders.</p>
                     <label for="verifier-mode-automated" class="flex items-start space-x-3">
                         <input type="radio" id="verifier-mode-automated" name="verifier_mode" value="automated"
                             class="w-4 h-4 mt-1 text-blue-600 border-gray-300 focus:ring-blue-500"
@@ -160,31 +183,6 @@ use App\Enum\Gender;
                 </div>
             </div>
         </section>
-
-        <!-- Late Arrival Grace Time -->
-        <section class="mb-8 bg-white rounded-lg shadow-lg">
-            <div class="p-6">
-                <h3 class="mb-2 text-lg font-semibold text-gray-800">Grace Time for Late Arrivals</h3>
-                <p class="mb-6 text-sm text-gray-500">
-                    Set the number of minutes after the expected return time before a student is marked late.
-                </p>
-                <div class="max-w-xs">
-                    <label for="late-arrival-grace-minutes" class="block text-sm font-medium text-gray-700">
-                        Grace Time (minutes)
-                    </label>
-                    <input
-                        type="number"
-                        id="late-arrival-grace-minutes"
-                        name="late_arrival_grace_minutes"
-                        min="0"
-                        step="1"
-                        class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                        value="<?= (int) $settings->getLateArrivalGraceMinutes() ?>">
-                </div>
-            </div>
-        </section>
-
-        <!-- Notification Preferences -->
 
         <!-- Save and Reset Buttons -->
         <div class="flex justify-end mt-6 space-x-4">

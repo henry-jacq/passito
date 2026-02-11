@@ -6,6 +6,8 @@ use App\Enum\UserRole;
 use Slim\Routing\RouteParser;
 use App\Core\Storage;
 use App\Services\JwtService;
+use App\Services\FileService;
+use App\Services\SecureLinkService;
 
 class View
 {
@@ -26,6 +28,8 @@ class View
         private readonly Storage $storage,
         private readonly Session $session,
         private readonly JwtService $jwt,
+        private readonly FileService $fileService,
+        private readonly SecureLinkService $secureLinks,
         RouteParser $router
     ) {
         $this->router = $router;
@@ -39,6 +43,30 @@ class View
     public function urlFor(string $routeName, array $params = [], array $queryParams = []): string
     {
         return $this->router->urlFor($routeName, $params, $queryParams);
+    }
+
+    public function secureResourceUrl(string $type, string $id): string
+    {
+        $token = $this->secureLinks->generateToken($type, $id);
+        return $this->router->urlFor('resource.access', ['token' => $token]);
+    }
+
+    public function fileUrl(string $identifier, string $fallbackRoute, array $fallbackParams): string
+    {
+        if ($this->fileService->isUuid($identifier)) {
+            return $this->secureResourceUrl('file', $identifier);
+        }
+
+        return $this->router->urlFor($fallbackRoute, $fallbackParams);
+    }
+
+    public function fileLabel(string $identifier): string
+    {
+        if ($this->fileService->isUuid($identifier)) {
+            return $this->fileService->getOriginalNameByUuid($identifier) ?? 'Attachment';
+        }
+
+        return basename($identifier);
     }
 
     /**

@@ -106,14 +106,20 @@ use App\Enum\OutpassStatus;
                 <ul class="space-y-4 list-disc list-inside">
                     <?php foreach ($outpass->getAttachments() as $attachment): ?>
                         <?php
-                        $url = htmlspecialchars($this->urlFor('storage.admin', [
-                            'id' => $user->getId(),
-                            'params' => $attachment
-                        ])); ?>
+                        $url = htmlspecialchars($this->fileUrl(
+                            $attachment,
+                            'storage.admin',
+                            [
+                                'id' => $user->getId(),
+                                'params' => $attachment
+                            ]
+                        ));
+                        $label = $this->fileLabel($attachment);
+                        ?>
                         <li>
                             <a href="<?= $url ?>" class="inline-flex items-center gap-1 text-blue-600 hover:underline">
                                 <i class="fa-solid fa-link"></i>
-                                <?= basename($url) ?>
+                                <?= htmlspecialchars($label) ?>
                             </a>
                         </li>
                     <?php endforeach; ?>

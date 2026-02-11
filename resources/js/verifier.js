@@ -27,23 +27,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let activeScan = false;
     let activeOutpassId = null;
     let lastPayload = null;
-
-    const resetResult = () => {
-        if (studentName) studentName.textContent = '';
-        if (outpassType) outpassType.textContent = '';
-        if (destination) destination.textContent = '';
-        if (checkoutStatus) checkoutStatus.textContent = '';
-        if (checkinStatus) checkinStatus.textContent = '';
-        if (depart) depart.textContent = '';
-        if (ret) ret.textContent = '';
-        if (statusBadge) {
-            statusBadge.textContent = '';
-            statusBadge.className = 'px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-600';
-        }
-        if (checkoutBtn) checkoutBtn.classList.add('hidden');
-        if (checkinBtn) checkinBtn.classList.add('hidden');
-        if (resultPanel) resultPanel.classList.add('hidden');
-    };
+    let latestRequestId = 0;
+    let actionInFlight = false;
+    let lastData = null;
 
     const setStatusBadge = (label, variant) => {
         if (!statusBadge) return;
@@ -57,6 +43,85 @@ document.addEventListener('DOMContentLoaded', () => {
         const classes = variants[variant] || variants.neutral;
         statusBadge.textContent = label;
         statusBadge.className = `px-2 py-1 text-xs font-medium rounded-full ${classes}`;
+    };
+
+    const showResultPanel = () => {
+        if (resultPanel && resultPanel.classList.contains('hidden')) {
+            resultPanel.classList.remove('hidden');
+        }
+    };
+
+    const updateButtons = (data) => {
+        showResultPanel();
+        if (checkoutBtn) checkoutBtn.classList.remove('hidden');
+        if (checkinBtn) checkinBtn.classList.remove('hidden');
+
+        if (data?.has_checkin) {
+            setButtonState(checkoutBtn, false);
+            setButtonState(checkinBtn, false);
+        } else if (data?.has_checkout) {
+            setButtonState(checkoutBtn, false);
+            setButtonState(checkinBtn, true);
+        } else {
+            setButtonState(checkoutBtn, true);
+            setButtonState(checkinBtn, false);
+        }
+    };
+
+    const setLoadingState = () => {
+        showResultPanel();
+        if (!lastData) {
+            setStatusBadge('Loading...', 'info');
+        }
+        setButtonState(checkoutBtn, false);
+        setButtonState(checkinBtn, false);
+    };
+
+    const renderResult = (data) => {
+        lastData = data;
+        activeOutpassId = data?.id || null;
+        if (studentName) studentName.textContent = data?.student_name || '';
+        if (outpassType) outpassType.textContent = data?.type ? `Type: ${data.type}` : '';
+        if (destination) destination.textContent = data?.destination ? `Destination: ${data.destination}` : '';
+        if (checkoutStatus) checkoutStatus.textContent = data?.checkout_time || 'Pending';
+        if (checkinStatus) checkinStatus.textContent = data?.checkin_time || 'Pending';
+        if (depart) depart.textContent = `${data?.depart_date || '—'} ${data?.depart_time || ''}`.trim();
+        if (ret) ret.textContent = `${data?.return_date || '—'} ${data?.return_time || ''}`.trim();
+
+        const statusVariant = (() => {
+            switch (data?.status_color) {
+                case 'green':
+                    return 'success';
+                case 'yellow':
+                    return 'warning';
+                case 'red':
+                    return 'danger';
+                case 'gray':
+                    return 'neutral';
+                default:
+                    return 'info';
+            }
+        })();
+
+        if (data?.has_checkin) {
+            setStatusBadge('Expired', 'danger');
+        } else if (data?.has_checkout) {
+            setStatusBadge('Checked Out', 'warning');
+        } else {
+            setStatusBadge(data?.status || 'Ready', statusVariant);
+        }
+
+        updateButtons(data);
+    };
+
+    const setButtonState = (button, enabled) => {
+        if (!button) return;
+        button.disabled = !enabled;
+        if (enabled) {
+            button.classList.remove('opacity-50', 'cursor-not-allowed');
+        } else {
+            button.classList.add('opacity-50', 'cursor-not-allowed');
+        }
     };
 
     const stopScan = () => {
@@ -79,7 +144,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const startScan = async () => {
         try {
             activeScan = true;
-            resetResult();
             activeOutpassId = null;
             activeStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
             if (video) {
@@ -135,118 +199,56 @@ document.addEventListener('DOMContentLoaded', () => {
     const submitScan = async (payload) => {
         const toast = new Toast();
         try {
+            const requestId = ++latestRequestId;
             lastPayload = payload;
             activeOutpassId = null;
-            resetResult();
+            setLoadingState();
             const response = await Ajax.post('/api/web/verifier/scan', {
                 qr_payload: payload
             });
 
             if (response.ok && response.data?.status && response.data?.data) {
-                const data = response.data.data;
-                activeOutpassId = data.id;
-                if (studentName) studentName.textContent = data.student_name || '';
-                if (outpassType) outpassType.textContent = data.type ? `Type: ${data.type}` : '';
-                if (destination) destination.textContent = data.destination ? `Destination: ${data.destination}` : '';
-                if (checkoutStatus) checkoutStatus.textContent = data.checkout_time || 'Pending';
-                if (checkinStatus) checkinStatus.textContent = data.checkin_time || 'Pending';
-                if (depart) depart.textContent = `${data.depart_date || '—'} ${data.depart_time || ''}`.trim();
-                if (ret) ret.textContent = `${data.return_date || '—'} ${data.return_time || ''}`.trim();
-
-                const statusVariant = (() => {
-                    switch (data.status_color) {
-                        case 'green':
-                            return 'success';
-                        case 'yellow':
-                            return 'warning';
-                        case 'red':
-                            return 'danger';
-                        case 'gray':
-                            return 'neutral';
-                        default:
-                            return 'info';
-                    }
-                })();
-
-                if (data.has_checkin) {
-                    setStatusBadge('Expired', 'danger');
-                    if (checkoutBtn) checkoutBtn.classList.add('hidden');
-                    if (checkinBtn) checkinBtn.classList.add('hidden');
-                } else if (data.has_checkout) {
-                    setStatusBadge('Checked Out', 'warning');
-                    if (checkoutBtn) checkoutBtn.classList.add('hidden');
-                    if (checkinBtn) checkinBtn.classList.remove('hidden');
-                } else {
-                    setStatusBadge(data.status || 'Ready', statusVariant);
-                    if (checkoutBtn) checkoutBtn.classList.remove('hidden');
-                    if (checkinBtn) checkinBtn.classList.add('hidden');
-                }
-
-                if (resultPanel) resultPanel.classList.remove('hidden');
+                if (requestId !== latestRequestId) return;
+                renderResult(response.data.data);
             } else {
                 toast.create({ message: response.data?.message || 'Invalid QR code.', position: "bottom-right", type: "error", duration: 5000 });
+                if (lastData) {
+                    renderResult(lastData);
+                }
             }
         } catch (error) {
             toast.create({ message: 'An error occurred while scanning the QR.', position: "bottom-right", type: "error", duration: 5000 });
+            if (lastData) {
+                renderResult(lastData);
+            }
         }
     };
 
     const submitManualId = async (id) => {
         const toast = new Toast();
         try {
+            const requestId = ++latestRequestId;
             lastPayload = null;
             activeOutpassId = null;
-            resetResult();
+            setLoadingState();
             const response = await Ajax.post('/api/web/verifier/scan', {
                 outpass_id: id
             });
 
             if (response.ok && response.data?.status && response.data?.data) {
-                const data = response.data.data;
-                activeOutpassId = data.id;
-                if (studentName) studentName.textContent = data.student_name || '';
-                if (outpassType) outpassType.textContent = data.type ? `Type: ${data.type}` : '';
-                if (destination) destination.textContent = data.destination ? `Destination: ${data.destination}` : '';
-                if (checkoutStatus) checkoutStatus.textContent = data.checkout_time || 'Pending';
-                if (checkinStatus) checkinStatus.textContent = data.checkin_time || 'Pending';
-                if (depart) depart.textContent = `${data.depart_date || '—'} ${data.depart_time || ''}`.trim();
-                if (ret) ret.textContent = `${data.return_date || '—'} ${data.return_time || ''}`.trim();
-
-                const statusVariant = (() => {
-                    switch (data.status_color) {
-                        case 'green':
-                            return 'success';
-                        case 'yellow':
-                            return 'warning';
-                        case 'red':
-                            return 'danger';
-                        case 'gray':
-                            return 'neutral';
-                        default:
-                            return 'info';
-                    }
-                })();
-
-                if (data.has_checkin) {
-                    setStatusBadge('Expired', 'danger');
-                    if (checkoutBtn) checkoutBtn.classList.add('hidden');
-                    if (checkinBtn) checkinBtn.classList.add('hidden');
-                } else if (data.has_checkout) {
-                    setStatusBadge('Checked Out', 'warning');
-                    if (checkoutBtn) checkoutBtn.classList.add('hidden');
-                    if (checkinBtn) checkinBtn.classList.remove('hidden');
-                } else {
-                    setStatusBadge(data.status || 'Ready', statusVariant);
-                    if (checkoutBtn) checkoutBtn.classList.remove('hidden');
-                    if (checkinBtn) checkinBtn.classList.add('hidden');
-                }
-
-                if (resultPanel) resultPanel.classList.remove('hidden');
+                if (requestId !== latestRequestId) return;
+                renderResult(response.data.data);
             } else {
                 toast.create({ message: response.data?.message || 'Outpass not found.', position: "bottom-right", type: "error", duration: 5000 });
+                if (lastData) {
+                    renderResult(lastData);
+                }
             }
         } catch (error) {
             toast.create({ message: 'Unable to load outpass details.', position: "bottom-right", type: "error", duration: 5000 });
+            if (lastData) {
+                renderResult(lastData);
+            }
         }
     };
 
@@ -299,6 +301,9 @@ document.addEventListener('DOMContentLoaded', () => {
             toast.create({ message: 'Scan a valid QR code first.', position: "bottom-right", type: "warning", duration: 4000 });
             return;
         }
+        if (actionInFlight) return;
+        actionInFlight = true;
+        setLoadingState();
         const toast = new Toast();
         try {
             const response = await Ajax.post('/api/web/verifier/log', {
@@ -310,12 +315,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 toast.create({ message: response.data.message || 'Verification successful.', position: "bottom-right", type: "success", duration: 4000 });
                 if (lastPayload) {
                     await submitScan(lastPayload);
+                } else if (activeOutpassId) {
+                    await submitManualId(activeOutpassId);
                 }
             } else {
                 toast.create({ message: response.data?.message || 'Verification failed.', position: "bottom-right", type: "error", duration: 5000 });
+                if (lastData) {
+                    renderResult(lastData);
+                }
             }
         } catch (error) {
             toast.create({ message: 'An error occurred while verifying the outpass.', position: "bottom-right", type: "error", duration: 5000 });
+            if (lastData) {
+                renderResult(lastData);
+            }
+        } finally {
+            actionInFlight = false;
         }
     };
 

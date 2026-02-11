@@ -31,6 +31,20 @@ if (outpassForm && outpassSubmitButton) {
 		outpassSubmitButton.innerHTML = 'Submitting...';
 		const formData = new FormData(outpassForm);
 		const toast = new Toast();
+		const attachmentsInput = document.getElementById('attachments');
+		const fileLabel = document.getElementById('fileLabel');
+		const filePreview = document.getElementById('filePreview');
+		const resetAttachmentsUi = () => {
+			if (attachmentsInput) {
+				attachmentsInput.value = '';
+			}
+			if (fileLabel) {
+				fileLabel.textContent = 'Upload supporting documents (JPG, PNG, PDF)';
+			}
+			if (filePreview) {
+				filePreview.innerHTML = '';
+			}
+		};
 
 		try {
 			// Capture the query params
@@ -43,6 +57,7 @@ if (outpassForm && outpassSubmitButton) {
 			if (response.status) {
 				toast.create({ message: response.data.message, position: "bottom-right", type: response.data.type, duration: 4000 });
 				outpassForm.reset();
+				resetAttachmentsUi();
 			} else {
 				toast.create({ message: response.data.message, position: "bottom-right", type: response.data.type, duration: 4000 });
 			}

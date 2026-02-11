@@ -179,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const acceptOutpassButtons = document.querySelectorAll('.accept-outpass');
     acceptOutpassButtons.forEach((button) => {
         button.addEventListener('click', async (event) => {
-            const outpassId = event.target.dataset.id;
+            const outpassId = event.currentTarget.dataset.id;
 
             try {
                 const response = await Ajax.post(`/api/web/admin/outpass/accept`, {
@@ -189,7 +189,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (response.ok) {
                     const data = response.data;
                     if (data.status) {
-                        const tr = event.target.closest('tr');
+                        const hasTable = !!document.querySelector('table tbody');
+                        if (!hasTable) {
+                            location.reload();
+                            return;
+                        }
+                        const tr = event.currentTarget.closest('tr');
                         if (tr) {
                             const table = tr.closest('table');
                             const dataRows = table.querySelectorAll('tbody tr');
@@ -199,6 +204,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             } else {
                                 tr.remove();
                             }
+                        } else {
+                            location.reload();
                         }
                     } else {
                         alert(data.message);

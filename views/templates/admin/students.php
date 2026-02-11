@@ -48,7 +48,7 @@ $errorMessage = $this->session->getFlash('error')[$flashKey] ?? null;
                 <?php if (!empty($search)): ?>
                     <button
                         type="button"
-                        class="absolute inset-y-0 right-2 flex items-center px-2 text-sm text-gray-500 hover:text-gray-700"
+                        class="absolute inset-y-0 flex items-center px-2 text-sm text-gray-500 right-2 hover:text-gray-700"
                         onclick="window.location.href='?limit=<?= $records['limit'] ?? 10 ?>'"
                     >
                         Clear
@@ -95,7 +95,7 @@ $errorMessage = $this->session->getFlash('error')[$flashKey] ?? null;
                     <h3 class="text-base font-semibold">Import Students Records</h3>
                     <p class="mt-1 text-sm">
                         Upload a CSV file to import student data.
-                        <a href="#" class="text-blue-700 underline hover:text-blue-900">Download the template</a> for the correct format.
+                        <a href="<?= $this->staticAssetUrl('sample.csv') ?>" class="text-blue-700 underline hover:text-blue-900">Download the template</a> for the correct format.
                     </p>
                 </div>
                 <button id="import-btn" class="inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-white transition duration-200 bg-gray-500 rounded-lg shadow hover:bg-gray-600 focus:outline-none focus:ring-0 focus:border-transparent">

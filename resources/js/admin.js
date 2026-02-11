@@ -917,14 +917,18 @@ function renderRecordsTable(tableBody, outpasses) {
 
         const statusColor = {
             approved: 'green',
+            pending: 'yellow',
+            parent_pending: 'blue',
+            parent_approved: 'blue',
             rejected: 'red',
-            expired: 'yellow',
-            pending: 'blue',
+            parent_denied: 'red',
+            expired: 'slate',
+            cancelled: 'gray',
         }[outpass.status?.toLowerCase?.()] || 'gray';
 
         const statusBadge = `
             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-${statusColor}-100 text-${statusColor}-800">
-                ${capitalize(outpass.status)}
+                ${formatStatusLabel(outpass.status)}
             </span>`;
 
         row.innerHTML = `
@@ -951,6 +955,15 @@ function renderRecordsTable(tableBody, outpasses) {
 function capitalize(str) {
     if (!str) return '';
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+
+function formatStatusLabel(status) {
+    if (!status) return '';
+    return status
+        .toString()
+        .split('_')
+        .map(capitalize)
+        .join(' ');
 }
 
 function formatStudentYear(year) {

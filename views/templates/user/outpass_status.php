@@ -15,7 +15,7 @@ use App\Enum\OutpassStatus;
             </div>
             <div class="flex flex-col gap-3 mt-4 sm:flex-row sm:items-center md:mt-0">
                 <a href="<?= $this->urlFor('student.outpass.history') ?>"
-                    class="inline-flex items-center justify-center px-3 py-3 font-medium text-blue-700 transition-colors duration-150 bg-blue-50 border border-blue-200 rounded-lg text-md hover:bg-blue-100">
+                    class="inline-flex items-center justify-center px-3 py-3 font-medium text-blue-700 transition-colors duration-150 border border-blue-200 rounded-lg bg-blue-50 text-md hover:bg-blue-100">
                     View All History
                 </a>
                 <button onclick="window.location.href='<?= $this->urlFor('student.outpass.request') ?>'"
@@ -53,28 +53,19 @@ use App\Enum\OutpassStatus;
                     onclick="window.location.href='<?= $this->urlFor('student.outpass.status') . '/' . $outpasses[0]->getId() ?>';">
 
                     <?php
-                    $statusMapping = [
-                        OutpassStatus::APPROVED->value => ['text' => 'Approved', 'color' => 'emerald', 'bgColor' => 'bg-emerald-50', 'textColor' => 'text-emerald-700', 'borderColor' => 'border-emerald-200', 'icon' => 'fa-check-circle'],
-                        OutpassStatus::PENDING->value => ['text' => 'Pending', 'color' => 'amber', 'bgColor' => 'bg-amber-50', 'textColor' => 'text-amber-700', 'borderColor' => 'border-amber-200', 'icon' => 'fa-clock'],
-                        OutpassStatus::PARENT_PENDING->value => ['text' => 'Parent Approval Pending', 'color' => 'blue', 'bgColor' => 'bg-blue-50', 'textColor' => 'text-blue-700', 'borderColor' => 'border-blue-200', 'icon' => 'fa-user-clock'],
-                        OutpassStatus::PARENT_APPROVED->value => ['text' => 'Admin Review Pending', 'color' => 'blue', 'bgColor' => 'bg-blue-50', 'textColor' => 'text-blue-700', 'borderColor' => 'border-blue-200', 'icon' => 'fa-hourglass-half'],
-                        OutpassStatus::REJECTED->value => ['text' => 'Rejected', 'color' => 'red', 'bgColor' => 'bg-red-50', 'textColor' => 'text-red-700', 'borderColor' => 'border-red-200', 'icon' => 'fa-times-circle'],
-                        OutpassStatus::PARENT_DENIED->value => ['text' => 'Parent Denied', 'color' => 'red', 'bgColor' => 'bg-red-50', 'textColor' => 'text-red-700', 'borderColor' => 'border-red-200', 'icon' => 'fa-user-times'],
-                        OutpassStatus::EXPIRED->value => ['text' => 'Expired', 'color' => 'slate', 'bgColor' => 'bg-slate-50', 'textColor' => 'text-slate-700', 'borderColor' => 'border-slate-200', 'icon' => 'fa-calendar-times'],
-                    ];
-                    $status = $statusMapping[$outpasses[0]->getStatus()->value];
+                    $status = $outpasses[0]->getStatus();
+                    $color = $status->color() ?? 'gray';
                     ?>
 
-                    <div class="h-1 bg-<?= $status['color'] ?>-400"></div>
+                    <div class="h-1 bg-<?= $color ?>-400"></div>
 
                     <div class="p-6">
                         <div class="flex items-center justify-between">
                             <div class="flex-1">
                                 <div class="flex items-center justify-start gap-6 mb-4">
                                     <h3 class="text-xl font-semibold text-gray-900">#<?= $outpasses[0]->getId() . ' ' . ucfirst($outpasses[0]->getTemplate()->getName()) ?></h3>
-                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-base font-medium border <?= $status['bgColor'] ?> <?= $status['textColor'] ?> <?= $status['borderColor'] ?>">
-                                        <i class="fa-solid <?= $status['icon'] ?> mr-1.5 text-lg"></i>
-                                        <?= $status['text'] ?>
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-base font-medium text-<?= $color ?> bg-<?= $color ?>-100">
+                                        <?= $status->label() ?>
                                     </span>
                                 </div>
 
@@ -145,16 +136,18 @@ use App\Enum\OutpassStatus;
 
                     <div class="divide-y divide-gray-200">
                         <?php foreach ($outpasses as $i => $pass): if ($i === 0) continue; ?>
-                            <?php $status = $statusMapping[$pass->getStatus()->value]; ?>
+                        <?php
+                        $status = $pass->getStatus();
+                        $color = $status->color() ?? 'gray';
+                        ?>
 
                             <div class="p-6 transition-colors duration-150 hover:bg-gray-50">
                                 <div class="flex items-center justify-between">
                                     <div class="flex-1">
                                         <div class="flex items-center justify-start gap-6 mb-2">
                                             <h3 class="text-lg font-semibold text-gray-900">#<?= $pass->getId() . ' ' . ucfirst($pass->getTemplate()->getName()) ?></h3>
-                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-base font-medium border <?= $status['bgColor'] ?> <?= $status['textColor'] ?> <?= $status['borderColor'] ?>">
-                                                <i class="fa-solid <?= $status['icon'] ?> mr-1.5 text-lg"></i>
-                                                <?= $status['text'] ?>
+                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-base font-medium text-<?= $color ?> bg-<?= $color ?>-100">
+                                                <?= $status->label() ?>
                                             </span>
                                         </div>
 

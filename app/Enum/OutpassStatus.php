@@ -11,6 +11,7 @@ enum OutpassStatus: string
     case APPROVED = 'approved'; // Final approval by admin after parent
     case REJECTED = 'rejected';
     case EXPIRED = 'expired';
+    case CANCELLED = 'cancelled';
 
     public static function isPending(string $status): bool
     {
@@ -55,20 +56,26 @@ enum OutpassStatus: string
     public function label()
     {
         return match ($this) {
-            self::PENDING => 'Pending', self::PARENT_PENDING => 'Parent Pending',
+            self::PENDING => 'Pending',
+            self::PARENT_PENDING => 'Parent Pending',
             self::PARENT_APPROVED => 'Parent Approved',
-            self::PARENT_DENIED => 'Parent Denied', self::APPROVED => 'Approved', 
-            self::REJECTED => 'Rejected', self::EXPIRED => 'Expired'
+            self::PARENT_DENIED => 'Parent Denied',
+            self::APPROVED => 'Approved',
+            self::REJECTED => 'Rejected',
+            self::EXPIRED => 'Expired',
+            self::CANCELLED => 'Cancelled',
         };
     }
 
     public function color(): string
     {
         return match ($this) {
-            self::PENDING, self::PARENT_PENDING => 'yellow',
-            self::PARENT_APPROVED, self::APPROVED => 'green',
+            self::PENDING => 'yellow',
+            self::PARENT_PENDING, self::PARENT_APPROVED => 'blue',
+            self::APPROVED => 'green',
             self::PARENT_DENIED, self::REJECTED => 'red',
-            self::EXPIRED => 'gray',
+            self::EXPIRED => 'slate',
+            self::CANCELLED => 'gray',
         };
     }
 }

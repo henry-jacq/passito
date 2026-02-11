@@ -78,15 +78,15 @@ class OutpassService
         ];
 
         foreach ($results as $row) {
-            $status = $row['status']->value;
+            $status = $row['status'];
             $count = (int) $row['count'];
             $counts['total'] += $count;
 
-            if ($status === 'approved' || $status === 'expired') {
+            if ($status === OutpassStatus::APPROVED || $status === OutpassStatus::EXPIRED) {
                 $counts['approved'] += $count;
-            } elseif ($status === 'pending' || $status === 'parent_pending' || $status === 'parent_approved') {
+            } elseif (in_array($status, [OutpassStatus::PENDING, OutpassStatus::PARENT_PENDING, OutpassStatus::PARENT_APPROVED], true)) {
                 $counts['pending'] += $count;
-            } elseif ($status === 'rejected' || $status === 'parent_denied') {
+            } elseif (in_array($status, [OutpassStatus::REJECTED, OutpassStatus::PARENT_DENIED, OutpassStatus::CANCELLED], true)) {
                 $counts['rejected'] += $count;
             }
         }
@@ -339,14 +339,14 @@ class OutpassService
         ];
 
         foreach ($results as $row) {
-            $status = $row['status']->value;
+            $status = $row['status'];
             $count = (int) $row['count'];
 
-            if ($status === 'approved' || $status === 'expired') {
+            if ($status === OutpassStatus::APPROVED || $status === OutpassStatus::EXPIRED) {
                 $counts['approved'] += $count;
-            } elseif ($status === 'pending' || $status === 'parent_approved') {
+            } elseif (in_array($status, [OutpassStatus::PENDING, OutpassStatus::PARENT_APPROVED, OutpassStatus::PARENT_PENDING], true)) {
                 $counts['pending'] += $count;
-            } elseif ($status === 'rejected') {
+            } elseif (in_array($status, [OutpassStatus::REJECTED, OutpassStatus::PARENT_DENIED, OutpassStatus::CANCELLED], true)) {
                 $counts['rejected'] += $count;
             }
         }
@@ -361,6 +361,7 @@ class OutpassService
             OutpassStatus::EXPIRED->value,
             OutpassStatus::REJECTED->value,
             OutpassStatus::PARENT_DENIED->value,
+            OutpassStatus::CANCELLED->value,
         ];
 
         $wardenGender = $warden->getGender()->value;

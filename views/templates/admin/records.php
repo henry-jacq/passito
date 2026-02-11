@@ -39,8 +39,7 @@ use App\Enum\OutpassStatus;
                         <button
                             type="button"
                             class="absolute inset-y-0 flex items-center px-2 text-sm text-gray-500 right-2 hover:text-gray-700"
-                            onclick="window.location.href='?'"
-                        >
+                            onclick="window.location.href='?'">
                             Clear
                         </button>
                     <?php else: ?>
@@ -48,8 +47,7 @@ use App\Enum\OutpassStatus;
                             type="button"
                             id="search-records-button"
                             class="absolute inset-y-0 flex items-center px-2 text-sm text-blue-600 right-2 hover:text-blue-800"
-                            aria-label="Apply search"
-                        >
+                            aria-label="Apply search">
                             <i class="fas fa-arrow-right"></i>
                         </button>
                     <?php endif; ?>
@@ -61,8 +59,7 @@ use App\Enum\OutpassStatus;
                         type="date"
                         value="<?= $filterDate ?? '' ?>"
                         class="p-2 text-gray-600 transition duration-200 border border-gray-300 rounded-lg bg-gray-50 w-44 focus:border-blue-600/50 focus:ring-2 focus:ring-blue-600/50"
-                        aria-label="Filter by date"
-                    >
+                        aria-label="Filter by date">
                 </div>
                 <div>
                     <select id="filter-records" name="filter" class="flex-grow p-2 text-gray-600 transition duration-200 border border-gray-300 rounded-lg bg-gray-50 w-44 focus:border-blue-600/50 focus:ring-2 focus:ring-blue-600/50" aria-label="Outpass status filter">
@@ -109,8 +106,12 @@ use App\Enum\OutpassStatus;
                                 <td class="px-6 py-4 text-sm text-gray-900"><?= ucwords($outpass->getTemplate()->getName()) ?></td>
                                 <td class="px-6 py-4 text-sm text-gray-900"><?= $outpass->getDestination() ?></td>
                                 <td class="px-6 py-4 text-sm text-center text-gray-900">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-<?= $outpass->getStatus() === OutpassStatus::APPROVED ? 'green' : 'yellow' ?>-100 text-<?= $outpass->getStatus() === OutpassStatus::APPROVED ? 'green' : 'yellow' ?>-800">
-                                        <?= ucwords(str_replace('_', ' ', $outpass->getStatus()->value)) ?>
+                                    <?php
+                                    $status = $outpass->getStatus();
+                                    $color = $status->color() ?? 'gray';
+                                    ?>
+                                    <span class="inline-flex px-2 text-xs font-semibold leading-5 rounded-full bg-<?= $color ?>-100 text-<?= $color ?>-800">
+                                        <?= $status->label() ?>
                                     </span>
                                 </td>
                                 <td class="px-6 py-4">

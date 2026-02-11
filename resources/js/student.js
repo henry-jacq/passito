@@ -1,5 +1,6 @@
 import Ajax from './libs/ajax.js';
 import Toast from './libs/toast.js';
+import Modal from './libs/modal';
 
 // Mobile Menu Toggle Logic
 const mobileMenuToggle = document.getElementById('mobileMenuToggle');
@@ -141,6 +142,61 @@ document.addEventListener('DOMContentLoaded', () => {
 			const url = new URL(window.location.href);
 			url.searchParams.set('type', type);
 			window.location.href = url.toString();
+		});
+	});
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+	const cancelButton = document.getElementById('cancel-outpass');
+	if (!cancelButton) return;
+
+	cancelButton.addEventListener('click', async () => {
+		const outpassId = cancelButton.dataset.id;
+		if (!outpassId) return;
+		const toast = new Toast();
+
+		Modal.open({
+			content: `
+				<div class="px-2 space-y-6">
+					<h3 class="text-xl font-bold text-gray-900">Cancel Outpass</h3>
+					<div class="space-y-5">
+						<p class="text-gray-700">Are you sure you want to cancel this outpass request?</p>
+						<p class="text-sm text-red-600">This action cannot be undone.</p>
+					</div>
+				</div>
+			`,
+			actions: [
+				{
+					label: 'Cancel Outpass',
+					class: 'inline-flex justify-center rounded-lg bg-red-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-red-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2',
+					onClick: async () => {
+						try {
+							const response = await Ajax.post('/api/web/student/cancel', {
+								outpass_id: outpassId
+							});
+
+							if (response.ok && response.data?.status) {
+								toast.create({ message: response.data.message || 'Outpass cancelled.', position: "bottom-right", type: "success", duration: 4000 });
+								window.location.reload();
+							} else {
+								toast.create({ message: response.data?.message || 'Unable to cancel outpass.', position: "bottom-right", type: "error", duration: 4000 });
+							}
+						} catch (error) {
+							toast.create({ message: 'Unable to cancel outpass.', position: "bottom-right", type: "error", duration: 4000 });
+						} finally {
+							Modal.close();
+						}
+					},
+				},
+				{
+					label: 'Keep Outpass',
+					class: 'inline-flex justify-center rounded-lg bg-gray-100 px-6 py-2 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 mx-4 mt-3 sm:mt-0',
+					onClick: Modal.close,
+				},
+			],
+			size: 'sm:max-w-lg',
+			classes: 'custom-modal-class',
+			closeOnBackdropClick: true,
 		});
 	});
 });

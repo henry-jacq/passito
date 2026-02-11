@@ -9,6 +9,8 @@
 
     <?php
 
+    use App\Enum\OutpassStatus;
+
     use App\Enum\UserRole;
 
     if (empty($logbook) && empty($search)): ?>
@@ -40,8 +42,7 @@
                         <button
                             type="button"
                             class="absolute inset-y-0 flex items-center px-2 text-sm text-gray-500 right-2 hover:text-gray-700"
-                            onclick="window.location.href='?date=<?= urlencode($filterDate ?? '') ?>&action=<?= urlencode($filterAction ?? '') ?>'"
-                        >
+                            onclick="window.location.href='?date=<?= urlencode($filterDate ?? '') ?>&action=<?= urlencode($filterAction ?? '') ?>'">
                             Clear
                         </button>
                     <?php endif; ?>
@@ -53,8 +54,7 @@
                         type="date"
                         value="<?= $filterDate ?? '' ?>"
                         class="p-2 text-gray-600 transition duration-200 border border-gray-300 rounded-lg bg-gray-50 w-44 focus:border-blue-600/50 focus:ring-2 focus:ring-blue-600/50"
-                        aria-label="Filter by date"
-                    >
+                        aria-label="Filter by date">
                 </div>
                 <div>
                     <select id="filter-logbook-action" name="action" class="flex-grow p-2 text-gray-600 transition duration-200 border border-gray-300 rounded-lg bg-gray-50 w-44 focus:border-blue-600/50 focus:ring-2 focus:ring-blue-600/50" aria-label="Filter by action">
@@ -91,64 +91,59 @@
                     <?php else: ?>
                         <?php foreach ($logbook as $log): ?>
                             <tr class="hover:bg-gray-50">
-                            <td class="px-1 py-3 text-sm text-center text-gray-700">
-                                <a href="<?= $this->urlFor('admin.outpass.records.details', ['outpass_id' => $log->getOutpass()->getId()]) ?>" class="text-gray-600 hover:text-gray-800"># <?= htmlspecialchars($log->getOutpass()->getId()) ?></a>
-                            </td>
-                            <td class="px-4 py-3 text-sm text-gray-700"><?= htmlspecialchars($log->getOutpass()->getStudent()->getUser()->getName()) ?></td>
-                            <td class="px-4 py-3 text-sm text-gray-700"><?= htmlspecialchars($log->getOutpass()->getStudent()->getDigitalId()) ?></td>
-                            <td class="px-4 py-3 text-sm text-gray-700"><?= htmlspecialchars($log->getOutpass()->getStudent()->getProgram()->getProgramName(). ' ' .$log->getOutpass()->getStudent()->getProgram()->getShortCode()) ?></td>
-                            <td class="px-4 py-3 text-sm text-gray-700">
-                                <?php
-                                $status = ucfirst($log->getOutpass()->getStatus()->value);
-                                $colorMap = [
-                                    'Approved' => 'green',
-                                    'Pending' => 'yellow',
-                                    'Rejected' => 'red',
-                                    'Checked-in' => 'blue',
-                                    'Checked-out' => 'indigo'
-                                ];
-                                $color = $colorMap[$status] ?? 'gray';
-                                ?>
-                                <span class="inline-block px-2 py-1 text-xs font-medium bg-<?= $color ?>-100 text-<?= $color ?>-700 rounded-full"><?= $status ?></span>
-                            </td>
-                            <td class="px-4 py-3 text-sm text-gray-700">
-                                <?php if ($log->getOutTime()): ?>
-                                    <div class="text-sm">
-                                        <span class="block text-gray-700"><?= $log->getOutTime()->format('M d, Y') ?></span>
-                                        <span class="text-xs text-gray-500"><?= $log->getOutTime()->format('h:i A') ?></span>
-                                    </div>
-                                <?php else: ?>
-                                    <span class="text-sm text-gray-400">N/A</span>
-                                <?php endif; ?>
-                            </td>
-                            <td class="px-4 py-3 text-sm text-gray-700">
-                                <?php if ($log->getInTime()): ?>
-                                    <div class="text-sm">
-                                        <span class="block text-gray-700"><?= $log->getInTime()->format('M d, Y') ?></span>
-                                        <span class="text-xs text-gray-500"><?= $log->getInTime()->format('h:i A') ?></span>
-                                    </div>
-                                <?php else: ?>
-                                    <span class="text-sm text-gray-400">N/A</span>
-                                <?php endif; ?>
-                            </td>
-                            <td class="px-2 py-3 text-sm text-center text-gray-700">
-                                <?php
-                                $verifier = $log->getVerifier();
-                                $verifierName = htmlspecialchars($verifier->getVerifierName());
-                                $statusClass = $verifierName ? 'bg-green-500' : 'bg-red-500'; ?>
-
-                                <?php if (UserRole::isSuperAdmin($user->getRole()->value)): ?>
-                                    <a href="<?= $this->urlFor('admin.manage.verifiers') ?>" class="text-gray-600 hover:text-gray-800 hover:underline">
-                                        <span class="inline-block mr-1 w-2.5 h-2.5 <?= $statusClass ?> rounded-full"></span>
-                                        <?= $verifierName ?>
-                                    </a>
-                                <?php else: ?>
-                                    <span class="text-gray-600">
-                                        <span class="inline-block mr-1 w-2.5 h-2.5 <?= $statusClass ?> rounded-full"></span>
-                                        <?= $verifierName ?>
+                                <td class="px-1 py-3 text-sm text-center text-gray-700">
+                                    <a href="<?= $this->urlFor('admin.outpass.records.details', ['outpass_id' => $log->getOutpass()->getId()]) ?>" class="text-gray-600 hover:text-gray-800"># <?= htmlspecialchars($log->getOutpass()->getId()) ?></a>
+                                </td>
+                                <td class="px-4 py-3 text-sm text-gray-700"><?= htmlspecialchars($log->getOutpass()->getStudent()->getUser()->getName()) ?></td>
+                                <td class="px-4 py-3 text-sm text-gray-700"><?= htmlspecialchars($log->getOutpass()->getStudent()->getDigitalId()) ?></td>
+                                <td class="px-4 py-3 text-sm text-gray-700"><?= htmlspecialchars($log->getOutpass()->getStudent()->getProgram()->getProgramName() . ' ' . $log->getOutpass()->getStudent()->getProgram()->getShortCode()) ?></td>
+                                <td class="px-4 py-3 text-sm text-gray-700">
+                                    <?php
+                                    $status = $log->getOutpass()->getStatus();
+                                    $color = $status->color() ?? 'gray';
+                                    ?>
+                                    <span class="inline-block px-2 py-1 text-xs font-medium text-<?= $color ?>-800 bg-<?= $color ?>-100 rounded-full">
+                                        <?= $status->label() ?>
                                     </span>
-                                <?php endif; ?>
-                            </td>
+                                </td>
+                                <td class="px-4 py-3 text-sm text-gray-700">
+                                    <?php if ($log->getOutTime()): ?>
+                                        <div class="text-sm">
+                                            <span class="block text-gray-700"><?= $log->getOutTime()->format('M d, Y') ?></span>
+                                            <span class="text-xs text-gray-500"><?= $log->getOutTime()->format('h:i A') ?></span>
+                                        </div>
+                                    <?php else: ?>
+                                        <span class="text-sm text-gray-400">N/A</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="px-4 py-3 text-sm text-gray-700">
+                                    <?php if ($log->getInTime()): ?>
+                                        <div class="text-sm">
+                                            <span class="block text-gray-700"><?= $log->getInTime()->format('M d, Y') ?></span>
+                                            <span class="text-xs text-gray-500"><?= $log->getInTime()->format('h:i A') ?></span>
+                                        </div>
+                                    <?php else: ?>
+                                        <span class="text-sm text-gray-400">N/A</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="px-2 py-3 text-sm text-center text-gray-700">
+                                    <?php
+                                    $verifier = $log->getVerifier();
+                                    $verifierName = htmlspecialchars($verifier->getVerifierName());
+                                    $statusClass = $verifierName ? 'bg-green-500' : 'bg-red-500'; ?>
+
+                                    <?php if (UserRole::isSuperAdmin($user->getRole()->value)): ?>
+                                        <a href="<?= $this->urlFor('admin.manage.verifiers') ?>" class="text-gray-600 hover:text-gray-800 hover:underline">
+                                            <span class="inline-block mr-1 w-2.5 h-2.5 <?= $statusClass ?> rounded-full"></span>
+                                            <?= $verifierName ?>
+                                        </a>
+                                    <?php else: ?>
+                                        <span class="text-gray-600">
+                                            <span class="inline-block mr-1 w-2.5 h-2.5 <?= $statusClass ?> rounded-full"></span>
+                                            <?= $verifierName ?>
+                                        </span>
+                                    <?php endif; ?>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>

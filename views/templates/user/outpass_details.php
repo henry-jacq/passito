@@ -16,7 +16,14 @@ use App\Enum\OutpassStatus; ?>
                 <p class="mt-1 text-base text-gray-500">View your outpass request details.</p>
             </div>
             <!-- Apply outpass button -->
-            <div class="mt-4 md:mt-0">
+            <div class="flex flex-wrap items-center gap-3 mt-4 md:mt-0">
+                <?php $statusEnum = $outpass->getStatus(); ?>
+                <?php if ($statusEnum === OutpassStatus::PENDING): ?>
+                    <button type="button" id="cancel-outpass" data-id="<?= $outpass->getId() ?>"
+                        class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-gray-600 rounded-md shadow-md transition hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-300">
+                        Cancel Outpass
+                    </button>
+                <?php endif; ?>
                 <?php $document = $outpass->getDocument();
                 $downloadUrl = $document ? $this->fileUrl($document) : ''; ?>
                 <a <?php if ($document): ?>
@@ -24,7 +31,7 @@ use App\Enum\OutpassStatus; ?>
                     <?php else: ?>
                     href="javascript:void(0)" aria-disabled="true" tabindex="-1"
                     <?php endif; ?>
-                    class="px-4 py-2 text-white bg-blue-600 rounded-md shadow-md transition focus:outline-none inline-flex items-center <?= $document ? 'hover:bg-blue-700 focus:ring focus:ring-blue-300' : 'opacity-50 cursor-not-allowed' ?>">
+                    class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md shadow-md transition focus:outline-none <?= $document ? 'hover:bg-blue-700 focus:ring-2 focus:ring-blue-300' : 'opacity-50 cursor-not-allowed' ?>">
                     <i class="mr-1 fa-solid fa-arrow-down"></i>
                     <span>Download Outpass</span>
                 </a>
@@ -76,18 +83,12 @@ use App\Enum\OutpassStatus; ?>
                     <div class="flex items-center space-x-4 align-center">
                         <i class="text-2xl text-gray-500 fa-solid fa-info-circle"></i>
                         <div>
-                            <label class="block text-base font-medium text-gray-500">Status</label>
-                            <?php $color = match ($outpass->getStatus()->value) {
-                                OutpassStatus::APPROVED->value => 'green',
-                                OutpassStatus::PARENT_APPROVED->value => 'green',
-                                OutpassStatus::PENDING->value => 'yellow',
-                                OutpassStatus::PARENT_PENDING->value => 'yellow',
-                                OutpassStatus::REJECTED->value => 'red',
-                                OutpassStatus::PARENT_DENIED->value => 'red',
-                                OutpassStatus::EXPIRED->value => 'gray',
-                                default => 'gray',
-                            }; ?>
-                            <p class="text-base md:text-lg text-<?= $color ?>-800 font-medium mt-1"><?= ucwords(str_replace('_', ' ', $outpass->getStatus()->value)) ?></p>
+                            <label class="block mb-1 text-base font-medium text-gray-500">Status</label>
+                            <?php $status = $outpass->getStatus();
+                            $color = $status->color() ?? 'gray'; ?>
+                            <span class="px-3 py-1 text-base font-medium text-<?= $color ?> bg-<?= $color ?>-100 rounded-full">
+                                <?= $status->label() ?>
+                            </span>
                         </div>
                     </div>
                     <div class="flex items-center space-x-4 align-center">
@@ -136,8 +137,8 @@ use App\Enum\OutpassStatus; ?>
                                 </div>
                             <?php else: ?>
                                 <img class="object-contain w-48 h-48 select-none" src="<?= htmlspecialchars($this->fileUrl(
-                                                                                    $outpass->getQrCode()
-                                                                                )) ?>" alt="Outpass QR Code" oncontextmenu="return false;" draggable="false">
+                                                                                            $outpass->getQrCode()
+                                                                                        )) ?>" alt="Outpass QR Code" oncontextmenu="return false;" draggable="false">
                             <?php endif; ?>
                         </div>
                         <p class="my-1 font-medium text-gray-600 select-text">QR codes are only valid within the approved outpass time frame.</p>
@@ -185,7 +186,7 @@ use App\Enum\OutpassStatus; ?>
                                         ?>
                                             <a href="<?= $url ?>" download class="text-blue-600 hover:text-blue-700 hover:underline">
                                                 <i class="fa fa-link"></i>
-                                                <?= htmlspecialchars($label) ?> 
+                                                <?= htmlspecialchars($label) ?>
                                             </a>
                                         <?php endforeach; ?>
                                     <?php endif; ?>

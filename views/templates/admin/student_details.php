@@ -1,7 +1,3 @@
-<?php
-$student = $student ?? null;
-?>
-
 <main class="flex-1 p-6 mt-20 overflow-y-auto">
     <div class="mb-6">
         <div class="flex items-center justify-between pb-4 border-b border-gray-200">

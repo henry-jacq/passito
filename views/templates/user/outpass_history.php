@@ -64,23 +64,9 @@ use App\Enum\OutpassStatus; ?>
                                     <td class="px-4 py-3">
                                         <?php
                                         $status = $outpass->getStatus();
-                                        switch ($status) {
-                                            case OutpassStatus::APPROVED:
-                                                $badgeClass = 'text-green-800 bg-green-100';
-                                                break;
-                                            case OutpassStatus::PENDING:
-                                                $badgeClass = 'text-yellow-800 bg-yellow-100';
-                                                break;
-                                            case OutpassStatus::REJECTED:
-                                                $badgeClass = 'text-red-800 bg-red-100';
-                                                break;
-                                            case OutpassStatus::EXPIRED:
-                                                $badgeClass = 'text-gray-800 bg-gray-100';
-                                                break;
-                                            default:
-                                                $badgeClass = 'text-gray-800 bg-gray-100';
-                                        } ?>
-                                        <span class="px-3 py-1 text-sm font-medium <?= $badgeClass ?> rounded-full"><?= ucwords($outpass->getStatus()->value) ?></span>
+                                        $color = $status->color() ?? 'gray';
+                                        ?>
+                                        <span class="px-3 py-1 text-sm font-medium text-<?= $color ?> bg-<?= $color ?>-100 rounded-full"><?= $status->label() ?></span>
                                     </td>
                                     <td class="px-4 py-3">
                                         <a href="<?= $this->urlFor('student.outpass.details', ['outpass_id' => $outpass->getId()]) ?>" class="text-blue-600 hover:underline">View Details</a>

@@ -39,6 +39,8 @@
 
     {{contents}}
 
+    <?= $this->getComponent('admin/modal') ?>
+
     <?php
     if ($this->isAuthenticated()): ?>
         <script type="module" src="<?= vite_asset('js/student.js') ?>"></script>

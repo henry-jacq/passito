@@ -37,6 +37,29 @@ class AuthController extends BaseController
         return parent::render($request, $response, 'auth/login', $args);
     }
 
+    public function forgot(Request $request, Response $response): Response
+    {
+        $args = [
+            'title' => 'Forgot Password',
+            'brandLogo' => $this->config->get('app.logo'),
+        ];
+
+        return parent::render($request, $response, 'auth/forgot', $args);
+    }
+
+    public function reset(Request $request, Response $response): Response
+    {
+        $token = (string) (($request->getQueryParams()['token'] ?? '') ?: '');
+        $args = [
+            'title' => 'Reset Password',
+            'brandLogo' => $this->config->get('app.logo'),
+            'token' => $token,
+            'tokenMissing' => $token === '',
+        ];
+
+        return parent::render($request, $response, 'auth/reset', $args);
+    }
+
     // function to landing page
     public function landing(Request $request, Response $response): Response
     {

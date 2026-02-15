@@ -65,7 +65,7 @@
 
         <!-- Links -->
         <div class="mt-4 text-center">
-            <a href="#" class="text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline">Forgot password?</a>
+            <a href="<?= $this->urlFor('auth.forgot') ?>" class="text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline">Forgot password?</a>
         </div>
 
         <!-- Footer -->

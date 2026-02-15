@@ -23,6 +23,8 @@ return function (App $app) {
     // Auth Routes
     $app->group('/auth', function (RouteCollectorProxy $group) {
         $group->any('/login', [AuthController::class, 'login'])->setName('auth.login')->add(AuthMiddleware::class);
+        $group->any('/forgot', [AuthController::class, 'forgot'])->setName('auth.forgot')->add(AuthMiddleware::class);
+        $group->any('/reset', [AuthController::class, 'reset'])->setName('auth.reset')->add(AuthMiddleware::class);
         $group->any('/logout', [AuthController::class, 'logout'])->setName('auth.logout');
     });
 

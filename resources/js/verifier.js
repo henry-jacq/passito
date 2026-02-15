@@ -30,6 +30,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let latestRequestId = 0;
     let actionInFlight = false;
     let lastData = null;
+    let manualLookupTimer = null;
+    let lastManualLookupId = null;
+    let qrScanInFlight = false;
+    let qrScanDetector = null;
 
     const hideResultPanel = () => {
         if (resultPanel) {
@@ -39,6 +43,11 @@ document.addEventListener('DOMContentLoaded', () => {
         setButtonState(checkoutBtn, false);
         setButtonState(checkinBtn, false);
         setStatusBadge('', 'neutral');
+    };
+
+    const normalizeQrPayload = (value) => {
+        if (typeof value !== 'string') return '';
+        return value.trim();
     };
 
     const setStatusBadge = (label, variant) => {
@@ -135,6 +144,8 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const stopScan = () => {
+        qrScanInFlight = false;
+        qrScanDetector = null;
         if (zxingControls) {
             zxingControls.stop();
             zxingControls = null;
@@ -148,13 +159,24 @@ document.addEventListener('DOMContentLoaded', () => {
             video.srcObject = null;
         }
         if (scanPanel) scanPanel.classList.add('hidden');
-        activeScan = null;
+        activeScan = false;
+
+        if (stopBtn) {
+            stopBtn.disabled = true;
+            stopBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        }
     };
 
     const startScan = async () => {
         try {
+            // Ensure only one scan session at a time.
+            stopScan();
             activeScan = true;
             activeOutpassId = null;
+            if (stopBtn) {
+                stopBtn.disabled = false;
+                stopBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
             activeStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
             if (video) {
                 video.srcObject = activeStream;
@@ -182,15 +204,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            const detector = new BarcodeDetector({ formats: ['qr_code'] });
+            qrScanDetector = new BarcodeDetector({ formats: ['qr_code'] });
             const scanLoop = async () => {
                 if (!video || !activeStream || !activeScan) return;
                 try {
-                    const barcodes = await detector.detect(video);
+                    const barcodes = await qrScanDetector.detect(video);
                     if (barcodes.length > 0) {
-                        const payload = barcodes[0].rawValue;
+                        if (qrScanInFlight) return;
+                        const payload = normalizeQrPayload(barcodes[0].rawValue);
+                        if (!payload) return;
+                        qrScanInFlight = true;
                         stopScan();
                         await submitScan(payload);
+                        qrScanInFlight = false;
                         return;
                     }
                 } catch (err) {
@@ -210,11 +236,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const toast = new Toast();
         try {
             const requestId = ++latestRequestId;
-            lastPayload = payload;
+            lastPayload = normalizeQrPayload(payload);
             activeOutpassId = null;
             setLoadingState();
+            if (!lastPayload) {
+                toast.create({ message: 'Invalid QR code.', position: "bottom-right", type: "error", duration: 4000 });
+                hideResultPanel();
+                return;
+            }
             const response = await Ajax.post('/api/web/verifier/scan', {
-                qr_payload: payload
+                qr_payload: lastPayload
             });
 
             if (response.ok && response.data?.status && response.data?.data) {
@@ -269,32 +300,53 @@ document.addEventListener('DOMContentLoaded', () => {
                 toast.create({ message: 'Enter a valid outpass ID.', position: "bottom-right", type: "warning", duration: 4000 });
                 return;
             }
+            lastManualLookupId = id;
             submitManualId(id);
         });
     }
 
     if (manualIdInput) {
+        const scheduleManualLookup = () => {
+            if (manualLookupTimer) {
+                clearTimeout(manualLookupTimer);
+                manualLookupTimer = null;
+            }
+            const raw = manualIdInput.value.trim();
+            const id = raw ? Number(raw) : 0;
+            if (!id || Number.isNaN(id)) return;
+            if (id === lastManualLookupId) return;
+
+            manualLookupTimer = setTimeout(() => {
+                lastManualLookupId = id;
+                submitManualId(id);
+            }, 350);
+        };
+
+        // Spinner (+/-) and typing should not trigger duplicate calls; debounce it.
+        manualIdInput.addEventListener('input', scheduleManualLookup);
+        manualIdInput.addEventListener('change', scheduleManualLookup);
+
         manualIdInput.addEventListener('keydown', (event) => {
             if (event.key === 'Enter') {
                 event.preventDefault();
                 const raw = manualIdInput.value.trim();
                 const id = raw ? Number(raw) : 0;
                 if (id && !Number.isNaN(id)) {
+                    lastManualLookupId = id;
                     submitManualId(id);
                 }
-            }
-        });
-        manualIdInput.addEventListener('blur', () => {
-            const raw = manualIdInput.value.trim();
-            const id = raw ? Number(raw) : 0;
-            if (id && !Number.isNaN(id)) {
-                submitManualId(id);
             }
         });
     }
 
     if (stopBtn) {
         stopBtn.addEventListener('click', stopScan);
+    }
+
+    // Disable stop button until a scan session starts.
+    if (stopBtn) {
+        stopBtn.disabled = true;
+        stopBtn.classList.add('opacity-50', 'cursor-not-allowed');
     }
 
     const submitAction = async (action) => {
@@ -308,6 +360,8 @@ document.addEventListener('DOMContentLoaded', () => {
         setLoadingState();
         const toast = new Toast();
         try {
+            setButtonState(checkoutBtn, false);
+            setButtonState(checkinBtn, false);
             const response = await Ajax.post('/api/web/verifier/log', {
                 outpass_id: activeOutpassId,
                 action

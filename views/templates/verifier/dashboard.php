@@ -4,12 +4,22 @@
             <div class="flex items-center justify-between">
                 <div>
                     <h2 class="text-2xl font-semibold text-gray-800">Verifier Console</h2>
-                    <p class="mt-1 text-sm text-gray-500">Security desk tools for validating student outpasses quickly.</p>
+                    <p class="mt-1 text-sm text-gray-500">Validate student outpasses quickly.</p>
                 </div>
             </div>
 
             <form id="manual-verifier-form" class="mt-6 space-y-4">
-                <div class="flex flex-wrap items-center gap-3">
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                        <button type="button" id="start-qr-scan"
+                            class="px-4 py-2 text-sm text-white transition bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-300">
+                            Scan QR
+                        </button>
+                        <button id="qr-stop" type="button"
+                            class="px-3 py-2 text-sm text-gray-700 transition bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-200">
+                            Stop Camera
+                        </button>
+                    </div>
                     <div class="flex items-center gap-2">
                         <input id="manual-outpass-id" type="number" min="1" placeholder="Outpass ID"
                             class="w-40 px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-200" />
@@ -19,16 +29,9 @@
                         </button>
                     </div>
                 </div>
-                <div>
-                    <button type="button" id="start-qr-scan"
-                        class="px-4 py-2 text-sm text-white transition bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-300">
-                        Scan QR
-                    </button>
-                </div>
                 <div id="qr-scan-panel" class="hidden p-3 border border-gray-200 rounded-md bg-gray-50">
                     <p class="mb-2 text-xs text-gray-600">Point the camera at the QR code.</p>
                     <video id="qr-video" class="w-full rounded-md" playsinline muted></video>
-                    <button id="qr-stop" type="button" class="mt-2 text-xs text-gray-600 underline">Stop camera</button>
                 </div>
                 <div id="qr-result" class="hidden p-4 bg-white border border-gray-200 rounded-md">
                     <div class="flex items-start justify-between gap-4">

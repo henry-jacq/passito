@@ -219,10 +219,16 @@ class AdminService
 
     public function rejectPending(OutpassRequest $outpass, $approvedBy, $reason=null): OutpassRequest
     {
+        // On rejection we should not retain uploaded files. At this stage only
+        // attachments are expected to exist (QR/PDF are generated on approval).
+        if (!empty($outpass->getAttachments())) {
+            $this->outpass->removeAttachments($outpass);
+        }
+
         $outpass->setStatus(OutpassStatus::REJECTED);
         $outpass->setApprovedTime(new \DateTime());
         $outpass->setApprovedBy($approvedBy);
-        $outpass->setAttachments(null);
+        $outpass->setAttachments([]);
 
         if (empty($reason)) {
             $outpass->setRemarks(null);

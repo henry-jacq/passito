@@ -15,8 +15,8 @@ class CleanupExpiredFiles implements JobInterface
 
     public function handle(array $payload): ?array
     {
-        // Remove documents and attachments for expired outpasses
-        $this->outpassService->removeExpireOutpassFiles();
+        // Remove documents/attachments/QR for outpasses past their time window.
+        $this->outpassService->removeOutpassFilesPastTimeWindow();
 
         return [
             'status' => 'completed',

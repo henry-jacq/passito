@@ -625,21 +625,63 @@ class OutpassService
     }
 
     /**
-     * Remove documents and attachments for expired outpasses.
+     * Remove documents/attachments/QR for outpasses whose time window has ended.
+     *
+     * This is intentionally decoupled from status: an outpass may remain APPROVED
+     * until a verifier checks it in, but we don't want to retain files forever
+     * if the student never checks in.
      */
-    public function removeExpireOutpassFiles(int $batchSize = 20): void
+    public function removeOutpassFilesPastTimeWindow(int $batchSize = 20): void
     {
-        // Periodically remove documents for outpasses already marked as expired.
+        $now = new \DateTimeImmutable();
+
+        // Only consider rows that still have something to cleanup.
         $outpasses = $this->em->getRepository(OutpassRequest::class)
-        ->createQueryBuilder('o')
-        ->where('o.status IN (:status)')
-        ->setParameter('status', [OutpassStatus::EXPIRED->value])
-        ->getQuery()
-        ->getResult();
+            ->createQueryBuilder('o')
+            ->where('o.toDate IS NOT NULL')
+            ->andWhere('o.toTime IS NOT NULL')
+            ->andWhere('(o.attachments IS NOT NULL AND o.attachments <> :emptyArray) OR o.document IS NOT NULL OR o.qrCode IS NOT NULL')
+            ->setParameter('emptyArray', json_encode([]))
+            ->getQuery()
+            ->getResult();
 
         $count = 0;
 
         foreach ($outpasses as $outpass) {
+            $toDate = $outpass->getToDate();
+            $toTime = $outpass->getToTime();
+            if (!$toDate || !$toTime) {
+                continue;
+            }
+
+            $end = \DateTimeImmutable::createFromMutable($toDate)->setTime(
+                (int) $toTime->format('H'),
+                (int) $toTime->format('i'),
+                (int) $toTime->format('s')
+            );
+
+            // Add grace time (gender-based settings).
+            $graceMinutes = 0;
+            try {
+                $gender = $outpass->getStudent()?->getUser()?->getGender();
+                if ($gender) {
+                    $settings = $this->getSettings($gender);
+                    $graceMinutes = max(0, (int) $settings->getLateArrivalGraceMinutes());
+                }
+            } catch (\Throwable $e) {
+                // If settings lookup fails, default to no grace for cleanup safety.
+                $graceMinutes = 0;
+            }
+
+            if ($graceMinutes > 0) {
+                $end = $end->modify('+' . $graceMinutes . ' minutes');
+            }
+
+            // Window still active; keep files.
+            if ($end >= $now) {
+                continue;
+            }
+
             // Remove the attachments
             if (!empty($outpass->getAttachments())) {
                 $this->removeAttachments($outpass);

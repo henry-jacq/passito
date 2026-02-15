@@ -36,12 +36,12 @@
 
 Passito includes an enterprise-grade asynchronous job processing system with:
 
-- ✅ **Dynamic Worker Scaling** - Automatically adjusts workers based on queue load
-- ✅ **Health Monitoring** - Detects and alerts when workers are down
-- ✅ **Auto-Recovery** - Systemd automatically restarts crashed workers
-- ✅ **Email Alerts** - Admin notifications for system issues
-- ✅ **Retry Logic** - Failed jobs automatically retry
-- ✅ **Job Dependencies** - Chain jobs with dependency management
+- **Dynamic Worker Scaling** - Automatically adjusts workers based on queue load
+- **Health Monitoring** - Detects and alerts when workers are down
+- **Auto-Recovery** - Systemd automatically restarts crashed workers
+- **Email Alerts** - Admin notifications for system issues
+- **Retry Logic** - Failed jobs automatically retry
+- **Job Dependencies** - Chain jobs with dependency management
 
 **📚 [Complete Job System Documentation →](docs/JOBS.md)**
 
@@ -57,6 +57,12 @@ php passito.php jobs:health
 systemctl status passito-supervisor
 ```
 
+### Scheduled Jobs (Cron -> Queue)
+
+Cron scheduled tasks should only **dispatch jobs** into the queue. The queue worker/supervisor performs the heavy work. This keeps scheduled tasks non-blocking, improves reliability (retries/error handling), and lets you scale by running more workers.
+
+**Requirement:** `pcntl` PHP extension must be installed/enabled for running `jobs:supervisor` (process management).
+
 ## Dependencies
 
 To run Passito, ensure you have the following installed:
@@ -68,7 +74,7 @@ To run Passito, ensure you have the following installed:
 
 Install the following dependencies
 ```bash
-sudo apt install php php-mysql libapache2-mod-php php-xml php-mbstring php-gd php-mysql composer npm nodejs adminer
+sudo apt install php php-mysql libapache2-mod-php php-xml php-mbstring php-gd php-mysql php-pcntl composer npm nodejs adminer
 ```
 
 Install MySQL Database & Configure
@@ -249,6 +255,8 @@ Follow these steps to set up Passito on your local machine:
       ```
    
    **Note:** Set `ADMIN_EMAIL` in your `.env` file to receive health alerts.
+   
+   **How it works:** cron executes small dispatcher commands at the scheduled time. These commands enqueue jobs, and the queue workers execute the actual work concurrently without blocking the cron process. This enables better error handling, retries for failed tasks, and horizontal scaling by increasing worker processes.
 
 9. **Start the Job Supervisor** (Required for processing jobs):
    ```bash

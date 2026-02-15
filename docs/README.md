@@ -103,6 +103,12 @@ php passito.php jobs:health
 
 # View logs
 journalctl -u passito-supervisor -f
+
+## Scheduled Jobs (Cron -> Queue)
+
+Cron scheduled tasks should only dispatch jobs into the queue. The queue worker/supervisor performs the heavy work. This keeps scheduled tasks non-blocking, allows multiple tasks to be processed concurrently, and improves reliability with better error handling and retries. Scaling is done by increasing worker processes (or running the supervisor with higher max workers).
+
+**Note:** `pcntl` PHP extension must be installed/enabled to run `php passito.php jobs:supervisor`.
 ```
 
 ## Support

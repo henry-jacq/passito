@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Core\View;
+use App\Core\Config;
 use App\Services\MailService;
 use App\Interfaces\JobInterface;
 use App\Services\UserService;
@@ -11,6 +12,7 @@ class SendPasswordResetEmail implements JobInterface
 {
     public function __construct(
         private readonly View $view,
+        private readonly Config $config,
         private readonly MailService $mailService,
         private readonly UserService $userService
     ) {}
@@ -18,7 +20,7 @@ class SendPasswordResetEmail implements JobInterface
     public function handle(array $payload): void
     {
         try {
-            if (empty($payload['user_id']) || empty($payload['to']) || empty($payload['reset_link'])) {
+            if (empty($payload['user_id']) || empty($payload['reset_link'])) {
                 throw new \InvalidArgumentException(
                     'Invalid payload for SendPasswordResetEmail ' . json_encode($payload)
                 );
@@ -34,16 +36,22 @@ class SendPasswordResetEmail implements JobInterface
                 $expiresMinutes = 60;
             }
 
+            $host = rtrim((string) $this->config->get('app.host'), '/');
+            $resetLink = (string) $payload['reset_link'];
+            if (!str_starts_with($resetLink, 'http://') && !str_starts_with($resetLink, 'https://')) {
+                $resetLink = $host . '/' . ltrim($resetLink, '/');
+            }
+
             $body = $this->view->renderEmail('auth/password_reset', [
                 'user' => $user,
-                'reset_link' => (string) $payload['reset_link'],
+                'reset_link' => $resetLink,
                 'expires_minutes' => $expiresMinutes,
             ]);
 
-            $subject = (string) ($payload['subject'] ?? 'Reset your password');
+            $subject = 'Reset your password';
 
             $this->mailService->notify(
-                (string) $payload['to'],
+                (string) $user->getEmail(),
                 $subject,
                 $body,
                 true
@@ -54,4 +62,3 @@ class SendPasswordResetEmail implements JobInterface
         }
     }
 }
-

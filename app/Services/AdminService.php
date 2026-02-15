@@ -16,6 +16,7 @@ use App\Entity\AcademicYear;
 use App\Services\UserService;
 use App\Entity\OutpassRequest;
 use App\Jobs\SendOutpassEmail;
+use App\Jobs\SendAccountCreationEmail;
 use App\Core\JobPayloadBuilder;
 use App\Entity\WardenAssignment;
 use App\Services\AcademicService;
@@ -374,6 +375,10 @@ class AdminService
                     $invalidUsers[] = "Row $rowNumber ($name): Student creation failed";
                     continue;
                 }
+
+                $payload = JobPayloadBuilder::create()->set('user_id', $user->getId());
+
+                $this->queue->dispatch(SendAccountCreationEmail::class, $payload);
                 
                 $createdEmails[$email] = true;
                 $created++;

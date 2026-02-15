@@ -61,38 +61,3 @@ use App\Enum\UserRole; ?>
     </section>
 
 </main>
-
-<!-- <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const toggle = document.getElementById('maintenanceToggle');
-
-        toggle.addEventListener('change', async () => {
-            const isEnabled = toggle.checked;
-
-            try {
-                const response = await fetch('/admin/maintenance-mode', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest' // Optional: if your backend checks for AJAX
-                    },
-                    body: JSON.stringify({
-                        enabled: isEnabled
-                    })
-                });
-
-                const result = await response.json();
-
-                if (response.ok) {
-                    alert(`Maintenance mode ${isEnabled ? 'enabled' : 'disabled'} successfully.`);
-                } else {
-                    console.error(result);
-                    alert('Failed to update maintenance mode.');
-                }
-            } catch (error) {
-                console.error(error);
-                alert('An error occurred while updating maintenance mode.');
-            }
-        });
-    });
-</script> -->

@@ -3,8 +3,6 @@
 namespace App\Middleware;
 
 use App\Core\View;
-use App\Entity\User;
-use App\Enum\UserRole;
 use App\Services\SystemSettingsService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\MiddlewareInterface;

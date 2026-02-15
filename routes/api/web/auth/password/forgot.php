@@ -75,8 +75,6 @@ ${basename(__FILE__, '.php')} = function () {
     try {
         $jobPayload = JobPayloadBuilder::create()
             ->set('user_id', $user->getId())
-            ->set('to', $user->getEmail())
-            ->set('subject', 'Reset your password')
             ->set('reset_link', $resetLink)
             ->set('expires_minutes', 60);
 

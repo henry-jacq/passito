@@ -108,18 +108,24 @@ class ResourceController extends BaseController
             return $response->withStatus(403, 'Forbidden');
         }
 
-        $path = $this->storage->getFullPath($file->getStoragePath());
-        if (!is_file($path) || !is_readable($path)) {
+        $storagePath = $file->getStoragePath();
+        if (!$this->storage->fileExists($storagePath)) {
             return $response->withStatus(404, 'File Not Found');
         }
 
         $this->logAccess($file, $user, $request);
 
-        $fileSize = filesize($path);
-        $mimeType = $file->getMimeType() ?: mime_content_type($path);
+        $contents = $this->storage->read($storagePath);
+        if ($contents === null) {
+            return $response->withStatus(404, 'File Not Found');
+        }
+
+        $fileSize = $this->storage->fileSize($storagePath) ?? strlen($contents);
+        $mimeType = $file->getMimeType() ?: ($this->storage->mimeType($storagePath) ?? 'application/octet-stream');
+        $lastModifiedTs = $this->storage->lastModified($storagePath) ?? time();
         $dispositionName = str_replace('"', '', $file->getOriginalName());
 
-        $response->getBody()->write($this->storage->read($file->getStoragePath()) ?? '');
+        $response->getBody()->write($contents);
 
         return $response
             ->withHeader('Content-Type', $mimeType)
@@ -127,7 +133,7 @@ class ResourceController extends BaseController
             ->withHeader('Content-Disposition', 'inline; filename="' . $dispositionName . '"')
             ->withHeader('Cache-Control', 'private, max-age=' . (60 * 60 * 24 * 7))
             ->withHeader('Expires', gmdate(DATE_RFC1123, time() + 60 * 60 * 24 * 7))
-            ->withHeader('Last-Modified', gmdate(DATE_RFC1123, filemtime($path)))
+            ->withHeader('Last-Modified', gmdate(DATE_RFC1123, $lastModifiedTs))
             ->withHeader('Pragma', '');
     }
 

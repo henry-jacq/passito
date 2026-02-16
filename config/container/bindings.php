@@ -19,6 +19,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use League\Flysystem\Local\LocalFilesystemAdapter;
+use League\Flysystem\AwsS3V3\AwsS3V3Adapter;
+use Aws\S3\S3Client;
 
 return [
     App::class => function (ContainerInterface $container) {
@@ -75,9 +77,46 @@ return [
     Session::class => function (ContainerInterface $container) {
         return new Session($container->get(Config::class));
     },
-    Storage::class => function() {
-        $localAdapter = new LocalFilesystemAdapter(STORAGE_PATH);
+    Storage::class => function(Config $config) {
+        $driver = strtolower((string) $config->get('storage.driver', 'local'));
+
+        if ($driver === 's3') {
+            if (!class_exists(S3Client::class) || !class_exists(AwsS3V3Adapter::class)) {
+                throw new RuntimeException('S3 storage driver selected, but required Flysystem S3 packages are not installed.');
+            }
+
+            $s3 = (array) $config->get('storage.s3', []);
+            $bucket = (string) ($s3['bucket'] ?? '');
+            if ($bucket === '') {
+                throw new RuntimeException('S3 storage driver selected, but storage.s3.bucket is empty.');
+            }
+
+            $clientConfig = [
+                'region' => $s3['region'] ?? 'us-east-1',
+                'version' => $s3['version'] ?? 'latest',
+                'credentials' => [
+                    'key' => $s3['key'] ?? '',
+                    'secret' => $s3['secret'] ?? '',
+                ],
+            ];
+
+            if (!empty($s3['endpoint'])) {
+                $clientConfig['endpoint'] = $s3['endpoint'];
+            }
+            if (!empty($s3['use_path_style_endpoint'])) {
+                $clientConfig['use_path_style_endpoint'] = true;
+            }
+
+            $client = new S3Client($clientConfig);
+            $adapter = new AwsS3V3Adapter($client, $bucket, (string) ($s3['prefix'] ?? ''));
+            $filesystem = new Filesystem($adapter);
+
+            return new Storage($filesystem, false, null);
+        }
+
+        $root = (string) $config->get('storage.local.root', STORAGE_PATH);
+        $localAdapter = new LocalFilesystemAdapter($root);
         $fileSystem = new Filesystem($localAdapter);
-        return new Storage($fileSystem);
+        return new Storage($fileSystem, true, $root);
     }
 ];

@@ -16,6 +16,7 @@
     - [Verify Permissions](#verify-permissions)
     - [Setup Passito](#setup-passito)
   - [Docker Setup](#docker-setup)
+  - [Storage Backends](#storage-backends)
   - [Usage](#usage)
   - [Development](#development)
   - [Contributing](#contributing)
@@ -218,6 +219,11 @@ Follow these steps to set up Passito on your local machine:
    composer install
    ```
 
+   Optional S3 support is **not installed by default**. If you want to use S3-compatible storage, install:
+   ```bash
+   composer require league/flysystem-aws-s3-v3 aws/aws-sdk-php
+   ```
+
 4. **Configure Environment Variables**:
    Create a `.env` file in the root of the project and configure your database and application settings. You can copy from the `.env.example` provided in the repository:
    ```bash
@@ -257,6 +263,34 @@ Follow these steps to set up Passito on your local machine:
    **Note:** Set `ADMIN_EMAIL` in your `.env` file to receive health alerts.
    
    **How it works:** cron executes small dispatcher commands at the scheduled time. These commands enqueue jobs, and the queue workers execute the actual work concurrently without blocking the cron process. This enables better error handling, retries for failed tasks, and horizontal scaling by increasing worker processes.
+
+## Storage Backends
+
+Passito supports multiple Flysystem backends via configuration.
+
+- Default: `local` storage (works out of the box).
+- Optional: `s3` / S3-compatible object storage.
+
+Set these environment variables when using S3:
+
+```env
+STORAGE_DRIVER=s3
+AWS_DEFAULT_REGION=us-east-1
+AWS_VERSION=latest
+AWS_BUCKET=your-bucket
+AWS_ENDPOINT=
+AWS_USE_PATH_STYLE_ENDPOINT=false
+AWS_ACCESS_KEY_ID=your-key
+AWS_SECRET_ACCESS_KEY=your-secret
+AWS_PREFIX=
+```
+
+Notes:
+
+- If `STORAGE_DRIVER` is not set, Passito uses local storage.
+- For S3 mode, install these packages first:
+  - `league/flysystem-aws-s3-v3`
+  - `aws/aws-sdk-php`
 
 9. **Start the Job Supervisor** (Required for processing jobs):
    ```bash

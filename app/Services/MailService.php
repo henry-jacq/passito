@@ -94,6 +94,7 @@ class MailService
     ): bool {
         $this->mailer->clearAllRecipients();
         $this->mailer->clearAttachments();
+        $tempAttachments = [];
 
         try {
             $this->setContent($subject, $message, $isHTML);
@@ -101,11 +102,20 @@ class MailService
 
             if (!empty($attachments) && is_iterable($attachments)) {
                 foreach ($attachments as $attachment) {
-                    $file = $this->storage->getFullPath($attachment);
-                    if (is_readable($file)) {
-                        $this->attachFile($file);
+                    if ($this->storage->isLocal()) {
+                        $file = $this->storage->getFullPath($attachment);
+                        if (is_readable($file)) {
+                            $this->attachFile($file);
+                            continue;
+                        }
+                    }
+
+                    $tmp = $this->storage->materializeToTemp($attachment, 'mail_attach_');
+                    if ($tmp && is_readable($tmp)) {
+                        $tempAttachments[] = $tmp;
+                        $this->attachFile($tmp, basename($attachment));
                     } else {
-                        error_log("Attachment not found: $file");
+                        error_log("Attachment not found: {$attachment}");
                     }
                 }
             }
@@ -114,6 +124,10 @@ class MailService
         } catch (\Exception $e) {
             // TODO: log exception
             return false;
+        } finally {
+            foreach ($tempAttachments as $tmpFile) {
+                @unlink($tmpFile);
+            }
         }
     }
 }

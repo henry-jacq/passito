@@ -94,6 +94,22 @@ return [
         'header' => $_ENV['CSRF_HEADER_NAME'] ?? 'X-CSRF-Token',
         'field' => $_ENV['CSRF_FIELD_NAME'] ?? '_csrf',
     ],
+    'storage' => [
+        'driver' => $_ENV['STORAGE_DRIVER'] ?? 'local',
+        'local' => [
+            'root' => STORAGE_PATH,
+        ],
+        's3' => [
+            'region' => $_ENV['AWS_DEFAULT_REGION'] ?? '',
+            'version' => $_ENV['AWS_VERSION'] ?? 'latest',
+            'bucket' => $_ENV['AWS_BUCKET'] ?? '',
+            'endpoint' => $_ENV['AWS_ENDPOINT'] ?? null,
+            'use_path_style_endpoint' => $boolean($_ENV['AWS_USE_PATH_STYLE_ENDPOINT'] ?? false),
+            'key' => $_ENV['AWS_ACCESS_KEY_ID'] ?? '',
+            'secret' => $_ENV['AWS_SECRET_ACCESS_KEY'] ?? '',
+            'prefix' => $_ENV['AWS_PREFIX'] ?? '',
+        ],
+    ],
     'view' => [
         'layouts' => [
             UserRole::USER->value => 'user.php',

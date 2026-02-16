@@ -2,6 +2,7 @@
 
 namespace App\Core;
 
+use Throwable;
 use League\Flysystem\FilesystemOperator;
 use League\Flysystem\FilesystemException;
 use League\Flysystem\UnableToCopyFile;
@@ -15,15 +16,19 @@ class Storage
      * @var FilesystemOperator
      */
     protected FilesystemOperator $filesystem;
+    private bool $isLocal;
+    private ?string $localRoot;
 
     /**
      * Constructor.
      *
      * @param FilesystemOperator $filesystem A Flysystem filesystem instance.
      */
-    public function __construct(FilesystemOperator $filesystem)
+    public function __construct(FilesystemOperator $filesystem, bool $isLocal = true, ?string $localRoot = null)
     {
         $this->filesystem = $filesystem;
+        $this->isLocal = $isLocal;
+        $this->localRoot = $localRoot;
     }
 
     /**
@@ -42,6 +47,16 @@ class Storage
     }
 
     /**
+     * Write stream to storage.
+     *
+     * @param resource $stream
+     */
+    public function writeStream(string $path, $stream): void
+    {
+        $this->filesystem->writeStream($path, $stream);
+    }
+
+    /**
      * Reads and returns the content of a file.
      *
      * @param string $path The path of the file to read.
@@ -56,6 +71,20 @@ class Storage
             return $this->filesystem->read($path);
         } catch (FilesystemException $e) {
             // Optionally log the error or handle it as needed.
+            return null;
+        }
+    }
+
+    /**
+     * Read stream from storage.
+     *
+     * @return resource|null
+     */
+    public function readStream(string $path)
+    {
+        try {
+            return $this->filesystem->readStream($path);
+        } catch (Throwable $e) {
             return null;
         }
     }
@@ -154,18 +183,20 @@ class Storage
      */
     public function ensureDirectoryExists(string $directory, int $permissions = 0775): void
     {
-        // Resolve full system path
-        $fullPath = $this->getFullPath($directory);
-
-        // If directory doesn’t exist, create recursively
-        if (!is_dir($fullPath)) {
-            if (!mkdir($fullPath, $permissions | 02000, true)) {
-                throw new \RuntimeException("Failed to create directory: $fullPath");
-            }
+        $normalized = trim($directory, '/');
+        if ($normalized === '') {
+            return;
         }
 
-        // Apply sticky group bit + permissions
-        chmod($fullPath, $permissions | 02000);
+        $this->filesystem->createDirectory($normalized);
+
+        // Apply local permissions only when local adapter is used.
+        if ($this->isLocal()) {
+            $fullPath = $this->getFullPath($normalized);
+            if (is_dir($fullPath)) {
+                @chmod($fullPath, $permissions | 02000);
+            }
+        }
     }
 
 
@@ -236,13 +267,15 @@ class Storage
      */
     public function getFullPath(string $relativePath, bool $createDir = false, int $permissions = 0775): string
     {
-        // Ensure STORAGE_PATH is defined in your application
-        if (!defined('STORAGE_PATH')) {
-            throw new \RuntimeException('STORAGE_PATH constant is not defined.');
+        if (!$this->isLocal()) {
+            throw new \RuntimeException('getFullPath() is available only for local filesystem adapters.');
         }
 
-        // Construct the full path by combining STORAGE_PATH and the relative path.
-        $fullPath = rtrim(STORAGE_PATH, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . ltrim($relativePath, DIRECTORY_SEPARATOR);
+        if ($this->localRoot === null || $this->localRoot === '') {
+            throw new \RuntimeException('Local storage root is not configured.');
+        }
+
+        $fullPath = rtrim($this->localRoot, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . ltrim($relativePath, DIRECTORY_SEPARATOR);
 
         if ($createDir) {
             // Determine the directory that should exist.
@@ -266,8 +299,92 @@ class Storage
      */
     public function moveUploadedFile(string $source, string $destination): void
     {
-        if (!move_uploaded_file($source, $this->getFullPath($destination, true))) {
-            throw new \RuntimeException("Failed to move uploaded file.");
+        if (!is_file($source) || !is_readable($source)) {
+            throw new \RuntimeException("Uploaded source file is not readable.");
         }
+
+        if ($this->isLocal() && is_uploaded_file($source)) {
+            if (!move_uploaded_file($source, $this->getFullPath($destination, true))) {
+                throw new \RuntimeException("Failed to move uploaded file.");
+            }
+            return;
+        }
+
+        $stream = fopen($source, 'rb');
+        if ($stream === false) {
+            throw new \RuntimeException("Failed to open uploaded file stream.");
+        }
+
+        try {
+            $this->writeStream($destination, $stream);
+        } finally {
+            fclose($stream);
+        }
+    }
+
+    public function isLocal(): bool
+    {
+        return $this->isLocal;
+    }
+
+    public function fileSize(string $path): ?int
+    {
+        try {
+            return (int) $this->filesystem->fileSize($path);
+        } catch (Throwable $e) {
+            return null;
+        }
+    }
+
+    public function mimeType(string $path): ?string
+    {
+        try {
+            return $this->filesystem->mimeType($path);
+        } catch (Throwable $e) {
+            return null;
+        }
+    }
+
+    public function lastModified(string $path): ?int
+    {
+        try {
+            return (int) $this->filesystem->lastModified($path);
+        } catch (Throwable $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Materialize a storage object into a temporary local file path.
+     * Useful for integrations that require local file paths (mail attachments, libraries).
+     */
+    public function materializeToTemp(string $storagePath, string $prefix = 'storage_'): ?string
+    {
+        $stream = $this->readStream($storagePath);
+        if ($stream === null) {
+            return null;
+        }
+
+        $tmp = tempnam(sys_get_temp_dir(), $prefix);
+        if ($tmp === false) {
+            fclose($stream);
+            return null;
+        }
+
+        $dest = fopen($tmp, 'wb');
+        if ($dest === false) {
+            fclose($stream);
+            @unlink($tmp);
+            return null;
+        }
+
+        try {
+            stream_copy_to_stream($stream, $dest);
+        } finally {
+            fclose($stream);
+            fclose($dest);
+        }
+
+        return $tmp;
     }
 }

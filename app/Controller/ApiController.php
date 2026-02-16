@@ -11,6 +11,7 @@ use App\Core\Storage;
 use App\Core\JobDispatcher;
 use App\Utils\CsvProcessor;
 use App\Services\JwtService;
+use App\Services\LoginSessionService;
 use App\Services\AuthService;
 use App\Services\FileService;
 use App\Services\MailService;
@@ -70,6 +71,7 @@ class ApiController
         private readonly JobDispatcher $queue,
         private readonly ParentVerificationService $verificationService,
         private readonly JwtService $jwt,
+        private readonly LoginSessionService $loginSessionService,
         private readonly EntityManagerInterface $em,
         private readonly FileService $fileService,
     )

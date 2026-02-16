@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Core\Config;
 use App\Entity\User;
+use App\Enum\UserRole;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Firebase\JWT\SignatureInvalidException;
@@ -15,11 +16,14 @@ class JwtService
     private const ALG = 'HS256';
     private const LEEWAY = 5;
 
-    public function __construct(private readonly Config $config)
+    public function __construct(
+        private readonly Config $config,
+        private readonly LoginSessionService $loginSessionService
+    )
     {
     }
 
-    public function createToken(User $user): string
+    public function createToken(User $user, ?string $sessionTokenId = null): string
     {
         $now = time();
         $ttl = (int) $this->config->get('jwt.ttl', 3600);
@@ -34,6 +38,10 @@ class JwtService
             'role' => $user->getRole()->value,
             'email' => $user->getEmail(),
         ];
+
+        if (!empty($sessionTokenId)) {
+            $payload['sid'] = $sessionTokenId;
+        }
 
         return $this->encode($payload);
     }
@@ -58,6 +66,10 @@ class JwtService
         }
 
         if (!$this->isValidClaims($payload)) {
+            return null;
+        }
+
+        if (!$this->isValidSession($payload)) {
             return null;
         }
 
@@ -149,5 +161,27 @@ class JwtService
         }
 
         return true;
+    }
+
+    private function isValidSession(array $payload): bool
+    {
+        $role = (string) ($payload['role'] ?? '');
+        if (!UserRole::isAdministrator($role)) {
+            return true;
+        }
+
+        $tokenId = (string) ($payload['sid'] ?? '');
+        if ($tokenId === '') {
+            // Backward-compatible path: admin tokens without sid remain valid.
+            // New logins include sid and are managed through login_sessions.
+            return true;
+        }
+
+        try {
+            return $this->loginSessionService->getActiveSessionByToken($tokenId) !== null;
+        } catch (\Throwable) {
+            // If session storage is temporarily unavailable, avoid blocking all admin logins.
+            return true;
+        }
     }
 }

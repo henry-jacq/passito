@@ -75,6 +75,11 @@ class AuthMiddleware implements MiddlewareInterface
                         ->withHeader('Location', $location);
                 }
             }
+
+            return $this->responseFactory
+                ->createResponse(302)
+                ->withHeader('Set-Cookie', $this->jwt->buildLogoutCookieHeader())
+                ->withHeader('Location', $this->view->urlFor('auth.login'));
         }
                
         return $handler->handle($request);

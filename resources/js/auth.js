@@ -2,6 +2,9 @@ import Ajax from "./libs/ajax";
 import Auth from "./libs/auth";
 
 document.addEventListener('DOMContentLoaded', function () {
+    // Login/forgot/reset pages are unauthenticated contexts; clear stale client token.
+    Auth.clearToken();
+
     const setAlert = (el, text, type) => {
         if (!el) return;
         const textEl = el.querySelector('span') || el;

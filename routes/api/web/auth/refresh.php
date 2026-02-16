@@ -22,7 +22,8 @@ ${basename(__FILE__, '.php')} = function () {
         ], 401);
     }
 
-    $newToken = $this->jwt->createToken($user);
+    $sessionTokenId = isset($payload['sid']) ? (string) $payload['sid'] : null;
+    $newToken = $this->jwt->createToken($user, $sessionTokenId);
 
     return $this->response([
         'message' => 'Refreshed',

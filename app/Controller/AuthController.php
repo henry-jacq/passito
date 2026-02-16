@@ -6,6 +6,7 @@ use App\Core\View;
 use App\Core\Config;
 use App\Services\AuthService;
 use App\Services\JwtService;
+use App\Services\LoginSessionService;
 use App\Controller\BaseController;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -16,7 +17,8 @@ class AuthController extends BaseController
         protected readonly AuthService $auth,
         protected readonly Config $config,
         protected readonly View $view,
-        protected readonly JwtService $jwt
+        protected readonly JwtService $jwt,
+        protected readonly LoginSessionService $loginSessionService
     )
     {
     }
@@ -81,6 +83,15 @@ class AuthController extends BaseController
 
     public function logout(Request $request, Response $response): Response
     {
+        $token = $this->jwt->extractToken($request);
+        if (!empty($token)) {
+            $payload = $this->jwt->decode($token);
+            $sessionTokenId = (string) ($payload['sid'] ?? '');
+            if ($sessionTokenId !== '') {
+                $this->loginSessionService->revokeByToken($sessionTokenId);
+            }
+        }
+
         $this->auth->logout();
         $loginPage = $this->view->urlFor('auth.login');
         return $response

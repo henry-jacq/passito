@@ -4,6 +4,7 @@
 import Modal from './libs/modal';
 import Ajax from './libs/ajax';
 import Toast from './libs/toast';
+import Auth from './libs/auth';
 
 function isValidEmail(email) {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -125,6 +126,101 @@ document.addEventListener('DOMContentLoaded', () => {
             event.stopPropagation();
         });
     });
+
+    // Manage login sessions modal (admin settings page)
+    const manageLoginsButton = document.getElementById('manage-logins-button');
+    const openLoginSessionsModal = async () => {
+        const sessionsResponse = await Ajax.post('/api/web/admin/sessions/fetch', {});
+        if (!sessionsResponse.ok || !sessionsResponse.data?.status) {
+            const toast = new Toast();
+            toast.create({ message: sessionsResponse.data?.message || 'Failed to fetch sessions.', position: 'bottom-right', type: 'warning', duration: 4000 });
+            return;
+        }
+
+        const modalResponse = await Ajax.post('/api/web/admin/modal', {
+            template: 'login_sessions',
+            sessions: sessionsResponse.data.data
+        });
+
+        if (!modalResponse.ok || !modalResponse.data) {
+            const toast = new Toast();
+            toast.create({ message: modalResponse.data?.message || 'Failed to open sessions modal.', position: 'bottom-right', type: 'warning', duration: 4000 });
+            return;
+        }
+
+        Modal.open({
+            content: modalResponse.data,
+            actions: [
+                {
+                    label: 'Close',
+                    class: 'inline-flex justify-center rounded-lg bg-gray-100 px-6 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2',
+                    onClick: Modal.close,
+                },
+            ],
+            size: 'sm:max-w-4xl',
+            classes: 'custom-modal-class',
+            closeOnBackdropClick: true,
+        });
+
+        document.querySelectorAll('.revoke-login-session').forEach((button) => {
+            button.addEventListener('click', async () => {
+                const tokenId = button.dataset.tokenId;
+                if (!tokenId) {
+                    return;
+                }
+
+                button.disabled = true;
+                const revokeResponse = await Ajax.post('/api/web/admin/sessions/revoke', {
+                    token_id: tokenId
+                });
+
+                if (!revokeResponse.ok || !revokeResponse.data?.status) {
+                    button.disabled = false;
+                    const toast = new Toast();
+                    toast.create({ message: revokeResponse.data?.message || 'Failed to revoke session.', position: 'bottom-right', type: 'warning', duration: 4000 });
+                    return;
+                }
+
+                if (revokeResponse.data.force_logout) {
+                    Auth.clearToken();
+                    window.location.href = '/auth/login';
+                    return;
+                }
+
+                await openLoginSessionsModal();
+            });
+        });
+
+        document.querySelectorAll('.delete-login-session').forEach((button) => {
+            button.addEventListener('click', async () => {
+                const tokenId = button.dataset.tokenId;
+                if (!tokenId) {
+                    return;
+                }
+
+                button.disabled = true;
+                const deleteResponse = await Ajax.post('/api/web/admin/sessions/delete', {
+                    token_id: tokenId
+                });
+
+                if (!deleteResponse.ok || !deleteResponse.data?.status) {
+                    button.disabled = false;
+                    const toast = new Toast();
+                    toast.create({ message: deleteResponse.data?.message || 'Failed to delete session entry.', position: 'bottom-right', type: 'warning', duration: 4000 });
+                    return;
+                }
+
+                await openLoginSessionsModal();
+            });
+        });
+    };
+
+    if (manageLoginsButton) {
+        manageLoginsButton.addEventListener('click', async (event) => {
+            event.preventDefault();
+            await openLoginSessionsModal();
+        });
+    }
 
     // Open attachments modal
     const attachmentButtons = document.querySelectorAll('.view-attachments');

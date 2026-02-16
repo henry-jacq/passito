@@ -54,7 +54,7 @@ use App\Enum\UserRole; ?>
                     View and manage active logins or connected devices.
                 </p>
             </div>
-            <button class="px-4 py-2 text-sm font-medium text-white transition bg-indigo-600 rounded-md shadow-md hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+            <button id="manage-logins-button" class="px-4 py-2 text-sm font-medium text-white transition bg-indigo-600 rounded-md shadow-md hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                 Manage Logins
             </button>
         </div>

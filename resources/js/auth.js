@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Login page
     const loginForm = document.getElementById('login_form');
     if (loginForm) {
+        const returnUrl = new URLSearchParams(window.location.search).get('returnUrl') || '';
         const email = document.getElementById('email_address');
         const password = document.getElementById('password');
         const errorMessage = document.getElementById('error_message');
@@ -52,6 +53,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const response = await Ajax.post('/api/web/auth/login', {
                     email: email?.value || '',
                     password: password?.value || '',
+                    return_url: returnUrl,
                 });
 
                 if (response.ok) {
@@ -69,6 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         const retryResponse = await Ajax.post('/api/web/auth/login', {
                             email: email?.value || '',
                             password: password?.value || '',
+                            return_url: returnUrl,
                         });
 
                         if (retryResponse.ok) {

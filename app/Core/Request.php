@@ -4,6 +4,7 @@ namespace App\Core;
 
 use App\Core\Session;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\UriInterface;
 
 class Request
 {
@@ -31,5 +32,38 @@ class Request
     public function isXhr(ServerRequestInterface $request): bool
     {
         return $request->getHeaderLine('X-Requested-With') === 'XMLHttpRequest';
+    }
+
+    public function shouldStoreRedirect(ServerRequestInterface $request): bool
+    {
+        if (strtoupper($request->getMethod()) !== 'GET') {
+            return false;
+        }
+
+        if ($this->isXhr($request)) {
+            return false;
+        }
+
+        $path = $request->getUri()->getPath();
+        if (str_starts_with($path, '/api')) {
+            return false;
+        }
+
+        if ($path === '/auth/login') {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function normalizeRedirectUri(UriInterface $uri): string
+    {
+        $path = $uri->getPath() ?: '/';
+        $query = $uri->getQuery();
+        if ($query !== '') {
+            return $path . '?' . $query;
+        }
+
+        return $path;
     }
 }

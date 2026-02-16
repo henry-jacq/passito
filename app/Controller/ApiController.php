@@ -222,9 +222,57 @@ class ApiController
      */
     public function getRedirect($default = "/")
     {
-        $redirect = $this->session->get('_redirect', $default);
+        $redirect = (string) $this->session->get('_redirect', $default);
         $this->session->forget('_redirect');
-        return $redirect;
+
+        // Accept only local app routes; fallback to default otherwise.
+        if ($redirect === '' || str_starts_with($redirect, '/api') || str_starts_with($redirect, '/auth/login')) {
+            return $default;
+        }
+
+        if (str_starts_with($redirect, 'http://') || str_starts_with($redirect, 'https://')) {
+            $host = parse_url($redirect, PHP_URL_HOST);
+            $currentHost = $this->slimRequest->getUri()->getHost();
+            if (!$host || $host !== $currentHost) {
+                return $default;
+            }
+
+            $path = parse_url($redirect, PHP_URL_PATH) ?: '/';
+            $query = parse_url($redirect, PHP_URL_QUERY);
+            return $query ? ($path . '?' . $query) : $path;
+        }
+
+        return str_starts_with($redirect, '/') ? $redirect : $default;
+    }
+
+    public function resolveReturnUrl(string $default = '/'): string
+    {
+        $candidate = trim((string) ($this->data['return_url'] ?? $this->data['returnUrl'] ?? ''));
+        if ($candidate === '') {
+            return $default;
+        }
+
+        if (str_starts_with($candidate, '//') || str_starts_with($candidate, '/api') || $candidate === '/auth/login') {
+            return $default;
+        }
+
+        if (str_starts_with($candidate, 'http://') || str_starts_with($candidate, 'https://')) {
+            $host = parse_url($candidate, PHP_URL_HOST);
+            $currentHost = $this->slimRequest->getUri()->getHost();
+            if (!$host || $host !== $currentHost) {
+                return $default;
+            }
+
+            $path = parse_url($candidate, PHP_URL_PATH) ?: '/';
+            $query = parse_url($candidate, PHP_URL_QUERY);
+            $candidate = $query ? ($path . '?' . $query) : $path;
+        }
+
+        if (!str_starts_with($candidate, '/')) {
+            return $default;
+        }
+
+        return $candidate;
     }
 
     private function packData(array $data, string $contentType)

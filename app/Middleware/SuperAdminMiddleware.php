@@ -32,24 +32,12 @@ class SuperAdminMiddleware implements MiddlewareInterface
     {
         $token = $this->jwt->extractToken($request);
         if (empty($token)) {
-            if ($request->getMethod() === 'GET' && !$this->requestService->isXhr($request)) {
-                $this->session->put('_redirect', (string) $request->getUri());
-                return $this->responseFactory
-                    ->createResponse(302)
-                    ->withHeader('Location', $this->view->urlFor('auth.login'));
-            }
-
-            return $handler->handle($request);
+            return $this->unauthorizedResponse($request);
         }
 
         $payload = $this->jwt->decode($token);
         if (!$payload || empty($payload['sub'])) {
-            if ($request->getMethod() === 'GET' && !$this->requestService->isXhr($request)) {
-                $this->session->put('_redirect', (string) $request->getUri());
-            }
-            return $this->responseFactory
-                ->createResponse(302)
-                ->withHeader('Location', $this->view->urlFor('auth.login'));
+            return $this->unauthorizedResponse($request);
         }
 
         // User is authenticated
@@ -57,12 +45,7 @@ class SuperAdminMiddleware implements MiddlewareInterface
             (int) $payload['sub']
         );
         if (is_null($user)) {
-            if ($request->getMethod() === 'GET' && !$this->requestService->isXhr($request)) {
-                $this->session->put('_redirect', (string) $request->getUri());
-            }
-            return $this->responseFactory
-                ->createResponse(302)
-                ->withHeader('Location', $this->view->urlFor('auth.login'));
+            return $this->unauthorizedResponse($request);
         }
         $userRole = $user->getRole()->value;
 
@@ -74,5 +57,21 @@ class SuperAdminMiddleware implements MiddlewareInterface
         }
 
         return $handler->handle($request);
+    }
+
+    private function unauthorizedResponse(ServerRequestInterface $request): ResponseInterface
+    {
+        if ($this->requestService->shouldStoreRedirect($request)) {
+            $returnUrl = $this->requestService->normalizeRedirectUri($request->getUri());
+            return $this->responseFactory
+                ->createResponse(302)
+                ->withHeader('Location', $this->view->urlFor('auth.login', [], [
+                    'returnUrl' => $returnUrl,
+                ]));
+        }
+
+        return $this->responseFactory
+            ->createResponse(401)
+            ->withHeader('Content-Type', 'application/json');
     }
 }

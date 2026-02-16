@@ -60,7 +60,7 @@ ${basename(__FILE__, '.php')} = function () {
             usleep(mt_rand(400000, 1300000));
             return $this->response([
                 'message' => 'Authenticated',
-                'redirect' => $this->getRedirect($path),
+                'redirect' => $this->resolveReturnUrl($path),
                 'token' => $token,
                 'token_type' => 'Bearer',
             ], 202, 'application/json', [

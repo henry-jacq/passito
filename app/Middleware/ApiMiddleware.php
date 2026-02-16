@@ -43,15 +43,21 @@ class ApiMiddleware implements MiddlewareInterface
 
         $payload = $this->jwt->decode($token);
         if (!$payload || empty($payload['sub'])) {
+            if (str_starts_with($path, '/api/web/auth/')) {
+                return $handler->handle($request);
+            }
             $response = $handler->handle($request);
-            return $response->withHeader('Set-Cookie', $this->jwt->buildLogoutCookieHeader());
+            return $response->withAddedHeader('Set-Cookie', $this->jwt->buildLogoutCookieHeader());
         }
 
         // Fetch user and role
         $user = $this->em->getRepository(User::class)->find((int) $payload['sub']);
         if (!$user) {
+            if (str_starts_with($path, '/api/web/auth/')) {
+                return $handler->handle($request);
+            }
             $response = $handler->handle($request);
-            return $response->withHeader('Set-Cookie', $this->jwt->buildLogoutCookieHeader());
+            return $response->withAddedHeader('Set-Cookie', $this->jwt->buildLogoutCookieHeader());
         }
         if ($user->getStatus() !== UserStatus::ACTIVE) {
             return $this->responseFactory

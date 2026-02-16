@@ -43,6 +43,32 @@ sudo yum install php php-mysqlnd php-xml php-mbstring php-gd \
 
 ## Installation Methods
 
+### Method 0: Bootstrap Script (Recommended for Local Setup)
+
+Passito includes `setup.sh` to automate common setup steps.
+
+```bash
+./setup.sh --help
+./setup.sh
+```
+
+When no flags are passed, the script runs in interactive mode and asks what to configure.
+
+Optional flags:
+
+- `--full` to run full setup flow
+- `--with-system` to install apt packages
+- `--with-apache` to enable Apache modules and configure vhost + hosts entry
+- `--ssl` to configure Apache SSL vhost and generate self-signed cert files
+- `--with-s3` to install optional S3 dependencies
+- `--build` to build frontend assets
+- `--migrate` to run migrations
+- `--seed` to run core seeders
+- `--domain <name>` to set Apache ServerName
+
+Apache vhost template used by the script: `deployment/passito.conf`
+Apache SSL vhost template used by the script: `deployment/passito-ssl.conf`
+
 ### Method 1: Standard Installation
 
 #### Step 1: Clone Repository

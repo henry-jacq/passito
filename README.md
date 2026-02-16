@@ -90,6 +90,38 @@ sudo a2enconf adminer
 
 ## Installation
 
+### Quick Bootstrap Script
+
+You can run a single setup script to bootstrap dependencies, directories, permissions, and optional system setup:
+
+```bash
+./setup.sh --help
+./setup.sh
+```
+
+If you run `./setup.sh` with no flags, it asks interactively which steps to run.
+
+Optional flags:
+
+- `--full`: run the complete setup flow (apt deps + apache config + app deps + permissions)
+- `--with-system`: installs OS packages via `apt` (Ubuntu/Debian)
+- `--with-apache`: enables required Apache modules, writes vhost config, enables site, updates `/etc/hosts`
+- `--ssl`: enables Apache SSL vhost and generates self-signed `.pem`/`-key.pem` cert files
+- `--with-s3`: installs optional S3 Composer packages
+- `--build`: runs production frontend build
+- `--migrate`: runs DB migrations
+- `--seed`: runs core seeders
+- `--domain <name>`: sets Apache `ServerName` (default `passito.local`)
+
+Example full setup:
+
+```bash
+./setup.sh --full --domain passito.local --ssl --build
+```
+
+Apache vhost template is stored at `deployment/passito.conf` and is applied by the setup script.
+Apache SSL template is stored at `deployment/passito-ssl.conf`.
+
 ### Add www-data user to group for permissions
 
 ```bash

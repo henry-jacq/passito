@@ -1,5 +1,30 @@
 # Changelog
 
+## v0.8.0 (2026-02-16)
+
+### 🚀 Major Features
+- **S3-Compatible Storage Backend**: Added pluggable storage support with local/S3-compatible drivers and abstract file operations.
+- **Login Session Management**: Added admin session tracking with revoke controls and related authentication flow updates.
+- **Secure Post-Login Redirects**: Implemented validated return URL handling for protected route access and safe redirects after login.
+
+### ✨ Enhancements
+- **Outpass Lifecycle**: Added outpass cancellation flow and refined status handling.
+- **Verifier Experience**: Improved QR scan behavior, debounced manual lookup, and strengthened outpass status validation.
+- **Resource Serving**: Added CSV asset support and standardized resource-based file serving.
+
+### 🔧 Refactoring
+- Consolidated resource serving and removed deprecated storage-controller based access paths.
+- Simplified verifier result rendering and button state management.
+
+### 🐛 Bug Fixes
+- Fixed admin outpass button event freeze issues.
+- Fixed attachment cleanup behavior during outpass rejection.
+- Improved outpass UI event handling/state reliability.
+- Refined file cleanup timing with grace periods to avoid premature deletion.
+
+### 📚 Documentation
+- Clarified job system architecture and documented `pcntl` requirement for supervisor mode.
+
 ## v0.7.0 (2026-02-11)
 
 ### 🚀 Major Features

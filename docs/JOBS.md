@@ -743,5 +743,5 @@ systemctl restart passito-supervisor
 
 ---
 
-**Version:** 0.7.0  
+**Version:** 0.8.0  
 **Last Updated:** February 2026

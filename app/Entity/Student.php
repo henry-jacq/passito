@@ -10,7 +10,7 @@ use App\Traits\EntityGetSetTrait;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'students', indexes: [
-    new ORM\Index(name: "digital_id_idx", columns: ["digitalId"]),
+    new ORM\Index(name: "roll_no_idx", columns: ["rollNo"]),
     new ORM\Index(name: "year_idx", columns: ["year"]),
     new ORM\Index(name: "academic_year_idx", columns: ["academic_year_id"])
 ])]
@@ -40,7 +40,7 @@ class Student
     private ?AcademicYear $academicYear = null;
 
     #[ORM\Column(type: 'integer', unique: true)]
-    private int $digitalId;
+    private int $rollNo;
 
     #[ORM\Column(type: 'integer')]
     private int $year;
@@ -60,7 +60,7 @@ class Student
             'id' => $this->getId(),
             'user' => $this->getUser()->toArray(),
             'hostel' => $this->getHostel()->toArray(),
-            'digital_id' => $this->getDigitalId(),
+            'roll_no' => $this->getRollNo(),
             'year' => $this->getYear(),
             'academic_year' => $this->getAcademicYear()?->toArray(),
             'program' => $this->getProgram()->toArray(),

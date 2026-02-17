@@ -138,7 +138,7 @@ use App\Enum\ReportKey;
                             <thead class="bg-gray-50">
                                 <tr>
                                     <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Student Name</th>
-                                    <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Digital ID</th>
+                                    <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Roll No</th>
                                     <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Hostel</th>
                                     <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Late By</th>
                                 </tr>
@@ -147,7 +147,7 @@ use App\Enum\ReportKey;
                                 <?php foreach ($lateArrivals as $arrival): ?>
                                     <tr class="hover:bg-gray-50">
                                         <td class="px-4 py-3 text-gray-800"><?= $arrival->getOutpass()->getStudent()->getUser()->getName() ?></td>
-                                        <td class="px-4 py-3 text-gray-800"><?= $arrival->getOutpass()->getStudent()->getDigitalId() ?></td>
+                                        <td class="px-4 py-3 text-gray-800"><?= $arrival->getOutpass()->getStudent()->getRollNo() ?></td>
                                         <td class="px-4 py-3 text-gray-600"><?= $arrival->getOutpass()->getStudent()->getHostel()->getHostelName() ?></td>
                                         <td class="px-4 py-3">
                                             <span class="px-2 py-1 text-xs font-medium text-red-800 bg-red-100 rounded-full"><?= $arrival->getLateDuration() ?></span>

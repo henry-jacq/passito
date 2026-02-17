@@ -28,7 +28,7 @@ use App\Enum\OutpassStatus;
         <div class="mb-8 rounded-lg">
             <form class="flex flex-wrap items-center justify-between gap-4" method="get" action="">
                 <div class="relative flex-grow">
-                    <input id="search-records" name="q" type="text" placeholder="Search by student name or digital ID..."
+                    <input id="search-records" name="q" type="text" placeholder="Search by student name or roll no..."
                         value="<?= $search ?? '' ?>"
                         class="w-full py-2 transition duration-200 border border-gray-300 rounded-md bg-gray-50 text-md ps-12 focus:outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600/50"
                         aria-label="Search records">

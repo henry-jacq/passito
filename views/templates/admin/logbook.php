@@ -31,7 +31,7 @@
         <div class="mb-6">
             <form class="flex flex-wrap items-center justify-between gap-4" method="get" action="">
                 <div class="relative flex-grow">
-                    <input id="search-logbook" name="q" type="text" placeholder="Search by name or digital ID..."
+                    <input id="search-logbook" name="q" type="text" placeholder="Search by name or roll no..."
                         value="<?= $search ?? '' ?>"
                         class="w-full py-2 transition duration-200 border border-gray-300 rounded-md bg-gray-50 text-md ps-12 focus:outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600/50"
                         aria-label="Search logbook">
@@ -71,7 +71,7 @@
                     <tr>
                         <th class="px-1 py-3 text-sm font-semibold text-center text-gray-600">Outpass ID</th>
                         <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Student Name</th>
-                        <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Digital ID</th>
+                        <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Roll No</th>
                         <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Course</th>
                         <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Status</th>
                         <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Check-Out</th>
@@ -95,7 +95,7 @@
                                     <a href="<?= $this->urlFor('admin.outpass.records.details', ['outpass_id' => $log->getOutpass()->getId()]) ?>" class="text-gray-600 hover:text-gray-800"># <?= htmlspecialchars($log->getOutpass()->getId()) ?></a>
                                 </td>
                                 <td class="px-4 py-3 text-sm text-gray-700"><?= htmlspecialchars($log->getOutpass()->getStudent()->getUser()->getName()) ?></td>
-                                <td class="px-4 py-3 text-sm text-gray-700"><?= htmlspecialchars($log->getOutpass()->getStudent()->getDigitalId()) ?></td>
+                                <td class="px-4 py-3 text-sm text-gray-700"><?= htmlspecialchars($log->getOutpass()->getStudent()->getRollNo()) ?></td>
                                 <td class="px-4 py-3 text-sm text-gray-700"><?= htmlspecialchars($log->getOutpass()->getStudent()->getProgram()->getProgramName() . ' ' . $log->getOutpass()->getStudent()->getProgram()->getShortCode()) ?></td>
                                 <td class="px-4 py-3 text-sm text-gray-700">
                                     <?php

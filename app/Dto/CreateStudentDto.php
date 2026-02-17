@@ -11,7 +11,7 @@ use App\Entity\AcademicYear;
 class CreateStudentDto
 {
     public function __construct(
-        private readonly int $digitalId,
+        private readonly int $rollNo,
         private readonly int $year,
         private readonly string $roomNo,
         private readonly string $parentNo,
@@ -24,9 +24,9 @@ class CreateStudentDto
 
     private function validate(): void
     {
-        // Validate digital ID
-        if ($this->digitalId <= 0) {
-            throw new \InvalidArgumentException('Digital ID must be a positive integer');
+        // Validate roll no
+        if ($this->rollNo <= 0) {
+            throw new \InvalidArgumentException('Roll No must be a positive integer');
         }
 
         // Validate year against program duration
@@ -47,9 +47,9 @@ class CreateStudentDto
         }
     }
 
-    public function getDigitalId(): int
+    public function getRollNo(): int
     {
-        return $this->digitalId;
+        return $this->rollNo;
     }
 
     public function getYear(): int
@@ -85,7 +85,7 @@ class CreateStudentDto
     public function toArray(): array
     {
         return [
-            'digital_id' => $this->digitalId,
+            'roll_no' => $this->rollNo,
             'year' => $this->year,
             'room_no' => $this->roomNo,
             'parent_no' => $this->parentNo,
@@ -101,7 +101,7 @@ class CreateStudentDto
     public static function fromArray(array $data): self
     {
         return new self(
-            digitalId: (int) $data['digital_id'],
+            rollNo: (int) $data['roll_no'],
             year: (int) $data['year'],
             roomNo: $data['room_no'],
             parentNo: $data['parent_no'],

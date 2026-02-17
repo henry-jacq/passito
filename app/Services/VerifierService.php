@@ -364,9 +364,9 @@ class VerifierService
             $isNumeric = ctype_digit($search);
             if ($isNumeric) {
                 $queryBuilder->andWhere(
-                    $queryBuilder->expr()->eq('student.digitalId', ':digitalId')
+                    $queryBuilder->expr()->eq('student.rollNo', ':rollNo')
                 )
-                    ->setParameter('digitalId', (int) $search);
+                    ->setParameter('rollNo', (int) $search);
             } else {
                 $queryBuilder->andWhere(
                     $queryBuilder->expr()->like('user.name', ':search')

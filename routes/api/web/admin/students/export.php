@@ -19,13 +19,13 @@ ${basename(__FILE__, '.php')} = function () {
         $csvPath = $this->storage->generateFileName('exports', 'csv');
         $fullPath = $this->storage->getFullPath($csvPath, true);
 
-        $headers = ['name', 'email', 'digital_id', 'program', 'branch', 'year', 'academic_year', 'room_no', 'hostel_name', 'student_no', 'parent_no'];
+        $headers = ['name', 'email', 'roll_no', 'program', 'branch', 'year', 'academic_year', 'room_no', 'hostel_name', 'student_no', 'parent_no'];
 
         $rows = $this->csvProcessor->mapDataToRows($students, function ($student) {
             return [
                 $student->getUser()->getName(),
                 $student->getUser()->getEmail(),
-                $student->getDigitalId(),
+                $student->getRollNo(),
                 $student->getProgram()->getProgramName(),
                 $student->getProgram()->getShortCode(),
                 $student->getYear(),

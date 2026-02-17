@@ -33,7 +33,7 @@ use App\Enum\OutpassStatus;
             <h3 class="mb-4 text-sm font-semibold tracking-wider text-gray-800 uppercase">Student Details</h3>
             <ul class="space-y-3 text-sm text-gray-700">
                 <li><strong class="text-gray-900">Name:</strong> <?= $student->getUser()->getName() ?></li>
-                <li><strong class="text-gray-900">Digital ID:</strong> <?= $student->getDigitalId() ?></li>
+                <li><strong class="text-gray-900">Roll No:</strong> <?= $student->getRollNo() ?></li>
                 <li><strong class="text-gray-900">Institution:</strong> <?= $student->getProgram()->getProvidedBy()->getName() ?></li>
             </ul>
             <br>

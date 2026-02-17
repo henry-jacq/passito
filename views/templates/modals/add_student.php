@@ -17,8 +17,8 @@
             </div>
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
                 <div>
-                    <label for="digital-id" class="block text-sm font-medium text-gray-700">Digital ID</label>
-                    <input type="text" id="digital-id" name="digital-id" placeholder="e.g., 2212025" required
+                    <label for="roll-no" class="block text-sm font-medium text-gray-700">Roll No</label>
+                    <input type="text" id="roll-no" name="roll-no" placeholder="e.g., 2212025" required
                         class="w-full px-3 py-2 text-sm text-gray-800 transition duration-200 bg-white border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500">
                 </div>
                 <div>

@@ -57,7 +57,7 @@ class ReportService
         $checkedOut = $this->verifierService->fetchCheckedOutLogs($user, $today);
 
         // Define headers for CSV
-        $headers = ['Name', 'Digital ID', 'Email', 'Date', 'Time', 'Action'];
+        $headers = ['Name', 'Roll No', 'Email', 'Date', 'Time', 'Action'];
 
         $rows = [];
 
@@ -66,7 +66,7 @@ class ReportService
             $rows[] = [
                 '_sort' => $log->getInTime()?->getTimestamp() ?? 0,
                 $log->getOutpass()->getStudent()->getUser()->getName() ?? null,
-                $log->getOutpass()->getStudent()->getDigitalId() ?? null,
+                $log->getOutpass()->getStudent()->getRollNo() ?? null,
                 $log->getOutpass()->getStudent()->getUser()->getEmail() ?? null,
                 $log->getInTime()->format('d-m-Y') ?? null,
                 $log->getInTime()->format('h:i:s A') ?? null,
@@ -79,7 +79,7 @@ class ReportService
             $rows[] = [
                 '_sort' => $log->getOutTime()?->getTimestamp() ?? 0,
                 $log->getOutpass()->getStudent()->getUser()->getName() ?? null,
-                $log->getOutpass()->getStudent()->getDigitalId() ?? null,
+                $log->getOutpass()->getStudent()->getRollNo() ?? null,
                 $log->getOutpass()->getStudent()->getUser()->getEmail() ?? null,
                 $log->getOutTime()->format('d-m-Y') ?? null,
                 $log->getOutTime()->format('h:i:s A') ?? null,
@@ -115,7 +115,7 @@ class ReportService
 
         $headers = [
             'Student Name',
-            'Digital ID',
+            'Roll No',
             'Email',
             'From Duration',
             'To Duration',
@@ -135,7 +135,7 @@ class ReportService
             
             return [
                 $log->getOutpass()->getStudent()->getUser()->getName() ?? null,
-                $log->getOutpass()->getStudent()->getDigitalId() ?? null,
+                $log->getOutpass()->getStudent()->getRollNo() ?? null,
                 $log->getOutpass()->getStudent()->getUser()->getEmail() ?? null,
                 $fromDate . ' ' . $fromTime,
                 $toDate . ' ' . $toTime,

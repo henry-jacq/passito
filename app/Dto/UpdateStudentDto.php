@@ -14,7 +14,7 @@ class UpdateStudentDto
         private readonly string $name,
         private readonly string $email,
         private readonly string $contact,
-        private readonly int $digitalId,
+        private readonly int $rollNo,
         private readonly int $year,
         private readonly string $roomNo,
         private readonly string $parentNo,
@@ -44,9 +44,9 @@ class UpdateStudentDto
             throw new \InvalidArgumentException('Contact number cannot be empty');
         }
 
-        // Validate digital ID
-        if ($this->digitalId <= 0) {
-            throw new \InvalidArgumentException('Digital ID must be a positive integer');
+        // Validate roll no
+        if ($this->rollNo <= 0) {
+            throw new \InvalidArgumentException('Roll No must be a positive integer');
         }
 
         // Validate year against program duration
@@ -82,9 +82,9 @@ class UpdateStudentDto
         return $this->contact;
     }
 
-    public function getDigitalId(): int
+    public function getRollNo(): int
     {
-        return $this->digitalId;
+        return $this->rollNo;
     }
 
     public function getYear(): int
@@ -128,7 +128,7 @@ class UpdateStudentDto
             'name' => $this->name,
             'email' => $this->getEmail(),
             'contact' => $this->contact,
-            'digital_id' => $this->digitalId,
+            'roll_no' => $this->rollNo,
             'year' => $this->year,
             'room_no' => $this->roomNo,
             'parent_no' => $this->parentNo,
@@ -148,7 +148,7 @@ class UpdateStudentDto
             name: $data['name'],
             email: $data['email'],
             contact: $data['contact'],
-            digitalId: (int) $data['digital_id'],
+            rollNo: (int) $data['roll_no'],
             year: (int) $data['year'],
             roomNo: $data['room_no'],
             parentNo: $data['parent_no'],

@@ -41,7 +41,7 @@ $errorMessage = $this->session->getFlash('error')[$flashKey] ?? null;
                     type="text"
                     name="q"
                     value="<?= $search ?? '' ?>"
-                    placeholder="Search students by name or digital ID..."
+                    placeholder="Search students by name or roll no..."
                     class="w-full py-2 transition duration-200 border border-gray-300 rounded-md bg-gray-50 text-md ps-12 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
                 />
                 <input type="hidden" name="limit" value="<?= $records['limit'] ?? 10 ?>">
@@ -170,7 +170,7 @@ $errorMessage = $this->session->getFlash('error')[$flashKey] ?? null;
                                     data-id="<?= $student->getId() ?>"
                                     data-name="<?= $student->getUser()->getName() ?>"
                                     data-email="<?= $student->getUser()->getEmail() ?>"
-                                    data-digital-id="<?= $student->getDigitalId() ?>"
+                                    data-roll-no="<?= $student->getRollNo() ?>"
                                     data-year="<?= $student->getYear() ?>"
                                     data-room-no="<?= $student->getRoomNo() ?>"
                                     data-hostel-id="<?= $student->getHostel()->getId() ?>"
@@ -242,7 +242,7 @@ $errorMessage = $this->session->getFlash('error')[$flashKey] ?? null;
                 <div>
                     <h3 class="text-base font-semibold">No results for “<?= $search ?>”</h3>
                     <p class="mt-1 text-sm">
-                        Try a different name or digital ID or clear the search to view all students.
+                        Try a different name or roll no or clear the search to view all students.
                     </p>
                 </div>
             </div>

@@ -24,8 +24,8 @@
                     <div class="mt-1 font-medium text-gray-800"><?= $userData->getUser()->getName() ?></div>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Digital ID</label>
-                    <div class="mt-1 font-medium text-gray-800"><?= $userData->getDigitalId() ?></div>
+                    <label class="block text-sm font-medium text-gray-700">Roll No</label>
+                    <div class="mt-1 font-medium text-gray-800"><?= $userData->getRollNo() ?></div>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Year</label>

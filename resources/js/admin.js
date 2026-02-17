@@ -454,7 +454,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     onClick: async (event) => {
                                         const studentName = document.getElementById('student-name').value;
                                         const email = document.getElementById('email').value;
-                                        const digitalId = document.getElementById('digital-id').value;
+                                        const rollNo = document.getElementById('roll-no').value;
                                         const year = document.getElementById('year').value;
                                         const roomNo = document.getElementById('room-no').value;
                                         const hostelNo = document.getElementById('hostel-no').value;
@@ -466,7 +466,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                         event.target.disabled = true;
                                         event.target.textContent = 'Adding Student...';
 
-                                        if (studentName && email && digitalId && year && roomNo && hostelNo && studentNo && parentNo && programId && academicYearId) {
+                                        if (studentName && email && rollNo && year && roomNo && hostelNo && studentNo && parentNo && programId && academicYearId) {
                                             if (studentNo === parentNo) {
                                                 alert("Student number and Parent number must not be the same.");
                                                 event.target.textContent = 'Add Student';
@@ -477,7 +477,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                             try {
                                                 const response = await Ajax.post('/api/web/admin/students/create', {
                                                     name: studentName, email,
-                                                    digital_id: digitalId, year, room_no: roomNo,
+                                                    roll_no: rollNo, year, room_no: roomNo,
                                                     hostel_no: hostelNo,
                                                     contact: studentNo,
                                                     parent_no: parentNo,
@@ -541,7 +541,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 id: button.dataset.id,
                 name: button.dataset.name,
                 email: button.dataset.email,
-                digital_id: button.dataset.digitalId,
+                roll_no: button.dataset.rollNo,
                 year: button.dataset.year,
                 room_no: button.dataset.roomNo,
                 hostel_id: button.dataset.hostelId,
@@ -624,7 +624,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                         const studentId = document.getElementById('student-id').value;
                                         const studentName = document.getElementById('student-name').value;
                                         const email = document.getElementById('email').value;
-                                        const digitalId = document.getElementById('digital-id').value;
+                                        const rollNo = document.getElementById('roll-no').value;
                                         const year = document.getElementById('year').value;
                                         const roomNo = document.getElementById('room-no').value;
                                         const hostelNo = document.getElementById('hostel-no').value;
@@ -637,7 +637,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                         event.target.disabled = true;
                                         event.target.textContent = 'Updating Student...';
 
-                                        if (studentName && email && digitalId && year && roomNo && hostelNo && studentNo && parentNo && programId && academicYearId) {
+                                        if (studentName && email && rollNo && year && roomNo && hostelNo && studentNo && parentNo && programId && academicYearId) {
                                             if (!isValidEmail(email)) {
                                                 alert('Please enter a valid email address.');
                                                 event.target.textContent = 'Update Student';
@@ -656,7 +656,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                                     student_id: studentId,
                                                     name: studentName,
                                                     email,
-                                                    digital_id: digitalId,
+                                                    roll_no: rollNo,
                                                     year,
                                                     room_no: roomNo,
                                                     hostel_no: hostelNo,

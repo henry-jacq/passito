@@ -210,7 +210,7 @@ GET /api/outpasses/{id}
     "student": {
       "id": 123,
       "name": "John Doe",
-      "digital_id": "STU001",
+      "roll_no": "STU001",
       "program": "Computer Science",
       "year": 2
     },
@@ -321,7 +321,7 @@ GET /api/students/{id}
   "success": true,
   "data": {
     "id": 123,
-    "digital_id": "STU001",
+    "roll_no": "STU001",
     "name": "John Doe",
     "email": "john.doe@example.com",
     "phone": "+919876543210",

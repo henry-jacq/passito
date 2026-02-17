@@ -26,8 +26,8 @@ use App\Enum\OutpassStatus;
                 <p class="text-base gray-900"><?= $outpass->getStudent()->getUser()->getName() ?></p>
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-500">Digital ID</label>
-                <p class="text-base gray-900"><?= $outpass->getStudent()->getDigitalId() ?></p>
+                <label class="block text-sm font-medium text-gray-500">Roll No</label>
+                <p class="text-base gray-900"><?= $outpass->getStudent()->getRollNo() ?></p>
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-500">Contact</label>

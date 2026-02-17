@@ -148,7 +148,7 @@ class UserService
         $student = new Student();
         $student->setUser($user);
         $student->setHostel($hostel);
-        $student->setDigitalId((int) $data['digital_id']);
+        $student->setRollNo((int) $data['roll_no']);
         $student->setYear($givenYear);
         $student->setAcademicYear($academicYear);
         $student->setProgram($program);
@@ -171,7 +171,7 @@ class UserService
         $student = new Student();
         $student->setUser($user);
         $student->setHostel($dto->getHostel());
-        $student->setDigitalId($dto->getDigitalId());
+        $student->setRollNo($dto->getRollNo());
         $student->setYear($dto->getYear());
         $student->setAcademicYear($dto->getAcademicYear());
         $student->setProgram($dto->getProgram());
@@ -203,12 +203,12 @@ class UserService
             return false;
         }
 
-        $digitalId = (int) ($data['digital_id'] ?? 0);
-        if ($digitalId <= 0) {
+        $rollNo = (int) ($data['roll_no'] ?? 0);
+        if ($rollNo <= 0) {
             return false;
         }
 
-        $existingStudent = $this->em->getRepository(Student::class)->findOneBy(['digitalId' => $digitalId]);
+        $existingStudent = $this->em->getRepository(Student::class)->findOneBy(['rollNo' => $rollNo]);
         if ($existingStudent && $existingStudent->getId() !== $student->getId()) {
             return false;
         }
@@ -242,7 +242,7 @@ class UserService
         $student->setHostel($hostel);
         $student->setProgram($program);
         $student->setAcademicYear($academicYear);
-        $student->setDigitalId($digitalId);
+        $student->setRollNo($rollNo);
         $student->setYear($givenYear);
         $student->setRoomNo($data['room_no']);
         $student->setParentNo((string) $data['parent_no']);
@@ -273,8 +273,8 @@ class UserService
             return false;
         }
 
-        // Check digital ID uniqueness
-        $existingStudent = $this->em->getRepository(Student::class)->findOneBy(['digitalId' => $dto->getDigitalId()]);
+        // Check roll no uniqueness
+        $existingStudent = $this->em->getRepository(Student::class)->findOneBy(['rollNo' => $dto->getRollNo()]);
         if ($existingStudent && $existingStudent->getId() !== $student->getId()) {
             return false;
         }
@@ -287,7 +287,7 @@ class UserService
         $student->setHostel($dto->getHostel());
         $student->setProgram($dto->getProgram());
         $student->setAcademicYear($dto->getAcademicYear());
-        $student->setDigitalId($dto->getDigitalId());
+        $student->setRollNo($dto->getRollNo());
         $student->setYear($dto->getYear());
         $student->setRoomNo($dto->getRoomNo());
         $student->setParentNo($dto->getParentNo());
@@ -335,11 +335,11 @@ class UserService
                     ->andWhere(
                         $queryBuilder->expr()->orX(
                             $queryBuilder->expr()->like('u.name', ':search'),
-                            $queryBuilder->expr()->eq('s.digitalId', ':digitalId')
+                            $queryBuilder->expr()->eq('s.rollNo', ':rollNo')
                         )
                     )
                     ->setParameter('search', '%' . $search . '%')
-                    ->setParameter('digitalId', (int) $search);
+                    ->setParameter('rollNo', (int) $search);
             } else {
                 $queryBuilder
                     ->andWhere(

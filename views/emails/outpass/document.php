@@ -132,7 +132,7 @@
                 <?= $outpass->getToDate()?->format('d-m-Y') ?? 'N/A' ?>
                 <?= $outpass->getToTime()?->format('h:i A') ?? '' ?>
             </p>
-            <p><strong>ID No:</strong> <?= $student?->getDigitalId() ?? 'N/A' ?></p>
+            <p><strong>ID No:</strong> <?= $student?->getRollNo() ?? 'N/A' ?></p>
             <p><strong>Year:</strong> <?= $student ? formatStudentYear($student->getYear()) : 'N/A' ?> Year</p>
             <p><strong>Room:</strong> <?= $student?->getRoomNo() ?? 'N/A' ?></p>
             <p><strong>Destination:</strong> <?= $outpass?->getDestination() ?? 'N/A' ?></p>

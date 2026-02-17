@@ -1,4 +1,4 @@
-name,program,email,digital_id,student_no,parent_no,hostel_name,room_no,year,academic_year
+name,program,email,roll_no,student_no,parent_no,hostel_name,room_no,year,academic_year
 Henry,IT,henry2212023@edu.in ,2212023,6385408271,9782268028,Hostel-1,B-70,4,UG2022-26
 Arjun,ECE,arjun2214000@edu.in,2214000,9537623303,9648945325,Hostel-1,B-19,2,UG2022-26
 Rohan,MECH,rohan2214002@edu.in,2214002,9567388459,9646233880,Hostel-2,B-33,1,UG2022-26

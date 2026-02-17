@@ -265,7 +265,7 @@ class AdminService
         $parsed = $csv->readFromFile($filePath);
 
         // Validate headers
-        $required = ['name', 'program', 'email', 'digital_id', 'student_no', 'parent_no', 'hostel_name', 'room_no', 'year', 'academic_year'];
+        $required = ['name', 'program', 'email', 'roll_no', 'student_no', 'parent_no', 'hostel_name', 'room_no', 'year', 'academic_year'];
         $headerValidation = $csv->validateHeaders($parsed['headers'], $required);
 
         // Set flash key for bulk upload
@@ -287,7 +287,7 @@ class AdminService
 
                 $email = strtolower(trim($row['email'] ?? ''));
                 $programName = trim($row['program'] ?? '');
-                $digitalId = trim($row['digital_id'] ?? '');
+                $rollNo = trim($row['roll_no'] ?? '');
                 $name = trim($row['name'] ?? '');
 
                 // Validate email
@@ -310,15 +310,15 @@ class AdminService
                     continue;
                 }
 
-                // Validate digital ID and not exists already
-                if (empty($digitalId) || !is_numeric($digitalId)) {
-                    $invalidUsers[] = "Row $rowNumber ($name): Invalid digital ID '$digitalId'";
+                // Validate roll no and not exists already
+                if (empty($rollNo) || !is_numeric($rollNo)) {
+                    $invalidUsers[] = "Row $rowNumber ($name): Invalid roll no '$rollNo'";
                     continue;
                 }
 
-                $existingStudent = $this->em->getRepository(Student::class)->findOneBy(['digitalId' => (int)$digitalId]);
+                $existingStudent = $this->em->getRepository(Student::class)->findOneBy(['rollNo' => (int)$rollNo]);
                 if ($existingStudent) {
-                    $invalidUsers[] = "Row $rowNumber ($name): Student with digital ID '$digitalId' already exists";
+                    $invalidUsers[] = "Row $rowNumber ($name): Student with roll no '$rollNo' already exists";
                     continue;
                 }
 
@@ -366,7 +366,7 @@ class AdminService
                     'program' => $program,
                     'hostel' => $hostel,
                     'academic_year' => $academicYear,
-                    'digital_id' => (int)$digitalId,
+                    'roll_no' => (int)$rollNo,
                     'room_no' => trim($row['room_no']) ?? null,
                     'parent_no' => trim($row['parent_no']) ?? null,
                 ], $user);

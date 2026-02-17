@@ -6,7 +6,7 @@ use App\Core\JobPayloadBuilder;
 use App\Jobs\SendAccountCreationEmail;
 
 ${basename(__FILE__, '.php')} = function () {
-    $required = ['name', 'email', 'digital_id', 'year', 'room_no', 'hostel_no', 'contact', 'parent_no', 'program', 'academic_year'];
+    $required = ['name', 'email', 'roll_no', 'year', 'room_no', 'hostel_no', 'contact', 'parent_no', 'program', 'academic_year'];
     if ($this->isAuthenticated() && $this->paramsExists($required) && UserRole::isAdministrator($this->getRole())) {
 
         $gender = $this->getAttribute('user')->getGender();
@@ -48,7 +48,7 @@ ${basename(__FILE__, '.php')} = function () {
             'program' => $program,
             'hostel' => $hostel,
             'academic_year' => $academicYear,
-            'digital_id' => (int) $this->data['digital_id'],
+            'roll_no' => (int) $this->data['roll_no'],
             'year' => (int) $this->data['year'],
             'room_no' => $this->data['room_no'],
             'parent_no' => (int) $this->data['parent_no'],

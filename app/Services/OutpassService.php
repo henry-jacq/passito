@@ -180,8 +180,8 @@ class OutpassService
             if (!empty($search)) {
                 $isNumeric = ctype_digit($search);
                 if ($isNumeric) {
-                    $queryBuilder->andWhere('s.digitalId = :digitalId')
-                        ->setParameter('digitalId', (int) $search);
+                    $queryBuilder->andWhere('s.rollNo = :rollNo')
+                        ->setParameter('rollNo', (int) $search);
                 } else {
                     $queryBuilder->andWhere('u.name LIKE :search')
                         ->setParameter('search', '%' . $search . '%');
@@ -245,8 +245,8 @@ class OutpassService
         if (!empty($search)) {
             $isNumeric = ctype_digit($search);
             if ($isNumeric) {
-                $queryBuilder->andWhere('s.digitalId = :digitalId')
-                    ->setParameter('digitalId', (int) $search);
+                $queryBuilder->andWhere('s.rollNo = :rollNo')
+                    ->setParameter('rollNo', (int) $search);
             } else {
                 $queryBuilder->andWhere('u.name LIKE :search')
                     ->setParameter('search', '%' . $search . '%');
@@ -390,8 +390,8 @@ class OutpassService
         if (!empty($search)) {
             $isNumeric = ctype_digit($search);
             if ($isNumeric) {
-                $queryBuilder->andWhere('s.digitalId = :digitalId')
-                    ->setParameter('digitalId', (int) $search);
+                $queryBuilder->andWhere('s.rollNo = :rollNo')
+                    ->setParameter('rollNo', (int) $search);
             } else {
                 $queryBuilder->andWhere('u.name LIKE :search')
                     ->setParameter('search', '%' . $search . '%');
@@ -440,7 +440,7 @@ class OutpassService
         $qb->andWhere(
             $qb->expr()->orX(
                 $qb->expr()->like('u.name', ':search'),
-                $qb->expr()->like('s.digitalId', ':search'),
+                $qb->expr()->like('s.rollNo', ':search'),
                 $qb->expr()->like('s.branch', ':search'),
                 $qb->expr()->like('s.course', ':search'),
                 $qb->expr()->like('o.destination', ':search')

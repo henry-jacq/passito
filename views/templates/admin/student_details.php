@@ -16,7 +16,7 @@
                     data-id="<?= $student->getId() ?>"
                     data-name="<?= $student->getUser()->getName() ?>"
                     data-email="<?= $student->getUser()->getEmail() ?>"
-                    data-digital-id="<?= $student->getDigitalId() ?>"
+                    data-roll-no="<?= $student->getRollNo() ?>"
                     data-year="<?= $student->getYear() ?>"
                     data-room-no="<?= $student->getRoomNo() ?>"
                     data-hostel-id="<?= $student->getHostel()->getId() ?>"
@@ -55,7 +55,7 @@
                         <?= $student->getUser()->getStatus() === \App\Enum\UserStatus::ACTIVE ? 'Active' : 'Inactive' ?>
                     </span>
                     <span class="px-3 py-1 text-xs text-gray-700 bg-gray-100 rounded-full">
-                        <?= $student->getDigitalId() ?>
+                        <?= $student->getRollNo() ?>
                     </span>
                     <span class="px-3 py-1 text-xs text-gray-700 bg-gray-100 rounded-full">
                         Room <?= $student->getRoomNo() ?>

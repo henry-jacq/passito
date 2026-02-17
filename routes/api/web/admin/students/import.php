@@ -5,6 +5,14 @@ use App\Enum\UserRole;
 ${basename(__FILE__, '.php')} = function () {
 
     if ($this->isAuthenticated() && UserRole::isAdministrator($this->getRole())) {
+        $hostels = $this->academicService->getHostelsByType($this->getUser());
+        if (empty($hostels)) {
+            return $this->response([
+                'status' => false,
+                'message' => 'Hostels have not been created. Please create at least one hostel before importing students.',
+            ], 400);
+        }
+
         $file = $this->files['file'] ?? null;
 
         if ($file && $file->getError() === UPLOAD_ERR_OK) {

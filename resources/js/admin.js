@@ -826,10 +826,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Import students data
     const importStudentsButton = document.getElementById('import-btn');
+    if (!importStudentsButton) {
+        return;
+    }
+
     importStudentsButton.addEventListener('click', async (event) => {
         event.stopPropagation();
 
         try {
+            const hostelsResponse = await Ajax.post('/api/web/admin/hostels/fetch');
+            if (!hostelsResponse.ok) {
+                handleError(hostelsResponse.status);
+                return;
+            }
+
+            const hostelsPayload = hostelsResponse.data;
+            if (!hostelsPayload?.status || !Array.isArray(hostelsPayload?.data?.hostels) || hostelsPayload.data.hostels.length === 0) {
+                const toast = new Toast();
+                toast.create({
+                    message: hostelsPayload?.message || 'Hostels have not been created. Please create at least one hostel before importing students.',
+                    position: "bottom-right",
+                    type: "warning",
+                    duration: 5000
+                });
+                return;
+            }
+
             const response = await Ajax.post('/api/web/admin/modal?template=import_students');
 
             if (response.ok && response.data) {

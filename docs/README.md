@@ -103,13 +103,26 @@ php passito.php jobs:health
 
 # View logs
 journalctl -u passito-supervisor -f
+```
+
+### Data Operations
+
+```bash
+# Create backup (database + files, includes storage by default)
+php passito.php app:backup-data
+
+# Import a backup directory or zip (destructive)
+php passito.php app:import-backup /path/to/backup --force
+
+# Reset app data to initial state (destructive, clears storage runtime files too)
+php passito.php app:factory-reset --force
+```
 
 ## Scheduled Jobs (Cron -> Queue)
 
 Cron scheduled tasks should only dispatch jobs into the queue. The queue worker/supervisor performs the heavy work. This keeps scheduled tasks non-blocking, allows multiple tasks to be processed concurrently, and improves reliability with better error handling and retries. Scaling is done by increasing worker processes (or running the supervisor with higher max workers).
 
 **Note:** `pcntl` PHP extension must be installed/enabled to run `php passito.php jobs:supervisor`.
-```
 
 ## Support
 

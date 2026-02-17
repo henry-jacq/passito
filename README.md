@@ -58,6 +58,23 @@ php passito.php jobs:health
 systemctl status passito-supervisor
 ```
 
+Data maintenance commands:
+```bash
+# Create full backup (database + files, includes storage by default)
+php passito.php app:backup-data
+
+# Import backup from directory or zip (destructive)
+php passito.php app:import-backup /path/to/backup --force
+
+# Reset app data to initial state (destructive, clears storage data too)
+php passito.php app:factory-reset --force
+```
+
+Notes:
+- `app:backup-data` backs up database tables and file sources (`storage`, `resources/assets`) by default.
+- `app:factory-reset` now clears database records and removes runtime files under `storage/` (keeps `.gitkeep` / `.gitignore`).
+- Use these commands only with a verified backup.
+
 ### Scheduled Jobs (Cron -> Queue)
 
 Cron scheduled tasks should only **dispatch jobs** into the queue. The queue worker/supervisor performs the heavy work. This keeps scheduled tasks non-blocking, improves reliability (retries/error handling), and lets you scale by running more workers.

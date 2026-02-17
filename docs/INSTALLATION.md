@@ -325,6 +325,26 @@ php passito.php app:create-super-admin
 
 Follow the prompts to create your admin account.
 
+#### Step 11: Data Backup and Reset Commands
+
+Use these maintenance commands as needed:
+
+```bash
+# Backup database + files (includes storage/ by default)
+php passito.php app:backup-data
+
+# Restore from backup directory or zip (destructive)
+php passito.php app:import-backup /path/to/backup --force
+
+# Factory reset app data (destructive, also clears storage runtime files)
+php passito.php app:factory-reset --force
+```
+
+Optional flags:
+- `app:backup-data --no-db --no-files --source=storage --source=resources/assets --no-zip`
+- `app:import-backup /path/to/backup --force --no-files`
+- `app:factory-reset --force --drop-super-admins --keep-reference --no-reseed`
+
 ### Method 2: Docker Installation
 
 #### Step 1: Prerequisites

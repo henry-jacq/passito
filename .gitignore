@@ -12,6 +12,7 @@ storage/attachments/
 storage/outpasses/
 storage/exports/
 storage/reports/
+storage/backups/
 resources/.sass-cache/
 
 # Logs

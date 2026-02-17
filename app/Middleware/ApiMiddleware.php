@@ -4,6 +4,7 @@ namespace App\Middleware;
 
 use App\Core\View;
 use App\Entity\User;
+use App\Entity\Student;
 use App\Core\Request;
 use App\Enum\UserRole;
 use App\Enum\UserStatus;
@@ -63,6 +64,7 @@ class ApiMiddleware implements MiddlewareInterface
             return $this->responseFactory
                 ->createResponse(403)
                 ->withHeader('Content-Type', 'application/json')
+                ->withAddedHeader('Set-Cookie', $this->jwt->buildLogoutCookieHeader())
                 ->withBody($this->streamFactory->createStream(json_encode([
                     'message' => 'Account inactive',
                     'status' => false,
@@ -70,6 +72,22 @@ class ApiMiddleware implements MiddlewareInterface
         }
 
         $userRole = $user->getRole()->value;
+
+        if (UserRole::isStudent($userRole)) {
+            $student = $this->em->getRepository(Student::class)->findOneBy(['user' => $user]);
+            $academicYear = $student?->getAcademicYear();
+
+            if (!$student || !$academicYear || !$academicYear->getStatus()) {
+                return $this->responseFactory
+                    ->createResponse(403)
+                    ->withHeader('Content-Type', 'application/json')
+                    ->withAddedHeader('Set-Cookie', $this->jwt->buildLogoutCookieHeader())
+                    ->withBody($this->streamFactory->createStream(json_encode([
+                        'message' => 'Academic year inactive',
+                        'status' => false,
+                    ])));
+            }
+        }
 
         // Prevent unauthorized access to admin routes
         if (str_contains($request->getUri()->getPath(), '/api/web/admin') && UserRole::isAdministrator($userRole) === false) {

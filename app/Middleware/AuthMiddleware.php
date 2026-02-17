@@ -4,6 +4,7 @@ namespace App\Middleware;
 
 use App\Core\View;
 use App\Entity\User;
+use App\Entity\Student;
 use App\Entity\Verifier;
 use App\Enum\UserRole;
 use App\Enum\VerifierMode;
@@ -43,6 +44,18 @@ class AuthMiddleware implements MiddlewareInterface
                             ->withHeader('Set-Cookie', $this->jwt->buildLogoutCookieHeader())
                             ->withHeader('Location', $this->view->urlFor('auth.login'));
                     }
+
+                    if (UserRole::isStudent($user->getRole()->value)) {
+                        $student = $this->em->getRepository(Student::class)->findOneBy(['user' => $user]);
+                        $academicYear = $student?->getAcademicYear();
+                        if (!$student || !$academicYear || !$academicYear->getStatus()) {
+                            return $this->responseFactory
+                                ->createResponse(302)
+                                ->withHeader('Set-Cookie', $this->jwt->buildLogoutCookieHeader())
+                                ->withHeader('Location', $this->view->urlFor('auth.login'));
+                        }
+                    }
+
                     $location = $this->view->urlFor('student.dashboard');
 
                     if (UserRole::isAdministrator($user->getRole()->value)) {

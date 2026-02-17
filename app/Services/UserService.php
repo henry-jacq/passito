@@ -367,9 +367,147 @@ class UserService
         return $this->em->getRepository(Student::class)->findOneBy(['user' => $user]);
     }
 
+    public function getStudentAccessIssue(User $user): ?string
+    {
+        if (!UserRole::isStudent($user->getRole()->value)) {
+            return null;
+        }
+
+        $student = $this->em->getRepository(Student::class)->findOneBy(['user' => $user]);
+        if (!$student) {
+            return 'student_record_missing';
+        }
+
+        $academicYear = $student->getAcademicYear();
+        if (!$academicYear instanceof AcademicYear) {
+            return 'academic_year_missing';
+        }
+
+        if (!$academicYear->getStatus()) {
+            return 'academic_year_inactive';
+        }
+
+        return null;
+    }
+
+    public function isStudentAcademicYearActive(User $user): bool
+    {
+        return $this->getStudentAccessIssue($user) === null;
+    }
+
     public function getStudentById(int $studentId): ?Student
     {
         return $this->em->getRepository(Student::class)->find($studentId);
+    }
+
+    public function shiftStudentsCurrentYearByAcademicBatch(
+        User $actor,
+        AcademicYear $academicYear,
+        bool $promoteCurrentYear = true,
+        bool $deactivateExceeded = true
+    ): array {
+        $queryBuilder = $this->em->getRepository(Student::class)->createQueryBuilder('s')
+            ->innerJoin('s.user', 'u')
+            ->where('s.academicYear = :academicYear')
+            ->andWhere('u.status = :activeStatus')
+            ->setParameter('academicYear', $academicYear)
+            ->setParameter('activeStatus', UserStatus::ACTIVE);
+
+        if (!UserRole::isSuperAdmin($actor->getRole()->value)) {
+            $queryBuilder
+                ->andWhere('u.gender = :gender')
+                ->setParameter('gender', $actor->getGender());
+        }
+
+        /** @var Student[] $students */
+        $students = $queryBuilder->getQuery()->getResult();
+
+        $stats = [
+            'eligible_students' => count($students),
+            'promoted_students' => 0,
+            'shifted_students' => 0,
+            'exceeded_students' => 0,
+            'deactivated_students' => 0,
+            'unchanged_students' => 0,
+            'remaining_active_students' => 0,
+            'academic_year_deactivated' => false,
+        ];
+
+        $now = new DateTime();
+
+        foreach ($students as $student) {
+            $changed = false;
+            $duration = max(1, $student->getProgram()->getDuration());
+            $currentYear = $student->getYear();
+
+            if ($currentYear > $duration) {
+                $stats['exceeded_students']++;
+                if ($deactivateExceeded && $student->getUser()->getStatus() !== UserStatus::INACTIVE) {
+                    $student->getUser()->setStatus(UserStatus::INACTIVE);
+                    $student->setUpdatedAt($now);
+                    $stats['deactivated_students']++;
+                    $stats['shifted_students']++;
+                    continue;
+                }
+
+                $stats['unchanged_students']++;
+                continue;
+            }
+
+            if (!$promoteCurrentYear) {
+                $stats['unchanged_students']++;
+                continue;
+            }
+
+            $nextYear = $currentYear + 1;
+            if ($nextYear > $duration) {
+                $stats['exceeded_students']++;
+                if ($deactivateExceeded && $student->getUser()->getStatus() !== UserStatus::INACTIVE) {
+                    $student->getUser()->setStatus(UserStatus::INACTIVE);
+                    $student->setUpdatedAt($now);
+                    $stats['deactivated_students']++;
+                    $stats['shifted_students']++;
+                    continue;
+                }
+
+                $stats['unchanged_students']++;
+                continue;
+            }
+
+            $student->setYear($nextYear);
+            $stats['promoted_students']++;
+            $changed = true;
+
+            if ($changed) {
+                $student->setUpdatedAt($now);
+                $stats['shifted_students']++;
+            } else {
+                $stats['unchanged_students']++;
+            }
+        }
+
+        $this->em->flush();
+
+        $remainingActiveStudents = (int) $this->em->getRepository(Student::class)
+            ->createQueryBuilder('s')
+            ->select('COUNT(s.id)')
+            ->innerJoin('s.user', 'u')
+            ->where('s.academicYear = :academicYear')
+            ->andWhere('u.status = :activeStatus')
+            ->setParameter('academicYear', $academicYear)
+            ->setParameter('activeStatus', UserStatus::ACTIVE)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        $stats['remaining_active_students'] = $remainingActiveStudents;
+
+        if ($remainingActiveStudents === 0 && $academicYear->getStatus()) {
+            $academicYear->setStatus(false);
+            $this->em->flush();
+            $stats['academic_year_deactivated'] = true;
+        }
+
+        return $stats;
     }
     
     /**

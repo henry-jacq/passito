@@ -824,99 +824,152 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Import students data
-    const importStudentsButton = document.getElementById('import-btn');
-    if (!importStudentsButton) {
-        return;
-    }
+    // Shift students across academic years
+    const shiftStudentsButton = document.getElementById('shift-students-btn');
+    if (shiftStudentsButton) {
+        shiftStudentsButton.addEventListener('click', async (event) => {
+            event.preventDefault();
 
-    importStudentsButton.addEventListener('click', async (event) => {
-        event.stopPropagation();
+            try {
+                const yearsResponse = await Ajax.post('/api/web/admin/academic_years/fetch');
+                if (!yearsResponse.ok) {
+                    handleError(yearsResponse.status);
+                    return;
+                }
 
-        try {
-            const hostelsResponse = await Ajax.post('/api/web/admin/hostels/fetch');
-            if (!hostelsResponse.ok) {
-                handleError(hostelsResponse.status);
-                return;
-            }
+                const yearsPayload = yearsResponse.data;
+                const academicYears = yearsPayload?.data?.academic_years ?? [];
+                if (!yearsPayload?.status || !Array.isArray(academicYears) || academicYears.length === 0) {
+                    const toast = new Toast();
+                    toast.create({
+                        message: yearsPayload?.message || 'Academic years are not available.',
+                        position: "bottom-right",
+                        type: "warning",
+                        duration: 5000
+                    });
+                    return;
+                }
 
-            const hostelsPayload = hostelsResponse.data;
-            if (!hostelsPayload?.status || !Array.isArray(hostelsPayload?.data?.hostels) || hostelsPayload.data.hostels.length === 0) {
-                const toast = new Toast();
-                toast.create({
-                    message: hostelsPayload?.message || 'Hostels have not been created. Please create at least one hostel before importing students.',
-                    position: "bottom-right",
-                    type: "warning",
-                    duration: 5000
+                const activeAcademicYears = academicYears.filter((year) => Boolean(year.status));
+                if (activeAcademicYears.length === 0) {
+                    const toast = new Toast();
+                    toast.create({
+                        message: 'Create or activate an academic year before shifting students.',
+                        position: "bottom-right",
+                        type: "warning",
+                        duration: 5000
+                    });
+                    return;
+                }
+
+                const modalResponse = await Ajax.post('/api/web/admin/modal', {
+                    template: 'shift_students',
+                    academic_years: academicYears
                 });
-                return;
-            }
 
-            const response = await Ajax.post('/api/web/admin/modal?template=import_students');
+                if (!modalResponse.ok || !modalResponse.data) {
+                    const toast = new Toast();
+                    toast.create({
+                        message: modalResponse.data?.message || 'Failed to load shift modal.',
+                        position: "bottom-right",
+                        type: "error",
+                        duration: 5000
+                    });
+                    return;
+                }
 
-            if (response.ok && response.data) {
                 Modal.open({
-                    content: response.data,
+                    content: modalResponse.data,
                     actions: [
-                        {
-                            label: 'Perform',
-                            class: `inline-flex justify-center rounded-lg bg-gray-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-gray-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-50`,
-                            onClick: async (event) => {
-                                let toastMessage = null;
-                                let toastType = 'error';
-                                let originalHtml = event.target.innerHTML;
+                                {
+                                    label: 'Shift',
+                                    class: `inline-flex justify-center rounded-lg bg-emerald-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-emerald-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:opacity-50`,
+                                    onClick: async (actionEvent) => {
+                                const academicYearId = document.getElementById('shift-academic-year')?.value;
+                                const promoteCurrentYear = document.getElementById('shift-promote-current-year')?.checked ?? true;
+                                const deactivateExceeded = document.getElementById('shift-deactivate-exceeded')?.checked ?? true;
+
+                                if (!academicYearId) {
+                                    const toast = new Toast();
+                                    toast.create({
+                                        message: 'Select an academic batch.',
+                                        position: "bottom-right",
+                                        type: "warning",
+                                        duration: 5000
+                                    });
+                                    return;
+                                }
+
+                                const button = actionEvent.target;
+                                const originalHtml = button.innerHTML;
+                                button.disabled = true;
+                                button.innerHTML = `<span class="flex items-center"><i class="fa-solid fa-spinner fa-spin w-4 h-4 mr-1"></i>Shifting</span>`;
+
                                 try {
-                                    const fileInput = document.getElementById('file');
-                                    const file = fileInput.files[0];
+                                    const shiftResponse = await Ajax.post('/api/web/admin/students/shift', {
+                                        academic_year_id: academicYearId,
+                                        promote_current_year: promoteCurrentYear ? 1 : 0,
+                                        deactivate_exceeded: deactivateExceeded ? 1 : 0
+                                    });
 
-                                    const button = event.target;
-
-                                    button.disabled = true;
-                                    button.innerHTML = `<span class="flex items-center"><i class="fa-solid fa-spinner fa-spin w-4 h-4 mr-1"></i>Performing</span>`;
-
-                                    // Ensure file is selected
-                                    if (!file) {
-                                        toastMessage = 'Please select a CSV file.';
+                                    if (!shiftResponse.ok || !shiftResponse.data?.status) {
+                                        const toast = new Toast();
+                                        toast.create({
+                                            message: shiftResponse.data?.message || 'Failed to shift students.',
+                                            position: "bottom-right",
+                                            type: "error",
+                                            duration: 5000
+                                        });
                                         return;
                                     }
 
-                                    const readJson = async (res) => {
-                                        try {
-                                            return await res.json();
-                                        } catch (error) {
-                                            return null;
-                                        }
-                                    };
+                                    const summary = shiftResponse.data?.data ?? {};
+                                    Modal.close();
 
-                                    // Prepare the form data for submission
-                                    const formData = new FormData();
-                                    formData.append('file', file);
+                                    const shifted = Number(summary.shifted_students ?? 0);
+                                    const promoted = Number(summary.promoted_students ?? 0);
+                                    const exceeded = Number(summary.exceeded_students ?? 0);
+                                    const deactivated = Number(summary.deactivated_students ?? 0);
+                                    const batchDeactivated = Boolean(summary.academic_year_deactivated ?? false);
+                                    const messageParts = [
+                                        `Year update completed for ${shifted} student${shifted === 1 ? '' : 's'}.`
+                                    ];
 
-                                    // Make an Ajax request to upload the data
-                                    const response = await Ajax.post('/api/web/admin/students/import', formData);
-
-                                    if (response.ok) {
-                                        const data = response.data ?? (await readJson(response));
-                                        if (data.status) {
-                                            location.reload();
-                                        } else {
-                                            toastMessage = data?.errors?.bulk_upload || data?.message || 'Students could not be created.';
-                                        }
-                                    } else {
-                                        const errorData = response.data ?? (await readJson(response));
-                                        toastMessage = errorData?.errors?.bulk_upload || errorData?.message || `An error occurred while importing students. (HTTP ${response.status})`;
+                                    if (promoted > 0) {
+                                        messageParts.push(`${promoted} moved to the next year.`);
                                     }
+
+                                    if (exceeded > 0) {
+                                        messageParts.push(`${exceeded} reached the course year limit.`);
+                                    }
+
+                                    if (deactivated > 0) {
+                                        messageParts.push(`${deactivated} marked as inactive.`);
+                                    }
+
+                                    if (batchDeactivated) {
+                                        messageParts.push('Academic batch marked inactive because no active students remain.');
+                                    }
+
+                                    const toast = new Toast();
+                                    toast.create({
+                                        message: messageParts.join(' '),
+                                        position: "bottom-right",
+                                        type: "success",
+                                        duration: 8000
+                                    });
                                 } catch (error) {
                                     console.error(error);
-                                    toastMessage = 'An error occurred while processing the request.';
+                                    const toast = new Toast();
+                                    toast.create({
+                                        message: 'An error occurred while shifting students.',
+                                        position: "bottom-right",
+                                        type: "error",
+                                        duration: 5000
+                                    });
                                 } finally {
-                                    event.target.innerHTML = originalHtml;
-                                    event.target.disabled = false;
-                                    Modal.close();
-                                    if (toastMessage) {
-                                        const toast = new Toast();
-                                        toast.create({ message: toastMessage, position: "bottom-right", type: toastType, duration: 5000 });
-                                    }
+                                    button.disabled = false;
+                                    button.innerHTML = originalHtml;
                                 }
                             },
                         },
@@ -926,19 +979,129 @@ document.addEventListener('DOMContentLoaded', () => {
                             onClick: Modal.close,
                         },
                     ],
-                    size: 'sm:max-w-xl',
+                    size: 'sm:max-w-2xl',
                     classes: 'focus:outline-none focus:ring-0 focus:border-transparent',
                     closeOnBackdropClick: false,
                 });
-            } else {
-                console.error('Error loading modal template:', response.data.message || 'Unknown error');
-                alert(response.data.message || 'Failed to load modal template');
+            } catch (error) {
+                console.error('Failed to open shift modal:', error);
             }
-        } catch (error) {
-            console.error('Failed to load modal content:', error);
-            alert('Failed to load modal content. Please try again later.');
-        }
-    });
+        });
+    }
+
+    // Import students data
+    const importStudentsButton = document.getElementById('import-btn');
+    if (importStudentsButton) {
+        importStudentsButton.addEventListener('click', async (event) => {
+            event.stopPropagation();
+
+            try {
+                const hostelsResponse = await Ajax.post('/api/web/admin/hostels/fetch');
+                if (!hostelsResponse.ok) {
+                    handleError(hostelsResponse.status);
+                    return;
+                }
+
+                const hostelsPayload = hostelsResponse.data;
+                if (!hostelsPayload?.status || !Array.isArray(hostelsPayload?.data?.hostels) || hostelsPayload.data.hostels.length === 0) {
+                    const toast = new Toast();
+                    toast.create({
+                        message: hostelsPayload?.message || 'Hostels have not been created. Please create at least one hostel before importing students.',
+                        position: "bottom-right",
+                        type: "warning",
+                        duration: 5000
+                    });
+                    return;
+                }
+
+                const response = await Ajax.post('/api/web/admin/modal?template=import_students');
+
+                if (response.ok && response.data) {
+                    Modal.open({
+                        content: response.data,
+                        actions: [
+                            {
+                                label: 'Perform',
+                                class: `inline-flex justify-center rounded-lg bg-gray-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-gray-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-50`,
+                                onClick: async (event) => {
+                                    let toastMessage = null;
+                                    let toastType = 'error';
+                                    let originalHtml = event.target.innerHTML;
+                                    try {
+                                        const fileInput = document.getElementById('file');
+                                        const file = fileInput.files[0];
+
+                                        const button = event.target;
+
+                                        button.disabled = true;
+                                        button.innerHTML = `<span class="flex items-center"><i class="fa-solid fa-spinner fa-spin w-4 h-4 mr-1"></i>Performing</span>`;
+
+                                        // Ensure file is selected
+                                        if (!file) {
+                                            toastMessage = 'Please select a CSV file.';
+                                            return;
+                                        }
+
+                                        const readJson = async (res) => {
+                                            try {
+                                                return await res.json();
+                                            } catch (error) {
+                                                return null;
+                                            }
+                                        };
+
+                                        // Prepare the form data for submission
+                                        const formData = new FormData();
+                                        formData.append('file', file);
+
+                                        // Make an Ajax request to upload the data
+                                        const response = await Ajax.post('/api/web/admin/students/import', formData);
+
+                                        if (response.ok) {
+                                            const data = response.data ?? (await readJson(response));
+                                            if (data.status) {
+                                                location.reload();
+                                            } else {
+                                                toastMessage = data?.errors?.bulk_upload || data?.message || 'Students could not be created.';
+                                            }
+                                        } else {
+                                            const errorData = response.data ?? (await readJson(response));
+                                            toastMessage = errorData?.errors?.bulk_upload || errorData?.message || `An error occurred while importing students. (HTTP ${response.status})`;
+                                        }
+                                    } catch (error) {
+                                        console.error(error);
+                                        toastMessage = 'An error occurred while processing the request.';
+                                    } finally {
+                                        event.target.innerHTML = originalHtml;
+                                        event.target.disabled = false;
+                                        Modal.close();
+                                        if (toastMessage) {
+                                            const toast = new Toast();
+                                            toast.create({ message: toastMessage, position: "bottom-right", type: toastType, duration: 5000 });
+                                        }
+                                    }
+                                },
+                            },
+                            {
+                                label: 'Cancel',
+                                class: `inline-flex justify-center rounded-lg bg-gray-100 px-6 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`,
+                                onClick: Modal.close,
+                            },
+                        ],
+                        size: 'sm:max-w-xl',
+                        classes: 'focus:outline-none focus:ring-0 focus:border-transparent',
+                        closeOnBackdropClick: false,
+                    });
+                } else {
+                    console.error('Error loading modal template:', response.data.message || 'Unknown error');
+                    alert(response.data.message || 'Failed to load modal template');
+                }
+            } catch (error) {
+                console.error('Failed to load modal content:', error);
+                alert('Failed to load modal content. Please try again later.');
+            }
+        });
+    }
 });
 
 document.addEventListener('DOMContentLoaded', () => {

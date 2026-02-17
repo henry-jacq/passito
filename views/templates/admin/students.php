@@ -79,6 +79,12 @@ $errorMessage = $this->session->getFlash('error')[$flashKey] ?? null;
                     Add Student
                 </button>
 
+                <!-- Shift Academic Year Button -->
+                <button id="shift-students-btn" class="px-3 py-2 text-white transition duration-200 bg-emerald-600 rounded-md hover:bg-emerald-700 focus:ring focus:ring-emerald-400">
+                    <i class="mr-2 fa-solid fa-arrow-up fa-sm"></i>
+                    Shift Year
+                </button>
+
                 <!-- Export Button -->
                 <button class="px-3 py-2 text-white transition duration-200 bg-indigo-600 rounded-md hover:bg-indigo-700 focus:ring focus:ring-indigo-400 export-students">
                     <i class="mr-2 fa-solid fa-arrow-up-from-bracket fa-sm"></i>

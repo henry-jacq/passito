@@ -27,6 +27,25 @@ ${basename(__FILE__, '.php')} = function () {
                 ], 403);
             }
 
+            if (UserRole::isStudent($user->getRole()->value)) {
+                $accessIssue = $this->userService->getStudentAccessIssue($user);
+                if ($accessIssue !== null) {
+                    $message = match ($accessIssue) {
+                        'student_record_missing' => 'Student profile is missing. Please contact administration.',
+                        'academic_year_missing' => 'Academic year is not assigned to your profile. Please contact administration.',
+                        'academic_year_inactive' => 'Your academic year is inactive. Please contact administration.',
+                        default => 'You are not allowed to access the system.',
+                    };
+
+                    usleep(mt_rand(400000, 1300000));
+                    return $this->response([
+                        'message' => $message,
+                    ], 403, 'application/json', [
+                        'Set-Cookie' => $this->jwt->buildLogoutCookieHeader(),
+                    ]);
+                }
+            }
+
             if (UserRole::isAdministrator($user->getRole()->value)) {
                 $path = $this->view->urlFor('admin.dashboard');
                 try {

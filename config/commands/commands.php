@@ -5,6 +5,7 @@ declare(strict_types=1);
 return [
     \App\Command\CreateSuperAdminCommand::class,
     \App\Command\CleanupExpiredFilesCommand::class,
+    \App\Command\DispatchScheduledReportsCommand::class,
     \App\Command\DatabaseSeederCommand::class,
     \App\Command\FactoryResetCommand::class,
     \App\Command\BackupDataCommand::class,

@@ -79,6 +79,13 @@ Notes:
 
 Cron scheduled tasks should only **dispatch jobs** into the queue. The queue worker/supervisor performs the heavy work. This keeps scheduled tasks non-blocking, improves reliability (retries/error handling), and lets you scale by running more workers.
 
+Scheduled report emails now follow this pattern:
+- Cron runs `app:dispatch-scheduled-reports` every minute.
+- The command finds due report schedules and enqueues email jobs.
+- Queue workers generate the report CSV + email body and send to configured recipients.
+- Super admins are always included automatically as recipients (they do not need to be selected in the report settings recipient list).
+- The recipient list in settings is for additional wardens only.
+
 **Requirement:** `pcntl` PHP extension must be installed/enabled for running `jobs:supervisor` (process management).
 
 ## Dependencies
@@ -304,6 +311,9 @@ Follow these steps to set up Passito on your local machine:
       ```bash
       # Cleanup expired outpass files daily at 2 AM
       0 2 * * * /usr/bin/php /path/to/passito/passito.php app:cleanup-expired-files
+
+      # Dispatch due automated report emails every minute
+      * * * * * /usr/bin/php /path/to/passito/passito.php app:dispatch-scheduled-reports
       
       # Health check every 5 minutes with email alerts (optional but recommended for production)
       */5 * * * * /usr/bin/php /path/to/passito/passito.php jobs:health --send-email --exit-code-on-failure

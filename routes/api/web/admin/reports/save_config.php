@@ -11,14 +11,18 @@ ${basename(__FILE__, '.php')} = function () {
             ], 403);
         }
         
-        $reportId = (int) $this->data['report_id'] ?? null;
+        $reportId = isset($this->data['report_id']) ? (int) $this->data['report_id'] : 0;
+        $recipientIds = isset($this->data['recipients']) && is_array($this->data['recipients'])
+            ? array_map('intval', $this->data['recipients'])
+            : [];
+
         $reportData = [
             'frequency' => empty($this->data['frequency']) ? null : $this->data['frequency'],
             'dayOfWeek' => empty((int) $this->data['dayOfWeek']) ? null : (int) $this->data['dayOfWeek'],
             'dayOfMonth' => empty((int) $this->data['dayOfMonth']) ? null : (int) $this->data['dayOfMonth'],
             'month' => empty((int) $this->data['month']) ? null : (int) $this->data['month'],
             'time' => isset($this->data['time']) ? date('H:i', strtotime($this->data['time'])) : null,
-            'recipients' => array_map('intval', $this->data['recipients']) ?? []
+            'recipients' => $recipientIds
         ];
 
         $result = $this->reportService->updateReportSettingsById($reportId, $reportData);

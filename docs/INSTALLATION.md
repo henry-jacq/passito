@@ -303,9 +303,15 @@ Add these lines:
 # Cleanup expired files daily at 2 AM
 0 2 * * * /usr/bin/php /var/www/passito/passito.php app:cleanup-expired-files
 
+# Dispatch due automated report emails every minute
+* * * * * /usr/bin/php /var/www/passito/passito.php app:dispatch-scheduled-reports
+
 # Health check every 5 minutes
 */5 * * * * /usr/bin/php /var/www/passito/passito.php jobs:health --send-email --exit-code-on-failure
 ```
+
+For automated reports, super admins are always included as recipients by default.  
+In report settings, select only additional wardens.
 
 #### Step 9: Build Assets
 

@@ -106,9 +106,16 @@ Add these lines:
 # Cleanup expired files daily at 2 AM
 0 2 * * * /usr/bin/php /path/to/passito/passito.php app:cleanup-expired-files
 
+# Dispatch due automated report emails every minute
+* * * * * /usr/bin/php /path/to/passito/passito.php app:dispatch-scheduled-reports
+
 # Health check every 5 minutes with email alerts
 */5 * * * * /usr/bin/php /path/to/passito/passito.php jobs:health --send-email --exit-code-on-failure
 ```
+
+Note for automated reports:
+- Super admins are always included automatically as recipients.
+- The report settings recipient checklist is for additional wardens only.
 
 ### Step 4: Verify Setup
 
@@ -642,6 +649,9 @@ php passito.php jobs:health --alert-threshold=10
 ```bash
 # Dispatch cleanup job
 php passito.php app:cleanup-expired-files
+
+# Dispatch due scheduled report emails
+php passito.php app:dispatch-scheduled-reports
 ```
 
 ### Systemd

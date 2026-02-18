@@ -51,7 +51,7 @@ use App\Enum\ReportKey;
             </div>
             <div class="p-6 transition duration-200 bg-white rounded-lg shadow hover:shadow-lg">
                 <h3 class="text-lg font-semibold text-gray-700">Overdue Returns</h3>
-                <p class="text-3xl text-green-800">0</p>
+                <p class="text-3xl text-green-800"><?= count($lateArrivals) ?></p>
                 <p class="mt-1 text-sm text-gray-500">Students overdue today</p>
             </div>
         </div>

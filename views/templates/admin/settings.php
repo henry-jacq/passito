@@ -28,23 +28,6 @@ use App\Enum\UserRole; ?>
         </div>
     </section>
 
-    <?php if (UserRole::isSuperAdmin($user->getRole()->value)): ?>
-        <!-- Transfer Ownership -->
-        <section class="p-6 mb-8 bg-white rounded-lg shadow-md">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h3 class="mb-2 text-lg font-semibold text-gray-800">Transfer Ownership</h3>
-                    <p class="text-sm text-gray-600">
-                        Transfer super admin access to another user if the chief warden of the hostels is changing.
-                    </p>
-                </div>
-                <button class="px-4 py-2 text-sm font-medium text-white transition bg-indigo-600 rounded-md shadow-md hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                    Transfer Ownership
-                </button>
-            </div>
-        </section>
-    <?php endif; ?>
-
     <!-- Manage Logins / Devices -->
     <section class="p-6 mb-8 bg-white rounded-lg shadow-md">
         <div class="flex items-center justify-between">

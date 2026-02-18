@@ -20,12 +20,14 @@ class ReportConfigSeeder
                 'reportKey' => ReportKey::DAILY_MOVEMENT,
                 'frequency' => CronFrequency::DAILY,
                 'enabled'   => true,
+                'time' => '23:59:00'
             ],
             [
                 'reportKey' => ReportKey::LATE_ARRIVALS,
                 'frequency' => CronFrequency::DAILY,
                 'dayOfWeek' => 1, // Monday
                 'enabled'   => true,
+                'time' => '23:59:00'
             ],
         ];
 

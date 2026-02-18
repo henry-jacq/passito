@@ -145,5 +145,5 @@ When contributing to documentation:
 
 ## Version
 
-Documentation version: 0.8.0  
+Documentation version: 0.9.0  
 Last updated: February 2026

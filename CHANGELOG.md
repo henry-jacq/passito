@@ -1,5 +1,27 @@
 # Changelog
 
+## v0.9.0 (2026-02-18)
+
+### 🚀 Major Features
+- **Scheduled Report Dispatch Pipeline**: Added cron-safe scheduled report dispatch with locking and queue-backed email delivery.
+- **Data Lifecycle Commands**: Added CLI commands for backup, import, and factory reset operations.
+- **Academic Year Shift Workflow**: Added year shift processing with stronger academic-year validation.
+
+### ✨ Enhancements
+- **Admin Import Validation**: Added hostel validation safeguards during student import.
+- **Student Field Standardization**: Renamed `digitalId` to `rollNo` across the application.
+- **UI Refresh**: Redesigned the landing page with a modern component-driven layout.
+
+### 🏗️ Deployment & DevOps
+- Added automated setup script support with Apache vhost templates.
+- Modernized Docker stack with dedicated `scheduler` and `queue-supervisor` services.
+
+### 🐛 Fixes
+- Updated Vite dependency to `7.3.1` for improved tooling compatibility.
+
+### 📚 Documentation
+- Expanded Docker setup instructions, background-service checks, and WSL integration guidance.
+
 ## v0.8.0 (2026-02-16)
 
 ### 🚀 Major Features

@@ -379,17 +379,36 @@ To set up Passito using Docker, follow these steps:
 2. **Build and Start the Containers**:
    From the root of your project, run:
    ```bash
-   docker-compose up --build
+   docker compose up -d --build
    ```
    This will build the containers defined in your `docker-compose.yml` file.
 
-3. **Access the Application**:
+3. **Important Note (WSL)**:
+   If you see this error:
+   `The command 'docker' could not be found in this WSL 2 distro.`
+   enable WSL integration for your distro in Docker Desktop settings.
+   Reference: https://docs.docker.com/go/wsl2/
+
+4. **Initialize Database and Seed Core Data**:
+   ```bash
+   docker compose exec web php passito.php migrations:migrate
+   docker compose exec web php passito.php app:seed app_settings
+   docker compose exec web php passito.php app:seed outpass_rules
+   ```
+
+5. **Check Background Services**:
+   ```bash
+   docker compose logs -f queue-supervisor
+   docker compose logs -f scheduler
+   ```
+
+6. **Access the Application**:
    Open your web browser and go to `http://localhost:8000` (or the port you have configured in the `docker-compose.yml`).
 
-4. **Access Adminer** (optional):
+7. **Access Adminer** (optional):
    If you want to manage your database using Adminer, you can access it at `http://localhost:8080`.
 
-5. **Running Vite**:
+8. **Running Vite**:
    If you want to run the Vite development server for frontend resources, execute the following command in the Docker container:
    ```bash
    npm run dev

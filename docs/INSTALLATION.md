@@ -387,24 +387,38 @@ DB_PASS=passito_password
 #### Step 3: Build and Start
 
 ```bash
-docker-compose up -d --build
+docker compose up -d --build
 ```
 
-#### Step 4: Initialize Database
+#### Step 4: Important Note (WSL)
+
+If you see this error:
+`The command 'docker' could not be found in this WSL 2 distro.`
+enable WSL integration for your distro in Docker Desktop settings.
+Reference: https://docs.docker.com/go/wsl2/
+
+#### Step 5: Initialize Database
 
 ```bash
 # Run migrations
-docker-compose exec web php passito.php migrations:migrate
+docker compose exec web php passito.php migrations:migrate
 
 # Seed data
-docker-compose exec web php passito.php app:seed app_settings
-docker-compose exec web php passito.php app:seed outpass_rules
+docker compose exec web php passito.php app:seed app_settings
+docker compose exec web php passito.php app:seed outpass_rules
 
 # Create admin
-docker-compose exec web php passito.php app:create-super-admin
+docker compose exec web php passito.php app:create-super-admin
 ```
 
-#### Step 5: Access Application
+#### Step 6: Check Queue and Scheduler Logs
+
+```bash
+docker compose logs -f queue-supervisor
+docker compose logs -f scheduler
+```
+
+#### Step 7: Access Application
 
 - Application: http://localhost:8000
 - Adminer: http://localhost:8080

@@ -1,35 +1,79 @@
-version: '3.8'
+x-app-base: &app-base
+  image: passito-app:local
+  build:
+    context: .
+    dockerfile: docker/web/Dockerfile
+  depends_on:
+    db:
+      condition: service_healthy
+  environment:
+    DB_HOST: ${DB_HOST:-db}
+    DB_PORT: ${DB_PORT:-3306}
+    DB_NAME: ${DB_NAME:-passito}
+    DB_USER: ${DB_USER:-passito}
+    DB_PASS: ${DB_PASS:-passito_password}
+  volumes:
+    - ./:/var/www/html
+    - passito_vendor_data:/var/www/html/vendor
+  restart: unless-stopped
 
 services:
-  passito-web:
-    build:
-      context: ./docker/web
+  web:
+    <<: *app-base
     ports:
-      - "8000:80"  # PHP app exposed to localhost:8000
-      - "5173:5173"  # Expose Vite's port to host machine
-    volumes:
-      - .:/var/www/html
-    restart: always
+      - "8000:80"
+      - "5173:5173"
 
-  passito-db:
+  scheduler:
+    <<: *app-base
+    user: "www-data:www-data"
+    command: ["bash", "-lc", "while true; do php passito.php app:dispatch-scheduled-reports || true; sleep 60; done"]
+
+  queue-supervisor:
+    <<: *app-base
+    user: "www-data:www-data"
+    init: true
+    command:
+      - php
+      - passito.php
+      - jobs:supervisor
+      - --min-workers=1
+      - --max-workers=10
+      - --scale-up-threshold=5
+      - --scale-down-threshold=2
+      - --check-interval=10
+
+  db:
     image: mysql:5.7
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: passito
-      MYSQL_USER: myuser
-      MYSQL_PASSWORD: mypassword
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASS:-rootpassword}
+      MYSQL_DATABASE: ${DB_NAME:-passito}
+      MYSQL_USER: ${DB_USER:-passito}
+      MYSQL_PASSWORD: ${DB_PASS:-passito_password}
     ports:
       - "3306:3306"
     volumes:
-      - passito_db_data:/var/lib/mysql  # Add this line for data persistence
-    restart: always
+      - passito_db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u$$MYSQL_USER -p$$MYSQL_PASSWORD --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+    restart: unless-stopped
 
-  passito-adminer:
+  adminer:
     build:
       context: ./docker/adminer
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      ADMINER_DEFAULT_SERVER: db
     ports:
       - "8080:8080"
-    restart: always
+    restart: unless-stopped
 
 volumes:
   passito_db_data:
+  passito_vendor_data:

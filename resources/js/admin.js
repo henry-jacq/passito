@@ -787,39 +787,152 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    const studentSelectAllCheckbox = document.getElementById('students-select-all');
+    const studentExportCheckboxes = Array.from(document.querySelectorAll('.student-export-checkbox'));
+    const getSelectedStudentIds = () => studentExportCheckboxes
+        .filter((checkbox) => checkbox.checked)
+        .map((checkbox) => Number(checkbox.dataset.studentId))
+        .filter((id) => Number.isInteger(id) && id > 0);
+
+    const syncStudentSelectAllState = () => {
+        if (!studentSelectAllCheckbox || studentExportCheckboxes.length === 0) {
+            return;
+        }
+
+        const checkedCount = studentExportCheckboxes.filter((checkbox) => checkbox.checked).length;
+        studentSelectAllCheckbox.checked = checkedCount === studentExportCheckboxes.length;
+        studentSelectAllCheckbox.indeterminate = checkedCount > 0 && checkedCount < studentExportCheckboxes.length;
+    };
+
+    if (studentSelectAllCheckbox && studentExportCheckboxes.length > 0) {
+        studentSelectAllCheckbox.addEventListener('change', () => {
+            studentExportCheckboxes.forEach((checkbox) => {
+                checkbox.checked = studentSelectAllCheckbox.checked;
+            });
+            syncStudentSelectAllState();
+        });
+
+        studentExportCheckboxes.forEach((checkbox) => {
+            checkbox.addEventListener('change', syncStudentSelectAllState);
+        });
+
+        syncStudentSelectAllState();
+    }
+
     // Export student data
     const exportStudentsButton = document.querySelector('.export-students');
     if (exportStudentsButton) {
         exportStudentsButton.addEventListener('click', async (event) => {
             event.stopPropagation();
 
+            const selectedStudentIds = getSelectedStudentIds();
             const toast = new Toast();
-            toast.create({ message: "Exporting, please wait...", position: "bottom-right", type: "queue", duration: 4000 });
 
             try {
-                const response = await Ajax.download(`/api/web/admin/students/export`, 'POST', {
-                    'Content-Type': 'application/json'
+                const [programsResponse, yearsResponse] = await Promise.all([
+                    Ajax.post('/api/web/admin/programs/fetch'),
+                    Ajax.post('/api/web/admin/academic_years/fetch')
+                ]);
+
+                const programsData = (programsResponse.ok && programsResponse.data?.status && Array.isArray(programsResponse.data?.data?.programs))
+                    ? programsResponse.data.data.programs
+                    : [];
+                const academicYearsData = (yearsResponse.ok && yearsResponse.data?.status && Array.isArray(yearsResponse.data?.data?.academic_years))
+                    ? yearsResponse.data.data.academic_years
+                    : [];
+
+                const modalResponse = await Ajax.post('/api/web/admin/modal', {
+                    template: 'export_students',
+                    selectedCount: selectedStudentIds.length,
+                    programs: programsData,
+                    academic_years: academicYearsData
                 });
 
-                if (response.ok) {
-                    const url = window.URL.createObjectURL(response.data);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = response.filename || 'students_export.csv'; // fallback filename
-                    document.body.appendChild(a);
-                    a.click();
-                    a.remove();
-                    window.URL.revokeObjectURL(url);
-                    toast.create({ message: "Export completed successfully", position: "bottom-right", type: "success", duration: 4000 });
-                } else {
-                    toast.create({ message: response.message || "Failed to export student data", position: "bottom-right", type: "error", duration: 4000 });
+                if (!modalResponse.ok || typeof modalResponse.data !== 'string' || modalResponse.data.trim() === '') {
+                    toast.create({ message: 'Failed to load export options', position: "bottom-right", type: "error", duration: 4000 });
+                    return;
                 }
+
+                Modal.open({
+                    content: modalResponse.data,
+                    actions: [
+                        {
+                            label: 'Export',
+                            class: 'inline-flex justify-center rounded-lg bg-indigo-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-indigo-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50',
+                            onClick: async (event) => {
+                                const button = event.currentTarget;
+                                const selectedScope = document.querySelector('input[name="students-export-scope"]:checked')?.value || 'all';
+                                const programId = document.getElementById('export-program-id')?.value || '';
+                                const academicYearId = document.getElementById('export-academic-year-id')?.value || '';
+                                const payload = {
+                                    scope: selectedScope
+                                };
+
+                                if (selectedScope === 'selected') {
+                                    if (selectedStudentIds.length === 0) {
+                                        toast.create({ message: 'Select at least one student to export', position: "bottom-right", type: "warning", duration: 4000 });
+                                        return;
+                                    }
+                                    payload.student_ids = selectedStudentIds;
+                                }
+
+                                if (programId !== '') {
+                                    payload.program_id = Number(programId);
+                                }
+
+                                if (academicYearId !== '') {
+                                    payload.academic_year_id = Number(academicYearId);
+                                }
+
+                                button.disabled = true;
+                                button.textContent = 'Exporting...';
+
+                                toast.create({ message: "Exporting, please wait...", position: "bottom-right", type: "queue", duration: 4000 });
+
+                                try {
+                                    const response = await Ajax.download(
+                                        '/api/web/admin/students/export',
+                                        'POST',
+                                        {},
+                                        payload
+                                    );
+
+                                    if (response.ok) {
+                                        const url = window.URL.createObjectURL(response.data);
+                                        const a = document.createElement('a');
+                                        a.href = url;
+                                        a.download = response.filename || 'students_export.csv';
+                                        document.body.appendChild(a);
+                                        a.click();
+                                        a.remove();
+                                        window.URL.revokeObjectURL(url);
+                                        toast.create({ message: "Export completed successfully", position: "bottom-right", type: "success", duration: 4000 });
+                                        Modal.close();
+                                    } else {
+                                        toast.create({ message: response.message || "Failed to export student data", position: "bottom-right", type: "error", duration: 4000 });
+                                    }
+                                } catch (error) {
+                                    console.error('Export failed:', error);
+                                    toast.create({ message: "An error occurred during export", position: "bottom-right", type: "error", duration: 4000 });
+                                } finally {
+                                    button.disabled = false;
+                                    button.textContent = 'Export';
+                                }
+                            }
+                        },
+                        {
+                            label: 'Cancel',
+                            class: 'inline-flex justify-center rounded-lg bg-gray-100 px-6 py-2 mx-4 text-sm font-medium text-gray-700 shadow-md hover:bg-gray-200 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2',
+                            onClick: Modal.close
+                        }
+                    ],
+                    size: 'sm:max-w-lg',
+                    classes: 'custom-modal-class',
+                    closeOnBackdropClick: false
+                });
             } catch (error) {
-                console.error('Export failed:', error);
-                alert('An error occurred during export.');
-                toast.create({ message: "An error occurred during export", position: "bottom-right", type: "error", duration: 4000 });
-            } finally {
-                Modal.close();
+                console.error('Failed to open export modal:', error);
+                toast.create({ message: "An error occurred while opening export options", position: "bottom-right", type: "error", duration: 4000 });
             }
         });
     }

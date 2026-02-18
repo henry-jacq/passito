@@ -134,6 +134,14 @@ $errorMessage = $this->session->getFlash('error')[$flashKey] ?? null;
             <table class="w-full border-collapse table-auto">
                 <thead class="bg-gray-100">
                     <tr>
+                        <th class="px-4 py-3 text-sm font-semibold text-center text-gray-600">
+                            <input
+                                type="checkbox"
+                                id="students-select-all"
+                                class="w-4 h-4 text-indigo-600 border-gray-300 rounded cursor-pointer focus:ring-indigo-500"
+                                aria-label="Select all students on this page"
+                            >
+                        </th>
                         <th class="px-4 py-3 text-sm font-semibold text-left text-gray-600">Student Name</th>
                         <th class="px-4 py-3 text-sm font-semibold text-center text-gray-600">Course</th>
                         <th class="px-4 py-3 text-sm font-semibold text-center text-gray-600">Year</th>
@@ -151,6 +159,16 @@ $errorMessage = $this->session->getFlash('error')[$flashKey] ?? null;
                             class="transition border-t cursor-pointer hover:bg-blue-50"
                             data-href="<?= $this->urlFor('admin.manage.students.details', ['student_id' => $student->getId()]) ?>"
                         >
+                            <td class="px-4 py-3 text-sm text-center">
+                                <input
+                                    type="checkbox"
+                                    class="w-4 h-4 text-indigo-600 border-gray-300 rounded cursor-pointer student-export-checkbox focus:ring-indigo-500"
+                                    value="<?= $student->getId() ?>"
+                                    data-student-id="<?= $student->getId() ?>"
+                                    data-no-row-click="true"
+                                    aria-label="Select <?= htmlspecialchars($student->getUser()->getName(), ENT_QUOTES, 'UTF-8') ?> for export"
+                                >
+                            </td>
                             <td class="px-4 py-3 text-sm text-gray-700"><?= $student->getUser()->getName() ?></td>
                             <td class="px-4 py-3 text-sm text-center text-gray-700"><?= $student->getProgram()->getProgramName() . ' ' . $student->getProgram()->getShortCode() ?></td>
                             <td class="px-4 py-3 text-sm text-center text-gray-700"><?= formatStudentYear($student->getYear()) ?></td>

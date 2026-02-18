@@ -316,6 +316,41 @@ class UserService
             ->getResult();
     }
 
+    public function getStudentsForExport(
+        User $user,
+        array $studentIds = [],
+        ?int $academicYearId = null,
+        ?int $programId = null
+    ): array {
+        $ids = array_values(array_unique(array_filter(array_map('intval', $studentIds), static fn ($id) => $id > 0)));
+
+        $queryBuilder = $this->em->getRepository(Student::class)->createQueryBuilder('s')
+            ->innerJoin('s.user', 'u')
+            ->where('u.gender = :gender')
+            ->setParameter('gender', $user->getGender())
+            ->orderBy('u.name', 'ASC');
+
+        if (!empty($ids)) {
+            $queryBuilder
+                ->andWhere('s.id IN (:studentIds)')
+                ->setParameter('studentIds', $ids);
+        }
+
+        if ($academicYearId !== null && $academicYearId > 0) {
+            $queryBuilder
+                ->andWhere('IDENTITY(s.academicYear) = :academicYearId')
+                ->setParameter('academicYearId', $academicYearId);
+        }
+
+        if ($programId !== null && $programId > 0) {
+            $queryBuilder
+                ->andWhere('IDENTITY(s.program) = :programId')
+                ->setParameter('programId', $programId);
+        }
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
     public function getStudentsByGenderPaginated(User $user, int $page = 1, int $limit = 10, ?string $search = null): array
     {
         $offset = ($page - 1) * $limit;

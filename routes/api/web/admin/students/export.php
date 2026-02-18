@@ -6,7 +6,24 @@ ${basename(__FILE__, '.php')} = function () {
 
     if ($this->isAuthenticated() && UserRole::isAdministrator($this->getRole())) {
         $gender = $this->getAttribute('user');
-        $students = $this->userService->getStudentsByGender($gender);
+        $scope = strtolower(trim((string) ($this->data['scope'] ?? 'all')));
+        $selectedIds = isset($this->data['student_ids']) && is_array($this->data['student_ids'])
+            ? array_values(array_unique(array_filter(array_map('intval', $this->data['student_ids']), static fn ($id) => $id > 0)))
+            : [];
+        $programId = isset($this->data['program_id']) ? (int) $this->data['program_id'] : null;
+        $academicYearId = isset($this->data['academic_year_id']) ? (int) $this->data['academic_year_id'] : null;
+
+        if ($scope === 'selected') {
+            if (empty($selectedIds)) {
+                return $this->response([
+                    'message' => 'Select at least one student to export',
+                    'status' => false,
+                ], 422);
+            }
+            $students = $this->userService->getStudentsForExport($gender, $selectedIds, $academicYearId, $programId);
+        } else {
+            $students = $this->userService->getStudentsForExport($gender, [], $academicYearId, $programId);
+        }
 
         if (empty($students)) {
             return $this->response([

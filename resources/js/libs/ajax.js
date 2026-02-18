@@ -109,7 +109,7 @@ const Ajax = (function () {
     };
 
     // Download (handles blob response and filename)
-    const download = async (url, method = 'GET', headers = {}) => {
+    const download = async (url, method = 'GET', headers = {}, body = null) => {
         const csrfCookieName = getMeta('csrf-cookie-name') || 'passito_csrf';
         const csrfHeaderName = getMeta('csrf-header-name') || 'X-CSRF-Token';
         const csrfToken = getCookie(csrfCookieName);
@@ -122,11 +122,23 @@ const Ajax = (function () {
             mergedHeaders[csrfHeaderName] = decodeURIComponent(csrfToken);
         }
 
-        const response = await fetch(url, {
+        const fetchOptions = {
             method,
             credentials: 'same-origin',
             headers: mergedHeaders,
-        });
+        };
+
+        if (body instanceof FormData) {
+            fetchOptions.body = body;
+            delete fetchOptions.headers['Content-Type'];
+        } else if (body !== null && method.toUpperCase() !== 'GET') {
+            if (!fetchOptions.headers['Content-Type']) {
+                fetchOptions.headers['Content-Type'] = 'application/json';
+            }
+            fetchOptions.body = typeof body === 'string' ? body : JSON.stringify(body);
+        }
+
+        const response = await fetch(url, fetchOptions);
 
         if (!response.ok) {
             let message = null;

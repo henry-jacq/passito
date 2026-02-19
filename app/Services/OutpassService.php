@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use DateTime;
+use DateTimeImmutable;
 use App\Entity\User;
 use App\Enum\Gender;
 use App\Core\Storage;
@@ -352,6 +353,89 @@ class OutpassService
         }
 
         return $counts;
+    }
+
+    /**
+     * Mark stale approved outpasses as expired.
+     *
+     * Stale means the return date/time window (plus configured grace minutes)
+     * has passed.
+     *
+     * @return array{checked:int, updated:int, grace_minutes:int}
+     */
+    public function autoCloseExpiredApprovedOutpasses(User $adminUser): array
+    {
+        $now = new DateTimeImmutable();
+        $settings = $this->getSettings($adminUser->getGender());
+        $graceMinutes = max(0, (int) $settings->getLateArrivalGraceMinutes());
+
+        $queryBuilder = $this->em->createQueryBuilder();
+        $queryBuilder->select('o', 's', 'u', 'h')
+            ->from(OutpassRequest::class, 'o')
+            ->join('o.student', 's')
+            ->join('s.user', 'u')
+            ->join('s.hostel', 'h')
+            ->where('o.status = :status')
+            ->andWhere('u.gender = :gender')
+            ->andWhere('o.toDate <= :today')
+            ->setParameter('status', OutpassStatus::APPROVED->value)
+            ->setParameter('gender', $adminUser->getGender()->value)
+            ->setParameter('today', DateTime::createFromImmutable($now)->setTime(0, 0, 0))
+            ->orderBy('o.toDate', 'ASC')
+            ->addOrderBy('o.toTime', 'ASC');
+
+        // Wardens can auto-close only their assigned hostels.
+        if (UserRole::isAdmin($adminUser->getRole()->value)) {
+            $ids = $this->getAssignedHostelIds($adminUser);
+            if (!empty($ids)) {
+                $queryBuilder->andWhere($queryBuilder->expr()->in('h.id', ':ids'))
+                    ->setParameter('ids', $ids);
+            } else {
+                return [
+                    'checked' => 0,
+                    'updated' => 0,
+                    'grace_minutes' => $graceMinutes,
+                ];
+            }
+        }
+
+        /** @var OutpassRequest[] $outpasses */
+        $outpasses = $queryBuilder->getQuery()->getResult();
+
+        $checked = count($outpasses);
+        $updated = 0;
+
+        foreach ($outpasses as $outpass) {
+            $toDate = $outpass->getToDate();
+            $toTime = $outpass->getToTime();
+            $cutoff = DateTimeImmutable::createFromMutable($toDate)->setTime(
+                (int) $toTime->format('H'),
+                (int) $toTime->format('i'),
+                (int) $toTime->format('s')
+            );
+
+            if ($graceMinutes > 0) {
+                $cutoff = $cutoff->modify('+' . $graceMinutes . ' minutes');
+            }
+
+            if ($cutoff > $now) {
+                continue;
+            }
+
+            $outpass->setStatus(OutpassStatus::EXPIRED);
+            $this->em->persist($outpass);
+            $updated++;
+        }
+
+        if ($updated > 0) {
+            $this->em->flush();
+        }
+
+        return [
+            'checked' => $checked,
+            'updated' => $updated,
+            'grace_minutes' => $graceMinutes,
+        ];
     }
 
     private function buildBaseOutpassQuery(?User $warden = null)

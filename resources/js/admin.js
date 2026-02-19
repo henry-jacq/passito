@@ -1529,30 +1529,46 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Notify students
-    const performNotifyStudents = document.getElementById('notifyStudents');
-    performNotifyStudents.addEventListener('click', async (event) => {
+    // Auto-close stale approved outpasses
+    const performAutoCloseExpiredPasses = document.getElementById('autoCloseExpiredPasses');
+    performAutoCloseExpiredPasses.addEventListener('click', async () => {
         try {
-            const response = await Ajax.post('/api/web/admin/modal?template=action_notify');
+            const response = await Ajax.post('/api/web/admin/modal?template=action_expire');
 
             if (response.ok && response.data) {
                 Modal.open({
                     content: response.data,
                     actions: [
                         {
-                            label: 'Notify Students',
+                            label: 'Run Auto-Close',
                             class: `inline-flex justify-center rounded-lg bg-blue-600 px-5 py-2 text-sm font-medium text-white shadow-md hover:bg-blue-500 transition duration-200`,
-                            onClick: async () => {
+                            onClick: async (btn) => {
+                                btn.disabled = true;
+                                btn.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i> Running...`;
+                                Modal.close();
+
                                 try {
-                                    const response = await Ajax.post(`/api/web/admin/actions/notify`, {});
+                                    const response = await Ajax.post(`/api/web/admin/actions/expire`, {});
 
                                     if (response.ok) {
                                         const data = response.data;
                                         if (data.status) {
-                                            alert("Notification sent successfully!");
-                                            // location.reload();
+                                            const updated = data?.data?.updated ?? 0;
+                                            const toast = new Toast();
+                                            toast.create({
+                                                message: `Auto-close finished. ${updated} pass(es) updated.`,
+                                                position: 'bottom-right',
+                                                type: 'success',
+                                                duration: 4000
+                                            });
                                         } else {
-                                            alert(data.message);
+                                            const toast = new Toast();
+                                            toast.create({
+                                                message: data.message || 'Auto-close failed',
+                                                position: 'bottom-right',
+                                                type: 'error',
+                                                duration: 4000
+                                            });
                                         }
                                     } else {
                                         handleError(response.status);
@@ -1560,7 +1576,8 @@ document.addEventListener("DOMContentLoaded", () => {
                                 } catch (error) {
                                     console.error(error);
                                 } finally {
-                                    Modal.close();
+                                    btn.disabled = false;
+                                    btn.innerHTML = 'Run Auto-Close';
                                 }
                             },
                         },

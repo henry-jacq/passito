@@ -174,9 +174,9 @@ use App\Enum\ReportKey;
                 </button>
             </div>
             <div class="p-4 transition duration-200 bg-white rounded-lg shadow hover:shadow-lg">
-                <h4 class="font-semibold">Notify Students</h4>
-                <p class="mb-3 text-sm">Alert students who haven't checked in.</p>
-                <button id="notifyStudents" class="flex items-center px-2 py-1 text-sm text-white transition duration-200 bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed">
+                <h4 class="font-semibold">Auto-Close Expired Passes</h4>
+                <p class="mb-3 text-sm">Mark stale approved passes as expired.</p>
+                <button id="autoCloseExpiredPasses" class="flex items-center px-2 py-1 text-sm text-white transition duration-200 bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed">
                     <i class="mr-2 fas fa-play"></i>
                     <span>Perform</span>
                 </button>
